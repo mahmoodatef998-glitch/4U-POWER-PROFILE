@@ -19,6 +19,26 @@
   --color-brand-600: #e6b800;
   --color-brand-700: #7a5900;   /* yellow-family text on white: 6.6:1 */
 
+  /* Deep navy for immersive dark sections (hybrid with the Upscayl-style glass look) */
+  --color-navy-950: #070b18;
+  --color-navy-900: #0c1224;
+  --color-navy-800: #141c36;
+  --color-navy-700: #1f2a4d;
+
+  /* Product-line accent gradients: amber (generators), green (ATS), blue (switchgear), violet (MDB), cyan (sync) */
+  --color-line-gen-a: #ffd426;
+  --color-line-gen-b: #ff8a3d;
+  --color-line-ats-a: #4ade80;
+  --color-line-ats-b: #14b8a6;
+  --color-line-sw-a: #60a5fa;
+  --color-line-sw-b: #818cf8;
+  --color-line-mdb-a: #c084fc;
+  --color-line-mdb-b: #f472b6;
+  --color-line-sync-a: #22d3ee;
+  --color-line-sync-b: #6366f1;
+
+  --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
+
   --color-ink: #111113;
   --color-muted: #52525b;
   --color-line: #e4e4e7;
@@ -27,6 +47,17 @@
   --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
   --font-display: var(--font-barlow), var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
   --font-arabic: var(--font-plex-arabic), var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+
+  --animate-float: float 7s ease-in-out infinite;
+  @keyframes float {
+    0%, 100% { transform: translate3d(0, 0, 0); }
+    50% { transform: translate3d(0, -10px, 0); }
+  }
+  --animate-tab-progress: tab-progress linear forwards;
+  @keyframes tab-progress {
+    from { transform: scaleX(0); }
+    to { transform: scaleX(1); }
+  }
 
   --animate-kenburns: kenburns 24s ease-out both;
   @keyframes kenburns {
@@ -71,6 +102,47 @@
     background-size: 48px 48px;
   }
   .flip-rtl { @apply rtl:-scale-x-100; }
+
+  /* Gradient text in the brand amber (or any --grad passed in) */
+  .grad-text {
+    background-image: var(--grad, linear-gradient(120deg, var(--color-brand-400), var(--color-line-gen-b)));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  /* Frosted glass card for dark sections */
+  .glass { @apply border border-white/10 bg-white/[0.04] backdrop-blur-xl; box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.06); }
+  /* 1px gradient border that fades in on hover (cards) */
+  .grad-border { position: relative; isolation: isolate; }
+  .grad-border::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    border-radius: inherit;
+    padding: 1.5px;
+    background: var(--grad, linear-gradient(135deg, var(--color-brand-400), var(--color-line-gen-b)));
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 300ms var(--ease-out-expo);
+    pointer-events: none;
+  }
+  .grad-border:hover::before, .grad-border:focus-within::before { opacity: 1; }
+  /* Soft coloured light behind dark sections */
+  .aurora {
+    background:
+      radial-gradient(40rem 24rem at 15% 0%, rgb(255 212 38 / 0.14), transparent 70%),
+      radial-gradient(36rem 22rem at 90% 20%, rgb(99 102 241 / 0.16), transparent 70%),
+      radial-gradient(30rem 20rem at 60% 100%, rgb(20 184 166 / 0.12), transparent 70%);
+  }
+  /* Per product-line gradients */
+  .line-generator { --grad-ink: linear-gradient(120deg, #a15c00, #c2410c); --grad: linear-gradient(120deg, var(--color-line-gen-a), var(--color-line-gen-b)); --glow: rgb(255 170 50 / 0.35); }
+  .line-ats_panel { --grad-ink: linear-gradient(120deg, #15803d, #0f766e); --grad: linear-gradient(120deg, var(--color-line-ats-a), var(--color-line-ats-b)); --glow: rgb(45 212 150 / 0.3); }
+  .line-switchgear { --grad-ink: linear-gradient(120deg, #1d4ed8, #4f46e5); --grad: linear-gradient(120deg, var(--color-line-sw-a), var(--color-line-sw-b)); --glow: rgb(110 140 250 / 0.32); }
+  .line-mdb { --grad-ink: linear-gradient(120deg, #9333ea, #db2777); --grad: linear-gradient(120deg, var(--color-line-mdb-a), var(--color-line-mdb-b)); --glow: rgb(210 120 230 / 0.3); }
+  .line-sync_panel { --grad-ink: linear-gradient(120deg, #0e7490, #4338ca); --grad: linear-gradient(120deg, var(--color-line-sync-a), var(--color-line-sync-b)); --glow: rgb(60 170 240 / 0.3); }
 
   /* Long-form article typography */
   .prose-4u { @apply text-[1.0625rem] leading-8 text-zinc-700; }

@@ -50,7 +50,7 @@ export default async function MarketsPage({ params }: { params: Promise<{ locale
                   <Link
                     href={`/markets/${m.code}`}
                     className={cn(
-                      "group flex h-full flex-col rounded-2xl border p-6 transition hover:-tranzinc-y-1 hover:shadow-xl",
+                      "group flex h-full flex-col rounded-2xl border p-6 transition hover:-translate-y-1 hover:shadow-xl",
                       primary ? "border-brand-500/40 bg-brand-50/60" : "border-line bg-white",
                     )}
                   >

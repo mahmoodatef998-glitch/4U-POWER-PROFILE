@@ -1,5 +1,4 @@
 import { ArrowRight, BadgeCheck, CheckCircle2 } from "lucide-react";
-import Image from "next/image";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Calculator } from "@/components/calculator/calculator";
 import { CoverageMap } from "@/components/coverage-map";
@@ -8,6 +7,7 @@ import { WhatsAppButton } from "@/components/cta-buttons";
 import { HeroAssembly } from "@/components/hero-assembly";
 import { FaqBlock } from "@/components/faq-block";
 import { Counter, Reveal } from "@/components/motion";
+import { ProductLines } from "@/components/product-lines";
 import { NewsCard } from "@/components/news-card";
 import { SectionHeading } from "@/components/section-heading";
 import { TestimonialsCarousel } from "@/components/testimonials";
@@ -23,6 +23,9 @@ import { CATEGORIES } from "@/lib/types";
 import { pick, type Locale } from "@/lib/utils";
 
 export const revalidate = 3600;
+
+/** gradient family per story card: engine, cooling, control, delivery */
+const STORY_LINES = ["line-generator", "line-sync_panel", "line-ats_panel", "line-switchgear"];
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }) {
   const { locale } = await params;
@@ -70,14 +73,17 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
             </Reveal>
           </div>
 
-          <ul className="mt-14 grid gap-px overflow-hidden rounded-3xl border border-line bg-line sm:grid-cols-2 lg:grid-cols-4">
+          <ul className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {home.story.map((c, i) => (
-              <Reveal as="li" key={c.kicker.en} delay={i * 0.06} className="group relative flex flex-col bg-white p-6 transition-colors hover:bg-surface sm:p-7">
-                <span className="font-display text-sm font-extrabold tracking-widest text-brand-700 rtl:tracking-normal">{String(i + 1).padStart(2, "0")}</span>
-                <p className="mt-6 font-display text-3xl font-extrabold uppercase text-ink rtl:font-[family-name:var(--font-arabic)] rtl:text-2xl">{L(c.stat)}</p>
-                <h2 className="mt-3 text-xl leading-tight text-ink rtl:text-lg">{L(c.title)}</h2>
-                <p className="mt-3 text-sm leading-6 text-muted">{L(c.body)}</p>
-                <span className="absolute inset-x-0 bottom-0 h-1 origin-left scale-x-0 bg-brand-400 transition-transform duration-300 group-hover:scale-x-100 rtl:origin-right" aria-hidden />
+              <Reveal as="li" key={c.kicker.en} delay={i * 0.08} from="scale" className={`${STORY_LINES[i]} group`}>
+                <div className="grad-border relative flex h-full flex-col overflow-hidden rounded-3xl border border-line bg-white p-6 transition-[translate,box-shadow] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1 hover:shadow-[0_30px_60px_-30px_rgb(10_10_11/0.35)] sm:p-7">
+                  <div aria-hidden className="absolute -end-10 -top-10 size-32 rounded-full opacity-0 blur-2xl transition-opacity duration-500 group-hover:opacity-100" style={{ backgroundColor: "var(--glow)" }} />
+                  <span className="relative inline-flex h-1.5 w-10 rounded-full" style={{ background: "var(--grad)" }} aria-hidden />
+                  <span className="relative mt-5 font-display text-sm font-extrabold tracking-widest text-muted rtl:tracking-normal">{String(i + 1).padStart(2, "0")}</span>
+                  <p className="grad-text relative mt-2 font-display text-3xl font-extrabold uppercase [--grad:var(--grad-ink)] rtl:font-[family-name:var(--font-arabic)] rtl:text-2xl">{L(c.stat)}</p>
+                  <h2 className="relative mt-3 text-xl leading-tight text-ink rtl:text-lg">{L(c.title)}</h2>
+                  <p className="relative mt-3 text-sm leading-6 text-muted">{L(c.body)}</p>
+                </div>
               </Reveal>
             ))}
           </ul>
@@ -109,7 +115,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
       {/* ------------------------------------------------ WHO WE ARE + STATS */}
       <section className="section bg-white">
         <div className="container-x grid gap-12 lg:grid-cols-12 lg:items-center">
-          <Reveal className="lg:col-span-6">
+          <Reveal className="lg:col-span-6" from="start">
             <SectionHeading eyebrow={L(home.who.eyebrow)} title={L(home.who.title)} intro={L(home.who.body)} />
             <ul className="mt-8 grid gap-3">
               {home.who.points.map((p) => (
@@ -124,12 +130,12 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
               <ArrowRight className="flip-rtl size-4" aria-hidden />
             </Link>
           </Reveal>
-          <Reveal className="lg:col-span-6" delay={0.1}>
+          <Reveal className="lg:col-span-6" delay={0.1} from="end">
             <dl className="grid grid-cols-2 gap-4">
               {home.stats.map((s) => (
-                <div key={s.label.en} className="flex flex-col-reverse rounded-2xl border border-line bg-surface p-6">
+                <div key={s.label.en} className="grad-border flex flex-col-reverse rounded-3xl border border-line bg-surface p-6 transition-[translate] duration-500 hover:-translate-y-1">
                   <dt className="mt-2 text-sm font-semibold text-muted">{L(s.label)}</dt>
-                  <dd className="whitespace-nowrap text-3xl font-extrabold text-ink sm:text-5xl rtl:text-right" dir="ltr">
+                  <dd className="grad-text whitespace-nowrap font-display text-4xl font-extrabold [--grad:linear-gradient(120deg,var(--color-ink-950),var(--color-ink-600))] sm:text-6xl rtl:text-right" dir="ltr">
                     <Counter to={s.value} suffix={s.suffix} locale={locale} />
                   </dd>
                 </div>
@@ -139,35 +145,25 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
         </div>
       </section>
 
-      {/* ------------------------------------------------ CATEGORIES */}
-      <section className="section bg-surface" aria-labelledby="cat-title">
-        <div className="container-x">
-          <SectionHeading id="cat-title" eyebrow={L(home.categories.eyebrow)} title={L(home.categories.title)} />
-          <ul className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
-            {CATEGORIES.map((c, i) => {
-              const item = home.categories.items[c];
-              return (
-                <Reveal as="li" key={c} delay={i * 0.05} className={i === 0 ? "sm:col-span-2 lg:col-span-1" : undefined}>
-                  <Link
-                    href={categoryHref[c]}
-                    className="group flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-white transition hover:-tranzinc-y-1 hover:border-brand-500/50 hover:shadow-xl"
-                  >
-                    <div className="relative aspect-[4/3] bg-ink-900">
-                      <Image src={item.image} alt={L(categoryLabels[c])} fill sizes="(min-width:1024px) 20vw, 50vw" className="object-cover" />
-                    </div>
-                    <div className="flex flex-1 flex-col p-5">
-                      <h3 className="text-lg text-ink group-hover:text-brand-700">{L(categoryLabels[c])}</h3>
-                      <p className="mt-2 text-sm leading-6 text-muted">{L(item.body)}</p>
-                      <span className="mt-auto inline-flex items-center gap-1 pt-4 text-sm font-bold text-brand-700">
-                        {t("cta.learnMore")}
-                        <ArrowRight className="flip-rtl size-4" aria-hidden />
-                      </span>
-                    </div>
-                  </Link>
-                </Reveal>
-              );
-            })}
-          </ul>
+      {/* ------------------------------------------------ PRODUCT LINES: stacked gradient tabs */}
+      <section className="section on-dark relative overflow-hidden bg-navy-950 text-white" aria-labelledby="cat-title">
+        <div className="aurora pointer-events-none absolute inset-0" aria-hidden />
+        <div className="container-x relative">
+          <Reveal>
+            <SectionHeading id="cat-title" dark eyebrow={L(home.categories.eyebrow)} title={L(home.categories.title)} />
+          </Reveal>
+          <Reveal className="mt-12" delay={0.1}>
+            <ProductLines
+              items={CATEGORIES.map((c) => ({
+                id: c,
+                title: L(categoryLabels[c]),
+                body: L(home.categories.items[c].body),
+                image: home.categories.items[c].image,
+                href: categoryHref[c],
+              }))}
+              labels={{ tablist: L(home.categories.title), explore: t("cta.learnMore"), quote: t("cta.quote") }}
+            />
+          </Reveal>
         </div>
       </section>
 
@@ -188,15 +184,16 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
       </section>
 
       {/* ------------------------------------------------ COVERAGE */}
-      <section className="section on-dark bg-ink-950 text-white" aria-labelledby="cov-title">
-        <div className="container-x grid gap-12 lg:grid-cols-12 lg:items-center">
+      <section className="section on-dark relative overflow-hidden bg-navy-950 text-white" aria-labelledby="cov-title">
+        <div className="aurora pointer-events-none absolute inset-0 rotate-180" aria-hidden />
+        <div className="container-x relative grid gap-12 lg:grid-cols-12 lg:items-center">
           <div className="lg:col-span-6">
             <SectionHeading id="cov-title" dark eyebrow={L(home.coverage.eyebrow)} title={L(home.coverage.title)} intro={L(home.coverage.body)} />
             <h3 className="mt-10 text-sm font-bold uppercase tracking-widest text-brand-400 rtl:tracking-normal">{L(home.coverage.primary)}</h3>
             <ul className="mt-3 grid gap-3 sm:grid-cols-3">
               {primaryMarkets.map((m) => (
                 <li key={m}>
-                  <Link href={`/markets/${m}`} className="flex h-full items-center gap-3 rounded-2xl border border-brand-500/40 bg-brand-500/10 p-4 font-bold hover:bg-brand-500/20">
+                  <Link href={`/markets/${m}`} className="glass flex h-full items-center gap-3 rounded-2xl p-4 font-bold transition-[translate,background-color] duration-300 hover:-translate-y-0.5 hover:bg-white/10">
                     <span className="text-2xl" aria-hidden>{marketFlags[m]}</span>
                     {marketNames[m][locale]}
                   </Link>
@@ -244,10 +241,10 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
             </Link>
           </div>
           <ul className="mt-10 grid gap-6 md:grid-cols-3">
-            {news.slice(0, 3).map((p) => (
-              <li key={p.slug}>
+            {news.slice(0, 3).map((p, i) => (
+              <Reveal as="li" key={p.slug} delay={i * 0.08} from="scale">
                 <NewsCard post={p} locale={locale} />
-              </li>
+              </Reveal>
             ))}
           </ul>
         </div>

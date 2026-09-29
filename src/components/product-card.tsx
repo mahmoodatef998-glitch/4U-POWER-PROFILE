@@ -22,7 +22,7 @@ export function ProductCard({ product, headingLevel = "h3" }: { product: Product
   const href = `/products/${product.slug}`;
 
   return (
-    <article className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-white shadow-[0_1px_2px_rgb(10_10_11/0.04)] transition duration-300 hover:-tranzinc-y-1 hover:shadow-[0_24px_48px_-24px_rgb(10_10_11/0.35)]">
+    <article className={`line-${product.category} grad-border group relative flex h-full flex-col overflow-hidden rounded-3xl border border-line bg-white shadow-[0_1px_2px_rgb(10_10_11/0.04)] transition-[translate,box-shadow] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1 hover:shadow-[0_24px_48px_-24px_rgb(10_10_11/0.35)]`}>
       <div className="relative aspect-[4/3] overflow-hidden bg-ink-900">
         {product.images[0] && (
           <Image
@@ -30,7 +30,7 @@ export function ProductCard({ product, headingLevel = "h3" }: { product: Product
             alt={name}
             fill
             sizes="(min-width:1024px) 33vw, (min-width:640px) 50vw, 100vw"
-            className="object-cover transition duration-500 group-hover:scale-[1.03]"
+            className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.04]"
           />
         )}
         <div className="absolute start-3 top-3 flex flex-wrap gap-1.5">
@@ -38,7 +38,7 @@ export function ProductCard({ product, headingLevel = "h3" }: { product: Product
             {categoryLabels[product.category][locale]}
           </span>
           {kva && (
-            <span className="inline-flex items-center gap-1 rounded-full bg-brand-500 px-2.5 py-1 text-xs font-extrabold text-ink-950">
+            <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-extrabold text-ink-950" style={{ background: "var(--grad)" }}>
               <Gauge className="size-3.5" aria-hidden />
               <span dir="ltr">{kva}</span>
             </span>
