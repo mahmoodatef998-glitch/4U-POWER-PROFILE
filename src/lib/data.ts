@@ -9,7 +9,7 @@ import { newsPosts as seedNews } from "@/content/news";
 
 /**
  * Content access layer. Reads from Supabase when configured, otherwise falls back to the bundled
- * seed content (same data as supabase/seed.sql) so the site always renders.
+ * seed content (same data as supabase/seed/*.sql) so the site always renders.
  */
 async function fromSupabase<T>(table: string, order: { column: string; ascending: boolean }): Promise<T[] | null> {
   const sb = getPublicClient();

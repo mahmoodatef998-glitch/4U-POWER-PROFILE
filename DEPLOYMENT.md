@@ -12,7 +12,11 @@ This takes about 45 minutes. You need: a GitHub account with access to this repo
    - Save the database password somewhere safe.
 2. When the project is ready, open **SQL Editor** → **New query**.
 3. Open the file `supabase/migrations/20260929000000_init.sql` from this repository, copy **all** of it, paste it into the editor and click **Run**. You should see "Success".
-4. Open another **New query**, paste all of `supabase/seed.sql`, and click **Run**. This loads the 16 products, 9 projects, 6 news articles and 3 *unpublished* placeholder testimonials.
+4. Load the content: run the 5 files in `supabase/seed/` **one at a time, in order**. For each one: **New query**, paste the whole file, **Run**.
+   - `01_products.sql` → `02_projects_testimonials.sql` → `03_news_1.sql` → `04_news_2.sql` → `05_news_3.sql`
+   - Together they load 16 products, 9 projects, 6 articles and 3 *unpublished* placeholder testimonials.
+   - Every file is safe to re-run (no duplicates). If one fails, just run it again.
+   - Tip: open the file on GitHub → **Raw** → Ctrl+A / Ctrl+C, so the paste is never cut short.
 5. Go to **Project Settings → API** and copy three values:
    - **Project URL** → `NEXT_PUBLIC_SUPABASE_URL`
    - **anon public** key → `NEXT_PUBLIC_SUPABASE_ANON_KEY`

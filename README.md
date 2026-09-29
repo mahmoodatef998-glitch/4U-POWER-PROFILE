@@ -29,7 +29,7 @@ The site runs with **zero configuration**: content comes from `src/content/*`, a
 | `npm test` | kVA calculator unit checks (sizing math, product & ATS matching for 10–2500 kVA) |
 | `npm run check:seo` | Title/description length check for all static pages |
 | `npm run audit:seo -- http://localhost:3000` | Crawls every sitemap URL on a running server. Checks the title, meta description, a single H1, heading order, canonical, hreflang, OG/Twitter tags, JSON-LD types, image alt text, landmarks and `lang`/`dir` |
-| `npm run seed:sql` | Regenerates `supabase/seed.sql` from `src/content/*` |
+| `npm run seed:sql` | Regenerates `supabase/seed/*.sql` from `src/content/*` |
 | `python3 scripts/generate-illustrations.py` | Regenerates the placeholder SVG illustrations |
 
 ## Project map
@@ -48,7 +48,7 @@ src/
   lib/analytics.ts        trackEvent() → GA4 / GTM dataLayer / Meta Pixel
   messages/en.json, ar.json   UI strings
 supabase/migrations/      schema + RLS
-supabase/seed.sql         generated seed data
+supabase/seed/*.sql       generated seed data (run in order)
 ```
 
 ## Conversion tracking (for Google Ads)
