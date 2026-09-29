@@ -41,6 +41,8 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
       {/* ------------------------------------------------ HERO */}
       <section className="on-dark relative isolate overflow-hidden bg-navy-950 text-white">
         <div className="absolute inset-0 -z-10">
+          {/* Decorative art is desktop-only so the mobile LCP is the H1 text, not a background image. */}
+          <div className="absolute inset-0 hidden md:block">
           <Image
             src="/images/hero/hero-genset.svg"
             alt=""
@@ -50,6 +52,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
             sizes="100vw"
             className="animate-kenburns object-cover object-[70%_center] opacity-60 lg:opacity-90"
           />
+          </div>
           <div className="absolute inset-0 bg-gradient-to-r from-navy-950 via-navy-950/85 to-navy-950/20 rtl:bg-gradient-to-l" />
           <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-navy-950" />
         </div>
@@ -91,7 +94,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
               <li key={b}>
                 <Link
                   href={{ pathname: "/products", query: { engine: b } }}
-                  className="text-xl font-extrabold tracking-tight text-slate-400 transition hover:text-navy-900 sm:text-2xl"
+                  className="text-xl font-extrabold tracking-tight text-slate-500 transition hover:text-navy-900 sm:text-2xl"
                 >
                   {engineBrandLabels[b]?.[locale]}
                 </Link>
@@ -116,7 +119,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
               ))}
             </ul>
             <Link href="/about" className="mt-8 inline-flex items-center gap-2 font-bold text-amber-700 hover:underline">
-              {t("cta.learnMore")}
+              {locale === "ar" ? "تعرّف على فوريو باور جينيريشن" : "About 4U Power Generation"}
               <ArrowRight className="flip-rtl size-4" aria-hidden />
             </Link>
           </Reveal>
@@ -125,7 +128,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
               {home.stats.map((s) => (
                 <div key={s.label.en} className="flex flex-col-reverse rounded-2xl border border-line bg-surface p-6">
                   <dt className="mt-2 text-sm font-semibold text-muted">{L(s.label)}</dt>
-                  <dd className="text-4xl font-extrabold text-ink sm:text-5xl rtl:text-right" dir="ltr">
+                  <dd className="whitespace-nowrap text-3xl font-extrabold text-ink sm:text-5xl rtl:text-right" dir="ltr">
                     <Counter to={s.value} suffix={s.suffix} locale={locale} />
                   </dd>
                 </div>

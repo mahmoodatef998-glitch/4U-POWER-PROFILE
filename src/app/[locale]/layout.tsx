@@ -18,9 +18,12 @@ import type { Locale } from "@/lib/utils";
 const manrope = Manrope({ subsets: ["latin"], variable: "--font-manrope", display: "swap" });
 const plexArabic = IBM_Plex_Sans_Arabic({
   subsets: ["arabic"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["400", "600", "700"],
   variable: "--font-plex-arabic",
-  display: "swap",
+  // "optional" = no late font swap, so zero layout shift on Arabic pages. First-time visitors may see the
+  // device's Arabic system font; the webfont is cached and used from the next page view.
+  display: "optional",
+  // Not preloaded: English pages must not pay for Arabic font files.
   preload: false,
 });
 

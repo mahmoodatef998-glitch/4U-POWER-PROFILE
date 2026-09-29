@@ -21,22 +21,33 @@ type Props = {
   calcSubmissionId?: string | null;
   defaultMessage?: string;
   compact?: boolean;
+  /** slug → localized name; when set, a `?product=` URL param pre-fills the form (keeps the page static). */
+  productNames?: Record<string, string>;
 };
 
 const initial: LeadState = { status: "idle" };
 
-export function LeadForm({ source = "contact_form", productSlug, productName, calculatedKva, calcSubmissionId, defaultMessage, compact }: Props) {
+export function LeadForm({ source: sourceProp = "contact_form", productSlug: slugProp, productName: nameProp, calculatedKva, calcSubmissionId, defaultMessage, compact, productNames }: Props) {
   const t = useTranslations("form");
   const locale = useLocale() as Locale;
   const [state, action, pending] = useActionState(submitLead, initial);
   const [utm, setUtm] = useState<Record<string, string>>({});
   const [page, setPage] = useState("");
   const uid = useId();
+  const [urlProduct, setUrlProduct] = useState<string | null>(null);
 
   useEffect(() => {
     setUtm(readUtm());
     setPage(window.location.pathname);
-  }, []);
+    if (productNames) {
+      const slug = new URLSearchParams(window.location.search).get("product");
+      if (slug && productNames[slug]) setUrlProduct(slug);
+    }
+  }, [productNames]);
+
+  const productSlug = slugProp ?? urlProduct ?? undefined;
+  const productName = nameProp ?? (urlProduct && productNames ? productNames[urlProduct] : undefined);
+  const source = urlProduct && sourceProp === "contact_form" ? "quote_form" : sourceProp;
 
   useEffect(() => {
     if (state.status === "success") {
@@ -100,6 +111,7 @@ export function LeadForm({ source = "contact_form", productSlug, productName, ca
       <div>
         <label htmlFor={`${uid}-message`} className={label}>{t("message")}</label>
         <textarea
+          key={productName ?? "none"}
           id={`${uid}-message`}
           name="message"
           rows={compact ? 3 : 4}

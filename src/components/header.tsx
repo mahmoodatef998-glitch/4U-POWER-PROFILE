@@ -12,14 +12,14 @@ import { LogoMark } from "./icons";
 import { WhatsAppButton } from "./cta-buttons";
 
 const NAV = [
-  { href: "/generators", key: "generators" },
-  { href: "/ats-panels", key: "ats" },
-  { href: "/switchgear", key: "switchgear" },
-  { href: "/products", key: "products" },
-  { href: "/calculator", key: "calculator" },
+  { href: "/generators", key: "generators", top: true },
+  { href: "/ats-panels", key: "ats", top: true },
+  { href: "/switchgear", key: "switchgear", top: true },
+  { href: "/products", key: "products", top: true },
+  { href: "/calculator", key: "calculator", top: true },
   { href: "/projects", key: "projects" },
   { href: "/markets", key: "markets" },
-  { href: "/news", key: "news" },
+  { href: "/news", key: "news", top: true },
   { href: "/about", key: "about" },
   { href: "/contact", key: "contact" },
 ] as const;
@@ -94,13 +94,13 @@ export function Header() {
 
         <nav aria-label={t("primary")} className="hidden xl:block">
           <ul className="flex items-center gap-0.5">
-            {NAV.filter((n) => n.key !== "contact").map((n) => (
+            {NAV.filter((n) => "top" in n).map((n) => (
               <li key={n.href}>
                 <Link
                   href={n.href}
                   aria-current={isActive(n.href) ? "page" : undefined}
                   className={cn(
-                    "rounded-full px-3 py-2 text-sm font-semibold text-white/80 transition hover:bg-white/5 hover:text-white",
+                    "whitespace-nowrap rounded-full px-3 py-2 text-sm font-semibold text-white/80 transition hover:bg-white/5 hover:text-white",
                     isActive(n.href) && "text-amber-400 hover:text-amber-400",
                   )}
                 >
@@ -116,7 +116,7 @@ export function Header() {
           <a
             href={telUrl}
             onClick={() => trackEvent("call_click", { location: "header" })}
-            className="hidden h-10 items-center gap-2 rounded-full px-3 text-sm font-bold text-white hover:bg-white/10 lg:inline-flex"
+            className="hidden h-10 items-center gap-2 whitespace-nowrap rounded-full px-3 text-sm font-bold text-white hover:bg-white/10 2xl:inline-flex"
           >
             <Phone className="size-4 text-amber-400" aria-hidden />
             <span dir="ltr">{company.phone}</span>
@@ -124,7 +124,7 @@ export function Header() {
           <WhatsAppButton location="header" size="sm" className="hidden sm:inline-flex" />
 
           <Dialog.Root open={open} onOpenChange={setOpen}>
-            <Dialog.Trigger className="grid size-11 place-items-center rounded-full text-white hover:bg-white/10 xl:hidden" aria-label={t("menu")}>
+            <Dialog.Trigger className="grid size-11 place-items-center rounded-full text-white hover:bg-white/10" aria-label={t("menu")}>
               <Menu className="size-6" aria-hidden />
             </Dialog.Trigger>
             <Dialog.Portal>

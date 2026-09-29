@@ -1,0 +1,14 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "nextjs",
+  "headers": [
+    {
+      "source": "/datasheets/(.*)",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=86400" }]
+    }
+  ],
+  "redirects": [
+    { "source": "/index.html", "destination": "/en", "permanent": true },
+    { "source": "/home", "destination": "/en", "permanent": true }
+  ]
+}

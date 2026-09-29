@@ -9,6 +9,16 @@ const LAT = [38, -30] as const;
 const px = (lng: number) => ((lng - LON[0]) / (LON[1] - LON[0])) * W;
 const py = (lat: number) => ((LAT[0] - lat) / (LAT[0] - LAT[1])) * H;
 
+/** Label placement per market so nearby Gulf labels never collide. */
+const LABEL: Record<MarketCode, { dx: number; dy: number; anchor: "start" | "end" | "middle" }> = {
+  uae: { dx: 0, dy: 30, anchor: "middle" },
+  qatar: { dx: -2, dy: -16, anchor: "middle" },
+  "saudi-arabia": { dx: -14, dy: 5, anchor: "end" },
+  iraq: { dx: 14, dy: 5, anchor: "start" },
+  kenya: { dx: 14, dy: 5, anchor: "start" },
+  "south-africa": { dx: 14, dy: 5, anchor: "start" },
+};
+
 /** Stylised export-route map: Sharjah hub → six markets, primary markets emphasised. */
 export function CoverageMap({ locale, primary }: { locale: Locale; primary: MarketCode[] }) {
   const hub = marketGeo.uae;
@@ -60,15 +70,15 @@ export function CoverageMap({ locale, primary }: { locale: Locale; primary: Mark
         const y = py(g.lat);
         const isPrimary = primary.includes(c);
         const isHub = c === "uae";
-        const labelLeft = x > W * 0.6;
+        const lab = LABEL[c];
         return (
           <g key={c}>
             {isPrimary && <circle cx={x} cy={y} r="14" fill="#f5a524" opacity="0.18" />}
             <circle cx={x} cy={y} r={isHub ? 8 : isPrimary ? 6 : 4.5} fill={isPrimary ? "#f5a524" : "#c6d1e6"} stroke="#0a1426" strokeWidth="2" />
             <text
-              x={labelLeft ? x - 14 : x + 14}
-              y={y + 4}
-              textAnchor={labelLeft ? "end" : "start"}
+              x={x + lab.dx}
+              y={y + lab.dy}
+              textAnchor={lab.anchor}
               fontSize={isPrimary ? 15 : 13}
               fontWeight={isPrimary ? 800 : 600}
               fill={isPrimary ? "#ffffff" : "rgb(255 255 255 / 0.75)"}

@@ -8,9 +8,9 @@ export const newsPart1: NewsPost[] = [
     meta_title_en: "How to Choose the Right kVA Generator Size | 4U Power UAE",
     meta_title_ar: "كيف تختار حجم المولد المناسب بالكيلو فولت أمبير | فوريو باور",
     excerpt_en:
-      "Undersize a generator and it trips when the chiller starts; oversize it and you pay for fuel and wet-stacking you never needed. Here is the sizing method our engineers use.",
+      "Too small and it trips when the chiller starts; too big and you pay for fuel and wet-stacking. The step-by-step kVA sizing method our engineers use.",
     excerpt_ar:
-      "المولد الصغير يفصل عند تشغيل المكيف المركزي، والمولد الكبير يستهلك وقوداً ويتعرض لمشاكل التشغيل بحمل منخفض. هذه هي الطريقة التي يستخدمها مهندسونا لاختيار الحجم الصحيح.",
+      "المولد الصغير يفصل عند تشغيل التكييف، والكبير يهدر الوقود ويتضرر بالحمل المنخفض. إليك طريقة مهندسينا خطوة بخطوة لاختيار قدرة المولد الصحيحة.",
     cover_image: "/images/news/kva-sizing.svg",
     published_at: "2026-06-02T08:00:00Z",
     is_published: true,
@@ -114,7 +114,7 @@ Our free [kVA calculator](/en/calculator) runs through these steps for you and s
     meta_title_en: "ATS Panels Explained: Why Every Generator Needs One | 4U",
     meta_title_ar: "شرح لوحات ATS ولماذا يحتاجها كل مولد | فوريو باور",
     excerpt_en:
-      "A generator without an automatic transfer switch is just an engine waiting for someone to arrive. What an ATS does, how to size one, and the mistakes we see most often in the UAE.",
+      "What an automatic transfer switch does, how to size an ATS panel for your generator, and the installation mistakes we see most often across the UAE.",
     excerpt_ar:
       "المولد بدون لوحة تحويل أوتوماتيكي مجرد محرك ينتظر أن يأتي أحد لتشغيله. ما وظيفة لوحة ATS وكيف تختار سعتها وما الأخطاء الأكثر شيوعاً في الإمارات.",
     cover_image: "/images/news/ats-explained.svg",
@@ -212,9 +212,9 @@ Browse our [ATS panel range](/en/ats-panels) from 63 A to 4000 A, or use the [kV
     meta_title_en: "Perkins vs Cummins vs Kubota Generators in the UAE | 4U Power",
     meta_title_ar: "بيركنز أم كمنز أم كوبوتا؟ أفضل محرك مولد في الإمارات",
     excerpt_en:
-      "The engine is roughly half the cost of a generator and most of its reputation. An honest comparison of the brands we supply — and where each one makes the most sense.",
+      "The engine is half a generator's cost and most of its reputation. An honest comparison of Perkins, Cummins, Kubota and Volvo Penta for UAE sites.",
     excerpt_ar:
-      "المحرك يمثل تقريباً نصف تكلفة المولد ومعظم سمعته. مقارنة صريحة بين الماركات التي نوردها، ومتى يكون كل منها الخيار الأنسب.",
+      "المحرك يمثل نصف تكلفة المولد ومعظم سمعته. مقارنة صريحة بين بيركنز وكمنز وكوبوتا وفولفو بنتا، ومتى تكون كل ماركة الخيار الأنسب لموقعك في الإمارات.",
     cover_image: "/images/news/engine-brands.svg",
     published_at: "2026-07-01T08:00:00Z",
     is_published: true,

@@ -113,7 +113,7 @@ export default async function MarketPage({ params }: Props) {
         </section>
       )}
 
-      {m.faq.length > 0 && <FaqBlock locale={locale} items={m.faq} title={ar ? "الأسئلة الشائعة" : "Frequently asked questions"} eyebrow="FAQ" className="bg-white" />}
+      {m.faq.length > 0 && <FaqBlock locale={locale} items={m.faq} title={ar ? "الأسئلة الشائعة" : "Frequently asked questions"} eyebrow={locale === "ar" ? "أسئلة وأجوبة" : "FAQ"} className="bg-white" />}
       <CtaBanner
         title={ar ? `اطلب عرض سعر للتوريد إلى ${name}` : `Get a quotation for delivery to ${name}`}
         body={ar ? "أرسل القدرة ومدينة التسليم وسنرد بالخيارات والسعر ومدة الشحن." : "Send the kVA and delivery city — we reply with options, pricing and shipping time."}

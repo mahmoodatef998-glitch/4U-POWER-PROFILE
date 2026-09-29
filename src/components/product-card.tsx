@@ -83,7 +83,7 @@ export function ProductCard({ product, headingLevel = "h3" }: { product: Product
             rel="noopener noreferrer"
             onClick={() => trackEvent("whatsapp_click", { location: "product_card", product: product.slug })}
             aria-label={`${t("cta.whatsapp")} — ${name}`}
-            className="grid size-10 shrink-0 place-items-center rounded-full bg-[#128C4B] text-white transition hover:bg-[#0f7a41]"
+            className="grid size-10 shrink-0 place-items-center rounded-full bg-[#0B7038] text-white transition hover:bg-[#095c2e]"
           >
             <WhatsAppIcon className="size-5" />
           </a>

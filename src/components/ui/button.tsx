@@ -9,7 +9,7 @@ export const buttonVariants = cva(
     variants: {
       variant: {
         primary: "bg-amber-500 text-navy-950 shadow-[0_8px_24px_-8px_rgb(245_165_36/0.6)] hover:bg-amber-400",
-        whatsapp: "bg-[#128C4B] text-white hover:bg-[#0f7a41] shadow-[0_8px_24px_-10px_rgb(18_140_75/0.7)]",
+        whatsapp: "bg-[#0B7038] text-white hover:bg-[#095c2e] shadow-[0_8px_24px_-10px_rgb(18_140_75/0.7)]",
         dark: "bg-navy-900 text-white hover:bg-navy-800",
         outline: "border border-navy-900/15 bg-white text-ink hover:border-navy-900/40",
         ghostDark: "border border-white/20 bg-white/5 text-white backdrop-blur hover:bg-white/10",

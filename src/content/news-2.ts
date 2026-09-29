@@ -8,9 +8,9 @@ export const newsPart2: NewsPost[] = [
     meta_title_en: "Diesel vs Gas Generators for the GCC Climate | 4U Power UAE",
     meta_title_ar: "مولدات الديزل أم الغاز لمناخ الخليج؟ مقارنة عملية",
     excerpt_en:
-      "Diesel still dominates standby power in the Gulf, but gas and hybrid systems make sense on the right site. A practical comparison for 50 °C summers, dust and long run hours.",
+      "Diesel dominates Gulf standby power, but gas and hybrid systems win on the right site. A practical comparison for 50 °C summers, dust and long run hours.",
     excerpt_ar:
-      "لا يزال الديزل يهيمن على الطاقة الاحتياطية في الخليج، لكن الغاز والأنظمة الهجينة منطقية في المواقع المناسبة. مقارنة عملية لصيف 50 درجة والغبار وساعات التشغيل الطويلة.",
+      "يهيمن الديزل على الطاقة الاحتياطية في الخليج، لكن الغاز والأنظمة الهجينة أنسب لبعض المواقع. مقارنة عملية لصيف 50 درجة والغبار والتشغيل الطويل.",
     cover_image: "/images/news/diesel-vs-gas.svg",
     published_at: "2026-07-15T08:00:00Z",
     is_published: true,
@@ -98,7 +98,7 @@ Not sure which fits? Send us your load profile and running hours on WhatsApp and
     excerpt_en:
       "Heat, dust and humidity are hard on LV switchgear. A practical monthly, quarterly and annual checklist your facility team can start using today.",
     excerpt_ar:
-      "الحرارة والغبار والرطوبة تؤثر بشدة على لوحات الجهد المنخفض. قائمة عملية شهرية وربع سنوية وسنوية يمكن لفريق المنشأة البدء بها اليوم.",
+      "الحرارة والغبار والرطوبة تؤثر بشدة على لوحات الجهد المنخفض. قائمة صيانة عملية شهرية وربع سنوية وسنوية يمكن لفريق المنشأة في الإمارات البدء بها اليوم.",
     cover_image: "/images/news/switchgear-maintenance.svg",
     published_at: "2026-08-05T08:00:00Z",
     is_published: true,
@@ -188,7 +188,7 @@ Send us photos of your existing panels and nameplates on WhatsApp and we will ad
     meta_title_en: "Generator Export from UAE to Saudi Arabia & Iraq | 4U Power",
     meta_title_ar: "تصدير المولدات من الإمارات إلى السعودية والعراق | فوريو باور",
     excerpt_en:
-      "Why we built our business in SAIF Zone, Sharjah, and how we deliver generators and panels to the UAE, Saudi Arabia and Iraq — plus Qatar, Kenya and South Africa.",
+      "Why we are based in SAIF Zone, Sharjah, and how we deliver generators and panels to the UAE, Saudi Arabia and Iraq — plus Qatar, Kenya and South Africa.",
     excerpt_ar:
       "لماذا أسسنا أعمالنا في المنطقة الحرة لمطار الشارقة، وكيف نوصل المولدات واللوحات إلى الإمارات والسعودية والعراق، إضافة إلى قطر وكينيا وجنوب أفريقيا.",
     cover_image: "/images/news/export-markets.svg",

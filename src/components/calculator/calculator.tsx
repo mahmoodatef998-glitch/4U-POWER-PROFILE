@@ -422,7 +422,7 @@ export function Calculator({ products, variant = "full" }: { products: Product[]
                       trackEvent("calculator_quote_click", { kva: result.recommendedKva, product: p.slug, channel: "whatsapp" });
                       trackEvent("whatsapp_click", { location: "calculator_match", product: p.slug });
                     }}
-                    className="mt-3 inline-flex items-center gap-1.5 text-sm font-bold text-[#0f7a41] hover:underline"
+                    className="mt-3 inline-flex items-center gap-1.5 text-sm font-bold text-[#095c2e] hover:underline"
                   >
                     <WhatsAppIcon className="size-4" />
                     {t("quoteThis")}
@@ -512,6 +512,7 @@ export function Calculator({ products, variant = "full" }: { products: Product[]
                 disabled={idx > step && !valid}
                 onClick={() => (valid || idx === 1) && setStep(idx)}
                 aria-current={current ? "step" : undefined}
+                aria-label={`${idx}. ${s}`}
                 className="group w-full text-start disabled:cursor-not-allowed"
               >
                 <span className={cn("block h-1.5 rounded-full transition", current || done ? "bg-amber-500" : "bg-slate-200")} />

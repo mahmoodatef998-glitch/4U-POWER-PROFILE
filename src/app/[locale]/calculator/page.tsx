@@ -79,7 +79,7 @@ export default async function CalculatorPage({ params }: { params: Promise<{ loc
           </aside>
         </div>
       </section>
-      <FaqBlock locale={locale} items={[homeFaq[0]!, homeFaq[5]!, generatorsFaq[1]!, atsFaq[0]!]} title={ar ? "أسئلة حول اختيار الحجم" : "Sizing questions"} eyebrow="FAQ" className="bg-white" />
+      <FaqBlock locale={locale} items={[homeFaq[0]!, homeFaq[5]!, generatorsFaq[1]!, atsFaq[0]!]} title={ar ? "أسئلة حول اختيار الحجم" : "Sizing questions"} eyebrow={locale === "ar" ? "أسئلة وأجوبة" : "FAQ"} className="bg-white" />
     </>
   );
 }

@@ -4,7 +4,7 @@ import { CallButton, WhatsAppButton } from "@/components/cta-buttons";
 import { LeadForm } from "@/components/lead-form";
 import { PageHero } from "@/components/page-hero";
 import { pageSeo } from "@/content/seo";
-import { products } from "@/content/products";
+import { getProducts } from "@/lib/data";
 import { buildMetadata } from "@/lib/seo";
 import { company, telUrl } from "@/lib/site";
 import type { Locale } from "@/lib/utils";
@@ -16,20 +16,12 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: L
   return buildMetadata({ locale, path: "/contact", title: pageSeo.contact.title[locale], description: pageSeo.contact.description[locale] });
 }
 
-export default async function ContactPage({
-  params,
-  searchParams,
-}: {
-  params: Promise<{ locale: Locale }>;
-  searchParams: Promise<{ product?: string }>;
-}) {
+export default async function ContactPage({ params }: { params: Promise<{ locale: Locale }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
-  const { product: productSlug } = await searchParams;
   const t = await getTranslations();
   const ar = locale === "ar";
-  const product = products.find((p) => p.slug === productSlug);
-  const productName = product ? (ar ? product.name_ar : product.name_en) : undefined;
+  const productNames = Object.fromEntries((await getProducts()).map((p) => [p.slug, ar ? p.name_ar : p.name_en]));
   const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent(company.mapQuery)}&ll=${company.geo.lat},${company.geo.lng}&z=14&output=embed&hl=${locale}`;
 
   const nap: { icon: typeof MapPin; label: string; value: React.ReactNode }[] = [
@@ -79,7 +71,7 @@ export default async function ContactPage({
               <h2 className="text-2xl">{t("form.title")}</h2>
               <p className="mt-2 text-sm text-muted">{t("common.responseTime")}</p>
               <div className="mt-6">
-                <LeadForm source={product ? "quote_form" : "contact_form"} productSlug={product?.slug} productName={productName} />
+                <LeadForm productNames={productNames} />
               </div>
             </div>
           </div>

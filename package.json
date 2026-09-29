@@ -10,7 +10,8 @@
     "typecheck": "tsc --noEmit",
     "seed:sql": "tsx scripts/generate-seed.ts",
     "test": "tsx scripts/test-calculator.ts",
-    "check:seo": "tsx scripts/seo-lengths.ts"
+    "check:seo": "tsx scripts/seo-lengths.ts",
+    "audit:seo": "node scripts/seo-audit.mjs"
   },
   "dependencies": {
     "@radix-ui/react-accordion": "^1.2.20",
@@ -38,8 +39,10 @@
     "@types/node": "^26.6.3",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
+    "cheerio": "^1.2.0",
     "eslint": "^9.39.5",
     "eslint-config-next": "15.5",
+    "lighthouse": "^13.5.0",
     "postcss": "^8.5.28",
     "tailwindcss": "^4.3.3",
     "tsx": "^4.23.15",

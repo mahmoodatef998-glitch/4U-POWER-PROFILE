@@ -138,7 +138,7 @@ export async function PillarPage({
         </div>
       </section>
 
-      <FaqBlock locale={locale} items={faq} title={faqTitle} eyebrow="FAQ" />
+      <FaqBlock locale={locale} items={faq} title={faqTitle} eyebrow={locale === "ar" ? "أسئلة وأجوبة" : "FAQ"} />
 
       {related.length > 0 && (
         <section className="section bg-white" aria-labelledby="rel-title">
