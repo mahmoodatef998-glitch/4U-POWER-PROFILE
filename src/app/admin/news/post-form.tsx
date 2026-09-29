@@ -38,7 +38,7 @@ export function PostForm() {
           <input type="datetime-local" name="published_at" className="mt-1 block w-full rounded-xl border border-line p-3 font-normal" />
         </label>
       </div>
-      <button disabled={pending} className="justify-self-start rounded-full bg-amber-500 px-6 py-3 font-bold text-navy-950 disabled:opacity-50">
+      <button disabled={pending} className="justify-self-start rounded-full bg-brand-500 px-6 py-3 font-bold text-ink-950 disabled:opacity-50">
         {pending ? "Publishing…" : "Publish post"}
       </button>
     </form>

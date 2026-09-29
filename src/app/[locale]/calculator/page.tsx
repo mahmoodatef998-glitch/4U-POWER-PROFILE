@@ -62,7 +62,7 @@ export default async function CalculatorPage({ params }: { params: Promise<{ loc
             <ol className="mt-6 space-y-5">
               {steps.map(([title, body], i) => (
                 <li key={title} className="flex gap-4">
-                  <span className="grid size-9 shrink-0 place-items-center rounded-full bg-navy-900 font-extrabold text-amber-400">{i + 1}</span>
+                  <span className="grid size-9 shrink-0 place-items-center rounded-full bg-ink-900 font-extrabold text-brand-400">{i + 1}</span>
                   <div>
                     <h3 className="font-bold text-ink">{title}</h3>
                     <p className="mt-1 text-sm leading-6 text-muted">{body}</p>

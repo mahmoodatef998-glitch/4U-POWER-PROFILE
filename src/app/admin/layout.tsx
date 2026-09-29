@@ -10,13 +10,13 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <body className="min-h-screen bg-surface font-sans text-ink">
-        <header className="bg-navy-950 text-white">
+        <header className="bg-ink-950 text-white">
           <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
             <span className="font-extrabold">4U Admin</span>
             <nav className="flex gap-4 text-sm font-semibold">
-              <Link href="/admin" className="hover:text-amber-400">Leads</Link>
-              <Link href="/admin/news" className="hover:text-amber-400">News</Link>
-              <Link href="/en" className="hover:text-amber-400">View site ↗</Link>
+              <Link href="/admin" className="hover:text-brand-400">Leads</Link>
+              <Link href="/admin/news" className="hover:text-brand-400">News</Link>
+              <Link href="/en" className="hover:text-brand-400">View site ↗</Link>
             </nav>
           </div>
         </header>

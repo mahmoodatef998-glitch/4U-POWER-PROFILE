@@ -36,8 +36,8 @@ export function CoverageMap({ locale, primary }: { locale: Locale; primary: Mark
           <circle cx="1.5" cy="1.5" r="1.2" fill="rgb(255 255 255 / 0.12)" />
         </pattern>
         <radialGradient id="glow">
-          <stop offset="0" stopColor="#f5a524" stopOpacity="0.55" />
-          <stop offset="1" stopColor="#f5a524" stopOpacity="0" />
+          <stop offset="0" stopColor="#ffd426" stopOpacity="0.55" />
+          <stop offset="1" stopColor="#ffd426" stopOpacity="0" />
         </radialGradient>
       </defs>
       <rect width={W} height={H} fill="url(#dots)" rx="24" />
@@ -58,7 +58,7 @@ export function CoverageMap({ locale, primary }: { locale: Locale; primary: Mark
               key={c}
               d={`M${hx},${hy} Q${mx},${my} ${x},${y}`}
               fill="none"
-              stroke={isPrimary ? "#f5a524" : "rgb(255 255 255 / 0.35)"}
+              stroke={isPrimary ? "#ffd426" : "rgb(255 255 255 / 0.35)"}
               strokeWidth={isPrimary ? 2 : 1.2}
               strokeDasharray={isPrimary ? undefined : "5 5"}
             />
@@ -73,8 +73,8 @@ export function CoverageMap({ locale, primary }: { locale: Locale; primary: Mark
         const lab = LABEL[c];
         return (
           <g key={c}>
-            {isPrimary && <circle cx={x} cy={y} r="14" fill="#f5a524" opacity="0.18" />}
-            <circle cx={x} cy={y} r={isHub ? 8 : isPrimary ? 6 : 4.5} fill={isPrimary ? "#f5a524" : "#c6d1e6"} stroke="#0a1426" strokeWidth="2" />
+            {isPrimary && <circle cx={x} cy={y} r="14" fill="#ffd426" opacity="0.18" />}
+            <circle cx={x} cy={y} r={isHub ? 8 : isPrimary ? 6 : 4.5} fill={isPrimary ? "#ffd426" : "#d4d4d8"} stroke="#0a0a0b" strokeWidth="2" />
             <text
               x={x + lab.dx}
               y={y + lab.dy}

@@ -50,17 +50,17 @@ export default async function MarketsPage({ params }: { params: Promise<{ locale
                   <Link
                     href={`/markets/${m.code}`}
                     className={cn(
-                      "group flex h-full flex-col rounded-2xl border p-6 transition hover:-translate-y-1 hover:shadow-xl",
-                      primary ? "border-amber-500/40 bg-amber-50/60" : "border-line bg-white",
+                      "group flex h-full flex-col rounded-2xl border p-6 transition hover:-tranzinc-y-1 hover:shadow-xl",
+                      primary ? "border-brand-500/40 bg-brand-50/60" : "border-line bg-white",
                     )}
                   >
                     <span className="text-4xl" aria-hidden>{marketFlags[m.code]}</span>
-                    <span className="mt-3 text-xs font-bold uppercase tracking-widest text-amber-700 rtl:tracking-normal">
+                    <span className="mt-3 text-xs font-bold uppercase tracking-widest text-brand-700 rtl:tracking-normal">
                       {pick(primary ? home.coverage.primary : home.coverage.secondary, locale)}
                     </span>
                     <h2 className="mt-1 text-xl text-ink">{marketNames[m.code][locale]}</h2>
                     <p className="mt-3 flex-1 text-sm leading-6 text-muted">{pick(m.focus, locale)}</p>
-                    <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-bold text-amber-700">
+                    <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-bold text-brand-700">
                       {t("cta.learnMore")}
                       <ArrowRight className="flip-rtl size-4" aria-hidden />
                     </span>

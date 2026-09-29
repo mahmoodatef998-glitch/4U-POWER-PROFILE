@@ -37,8 +37,8 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
         </>
       ),
     },
-    { icon: Phone, label: ar ? "الهاتف / واتساب" : "Phone / WhatsApp", value: <a href={telUrl} dir="ltr" className="font-bold text-ink hover:text-amber-700">{company.phone}</a> },
-    { icon: Mail, label: ar ? "البريد الإلكتروني" : "Email", value: <a href={`mailto:${company.email}`} className="font-bold text-ink hover:text-amber-700">{company.email}</a> },
+    { icon: Phone, label: ar ? "الهاتف / واتساب" : "Phone / WhatsApp", value: <a href={telUrl} dir="ltr" className="font-bold text-ink hover:text-brand-700">{company.phone}</a> },
+    { icon: Mail, label: ar ? "البريد الإلكتروني" : "Email", value: <a href={`mailto:${company.email}`} className="font-bold text-ink hover:text-brand-700">{company.email}</a> },
     { icon: Clock, label: ar ? "ساعات العمل" : "Working hours", value: ar ? "الاثنين – السبت، 8:00 ص – 6:00 م (بتوقيت الإمارات)" : "Monday – Saturday, 8:00 am – 6:00 pm (GST)" },
   ];
 
@@ -81,10 +81,10 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
               <ul className="mt-6 space-y-5">
                 {nap.map(({ icon: Icon, label, value }) => (
                   <li key={label} className="flex gap-4">
-                    <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-navy-900 text-amber-400">
+                    <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-ink-900 text-brand-400">
                       <Icon className="size-5" aria-hidden />
                     </span>
-                    <div className="text-sm leading-6 text-slate-700">
+                    <div className="text-sm leading-6 text-zinc-700">
                       <p className="font-semibold text-muted">{label}</p>
                       <div>{value}</div>
                     </div>

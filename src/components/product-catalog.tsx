@@ -61,9 +61,9 @@ export function ProductCatalog({ products }: { products: Product[] }) {
   const chip = (active: boolean) =>
     cn(
       "rounded-full border px-3.5 py-2 text-sm font-semibold transition",
-      active ? "border-navy-900 bg-navy-900 text-white" : "border-line bg-white text-slate-700 hover:border-slate-400",
+      active ? "border-ink-900 bg-ink-900 text-white" : "border-line bg-white text-zinc-700 hover:border-zinc-400",
     );
-  const select = "mt-2 block w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-sm font-semibold focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/30";
+  const select = "mt-2 block w-full rounded-xl border border-zinc-300 bg-white px-3 py-2.5 text-sm font-semibold focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30";
 
   return (
     <div className="grid gap-8 lg:grid-cols-12">
@@ -71,10 +71,10 @@ export function ProductCatalog({ products }: { products: Product[] }) {
         <div className="rounded-2xl border border-line bg-white p-5 lg:sticky lg:top-24">
           <div className="flex items-center justify-between">
             <h2 id="filters-title" className="flex items-center gap-2 text-base font-extrabold">
-              <SlidersHorizontal className="size-4 text-amber-600" aria-hidden />
+              <SlidersHorizontal className="size-4 text-brand-600" aria-hidden />
               {t("filters")}
             </h2>
-            <button type="button" onClick={reset} className="inline-flex items-center gap-1 text-sm font-semibold text-amber-700 hover:underline">
+            <button type="button" onClick={reset} className="inline-flex items-center gap-1 text-sm font-semibold text-brand-700 hover:underline">
               <RotateCcw className="size-3.5" aria-hidden />
               {t("reset")}
             </button>
@@ -107,14 +107,14 @@ export function ProductCatalog({ products }: { products: Product[] }) {
               onValueChange={(v) => setKva([v[0] ?? KVA_MIN, v[1] ?? KVA_MAX])}
               aria-labelledby="kva-label"
             >
-              <Slider.Track className="relative h-2 grow rounded-full bg-slate-200">
-                <Slider.Range className="absolute h-full rounded-full bg-amber-500" />
+              <Slider.Track className="relative h-2 grow rounded-full bg-zinc-200">
+                <Slider.Range className="absolute h-full rounded-full bg-brand-500" />
               </Slider.Track>
               {[0, 1].map((i) => (
                 <Slider.Thumb
                   key={i}
                   aria-label={i === 0 ? "min kVA" : "max kVA"}
-                  className="block size-5 rounded-full border-4 border-white bg-amber-500 shadow ring-1 ring-amber-600/30 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy-900"
+                  className="block size-5 rounded-full border-4 border-white bg-brand-500 shadow ring-1 ring-brand-600/30 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900"
                 />
               ))}
             </Slider.Root>
@@ -159,7 +159,7 @@ export function ProductCatalog({ products }: { products: Product[] }) {
             ))}
           </ul>
         ) : (
-          <div className="mt-4 rounded-2xl border border-dashed border-slate-300 p-8 text-center">
+          <div className="mt-4 rounded-2xl border border-dashed border-zinc-300 p-8 text-center">
             <p className="text-muted">{t("noResults")}</p>
             <WhatsAppButton location="catalog_empty" className="mt-5" />
           </div>

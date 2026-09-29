@@ -76,23 +76,23 @@ export default async function MarketPage({ params }: Props) {
           <ul className="mt-10 grid gap-6 md:grid-cols-3">
             {m.points.map((pt) => (
               <li key={pt.title.en} className="rounded-2xl border border-line bg-surface p-6">
-                <CheckCircle2 className="size-6 text-amber-600" aria-hidden />
+                <CheckCircle2 className="size-6 text-brand-600" aria-hidden />
                 <h3 className="mt-4 text-lg text-ink">{pick(pt.title, locale)}</h3>
                 <p className="mt-2 text-sm leading-6 text-muted">{pick(pt.body, locale)}</p>
               </li>
             ))}
           </ul>
           <div className="mt-10 grid gap-6 lg:grid-cols-2">
-            <div className="on-dark rounded-2xl bg-navy-900 p-6 text-white">
+            <div className="on-dark rounded-2xl bg-ink-900 p-6 text-white">
               <h3 className="flex items-center gap-2 text-lg">
-                <Ship className="size-5 text-amber-400" aria-hidden />
+                <Ship className="size-5 text-brand-400" aria-hidden />
                 {ar ? "الشحن والتسليم" : "Shipping & delivery"}
               </h3>
               <p className="mt-3 text-sm leading-6 text-white/80">{pick(m.logistics, locale)}</p>
             </div>
-            <div className="rounded-2xl border border-amber-500/40 bg-amber-50 p-6">
+            <div className="rounded-2xl border border-brand-500/40 bg-brand-50 p-6">
               <h3 className="text-lg text-ink">{ar ? "الأكثر طلباً" : "Most requested"}</h3>
-              <p className="mt-3 text-sm leading-6 text-slate-700">{pick(m.focus, locale)}</p>
+              <p className="mt-3 text-sm leading-6 text-zinc-700">{pick(m.focus, locale)}</p>
             </div>
           </div>
         </div>

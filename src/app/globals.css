@@ -1,26 +1,31 @@
 @import "tailwindcss";
 
 @theme {
-  --color-navy-950: #060c18;
-  --color-navy-900: #0a1426;
-  --color-navy-800: #111f3a;
-  --color-navy-700: #1b2d50;
-  --color-navy-600: #2a3f68;
-  --color-navy-300: #9fb0cf;
-  --color-navy-200: #c6d1e6;
+  /* Industrial charcoal — pulled from the logo's black gear */
+  --color-ink-950: #0a0a0b;
+  --color-ink-900: #111113;
+  --color-ink-800: #19191c;
+  --color-ink-700: #242428;
+  --color-ink-600: #34343a;
+  --color-ink-300: #a1a1aa;
+  --color-ink-200: #d4d4d8;
 
-  --color-amber-300: #ffd27a;
-  --color-amber-400: #ffbe3d;
-  --color-amber-500: #f5a524;
-  --color-amber-600: #d98a0b;
-  --color-amber-700: #a85f00;   /* accent text on white: 5.3:1 */
+  /* Brand yellow — sampled from the logo (#FFDF58) */
+  --color-brand-50: #fffbe8;
+  --color-brand-100: #fff4c2;
+  --color-brand-300: #ffeb99;
+  --color-brand-400: #ffdf58;
+  --color-brand-500: #ffd426;
+  --color-brand-600: #e6b800;
+  --color-brand-700: #7a5900;   /* yellow-family text on white: 6.6:1 */
 
-  --color-ink: #0a1426;
-  --color-muted: #475569;
-  --color-line: #e2e8f0;
-  --color-surface: #f5f7fa;
+  --color-ink: #111113;
+  --color-muted: #52525b;
+  --color-line: #e4e4e7;
+  --color-surface: #f4f4f2;
 
   --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-barlow), var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
   --font-arabic: var(--font-plex-arabic), var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
 
   --animate-kenburns: kenburns 24s ease-out both;
@@ -39,9 +44,12 @@
   }
   html[dir="rtl"] body { font-family: var(--font-arabic); }
   h1, h2, h3, h4 { @apply font-extrabold tracking-tight text-balance; }
+  /* Condensed industrial display face for the big headings (matches the POWER wordmark) */
+  h1, h2 { font-family: var(--font-display); font-weight: 800; letter-spacing: -0.01em; text-transform: uppercase; line-height: 1.02; }
+  html[dir="rtl"] :is(h1, h2) { font-family: var(--font-arabic); text-transform: none; line-height: 1.25; font-weight: 700; }
   html[dir="rtl"] :is(h1, h2, h3, h4) { @apply tracking-normal; letter-spacing: 0; }
-  :focus-visible { @apply outline-2 outline-offset-2 outline-amber-500; }
-  ::selection { @apply bg-amber-400 text-navy-950; }
+  :focus-visible { @apply outline-2 outline-offset-2 outline-brand-500; }
+  ::selection { @apply bg-brand-400 text-ink-950; }
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
   }
@@ -50,9 +58,12 @@
 @layer components {
   .container-x { @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8; }
   .section { @apply py-16 sm:py-20 lg:py-24; }
-  .eyebrow { @apply inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.18em] text-amber-700; }
+  .eyebrow { @apply inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.22em] text-brand-700; }
+  .eyebrow::before { content: ""; @apply inline-block h-0.5 w-6 bg-brand-500; }
+  .hazard { background-image: repeating-linear-gradient(-45deg, var(--color-brand-400) 0 14px, var(--color-ink-950) 14px 28px); }
   html[dir="rtl"] .eyebrow { @apply tracking-normal text-sm normal-case; }
-  .on-dark .eyebrow, .eyebrow-dark { @apply text-amber-400; }
+  .on-dark .eyebrow, .eyebrow-dark { @apply text-brand-400; }
+  .on-dark .eyebrow::before, .eyebrow-dark::before { @apply bg-brand-400; }
   .grid-bg {
     background-image:
       linear-gradient(to right, rgb(255 255 255 / 0.05) 1px, transparent 1px),
@@ -62,13 +73,13 @@
   .flip-rtl { @apply rtl:-scale-x-100; }
 
   /* Long-form article typography */
-  .prose-4u { @apply text-[1.0625rem] leading-8 text-slate-700; }
+  .prose-4u { @apply text-[1.0625rem] leading-8 text-zinc-700; }
   .prose-4u > * + * { @apply mt-5; }
-  .prose-4u h2 { @apply mt-12 text-2xl text-ink sm:text-3xl; }
+  .prose-4u h2 { @apply mt-12 text-3xl text-ink sm:text-4xl; }
   .prose-4u h3 { @apply mt-8 text-xl text-ink; }
-  .prose-4u a { @apply font-semibold text-amber-700 underline decoration-amber-500/40 underline-offset-4 hover:decoration-amber-600; }
-  .prose-4u ul { @apply list-disc space-y-2 ps-6 marker:text-amber-600; }
-  .prose-4u ol { @apply list-decimal space-y-2 ps-6 marker:font-bold marker:text-amber-700; }
+  .prose-4u a { @apply font-semibold text-brand-700 underline decoration-brand-500/40 underline-offset-4 hover:decoration-brand-600; }
+  .prose-4u ul { @apply list-disc space-y-2 ps-6 marker:text-brand-600; }
+  .prose-4u ol { @apply list-decimal space-y-2 ps-6 marker:font-bold marker:text-brand-700; }
   .prose-4u strong { @apply font-bold text-ink; }
-  .prose-4u blockquote { @apply rounded-xl border-s-4 border-amber-500 bg-amber-50 px-5 py-4 text-slate-800; }
+  .prose-4u blockquote { @apply rounded-xl border-s-4 border-brand-500 bg-surface px-5 py-4 text-zinc-800; }
 }

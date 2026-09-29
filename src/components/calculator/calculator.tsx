@@ -36,12 +36,12 @@ function Help({ id, label, children }: { id: string; label: string; children: st
         aria-expanded={open}
         aria-controls={id}
         onClick={() => setOpen((o) => !o)}
-        className="inline-flex items-center gap-1.5 rounded-full text-sm font-semibold text-amber-700 hover:underline"
+        className="inline-flex items-center gap-1.5 rounded-full text-sm font-semibold text-brand-700 hover:underline"
       >
         <Info className="size-4" aria-hidden />
         {label}
       </button>
-      <p id={id} hidden={!open} className="mt-2 rounded-xl bg-amber-50 p-4 text-sm leading-6 text-slate-800">
+      <p id={id} hidden={!open} className="mt-2 rounded-xl bg-brand-50 p-4 text-sm leading-6 text-zinc-800">
         {children}
       </p>
     </div>
@@ -88,7 +88,7 @@ function RangeInput({
               if (!Number.isNaN(v)) onChange(Math.min(max, Math.max(min, v)));
             }}
             dir="ltr"
-            className="w-24 rounded-xl border border-slate-300 px-3 py-2 text-center text-lg font-extrabold tabular-nums focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/30"
+            className="w-24 rounded-xl border border-zinc-300 px-3 py-2 text-center text-lg font-extrabold tabular-nums focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30"
           />
           {suffix && <span className="text-lg font-bold text-muted">{suffix}</span>}
         </div>
@@ -103,10 +103,10 @@ function RangeInput({
         onValueChange={([v]) => v !== undefined && onChange(v)}
         aria-label={label}
       >
-        <Slider.Track className="relative h-2 grow rounded-full bg-slate-200">
-          <Slider.Range className="absolute h-full rounded-full bg-amber-500" />
+        <Slider.Track className="relative h-2 grow rounded-full bg-zinc-200">
+          <Slider.Range className="absolute h-full rounded-full bg-brand-500" />
         </Slider.Track>
-        <Slider.Thumb className="block size-6 rounded-full border-4 border-white bg-amber-500 shadow-md ring-1 ring-amber-600/30 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy-900" />
+        <Slider.Thumb className="block size-6 rounded-full border-4 border-white bg-brand-500 shadow-md ring-1 ring-brand-600/30 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900" />
       </Slider.Root>
       <div className="mt-1 flex justify-between text-xs text-muted" dir="ltr">
         <span>{min}{suffix}</span>
@@ -204,11 +204,11 @@ export function Calculator({ products, variant = "full" }: { products: Product[]
 
   const steps = [t("step1"), t("step2"), t("step3"), t("step4")];
   const field =
-    "mt-1.5 block w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-lg font-bold tabular-nums focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/30";
+    "mt-1.5 block w-full rounded-xl border border-zinc-300 bg-white px-4 py-3 text-lg font-bold tabular-nums focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30";
   const seg = (active: boolean) =>
     cn(
       "flex-1 rounded-full px-4 py-2.5 text-sm font-bold transition",
-      active ? "bg-navy-900 text-white shadow" : "text-slate-700 hover:bg-white",
+      active ? "bg-ink-900 text-white shadow" : "text-zinc-700 hover:bg-white",
     );
 
   /* ------------------------------------------------------------ Step 1: load */
@@ -216,7 +216,7 @@ export function Calculator({ products, variant = "full" }: { products: Product[]
     <fieldset>
       <legend className="sr-only">{t("step1")}</legend>
       {!widget && (
-        <div role="radiogroup" aria-label={t("step1")} className="flex gap-1 rounded-full bg-slate-100 p-1">
+        <div role="radiogroup" aria-label={t("step1")} className="flex gap-1 rounded-full bg-zinc-100 p-1">
           <button type="button" role="radio" aria-checked={mode === "known_load"} onClick={() => setMode("known_load")} className={seg(mode === "known_load")}>
             {t("modeKnown")}
           </button>
@@ -228,7 +228,7 @@ export function Calculator({ products, variant = "full" }: { products: Product[]
 
       {mode === "known_load" ? (
         <div className="mt-6 grid gap-5">
-          <div role="radiogroup" aria-label={t("unit")} className="flex w-fit gap-1 rounded-full bg-slate-100 p-1">
+          <div role="radiogroup" aria-label={t("unit")} className="flex w-fit gap-1 rounded-full bg-zinc-100 p-1">
             <button type="button" role="radio" aria-checked={unit === "kw"} onClick={() => setUnit("kw")} className={seg(unit === "kw")}>
               kW
             </button>
@@ -300,10 +300,10 @@ export function Calculator({ products, variant = "full" }: { products: Product[]
                   onClick={() => setType(lt)}
                   className={cn(
                     "flex flex-col items-center gap-2 rounded-2xl border p-3 text-center text-sm font-bold transition",
-                    active ? "border-amber-500 bg-amber-50 text-ink ring-2 ring-amber-500/30" : "border-line bg-white text-slate-700 hover:border-slate-400",
+                    active ? "border-brand-500 bg-brand-50 text-ink ring-2 ring-brand-500/30" : "border-line bg-white text-zinc-700 hover:border-zinc-400",
                   )}
                 >
-                  <Icon className={cn("size-6", active ? "text-amber-600" : "text-slate-500")} aria-hidden />
+                  <Icon className={cn("size-6", active ? "text-brand-600" : "text-zinc-500")} aria-hidden />
                   {t(lt)}
                 </button>
               );
@@ -319,7 +319,7 @@ export function Calculator({ products, variant = "full" }: { products: Product[]
                   <p className="text-xs text-muted">{t("kwEach", { kw: it.kw })}</p>
                 </div>
                 <div className="flex items-center gap-1" role="group" aria-label={`${t("quantity")}: ${it.label[locale]}`}>
-                  <button type="button" onClick={() => setQty(it.id, it.qty - 1)} className="grid size-9 place-items-center rounded-full border border-line hover:bg-slate-50" aria-label={`− ${it.label[locale]}`}>
+                  <button type="button" onClick={() => setQty(it.id, it.qty - 1)} className="grid size-9 place-items-center rounded-full border border-line hover:bg-zinc-50" aria-label={`− ${it.label[locale]}`}>
                     <Minus className="size-4" aria-hidden />
                   </button>
                   <input
@@ -332,7 +332,7 @@ export function Calculator({ products, variant = "full" }: { products: Product[]
                     aria-label={`${t("quantity")}: ${it.label[locale]}`}
                     className="w-12 rounded-lg border border-line py-1.5 text-center font-bold tabular-nums"
                   />
-                  <button type="button" onClick={() => setQty(it.id, it.qty + 1)} className="grid size-9 place-items-center rounded-full border border-line hover:bg-slate-50" aria-label={`+ ${it.label[locale]}`}>
+                  <button type="button" onClick={() => setQty(it.id, it.qty + 1)} className="grid size-9 place-items-center rounded-full border border-line hover:bg-zinc-50" aria-label={`+ ${it.label[locale]}`}>
                     <Plus className="size-4" aria-hidden />
                   </button>
                 </div>
@@ -364,13 +364,13 @@ export function Calculator({ products, variant = "full" }: { products: Product[]
   /* ------------------------------------------------------------ Result */
   const resultView = (
     <div ref={resultRef} tabIndex={-1} aria-live="polite" className="focus:outline-none">
-      <div className="on-dark relative overflow-hidden rounded-2xl bg-navy-900 p-6 text-white sm:p-8">
+      <div className="on-dark relative overflow-hidden rounded-2xl bg-ink-900 p-6 text-white sm:p-8">
         <div className="grid-bg pointer-events-none absolute inset-0 opacity-50" aria-hidden />
         <div className="relative grid gap-6 sm:grid-cols-2 sm:items-end">
           <div>
             <p className="eyebrow">{t("recommended")}</p>
             <p className="mt-2 text-5xl font-extrabold tracking-tight sm:text-6xl">
-              <span dir="ltr">{n(result.recommendedKva)}</span> <span className="text-2xl text-amber-400">{tn("kva")}</span>
+              <span dir="ltr">{n(result.recommendedKva)}</span> <span className="text-2xl text-brand-400">{tn("kva")}</span>
             </p>
             {!result.overRange && (
               <p className="mt-2 text-white/80">
@@ -378,7 +378,7 @@ export function Calculator({ products, variant = "full" }: { products: Product[]
                 {ats && (
                   <>
                     {" · "}
-                    <Link href={`/products/${ats.slug}`} className="text-amber-400 underline underline-offset-4">
+                    <Link href={`/products/${ats.slug}`} className="text-brand-400 underline underline-offset-4">
                       {productName(ats)}
                     </Link>
                   </>
@@ -402,7 +402,7 @@ export function Calculator({ products, variant = "full" }: { products: Product[]
       </div>
 
       {result.overRange ? (
-        <p className="mt-4 rounded-xl bg-amber-50 p-4 text-sm font-semibold text-slate-800">{t("overRange")}</p>
+        <p className="mt-4 rounded-xl bg-brand-50 p-4 text-sm font-semibold text-zinc-800">{t("overRange")}</p>
       ) : (
         <div className="mt-6">
           <h3 className="text-lg font-extrabold text-ink">{t("matches")}</h3>
@@ -410,7 +410,7 @@ export function Calculator({ products, variant = "full" }: { products: Product[]
             <ul className={cn("mt-3 grid gap-3", !widget && "sm:grid-cols-3")}>
               {matches.map((p) => (
                 <li key={p.slug} className="rounded-2xl border border-line p-4">
-                  <Link href={`/products/${p.slug}`} className="font-bold text-ink hover:text-amber-700">
+                  <Link href={`/products/${p.slug}`} className="font-bold text-ink hover:text-brand-700">
                     {productName(p)}
                   </Link>
                   {p.engine_brand && <p className="mt-1 text-sm text-muted">{engineBrandLabels[p.engine_brand]?.[locale] ?? p.engine_brand}</p>}
@@ -487,9 +487,9 @@ export function Calculator({ products, variant = "full" }: { products: Product[]
   /* ------------------------------------------------------------ Layout */
   if (widget) {
     return (
-      <div className="rounded-3xl border border-line bg-white p-5 shadow-[0_30px_60px_-30px_rgb(10_20_38/0.35)] sm:p-7">
+      <div className="rounded-3xl border border-line bg-white p-5 shadow-[0_30px_60px_-30px_rgb(10_10_11/0.35)] sm:p-7">
         <div className="flex items-center gap-2 text-sm font-bold text-ink">
-          <Zap className="size-5 text-amber-600" aria-hidden />
+          <Zap className="size-5 text-brand-600" aria-hidden />
           {t("title")}
         </div>
         <div className="mt-5">{loadStep}</div>
@@ -499,7 +499,7 @@ export function Calculator({ products, variant = "full" }: { products: Product[]
   }
 
   return (
-    <div className="rounded-3xl border border-line bg-white p-5 shadow-[0_30px_60px_-30px_rgb(10_20_38/0.35)] sm:p-8">
+    <div className="rounded-3xl border border-line bg-white p-5 shadow-[0_30px_60px_-30px_rgb(10_10_11/0.35)] sm:p-8">
       <ol className="grid grid-cols-4 gap-2" aria-label={t("title")}>
         {steps.map((s, i) => {
           const idx = i + 1;
@@ -515,7 +515,7 @@ export function Calculator({ products, variant = "full" }: { products: Product[]
                 aria-label={`${idx}. ${s}`}
                 className="group w-full text-start disabled:cursor-not-allowed"
               >
-                <span className={cn("block h-1.5 rounded-full transition", current || done ? "bg-amber-500" : "bg-slate-200")} />
+                <span className={cn("block h-1.5 rounded-full transition", current || done ? "bg-brand-500" : "bg-zinc-200")} />
                 <span className={cn("mt-2 hidden text-xs font-bold sm:block", current ? "text-ink" : "text-muted")}>
                   {idx}. {s}
                 </span>

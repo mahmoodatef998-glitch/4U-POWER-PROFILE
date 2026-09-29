@@ -96,13 +96,13 @@ export default async function ProductPage({ params }: Props) {
         title={name}
         intro={description}
         aside={
-          <div className="relative aspect-[4/3] overflow-hidden rounded-3xl bg-navy-900 ring-1 ring-white/10">
+          <div className="relative aspect-[4/3] overflow-hidden rounded-3xl bg-ink-900 ring-1 ring-white/10">
             {p.images[0] && <Image src={p.images[0]} alt={name} fill priority sizes="(min-width:1024px) 40vw, 100vw" className="object-cover" />}
           </div>
         }
       >
         <ul className="mb-8 flex flex-wrap gap-2 text-sm font-bold">
-          {kva && <li className="rounded-full bg-amber-500 px-3 py-1.5 text-navy-950" dir="ltr">{kva}</li>}
+          {kva && <li className="rounded-full bg-brand-500 px-3 py-1.5 text-ink-950" dir="ltr">{kva}</li>}
           {p.engine_brand && <li className="rounded-full bg-white/10 px-3 py-1.5">{engineBrandLabels[p.engine_brand]?.[locale] ?? p.engine_brand}</li>}
           {p.fuel_type && FuelIcon && (
             <li className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1.5">
@@ -113,7 +113,7 @@ export default async function ProductPage({ params }: Props) {
         </ul>
         <div className="flex flex-col gap-3 sm:flex-row">
           <WhatsAppButton location="product_hero" message={waMessage} size="lg" />
-          <a href="#request" className="inline-flex h-13 items-center justify-center rounded-full bg-amber-500 px-7 font-bold text-navy-950 hover:bg-amber-400">
+          <a href="#request" className="inline-flex h-13 items-center justify-center rounded-full bg-brand-500 px-7 font-bold text-ink-950 hover:bg-brand-400">
             {t("cta.requestSpec")}
           </a>
         </div>
@@ -140,7 +140,7 @@ export default async function ProductPage({ params }: Props) {
             {p.images.length > 1 && (
               <ul className="mt-8 grid grid-cols-2 gap-4">
                 {p.images.map((img, i) => (
-                  <li key={img} className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-navy-900">
+                  <li key={img} className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-ink-900">
                     <Image src={img} alt={`${name} — ${i + 1}`} fill sizes="(min-width:1024px) 28vw, 50vw" className="object-cover" />
                   </li>
                 ))}
@@ -152,13 +152,13 @@ export default async function ProductPage({ params }: Props) {
               <a
                 href={p.spec_sheet_url}
                 download
-                className="mt-8 flex items-center gap-4 rounded-2xl border border-line p-5 transition hover:border-amber-500 hover:bg-amber-50"
+                className="mt-8 flex items-center gap-4 rounded-2xl border border-line p-5 transition hover:border-brand-500 hover:bg-brand-50"
               >
-                <span className="grid size-12 place-items-center rounded-xl bg-navy-900 text-amber-400">
+                <span className="grid size-12 place-items-center rounded-xl bg-ink-900 text-brand-400">
                   <FileText className="size-6" aria-hidden />
                 </span>
                 <span className="flex-1 font-bold text-ink">{t("cta.downloadDatasheet")}</span>
-                <Download className="size-5 text-amber-700" aria-hidden />
+                <Download className="size-5 text-brand-700" aria-hidden />
               </a>
             )}
           </div>

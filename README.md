@@ -31,6 +31,7 @@ The site runs with **zero configuration**: content comes from `src/content/*`, a
 | `npm run audit:seo -- http://localhost:3000` | Crawls every sitemap URL on a running server. Checks the title, meta description, a single H1, heading order, canonical, hreflang, OG/Twitter tags, JSON-LD types, image alt text, landmarks and `lang`/`dir` |
 | `npm run seed:sql` | Regenerates `supabase/seed/*.sql` from `src/content/*` |
 | `python3 scripts/generate-illustrations.py` | Regenerates the placeholder SVG illustrations |
+| `python3 scripts/generate-brand-assets.py` | Rebuilds logo variants, favicon/icons, OG image and the hero part layers from `assets/source/` |
 
 ## Project map
 
@@ -50,6 +51,14 @@ src/
 supabase/migrations/      schema + RLS
 supabase/seed/*.sql       generated seed data (run in order)
 ```
+
+## Hero: scroll-to-assemble generator
+
+`src/components/hero-assembly.tsx` pins the hero while the visitor scrolls. The 8 parts of the client's exploded-view render (engine, alternator, radiator, end cover, control panel, air filter, silencer, base frame) travel from their exploded positions to the assembled set, one after another. Numbered callouts fade out as each part moves in.
+
+- No video: pure GPU transforms on ~200 KB of WebP layers. Honours `prefers-reduced-motion` (shows the assembled set, no pinning).
+- Tune the choreography in the `PARTS` array (`dx/dy` = assembled offset in canvas px, `win` = scroll window).
+- **Cinematic upgrade path:** have a 3D artist render the assembly (Blender / KeyShot) as ~120 transparent frames, then swap the layer stage for a canvas image-sequence scrubber. Same scroll logic.
 
 ## Conversion tracking (for Google Ads)
 

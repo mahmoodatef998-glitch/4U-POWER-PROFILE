@@ -22,8 +22,8 @@ export function ProductCard({ product, headingLevel = "h3" }: { product: Product
   const href = `/products/${product.slug}`;
 
   return (
-    <article className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-white shadow-[0_1px_2px_rgb(10_20_38/0.04)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_24px_48px_-24px_rgb(10_20_38/0.35)]">
-      <div className="relative aspect-[4/3] overflow-hidden bg-navy-900">
+    <article className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-white shadow-[0_1px_2px_rgb(10_10_11/0.04)] transition duration-300 hover:-tranzinc-y-1 hover:shadow-[0_24px_48px_-24px_rgb(10_10_11/0.35)]">
+      <div className="relative aspect-[4/3] overflow-hidden bg-ink-900">
         {product.images[0] && (
           <Image
             src={product.images[0]}
@@ -34,11 +34,11 @@ export function ProductCard({ product, headingLevel = "h3" }: { product: Product
           />
         )}
         <div className="absolute start-3 top-3 flex flex-wrap gap-1.5">
-          <span className="rounded-full bg-navy-950/85 px-2.5 py-1 text-xs font-bold text-white backdrop-blur">
+          <span className="rounded-full bg-ink-950/85 px-2.5 py-1 text-xs font-bold text-white backdrop-blur">
             {categoryLabels[product.category][locale]}
           </span>
           {kva && (
-            <span className="inline-flex items-center gap-1 rounded-full bg-amber-500 px-2.5 py-1 text-xs font-extrabold text-navy-950">
+            <span className="inline-flex items-center gap-1 rounded-full bg-brand-500 px-2.5 py-1 text-xs font-extrabold text-ink-950">
               <Gauge className="size-3.5" aria-hidden />
               <span dir="ltr">{kva}</span>
             </span>
@@ -56,14 +56,14 @@ export function ProductCard({ product, headingLevel = "h3" }: { product: Product
           {product.engine_brand && (
             <div className="flex items-center gap-1.5">
               <dt className="sr-only">{t("common.engine")}</dt>
-              <Cog className="size-4 text-amber-600" aria-hidden />
+              <Cog className="size-4 text-brand-600" aria-hidden />
               <dd>{engineBrandLabels[product.engine_brand]?.[locale] ?? product.engine_brand}</dd>
             </div>
           )}
           {product.fuel_type && FuelIcon && (
             <div className="flex items-center gap-1.5">
               <dt className="sr-only">{t("common.fuel")}</dt>
-              <FuelIcon className="size-4 text-amber-600" aria-hidden />
+              <FuelIcon className="size-4 text-brand-600" aria-hidden />
               <dd>{fuelLabels[product.fuel_type][locale]}</dd>
             </div>
           )}
@@ -73,7 +73,7 @@ export function ProductCard({ product, headingLevel = "h3" }: { product: Product
         <div className="relative z-10 mt-auto flex items-center gap-2 pt-5">
           <Link
             href={{ pathname: "/contact", query: { product: product.slug } }}
-            className="inline-flex h-10 flex-1 items-center justify-center rounded-full bg-navy-900 px-4 text-sm font-bold text-white transition hover:bg-navy-700"
+            className="inline-flex h-10 flex-1 items-center justify-center rounded-full bg-ink-900 px-4 text-sm font-bold text-white transition hover:bg-ink-700"
           >
             {t("cta.quote")}
           </Link>

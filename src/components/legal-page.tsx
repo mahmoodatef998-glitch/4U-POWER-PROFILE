@@ -19,11 +19,11 @@ export async function LegalPage({ locale, doc, path }: { locale: Locale; doc: Le
       />
       <section className="section bg-white">
         <div className="container-x max-w-3xl">
-          <p className="text-[1.0625rem] leading-8 text-slate-700">{pick(doc.intro, locale)}</p>
+          <p className="text-[1.0625rem] leading-8 text-zinc-700">{pick(doc.intro, locale)}</p>
           {doc.sections.map((s) => (
             <section key={s.title.en} className="mt-10">
               <h2 className="text-xl sm:text-2xl">{pick(s.title, locale)}</h2>
-              <p className="mt-3 leading-8 text-slate-700">{pick(s.body, locale)}</p>
+              <p className="mt-3 leading-8 text-zinc-700">{pick(s.body, locale)}</p>
             </section>
           ))}
         </div>

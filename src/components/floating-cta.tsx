@@ -15,7 +15,7 @@ export function FloatingCta() {
   const wa = whatsappUrl(t("whatsappDefault"));
   return (
     <>
-      <div className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-2 gap-2 border-t border-white/10 bg-navy-950/95 p-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] backdrop-blur md:hidden">
+      <div className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-2 gap-2 border-t border-white/10 bg-ink-950/95 p-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] backdrop-blur md:hidden">
         <a
           href={telUrl}
           onClick={() => trackEvent("call_click", { location: "sticky_mobile" })}
@@ -41,7 +41,7 @@ export function FloatingCta() {
           href={telUrl}
           aria-label={t("callUs")}
           onClick={() => trackEvent("call_click", { location: "sticky_desktop" })}
-          className="grid size-14 place-items-center rounded-full bg-navy-900 text-white shadow-xl ring-1 ring-white/10 transition hover:-translate-y-0.5 hover:bg-navy-800"
+          className="grid size-14 place-items-center rounded-full bg-ink-900 text-white shadow-xl ring-1 ring-white/10 transition hover:-tranzinc-y-0.5 hover:bg-ink-800"
         >
           <Phone className="size-6" aria-hidden />
         </a>
@@ -51,7 +51,7 @@ export function FloatingCta() {
           rel="noopener noreferrer"
           aria-label={t("whatsappUs")}
           onClick={() => trackEvent("whatsapp_click", { location: "sticky_desktop" })}
-          className="group relative grid size-14 place-items-center rounded-full bg-[#0B7038] text-white shadow-xl transition hover:-translate-y-0.5"
+          className="group relative grid size-14 place-items-center rounded-full bg-[#0B7038] text-white shadow-xl transition hover:-tranzinc-y-0.5"
         >
           <span className="absolute inset-0 animate-ping rounded-full bg-[#25D366]/40 [animation-iteration-count:3]" aria-hidden />
           <WhatsAppIcon className="relative size-7" />

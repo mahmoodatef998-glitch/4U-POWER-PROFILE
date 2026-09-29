@@ -23,10 +23,10 @@ export function TestimonialsCarousel({ items, labels }: { items: Testimonial[]; 
         {items.map((t, i) => (
           <li key={i} className="w-[85%] shrink-0 snap-start sm:w-[46%] lg:w-[32%]">
             <figure className="flex h-full flex-col rounded-2xl border border-white/10 bg-white/[0.04] p-6">
-              <Quote className="flip-rtl size-8 text-amber-400" aria-hidden />
+              <Quote className="flip-rtl size-8 text-brand-400" aria-hidden />
               <div className="mt-3 flex gap-0.5" aria-label={`${t.rating}/5`}>
                 {Array.from({ length: 5 }).map((_, s) => (
-                  <Star key={s} className={s < t.rating ? "size-4 fill-amber-400 text-amber-400" : "size-4 text-white/20"} aria-hidden />
+                  <Star key={s} className={s < t.rating ? "size-4 fill-brand-400 text-brand-400" : "size-4 text-white/20"} aria-hidden />
                 ))}
               </div>
               <blockquote className="mt-4 flex-1 text-base leading-7 text-white/85">“{locale === "ar" ? t.quote_ar : t.quote_en}”</blockquote>

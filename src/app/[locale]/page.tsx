@@ -4,7 +4,8 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Calculator } from "@/components/calculator/calculator";
 import { CoverageMap } from "@/components/coverage-map";
 import { CtaBanner } from "@/components/cta-banner";
-import { CallButton, WhatsAppButton } from "@/components/cta-buttons";
+import { WhatsAppButton } from "@/components/cta-buttons";
+import { HeroAssembly } from "@/components/hero-assembly";
 import { FaqBlock } from "@/components/faq-block";
 import { Counter, Reveal } from "@/components/motion";
 import { NewsCard } from "@/components/news-card";
@@ -38,50 +39,37 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
 
   return (
     <>
-      {/* ------------------------------------------------ HERO */}
-      <section className="on-dark relative isolate overflow-hidden bg-navy-950 text-white">
-        <div className="absolute inset-0 -z-10">
-          {/* Decorative art is desktop-only so the mobile LCP is the H1 text, not a background image. */}
-          <div className="absolute inset-0 hidden md:block">
-          <Image
-            src="/images/hero/hero-genset.svg"
-            alt=""
-            fill
-            priority
-            fetchPriority="high"
-            sizes="100vw"
-            className="animate-kenburns object-cover object-[70%_center] opacity-60 lg:opacity-90"
-          />
-          </div>
-          <div className="absolute inset-0 bg-gradient-to-r from-navy-950 via-navy-950/85 to-navy-950/20 rtl:bg-gradient-to-l" />
-          <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-navy-950" />
+      {/* ------------------------------------------------ HERO: scroll-to-assemble generator */}
+      <HeroAssembly
+        strings={{
+          scroll: locale === "ar" ? "مرّر لتجميع المولد" : "Scroll to assemble",
+          assembled: locale === "ar" ? "مولد متكامل — جاهز للتسليم" : "Fully assembled — ready to ship",
+          progress: L(home.hero.h1),
+        }}
+      >
+        <p className="eyebrow">
+          <BadgeCheck className="size-4" aria-hidden />
+          {L(home.hero.eyebrow)}
+        </p>
+        <h1 className="mt-4 text-[2.35rem] text-ink sm:text-6xl lg:text-[3.75rem] xl:text-[4.25rem] rtl:text-[1.9rem] rtl:sm:text-5xl rtl:lg:text-[3.25rem]">
+          {L(home.hero.h1)}
+        </h1>
+        <p className="mt-4 hidden max-w-xl text-base leading-7 text-muted sm:block lg:text-lg">{L(home.hero.lead)}</p>
+        <div className="mt-6 flex flex-col gap-2.5 sm:flex-row sm:gap-3">
+          <WhatsAppButton location="hero" size="lg" />
+          <Link href="/calculator" className={buttonVariants({ variant: "dark", size: "lg" })}>
+            {t("cta.tryCalculator")}
+            <ArrowRight className="flip-rtl" aria-hidden />
+          </Link>
         </div>
-        <div className="container-x grid min-h-[min(88vh,760px)] items-center py-16 lg:py-24">
-          <div className="max-w-2xl">
-            <p className="eyebrow">
-              <BadgeCheck className="size-4" aria-hidden />
-              {L(home.hero.eyebrow)}
-            </p>
-            <h1 className="mt-5 text-4xl leading-[1.05] sm:text-5xl lg:text-6xl">{L(home.hero.h1)}</h1>
-            <p className="mt-6 max-w-xl text-base leading-7 text-white/80 sm:text-lg">{L(home.hero.lead)}</p>
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <WhatsAppButton location="hero" size="lg" />
-              <Link href="/calculator" className={buttonVariants({ variant: "primary", size: "lg" })}>
-                {t("cta.tryCalculator")}
-                <ArrowRight className="flip-rtl" aria-hidden />
-              </Link>
-              <CallButton location="hero" size="lg" variant="ghostDark" className="sm:hidden" />
-            </div>
-            <ul className="mt-10 flex flex-wrap gap-2">
-              {home.hero.chips.map((c) => (
-                <li key={c.en} className="rounded-full border border-white/15 bg-white/5 px-3.5 py-1.5 text-sm font-semibold text-white/90 backdrop-blur">
-                  {L(c)}
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </section>
+        <ul className="mt-6 hidden flex-wrap gap-2 sm:flex">
+          {home.hero.chips.map((c) => (
+            <li key={c.en} className="rounded-full border border-ink-950/10 bg-white/70 px-3.5 py-1.5 text-sm font-bold text-ink backdrop-blur">
+              {L(c)}
+            </li>
+          ))}
+        </ul>
+      </HeroAssembly>
 
       {/* ------------------------------------------------ BRAND STRIP */}
       <section aria-labelledby="brands-title" className="border-b border-line bg-white">
@@ -94,7 +82,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
               <li key={b}>
                 <Link
                   href={{ pathname: "/products", query: { engine: b } }}
-                  className="text-xl font-extrabold tracking-tight text-slate-500 transition hover:text-navy-900 sm:text-2xl"
+                  className="text-xl font-extrabold tracking-tight text-zinc-500 transition hover:text-ink-900 sm:text-2xl"
                 >
                   {engineBrandLabels[b]?.[locale]}
                 </Link>
@@ -113,12 +101,12 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
             <ul className="mt-8 grid gap-3">
               {home.who.points.map((p) => (
                 <li key={p.en} className="flex gap-3 text-ink">
-                  <CheckCircle2 className="mt-0.5 size-5 shrink-0 text-amber-600" aria-hidden />
+                  <CheckCircle2 className="mt-0.5 size-5 shrink-0 text-brand-600" aria-hidden />
                   <span>{L(p)}</span>
                 </li>
               ))}
             </ul>
-            <Link href="/about" className="mt-8 inline-flex items-center gap-2 font-bold text-amber-700 hover:underline">
+            <Link href="/about" className="mt-8 inline-flex items-center gap-2 font-bold text-brand-700 hover:underline">
               {locale === "ar" ? "تعرّف على فوريو باور جينيريشن" : "About 4U Power Generation"}
               <ArrowRight className="flip-rtl size-4" aria-hidden />
             </Link>
@@ -149,15 +137,15 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
                 <Reveal as="li" key={c} delay={i * 0.05} className={i === 0 ? "sm:col-span-2 lg:col-span-1" : undefined}>
                   <Link
                     href={categoryHref[c]}
-                    className="group flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-white transition hover:-translate-y-1 hover:border-amber-500/50 hover:shadow-xl"
+                    className="group flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-white transition hover:-tranzinc-y-1 hover:border-brand-500/50 hover:shadow-xl"
                   >
-                    <div className="relative aspect-[4/3] bg-navy-900">
+                    <div className="relative aspect-[4/3] bg-ink-900">
                       <Image src={item.image} alt={L(categoryLabels[c])} fill sizes="(min-width:1024px) 20vw, 50vw" className="object-cover" />
                     </div>
                     <div className="flex flex-1 flex-col p-5">
-                      <h3 className="text-lg text-ink group-hover:text-amber-700">{L(categoryLabels[c])}</h3>
+                      <h3 className="text-lg text-ink group-hover:text-brand-700">{L(categoryLabels[c])}</h3>
                       <p className="mt-2 text-sm leading-6 text-muted">{L(item.body)}</p>
-                      <span className="mt-auto inline-flex items-center gap-1 pt-4 text-sm font-bold text-amber-700">
+                      <span className="mt-auto inline-flex items-center gap-1 pt-4 text-sm font-bold text-brand-700">
                         {t("cta.learnMore")}
                         <ArrowRight className="flip-rtl size-4" aria-hidden />
                       </span>
@@ -187,15 +175,15 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
       </section>
 
       {/* ------------------------------------------------ COVERAGE */}
-      <section className="section on-dark bg-navy-950 text-white" aria-labelledby="cov-title">
+      <section className="section on-dark bg-ink-950 text-white" aria-labelledby="cov-title">
         <div className="container-x grid gap-12 lg:grid-cols-12 lg:items-center">
           <div className="lg:col-span-6">
             <SectionHeading id="cov-title" dark eyebrow={L(home.coverage.eyebrow)} title={L(home.coverage.title)} intro={L(home.coverage.body)} />
-            <h3 className="mt-10 text-sm font-bold uppercase tracking-widest text-amber-400 rtl:tracking-normal">{L(home.coverage.primary)}</h3>
+            <h3 className="mt-10 text-sm font-bold uppercase tracking-widest text-brand-400 rtl:tracking-normal">{L(home.coverage.primary)}</h3>
             <ul className="mt-3 grid gap-3 sm:grid-cols-3">
               {primaryMarkets.map((m) => (
                 <li key={m}>
-                  <Link href={`/markets/${m}`} className="flex h-full items-center gap-3 rounded-2xl border border-amber-500/40 bg-amber-500/10 p-4 font-bold hover:bg-amber-500/20">
+                  <Link href={`/markets/${m}`} className="flex h-full items-center gap-3 rounded-2xl border border-brand-500/40 bg-brand-500/10 p-4 font-bold hover:bg-brand-500/20">
                     <span className="text-2xl" aria-hidden>{marketFlags[m]}</span>
                     {marketNames[m][locale]}
                   </Link>
@@ -222,7 +210,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
 
       {/* ------------------------------------------------ TESTIMONIALS (renders only with published quotes) */}
       {testimonials.length > 0 && (
-        <section className="section on-dark border-t border-white/10 bg-navy-900 text-white" aria-labelledby="t-title">
+        <section className="section on-dark border-t border-white/10 bg-ink-900 text-white" aria-labelledby="t-title">
           <div className="container-x">
             <SectionHeading id="t-title" dark eyebrow={L(home.testimonials.eyebrow)} title={L(home.testimonials.title)} />
             <div className="mt-10">
@@ -237,7 +225,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
         <div className="container-x">
           <div className="flex flex-wrap items-end justify-between gap-4">
             <SectionHeading id="news-title" eyebrow={L(home.news.eyebrow)} title={L(home.news.title)} />
-            <Link href="/news" className="inline-flex items-center gap-2 font-bold text-amber-700 hover:underline">
+            <Link href="/news" className="inline-flex items-center gap-2 font-bold text-brand-700 hover:underline">
               {t("cta.viewAll")}
               <ArrowRight className="flip-rtl size-4" aria-hidden />
             </Link>

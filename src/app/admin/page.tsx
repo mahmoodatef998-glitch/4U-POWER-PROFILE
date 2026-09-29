@@ -20,7 +20,7 @@ type Lead = {
 
 export default async function AdminLeads() {
   const sb = getAdminClient();
-  if (!sb) return <p className="rounded-xl bg-amber-50 p-4">Supabase is not configured. Set SUPABASE_SERVICE_ROLE_KEY — see DEPLOYMENT.md.</p>;
+  if (!sb) return <p className="rounded-xl bg-brand-50 p-4">Supabase is not configured. Set SUPABASE_SERVICE_ROLE_KEY — see DEPLOYMENT.md.</p>;
 
   const since = new Date(Date.now() - 30 * 864e5).toISOString();
   const [{ data: leads }, { count: calc30 }, { count: calcConv }] = await Promise.all([
@@ -57,11 +57,11 @@ export default async function AdminLeads() {
           </thead>
           <tbody className="divide-y divide-line">
             {list.map((l) => (
-              <tr key={l.id} className={l.status === "new" ? "bg-amber-50/50" : undefined}>
+              <tr key={l.id} className={l.status === "new" ? "bg-brand-50/50" : undefined}>
                 <td className="whitespace-nowrap px-4 py-3 text-muted">{new Date(l.created_at).toLocaleString("en-GB", { timeZone: "Asia/Dubai" })}</td>
                 <td className="px-4 py-3">
                   <p className="font-bold">{l.name}</p>
-                  <a className="text-amber-700" href={`https://wa.me/${l.phone.replace(/\D/g, "")}`} target="_blank" rel="noreferrer">{l.phone}</a>
+                  <a className="text-brand-700" href={`https://wa.me/${l.phone.replace(/\D/g, "")}`} target="_blank" rel="noreferrer">{l.phone}</a>
                   {l.email && <p className="text-muted">{l.email}</p>}
                 </td>
                 <td className="px-4 py-3">{l.country}</td>
@@ -83,7 +83,7 @@ export default async function AdminLeads() {
                         <option key={s}>{s}</option>
                       ))}
                     </select>
-                    <button className="rounded-lg bg-navy-900 px-3 py-1 font-bold text-white">Save</button>
+                    <button className="rounded-lg bg-ink-900 px-3 py-1 font-bold text-white">Save</button>
                   </form>
                 </td>
               </tr>

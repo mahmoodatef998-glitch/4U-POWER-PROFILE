@@ -6,10 +6,10 @@ export default function manifest(): MetadataRoute.Manifest {
     short_name: "4U Power",
     start_url: "/en",
     display: "standalone",
-    background_color: "#060c18",
-    theme_color: "#060c18",
+    background_color: "#0a0a0b",
+    theme_color: "#0a0a0b",
     icons: [
-      { src: "/icon.svg", sizes: "any", type: "image/svg+xml" },
+      { src: "/icon.png", sizes: "512x512", type: "image/png" },
       { src: "/images/logo-mark.png", sizes: "512x512", type: "image/png" },
     ],
   };

@@ -79,12 +79,12 @@ export async function PillarPage({
                   <h2 id={`${s.id ?? s.title.en.slice(0, 12).replace(/\W/g, "")}-h`} className="text-2xl leading-tight text-ink sm:text-3xl">
                     {L(s.title)}
                   </h2>
-                  <p className="mt-4 text-[1.0625rem] leading-8 text-slate-700">{L(s.body)}</p>
+                  <p className="mt-4 text-[1.0625rem] leading-8 text-zinc-700">{L(s.body)}</p>
                   {s.bullets && (
                     <ul className="mt-4 space-y-2">
                       {s.bullets.map((b) => (
-                        <li key={b.en} className="flex gap-3 text-slate-700">
-                          <Zap className="mt-1 size-4 shrink-0 text-amber-600" aria-hidden />
+                        <li key={b.en} className="flex gap-3 text-zinc-700">
+                          <Zap className="mt-1 size-4 shrink-0 text-brand-600" aria-hidden />
                           {L(b)}
                         </li>
                       ))}
@@ -95,7 +95,7 @@ export async function PillarPage({
             ))}
           </div>
           <aside className="lg:col-span-4">
-            <div className="on-dark rounded-3xl bg-navy-900 p-6 text-white lg:sticky lg:top-28">
+            <div className="on-dark rounded-3xl bg-ink-900 p-6 text-white lg:sticky lg:top-28">
               <p className="text-lg font-extrabold">{L(pillar.cta.title)}</p>
               <p className="mt-2 text-sm leading-6 text-white/75">{L(pillar.cta.body)}</p>
               <div className="mt-5 grid gap-2">
@@ -112,7 +112,7 @@ export async function PillarPage({
         <div className="container-x">
           <div className="flex flex-wrap items-end justify-between gap-4">
             <SectionHeading id="range-title" title={L(pillar.productsTitle)} />
-            <Link href={{ pathname: "/products", query: { category: categories[0] } }} className="inline-flex items-center gap-2 font-bold text-amber-700 hover:underline">
+            <Link href={{ pathname: "/products", query: { category: categories[0] } }} className="inline-flex items-center gap-2 font-bold text-brand-700 hover:underline">
               {t("cta.browseProducts")}
               <ArrowRight className="flip-rtl size-4" aria-hidden />
             </Link>

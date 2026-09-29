@@ -5,7 +5,7 @@ import { getAdminClient } from "@/lib/supabase/server";
 export default async function AdminNews({ searchParams }: { searchParams: Promise<{ created?: string }> }) {
   const { created } = await searchParams;
   const sb = getAdminClient();
-  if (!sb) return <p className="rounded-xl bg-amber-50 p-4">Supabase is not configured. See DEPLOYMENT.md.</p>;
+  if (!sb) return <p className="rounded-xl bg-brand-50 p-4">Supabase is not configured. See DEPLOYMENT.md.</p>;
   const { data } = await sb.from("news_posts").select("id,slug,title_en,published_at,is_published").order("published_at", { ascending: false });
   const posts = (data ?? []) as { id: string; slug: string; title_en: string; published_at: string; is_published: boolean }[];
 
@@ -18,13 +18,13 @@ export default async function AdminNews({ searchParams }: { searchParams: Promis
           {posts.map((p) => (
             <li key={p.id} className="flex items-center justify-between gap-4 px-5 py-3">
               <div>
-                <a href={`/en/news/${p.slug}`} target="_blank" rel="noreferrer" className="font-bold hover:text-amber-700">{p.title_en}</a>
+                <a href={`/en/news/${p.slug}`} target="_blank" rel="noreferrer" className="font-bold hover:text-brand-700">{p.title_en}</a>
                 <p className="text-xs text-muted">{new Date(p.published_at).toDateString()} · /{p.slug}</p>
               </div>
               <form action={togglePost}>
                 <input type="hidden" name="id" value={p.id} />
                 <input type="hidden" name="next" value={String(!p.is_published)} />
-                <button className={`rounded-full px-3 py-1 text-xs font-bold ${p.is_published ? "bg-emerald-100 text-emerald-800" : "bg-slate-200"}`}>
+                <button className={`rounded-full px-3 py-1 text-xs font-bold ${p.is_published ? "bg-emerald-100 text-emerald-800" : "bg-zinc-200"}`}>
                   {p.is_published ? "Published — unpublish" : "Draft — publish"}
                 </button>
               </form>

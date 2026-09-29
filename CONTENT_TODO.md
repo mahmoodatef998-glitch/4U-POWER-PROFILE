@@ -8,7 +8,7 @@ No stock photo hosts were reachable from the build environment. All images are t
 
 | Image | File | Used on | Replace with |
 |---|---|---|---|
-| Hero | `public/images/hero/hero-genset.svg` | Home hero (desktop) | Wide photo of your warehouse / generator line-up (≥ 2000 px wide, WebP/JPG) |
+| Hero (scroll assembly) | `public/images/hero/layers/*.webp`, cut from `assets/source/exploded-view.jpg` by `scripts/generate-brand-assets.py` | Home hero | ✅ Client render in use. For a cinematic upgrade, supply per-part renders or a 3D model (see README → Hero) |
 | Canopy genset | `public/images/products/generator-canopy.svg` | Perkins/Cummins/Kubota/Volvo/hybrid products, home category | Real canopy generator photos |
 | Open-frame genset | `public/images/products/generator-open.svg` | Several generator products | Real open-frame photos |
 | Containerised genset | `public/images/products/generator-container.svg` | 250–2500 kVA, gas | Real containerised photos |
@@ -19,7 +19,7 @@ No stock photo hosts were reachable from the build environment. All images are t
 | Projects ×9 | `public/images/projects/*.svg` | `/projects` | Real site photos per project |
 | News covers ×6 | `public/images/news/*.svg` | `/news` | Keep, or replace with real photos |
 | OG share image | `public/images/og-default.png` | Social previews | Optional: re-generate with a real photo (`scripts/generate-brand-images.mjs`) |
-| Logo | `src/components/icons.tsx` (`LogoMark`), `src/app/icon.svg`, `public/images/logo-mark.png`, `src/app/apple-icon.png` | Header, footer, favicon, schema | **Official 4U logo** (SVG) when available |
+| Logo | `public/brand/logo-{full,mark}-{light,dark}.png`, favicon/icons (generated from `assets/source/logo.jpg`) | Header, footer, favicon, schema, OG | ✅ Official logo in use. Send the **vector (SVG/AI)** version for pixel-perfect edges at every size |
 
 **How to replace:** upload photos to Supabase Storage (see `DEPLOYMENT.md`) and put the URLs into the `images` column of `products` / `projects`, or `cover_image` of `news_posts`. Alternatively, drop files into `public/images/...` with the same filename and change the extension in `src/content/*.ts`.
 

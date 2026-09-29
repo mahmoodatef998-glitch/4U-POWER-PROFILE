@@ -13,9 +13,9 @@ export function FaqAccordion({ items }: { items: FaqItem[] }) {
         <Accordion.Item key={f.q} value={`faq-${i}`} className="group">
           <Accordion.Header asChild>
             <h3>
-              <Accordion.Trigger className="flex w-full items-center justify-between gap-4 px-5 py-5 text-start text-base font-bold text-ink hover:text-amber-700 sm:px-6 sm:text-lg">
+              <Accordion.Trigger className="flex w-full items-center justify-between gap-4 px-5 py-5 text-start text-base font-bold text-ink hover:text-brand-700 sm:px-6 sm:text-lg">
                 {f.q}
-                <Plus className="size-5 shrink-0 text-amber-600 transition-transform duration-200 group-data-[state=open]:rotate-45" aria-hidden />
+                <Plus className="size-5 shrink-0 text-brand-600 transition-transform duration-200 group-data-[state=open]:rotate-45" aria-hidden />
               </Accordion.Trigger>
             </h3>
           </Accordion.Header>

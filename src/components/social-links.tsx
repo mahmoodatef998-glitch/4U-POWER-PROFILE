@@ -27,7 +27,7 @@ export function SocialLinks({ className, emptyLabel }: { className?: string; emp
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={label}
-                className={cn("grid size-10 place-items-center rounded-full bg-white/5 text-white/80 ring-1 ring-white/10 transition hover:bg-amber-500 hover:text-navy-950")}
+                className={cn("grid size-10 place-items-center rounded-full bg-white/5 text-white/80 ring-1 ring-white/10 transition hover:bg-brand-500 hover:text-ink-950")}
               >
                 <Icon className="size-5" />
               </a>

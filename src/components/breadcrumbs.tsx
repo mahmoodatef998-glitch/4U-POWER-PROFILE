@@ -21,7 +21,7 @@ export function Breadcrumbs({ locale, items, dark = true }: { locale: Locale; it
                   </span>
                 ) : (
                   <>
-                    <Link href={c.path} className="hover:text-amber-400">
+                    <Link href={c.path} className="hover:text-brand-400">
                       {c.name}
                     </Link>
                     <ChevronRight className="flip-rtl size-3.5 opacity-60" aria-hidden />

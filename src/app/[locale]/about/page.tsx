@@ -54,14 +54,14 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
         <div className="container-x grid gap-12 lg:grid-cols-12">
           <Reveal className="lg:col-span-7">
             <SectionHeading title={L(about.story.title)} />
-            <div className="mt-6 space-y-5 text-[1.0625rem] leading-8 text-slate-700">
+            <div className="mt-6 space-y-5 text-[1.0625rem] leading-8 text-zinc-700">
               {about.story.body.map((p) => (
                 <p key={p.en}>{L(p)}</p>
               ))}
             </div>
-            <div className="mt-10 rounded-2xl border-s-4 border-amber-500 bg-amber-50 p-6">
+            <div className="mt-10 rounded-2xl border-s-4 border-brand-500 bg-brand-50 p-6">
               <h2 className="text-xl">{L(about.mission.title)}</h2>
-              <p className="mt-2 leading-7 text-slate-800">{L(about.mission.body)}</p>
+              <p className="mt-2 leading-7 text-zinc-800">{L(about.mission.body)}</p>
             </div>
           </Reveal>
           <Reveal className="lg:col-span-5" delay={0.1}>
@@ -88,7 +88,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
           <ul className="mt-10 grid gap-6 sm:grid-cols-2 lg:max-w-3xl">
             {company.owners.map((o) => (
               <li key={o} className="flex items-center gap-4 rounded-2xl border border-line bg-white p-6">
-                <span className="grid size-14 place-items-center rounded-full bg-navy-900 text-amber-400">
+                <span className="grid size-14 place-items-center rounded-full bg-ink-900 text-brand-400">
                   <UserRound className="size-7" aria-hidden />
                 </span>
                 <div>
@@ -107,7 +107,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
           <ul className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {about.why.items.map((w, i) => (
               <Reveal as="li" key={w.title.en} delay={i * 0.05} className="rounded-2xl border border-line p-6">
-                <CheckCircle2 className="size-6 text-amber-600" aria-hidden />
+                <CheckCircle2 className="size-6 text-brand-600" aria-hidden />
                 <h3 className="mt-4 text-lg text-ink">{L(w.title)}</h3>
                 <p className="mt-2 text-sm leading-6 text-muted">{L(w.body)}</p>
               </Reveal>
@@ -118,8 +118,8 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
 
       <section className="section bg-surface" aria-labelledby="cert-title">
         <div className="container-x">
-          <div className="flex flex-col gap-6 rounded-3xl border border-dashed border-slate-300 bg-white p-8 sm:flex-row sm:items-center">
-            <Award className="size-12 shrink-0 text-slate-400" aria-hidden />
+          <div className="flex flex-col gap-6 rounded-3xl border border-dashed border-zinc-300 bg-white p-8 sm:flex-row sm:items-center">
+            <Award className="size-12 shrink-0 text-zinc-400" aria-hidden />
             <div>
               <h2 id="cert-title" className="text-xl">{L(about.certs.title)}</h2>
               <p className="mt-2 max-w-3xl leading-7 text-muted">{L(about.certs.body)}</p>
