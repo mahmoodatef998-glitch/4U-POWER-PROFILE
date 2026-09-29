@@ -7,8 +7,8 @@ export const home = {
   hero: {
     eyebrow: { en: "SAIF Zone, Sharjah · Licence No. 23919", ar: "سيف زون، الشارقة · رخصة رقم 23919" },
     h1: {
-      en: "Diesel Generators, ATS Panels & Switchgear Supplier in the UAE",
-      ar: "مورد مولدات ديزل ولوحات ATS ولوحات كهرباء في الإمارات",
+      en: "**Diesel generators,** ATS panels & switchgear supplier in the **UAE**",
+      ar: "مورد **مولدات ديزل** ولوحات ATS ولوحات كهرباء في **الإمارات**",
     },
     lead: {
       en: "Perkins, Cummins, Kubota and Volvo Penta generator sets from 10 to 2500 kVA — with the ATS, MDB and synchronising panels to match. Stocked in Sharjah, delivered across the UAE, Saudi Arabia and Iraq.",
@@ -72,7 +72,7 @@ export const home = {
   },
   who: {
     eyebrow: { en: "Who we are", ar: "من نحن" },
-    title: { en: "A power equipment partner built for speed", ar: "شريك معدات طاقة مبني على السرعة" },
+    title: { en: "A power equipment partner **built for speed**", ar: "شريك معدات طاقة **مبني على السرعة**" },
     body: {
       en: "4U Power Generation FZC is a licensed SAIF Zone company trading power generation, transmission and distribution equipment. We combine a Sharjah warehouse, multi-brand sourcing and hands-on engineering support so contractors and facility owners get the right generator and panel — quoted fast, delivered on time, documented properly.",
       ar: "فوريو باور جينيريشن (ش.م.ح) شركة مرخصة في المنطقة الحرة لمطار الشارقة لتجارة معدات توليد ونقل وتوزيع الطاقة. نجمع بين مستودع في الشارقة وتوريد متعدد الماركات ودعم هندسي عملي، ليحصل المقاولون وأصحاب المنشآت على المولد واللوحة الصحيحة بعرض سعر سريع وتسليم في الموعد ومستندات كاملة.",
@@ -86,7 +86,7 @@ export const home = {
   },
   categories: {
     eyebrow: { en: "What we supply", ar: "ما نورده" },
-    title: { en: "Complete standby & prime power packages", ar: "حلول متكاملة للطاقة الاحتياطية والأساسية" },
+    title: { en: "**Complete** standby & prime **power packages**", ar: "**حلول متكاملة** للطاقة الاحتياطية **والأساسية**" },
     items: {
       generator: {
         body: { en: "Diesel, gas, hybrid & solar-hybrid sets, 10–2500 kVA.", ar: "مولدات ديزل وغاز وهجينة وشمسية من 10 إلى 2500 ك.ف.أ." },
@@ -112,7 +112,7 @@ export const home = {
   },
   coverage: {
     eyebrow: { en: "Where we deliver", ar: "أين نوصل" },
-    title: { en: "From Sharjah to six markets — led by the UAE, Saudi Arabia and Iraq", ar: "من الشارقة إلى ستة أسواق، في مقدمتها الإمارات والسعودية والعراق" },
+    title: { en: "From Sharjah to **six markets** — led by the **UAE, Saudi Arabia and Iraq**", ar: "من الشارقة إلى **ستة أسواق**، في مقدمتها الإمارات والسعودية والعراق" },
     body: {
       en: "Our core markets get stock availability, overland delivery and localised specifications. Qatar, Kenya and South Africa are served by sea and road freight on project basis.",
       ar: "أسواقنا الرئيسية تحصل على توفر المخزون والشحن البري والمواصفات المحلية، بينما نخدم قطر وكينيا وجنوب أفريقيا بالشحن البحري والبري حسب المشروع.",
@@ -132,9 +132,9 @@ export const home = {
   },
   news: {
     eyebrow: { en: "Guides & news", ar: "أدلة وأخبار" },
-    title: { en: "Engineering guides from our team", ar: "أدلة هندسية من فريقنا" },
+    title: { en: "**Engineering guides** from our team", ar: "**أدلة هندسية** من فريقنا" },
   },
-  faq: { eyebrow: { en: "FAQ", ar: "الأسئلة الشائعة" }, title: { en: "Generator & ATS questions, answered", ar: "إجابات أسئلة المولدات ولوحات ATS" } },
+  faq: { eyebrow: { en: "FAQ", ar: "الأسئلة الشائعة" }, title: { en: "Generator & ATS questions, **answered**", ar: "إجابات أسئلة **المولدات ولوحات ATS**" } },
   cta: {
     title: { en: "Need a generator price today?", ar: "تحتاج سعر مولد اليوم؟" },
     body: {

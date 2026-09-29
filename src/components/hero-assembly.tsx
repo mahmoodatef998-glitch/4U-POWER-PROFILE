@@ -147,10 +147,10 @@ function Callout({ part, index, progress, locale }: { part: Part; index: number;
       <div className="absolute flex -translate-y-1/2 items-center gap-2" style={{ left: `${part.anchor[0] * 100}%`, top: `${part.anchor[1] * 100}%` }}>
         <span className="relative grid size-3 place-items-center">
           <span className="absolute size-3 animate-ping rounded-full bg-brand-400/70" />
-          <span className="size-2.5 rounded-full bg-brand-400 ring-2 ring-ink-950" />
+          <span className="size-2.5 rounded-full bg-brand-400 ring-2 ring-navy-950" />
         </span>
-        <span className="h-px w-6 bg-ink-950/60" />
-        <span className="whitespace-nowrap rounded-md bg-ink-950 px-2.5 py-1 text-xs font-bold text-white shadow-lg">{part.label[locale]}</span>
+        <span className="h-px w-6 bg-white/40" />
+        <span className="whitespace-nowrap rounded-full border border-white/15 bg-navy-900/80 px-3 py-1 text-xs font-semibold text-white shadow-lg backdrop-blur">{part.label[locale]}</span>
       </div>
     </m.div>
   );
@@ -202,7 +202,7 @@ function BackWord({ index, word, progress }: { index: number; word: string; prog
     <m.span
       aria-hidden
       style={{ opacity, y }}
-      className="pointer-events-none absolute inset-x-0 top-[8%] -z-10 select-none text-center font-display text-[24vw] font-extrabold uppercase leading-none tracking-tight text-ink-950/[0.045] [-webkit-text-stroke:1.5px_rgb(17_17_19/0.09)] sm:text-[19vw] rtl:font-[family-name:var(--font-arabic)] rtl:text-[17vw] rtl:tracking-normal"
+      className="pointer-events-none absolute inset-x-0 top-[8%] -z-10 select-none text-center font-display text-[24vw] font-extrabold uppercase leading-none tracking-tight text-white/[0.025] [-webkit-text-stroke:1.5px_rgb(255_255_255/0.07)] sm:text-[19vw] rtl:font-[family-name:var(--font-arabic)] rtl:text-[17vw] rtl:tracking-normal"
     >
       {word}
     </m.span>
@@ -215,7 +215,7 @@ function LockFlash({ progress }: { progress: MotionValue<number> }) {
   return <m.div className="pointer-events-none absolute inset-[-10%] rounded-full bg-[radial-gradient(closest-side,rgb(255_236_160/0.9),transparent)]" style={{ opacity, zIndex: 14 }} aria-hidden />;
 }
 
-export function HeroAssembly({ words, strings }: { words: string[]; strings: { scroll: string; label: string } }) {
+export function HeroAssembly({ words, strings }: { words: string[]; strings: { scroll: string; label: string; badge: string } }) {
   const locale = useLocale() as Locale;
   const ref = useRef<HTMLElement>(null);
   const still = !!useReducedMotion();
@@ -223,18 +223,31 @@ export function HeroAssembly({ words, strings }: { words: string[]; strings: { s
   // Spring-smoothed progress: wheel/trackpad steps become one continuous glide.
   const progress = useSpring(scrollYProgress, { stiffness: 140, damping: 28, mass: 0.35, restDelta: 0.0005 });
 
-  const glow = useTransform(progress, (v) => 0.25 + 0.5 * clamp01((v - 0.7) / 0.2));
+  const glow = useTransform(progress, (v) => 0.12 + 0.3 * clamp01((v - 0.7) / 0.2));
   const hint = useTransform(scrollYProgress, (v) => 1 - clamp01(v / 0.04));
   const bar = useTransform(progress, (v) => clamp01(v / LOCK[1]));
 
   return (
     <LazyMotion features={domAnimation} strict>
-      <section ref={ref} aria-label={strings.label} className={cn("relative bg-surface", !still && "h-[260vh] lg:h-[300vh]")}>
+      <section ref={ref} aria-label={strings.label} className={cn("relative bg-navy-950", !still && "h-[260vh] lg:h-[300vh]")}>
         <div className={cn("isolate overflow-hidden", still ? "relative h-[70svh] min-h-[420px]" : "sticky top-16 h-[calc(100svh-4rem)] lg:top-18 lg:h-[calc(100svh-4.5rem)]")}>
           <div
-            className="pointer-events-none absolute inset-0 -z-10 [background-image:linear-gradient(to_right,rgb(17_17_19/0.06)_1px,transparent_1px),linear-gradient(to_bottom,rgb(17_17_19/0.06)_1px,transparent_1px)] [background-size:56px_56px] [mask-image:radial-gradient(ellipse_at_center,black_35%,transparent_85%)]"
+            className="pointer-events-none absolute inset-0 -z-10 [background-image:linear-gradient(to_right,rgb(255_255_255/0.035)_1px,transparent_1px),linear-gradient(to_bottom,rgb(255_255_255/0.035)_1px,transparent_1px)] [background-size:56px_56px] [mask-image:radial-gradient(ellipse_at_center,black_35%,transparent_85%)]"
             aria-hidden
           />
+          <div className="nebula pointer-events-none absolute inset-0 -z-20" aria-hidden />
+          {/* big hairline arc behind the machine */}
+          <div
+            className="pointer-events-none absolute start-1/2 top-[14%] -z-10 aspect-square w-[min(140vw,150vh)] -translate-x-1/2 rounded-full border border-white/10 [mask-image:linear-gradient(to_bottom,black_30%,transparent_75%)] rtl:translate-x-1/2"
+            aria-hidden
+          />
+          <p className="absolute start-1/2 top-4 z-30 flex -translate-x-1/2 items-center gap-2.5 whitespace-nowrap rounded-full border border-white/10 bg-white/[0.06] px-4 py-2 text-xs font-medium text-white/85 backdrop-blur sm:top-6 sm:text-sm rtl:translate-x-1/2">
+            <span className="relative flex size-2.5">
+              <span className="absolute inset-0 animate-ping rounded-full bg-emerald-400/70" />
+              <span className="relative size-2.5 rounded-full bg-emerald-400" />
+            </span>
+            {strings.badge}
+          </p>
           <m.div
             className="pointer-events-none absolute start-1/2 top-1/2 -z-10 size-[80vmin] -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand-400 blur-[120px] rtl:translate-x-1/2"
             style={{ opacity: still ? 0.45 : glow }}
@@ -243,17 +256,17 @@ export function HeroAssembly({ words, strings }: { words: string[]; strings: { s
           {!still && words.map((w, i) => <BackWord key={i} index={i} word={w} progress={progress} />)}
 
           {/* stage: the generator owns the whole frame (never wider than its 2000px source) */}
-          <div className="absolute inset-0 flex items-center justify-center px-2 pb-10 pt-6 sm:px-6 max-md:pb-24">
+          <div className="absolute inset-0 flex items-center justify-center px-2 pb-10 pt-16 sm:px-6 max-md:pb-24">
             <div
               className="relative shrink-0 [--hero-vw:118vw] max-sm:[--hero-vw:104vw]"
-              style={{ aspectRatio: `${CANVAS.w} / ${CANVAS.h}`, width: `min(${CANVAS.w}px, var(--hero-vw), calc((100svh - 7.5rem) * ${ASPECT.toFixed(4)}))` }}
+              style={{ aspectRatio: `${CANVAS.w} / ${CANVAS.h}`, width: `min(${CANVAS.w}px, var(--hero-vw), calc((100svh - 11rem) * ${ASPECT.toFixed(4)}))` }}
             >
               {!still && PARTS.map((p, i) => <Layer key={p.id} part={p} index={i} progress={progress} priority={p.id === "engine" || p.id === "base-frame"} />)}
               {!still && PARTS.map((p) => (p.label ? <Landing key={p.id} part={p} progress={progress} /> : null))}
               <Assembled progress={progress} still={still} />
               {!still && PARTS.map((p, i) => <Callout key={p.id} part={p} index={i} progress={progress} locale={locale} />)}
               {!still && <LockFlash progress={progress} />}
-              <div className="absolute inset-x-[12%] bottom-[-2%] -z-10 h-[8%] rounded-[50%] bg-ink-950/20 blur-2xl" aria-hidden />
+              <div className="absolute inset-x-[12%] bottom-[-2%] -z-10 h-[8%] rounded-[50%] bg-black/60 blur-2xl" aria-hidden />
             </div>
           </div>
 
@@ -261,14 +274,14 @@ export function HeroAssembly({ words, strings }: { words: string[]; strings: { s
             <>
               <m.p
                 style={{ opacity: hint }}
-                className="absolute bottom-6 start-1/2 z-30 flex -translate-x-1/2 items-center gap-2 whitespace-nowrap rounded-full bg-white/80 px-4 py-2 text-xs font-bold uppercase tracking-[0.2em] text-muted shadow-sm backdrop-blur max-md:bottom-24 rtl:translate-x-1/2 rtl:tracking-normal"
+                className="absolute bottom-6 start-1/2 z-30 flex -translate-x-1/2 items-center gap-2 whitespace-nowrap rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-white/70 backdrop-blur max-md:bottom-24 rtl:translate-x-1/2 rtl:tracking-normal"
               >
-                <span className="inline-block h-5 w-3 rounded-full border-2 border-ink-600 p-0.5" aria-hidden>
-                  <span className="block h-1 w-full animate-bounce rounded-full bg-ink-600" />
+                <span className="inline-block h-5 w-3 rounded-full border-2 border-white/50 p-0.5" aria-hidden>
+                  <span className="block h-1 w-full animate-bounce rounded-full bg-white/70" />
                 </span>
                 {strings.scroll}
               </m.p>
-              <div className="absolute inset-x-0 bottom-0 z-30 h-1 bg-ink-950/10 max-md:bottom-[4.5rem]" aria-hidden>
+              <div className="absolute inset-x-0 bottom-0 z-30 h-1 bg-white/5 max-md:bottom-[4.5rem]" aria-hidden>
                 <m.div className="hazard h-full origin-left rtl:origin-right" style={{ scaleX: bar }} />
               </div>
             </>

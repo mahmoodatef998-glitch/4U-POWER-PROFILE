@@ -13,6 +13,7 @@ export const buttonVariants = cva(
         dark: "bg-ink-900 text-white hover:bg-ink-800 hover:shadow-[0_14px_30px_-14px_rgb(10_10_11/0.6)]",
         outline: "border border-ink-900/15 bg-white text-ink hover:border-ink-900/40",
         ghostDark: "border border-white/20 bg-white/5 text-white backdrop-blur hover:bg-white/10",
+        ring: "ring-grad bg-white/[0.04] text-white backdrop-blur hover:bg-white/10",
         link: "rounded-none p-0 text-brand-700 underline-offset-4 hover:underline",
       },
       size: {

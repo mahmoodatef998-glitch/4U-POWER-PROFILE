@@ -17,3 +17,6 @@ export function formatNumber(n: number, locale: Locale) {
 export function formatDate(iso: string, locale: Locale) {
   return new Intl.DateTimeFormat(locale === "ar" ? "ar-AE-u-nu-latn" : "en-GB", { dateStyle: "long" }).format(new Date(iso));
 }
+
+/** Headlines may mark emphasised words with **…**; this returns the plain text (for labels, metadata). */
+export const stripMarks = (s: string) => s.replace(/\*\*/g, "");

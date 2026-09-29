@@ -8,7 +8,7 @@ import { SectionHeading } from "./section-heading";
 export function FaqBlock({ locale, items, title, eyebrow, className = "bg-surface", dark }: { locale: Locale; items: Faq[]; title: string; eyebrow?: string; className?: string; dark?: boolean }) {
   const localized = items.map((f) => ({ q: pick(f.q, locale), a: pick(f.a, locale) }));
   return (
-    <section className={`section ${dark ? "on-dark bg-navy-950 text-white" : className}`} aria-labelledby="faq-title">
+    <section className={`section ${dark ? "on-dark relative text-white" : className}`} aria-labelledby="faq-title">
       <JsonLd data={faqSchema(localized)} />
       <div className="container-x grid gap-10 lg:grid-cols-12">
         <div className="lg:col-span-4">

@@ -130,7 +130,7 @@ export function ProductLines({ items, labels }: { items: ProductLine[]; labels: 
                   <p className="font-display text-sm font-extrabold tracking-[0.25em] text-white/50 rtl:tracking-normal" dir="ltr">
                     {String(i + 1).padStart(2, "0")} / {String(items.length).padStart(2, "0")}
                   </p>
-                  <h3 className="grad-text mt-4 font-display text-4xl leading-none font-extrabold uppercase sm:text-5xl lg:text-6xl rtl:font-[family-name:var(--font-arabic)] rtl:text-4xl rtl:leading-tight rtl:normal-case rtl:lg:text-5xl">
+                  <h3 className="grad-text mt-4 text-4xl leading-none font-bold tracking-[-0.035em] sm:text-5xl lg:text-6xl rtl:text-4xl rtl:leading-tight rtl:tracking-normal rtl:lg:text-5xl">
                     {it.title}
                   </h3>
                   <p className="mt-5 max-w-md text-base leading-7 text-white/75 sm:text-lg">{it.body}</p>

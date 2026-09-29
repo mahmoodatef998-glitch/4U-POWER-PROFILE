@@ -20,10 +20,10 @@
   --color-brand-700: #7a5900;   /* yellow-family text on white: 6.6:1 */
 
   /* Deep navy for immersive dark sections (hybrid with the Upscayl-style glass look) */
-  --color-navy-950: #070b18;
-  --color-navy-900: #0c1224;
-  --color-navy-800: #141c36;
-  --color-navy-700: #1f2a4d;
+  --color-navy-950: #0a0f1f;
+  --color-navy-900: #10172d;
+  --color-navy-800: #182142;
+  --color-navy-700: #243058;
 
   /* Product-line accent gradients: amber (generators), green (ATS), blue (switchgear), violet (MDB), cyan (sync) */
   --color-line-gen-a: #ffd426;
@@ -64,6 +64,7 @@
     from { transform: translate3d(0, 0, 0); }
     to { transform: translate3d(-50%, 0, 0); }
   }
+  --animate-marquee-slow: marquee 70s linear infinite;
   --animate-page-in: page-in 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
   @keyframes page-in {
     from { opacity: 0; }
@@ -87,7 +88,7 @@
   html[dir="rtl"] body { font-family: var(--font-arabic); }
   h1, h2, h3, h4 { @apply font-extrabold tracking-tight text-balance; }
   /* Condensed industrial display face for the big headings (matches the POWER wordmark) */
-  h1, h2 { font-family: var(--font-display); font-weight: 800; letter-spacing: -0.01em; text-transform: uppercase; line-height: 1.02; }
+  h1, h2 { font-family: var(--font-sans); font-weight: 700; letter-spacing: -0.035em; line-height: 1.04; }
   html[dir="rtl"] :is(h1, h2) { font-family: var(--font-arabic); text-transform: none; line-height: 1.25; font-weight: 700; }
   html[dir="rtl"] :is(h1, h2, h3, h4) { @apply tracking-normal; letter-spacing: 0; }
   :focus-visible { @apply outline-2 outline-offset-2 outline-brand-500; }
@@ -167,6 +168,29 @@
     pointer-events: none;
   }
   .shine:hover::after { transform: translateX(130%); }
+  /* Upscayl-style night sky: blue light on the start side, magenta on the end side, a hint of brand amber */
+  .nebula {
+    background:
+      radial-gradient(55rem 40rem at 8% 35%, rgb(56 88 214 / 0.26), transparent 70%),
+      radial-gradient(50rem 38rem at 94% 60%, rgb(170 60 150 / 0.2), transparent 70%),
+      radial-gradient(36rem 24rem at 55% 105%, rgb(255 180 40 / 0.07), transparent 70%);
+  }
+  /* Thin gradient ring (pill buttons, badges) */
+  .ring-grad { position: relative; isolation: isolate; }
+  .ring-grad::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1.5px;
+    background: linear-gradient(110deg, var(--color-brand-400), #ff8a3d 40%, #d946ef 75%, #6366f1);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+  /* Dotted texture used on the floating nav */
+  .dots { background-image: radial-gradient(rgb(255 255 255 / 0.07) 1px, transparent 1px); background-size: 6px 6px; }
   /* Soft coloured light behind dark sections */
   .aurora {
     background:

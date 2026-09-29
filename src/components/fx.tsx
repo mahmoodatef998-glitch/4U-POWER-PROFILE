@@ -1,10 +1,24 @@
 "use client";
 
 import { LazyMotion, domAnimation, m, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform } from "framer-motion";
-import { Children, Fragment, useEffect, useRef, type ElementType, type PointerEvent, type ReactNode } from "react";
+import { Children, Fragment, useEffect, useRef, useState, type ElementType, type PointerEvent, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
+
+/** "Plain **bright words** plain" → words flagged as emphasised (bright) or not (muted). */
+function parseMarks(text: string) {
+  return text
+    .split(/(\*\*[^*]+\*\*)/)
+    .flatMap((seg) => {
+      const em = seg.startsWith("**");
+      return seg
+        .replace(/\*\*/g, "")
+        .split(/\s+/)
+        .filter(Boolean)
+        .map((w) => ({ w, em }));
+    });
+}
 
 /**
  * Heading whose words rise out of a mask one after another. The full text stays in the DOM as real
@@ -24,15 +38,27 @@ export function SplitText({
   delay?: number;
 }) {
   const reduce = useReducedMotion();
-  const words = text.split(/\s+/).filter(Boolean);
-  if (reduce) return <Tag id={id} className={className}>{text}</Tag>;
+  const words = parseMarks(text);
+  const marked = words.some((w) => w.em);
+  const tone = (em: boolean) => (marked && !em ? "opacity-45" : undefined);
+  if (reduce)
+    return (
+      <Tag id={id} className={className}>
+        {words.map((w, i) => (
+          <Fragment key={i}>
+            {i > 0 && " "}
+            <span className={tone(w.em)}>{w.w}</span>
+          </Fragment>
+        ))}
+      </Tag>
+    );
   return (
     <LazyMotion features={domAnimation} strict>
       <Tag id={id} className={className}>
         {words.map((w, i) => (
           <Fragment key={i}>
             {i > 0 && " "}
-            <span className="inline-block overflow-hidden pb-[0.12em] -mb-[0.12em] align-top">
+            <span className={cn("inline-block overflow-hidden pb-[0.12em] -mb-[0.12em] align-top", tone(w.em))}>
               <m.span
                 className="inline-block will-change-transform"
                 initial={{ y: "110%" }}
@@ -40,7 +66,7 @@ export function SplitText({
                 viewport={{ once: true, margin: "0px 0px -8% 0px" }}
                 transition={{ duration: 0.9, delay: delay + i * 0.045, ease: EASE }}
               >
-                {w}
+                {w.w}
               </m.span>
             </span>
           </Fragment>
@@ -151,4 +177,50 @@ export function SpotlightTracker() {
     };
   }, []);
   return null;
+}
+
+/** Cycles through words in place (e.g. "Built for Hospitals → Data centres → …"). All words stay in the DOM for crawlers. */
+export function RotatingWords({ words, interval = 2200, className }: { words: string[]; interval?: number; className?: string }) {
+  const reduce = useReducedMotion();
+  const [i, setI] = useState(0);
+  useEffect(() => {
+    if (reduce) return;
+    const id = window.setInterval(() => setI((n) => (n + 1) % words.length), interval);
+    return () => window.clearInterval(id);
+  }, [reduce, interval, words.length]);
+  return (
+    <span className={cn("relative inline-grid overflow-hidden align-bottom", className)}>
+      {words.map((w, k) => (
+        <span
+          key={w}
+          aria-hidden={k !== i || undefined}
+          className={cn(
+            "[grid-area:1/1] whitespace-nowrap transition-[translate,opacity,filter] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]",
+            k === i ? "translate-y-0 opacity-100 blur-0" : k === (i - 1 + words.length) % words.length ? "-translate-y-full opacity-0 blur-sm" : "translate-y-full opacity-0 blur-sm",
+          )}
+        >
+          {w}
+        </span>
+      ))}
+    </span>
+  );
+}
+
+/** Screen-like panel that tilts back in 3D and straightens as it scrolls into view. */
+export function Tilt3D({ children, className }: { children: ReactNode; className?: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const reduce = useReducedMotion();
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "start 25%"] });
+  const rotateX = useTransform(scrollYProgress, [0, 1], [26, 0]);
+  const scale = useTransform(scrollYProgress, [0, 1], [0.88, 1]);
+  const y = useTransform(scrollYProgress, [0, 1], [60, 0]);
+  return (
+    <LazyMotion features={domAnimation} strict>
+      <div ref={ref} className={className} style={{ perspective: 1400 }}>
+        <m.div className="origin-bottom will-change-transform" style={reduce ? undefined : { rotateX, scale, y }}>
+          {children}
+        </m.div>
+      </div>
+    </LazyMotion>
+  );
 }

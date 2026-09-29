@@ -88,15 +88,34 @@ SEEDS = {
 
 
 def matte(rgb):
-    """white-backdrop matte: solid mask (holes filled) with a 1px soft edge"""
+    """
+    White-backdrop matte that also works on a dark page:
+      - solid mask; thin enclosed pockets (specular highlights) stay filled, wide enclosed pockets of
+        backdrop (gaps inside frames, between feet) are cut out
+      - soft edge alpha from the distance to white, then colours are un-blended from white so no light
+        fringe shows on dark backgrounds
+    """
     d = (254 - rgb).max(axis=2)
-    m = ndi.binary_fill_holes(ndi.binary_closing(d > 14, iterations=3))
-    soft = ndi.gaussian_filter(m.astype(float), 0.7)
-    return m, np.clip(soft * 255, 0, 255)
+    solid = ndi.binary_closing(d > 14, iterations=3)
+    holes = ndi.binary_fill_holes(solid) & ~solid
+    hl, hn = ndi.label(holes)
+    if hn:
+        # thin pockets (<= ~24px across) are highlights on metal; wider ones are backdrop showing through
+        width = ndi.maximum(ndi.distance_transform_edt(holes), hl, range(1, hn + 1))
+        keep = np.isin(hl, np.where(np.asarray(width) <= 12)[0] + 1)
+        solid = solid | keep
+    edge = np.clip(d / 36.0, 0, 1)  # partial coverage near the backdrop
+    inner = ndi.binary_erosion(solid, iterations=2)
+    a = np.where(inner, 1.0, np.where(solid | ndi.binary_dilation(solid, iterations=1), edge, 0.0))
+    a = ndi.gaussian_filter(a, 0.5)
+    safe = np.maximum(a, 1e-3)[..., None]
+    fg = np.clip((rgb - (1 - a[..., None]) * 255.0) / safe, 0, 255)
+    rgb_out = np.where(a[..., None] > 0.98, rgb, fg)
+    return solid, np.clip(a * 255, 0, 255), rgb_out
 
 
 ex = np.asarray(Image.open(SRC / "exploded-v2.webp").convert("RGB")).astype(float)
-mask, alpha = matte(ex)
+mask, alpha, ex = matte(ex)
 lab, _ = ndi.label(mask)
 meta = {"canvas": {"w": ex.shape[1], "h": ex.shape[0]}, "parts": {}}
 for name, seeds in SEEDS.items():
@@ -109,7 +128,7 @@ for name, seeds in SEEDS.items():
     meta["parts"][name] = dict(x=int(x0), y=int(y0), w=int(x1 - x0), h=int(y1 - y0), tx=tx, ty=ty, s=sc)
 
 asm = np.asarray(Image.open(SRC / "assembled-v2.webp").convert("RGB")).astype(float)
-_, a_asm = matte(asm)
+_, a_asm, asm = matte(asm)
 assembled = Image.fromarray(np.dstack([asm, a_asm]).astype(np.uint8), "RGBA")
 assembled.save(LAYERS / "assembled.webp", quality=82, method=6)
 (LAYERS / "layers.json").write_text(json.dumps(meta, indent=2))

@@ -79,14 +79,19 @@ export function Header() {
   return (
     <header
       className={cn(
-        "sticky top-0 z-50 border-b transition-colors duration-300",
-        scrolled ? "border-white/10 bg-navy-950/85 backdrop-blur-xl" : "border-transparent bg-navy-950",
+        "sticky top-0 z-50 px-2 pt-2 transition-colors duration-500 sm:px-4 lg:pt-3",
+        scrolled ? "bg-transparent" : "bg-navy-950",
       )}
     >
       <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:start-4 focus:top-3 focus:z-50 focus:rounded-full focus:bg-brand-500 focus:px-4 focus:py-2 focus:font-bold focus:text-ink-950">
         {t("skip")}
       </a>
-      <div className="container-x flex h-16 items-center justify-between gap-4 lg:h-18">
+      <div
+        className={cn(
+          "dots mx-auto flex h-14 max-w-7xl items-center justify-between gap-4 rounded-full border ps-4 pe-1.5 backdrop-blur-xl transition-[background-color,border-color,box-shadow] duration-500 sm:ps-5 lg:h-15",
+          scrolled ? "border-white/15 bg-navy-900/75 shadow-[0_18px_40px_-18px_rgb(0_0_0/0.8)]" : "border-white/10 bg-white/[0.04]",
+        )}
+      >
         <Link href="/" className="rounded-lg">
           <Brand />
         </Link>
@@ -99,7 +104,7 @@ export function Header() {
                   href={n.href}
                   aria-current={isActive(n.href) ? "page" : undefined}
                   className={cn(
-                    "whitespace-nowrap rounded-full px-3 py-2 text-sm font-semibold text-white/80 transition hover:bg-white/5 hover:text-white",
+                    "whitespace-nowrap rounded-full px-3.5 py-2 text-[0.94rem] font-medium text-white/75 transition hover:bg-white/5 hover:text-white",
                     isActive(n.href) && "text-brand-400 hover:text-brand-400",
                   )}
                 >
@@ -127,8 +132,8 @@ export function Header() {
               <Menu className="size-6" aria-hidden />
             </Dialog.Trigger>
             <Dialog.Portal>
-              <Dialog.Overlay className="fixed inset-0 z-50 bg-ink-950/70 backdrop-blur-sm" />
-              <Dialog.Content className="fixed inset-y-0 end-0 z-50 flex w-[88%] max-w-sm flex-col bg-ink-950 p-5 text-white shadow-2xl">
+              <Dialog.Overlay className="fixed inset-0 z-50 bg-navy-950/70 backdrop-blur-sm" />
+              <Dialog.Content className="fixed inset-y-0 end-0 z-50 flex w-[88%] max-w-sm flex-col border-s border-white/10 bg-navy-950 p-5 text-white shadow-2xl">
                 <div className="flex items-center justify-between">
                   <Dialog.Title className="sr-only">{t("menu")}</Dialog.Title>
                   <Dialog.Description className="sr-only">{company.brand}</Dialog.Description>
