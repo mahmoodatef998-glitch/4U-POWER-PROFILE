@@ -23,3 +23,10 @@ export const TikTokIcon = (p: P) => (
 export const YouTubeIcon = (p: P) => (
   <svg {...base} {...p}><path d="M21.58 7.19a2.5 2.5 0 0 0-1.76-1.77C18.25 5 12 5 12 5s-6.25 0-7.82.42a2.5 2.5 0 0 0-1.76 1.77C2 8.76 2 12 2 12s0 3.24.42 4.81a2.5 2.5 0 0 0 1.76 1.77C5.75 19 12 19 12 19s6.25 0 7.82-.42a2.5 2.5 0 0 0 1.76-1.77C22 15.24 22 12 22 12s0-3.24-.42-4.81ZM10 15V9l5.2 3L10 15Z" /></svg>
 );
+
+export const LogoMark = (p: P) => (
+  <svg viewBox="0 0 40 40" aria-hidden {...p}>
+    <rect width="40" height="40" rx="10" fill="#f5a524" />
+    <path d="M22.5 6 11 22.5h8.2L17 34l12-17.2h-8.3L22.5 6Z" fill="#0a1426" />
+  </svg>
+);

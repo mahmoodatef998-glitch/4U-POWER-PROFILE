@@ -2,7 +2,6 @@
 
 import * as Dialog from "@radix-ui/react-dialog";
 import { Menu, Phone, X, Globe } from "lucide-react";
-import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { Link, usePathname } from "@/i18n/navigation";
@@ -10,6 +9,7 @@ import { trackEvent } from "@/lib/analytics";
 import { company, telUrl } from "@/lib/site";
 import { cn } from "@/lib/utils";
 import { WhatsAppButton } from "./cta-buttons";
+import { LogoMark } from "./icons";
 
 const NAV = [
   { href: "/generators", key: "generators", top: true },
@@ -24,17 +24,19 @@ const NAV = [
   { href: "/contact", key: "contact" },
 ] as const;
 
-/** Official 4U POWER GENERATION (FZC) logo. `tone` = background it sits on. */
-export function Brand({ className, tone = "dark" }: { className?: string; tone?: "dark" | "light" }) {
+/** Site wordmark: bolt mark + "4U Power / Generation". Sits on the dark header/footer. */
+export function Brand({ className }: { className?: string }) {
   const locale = useLocale();
   return (
-    <Image
-      src={tone === "dark" ? "/brand/logo-full-dark.png" : "/brand/logo-full-light.png"}
-      alt={locale === "ar" ? "فوريو باور جينيريشن" : "4U Power Generation"}
-      width={120}
-      height={60}
-      className={cn("h-12 w-auto lg:h-14", className)}
-    />
+    <span className={cn("flex items-center gap-2.5", className)}>
+      <LogoMark className="size-9 shrink-0" />
+      <span className="leading-none">
+        <span className="block text-[1.05rem] font-extrabold tracking-tight text-white">{locale === "ar" ? "فوريو باور" : "4U Power"}</span>
+        <span className="block text-[0.68rem] font-semibold uppercase tracking-[0.2em] text-amber-400 rtl:tracking-normal">
+          {locale === "ar" ? "جينيريشن" : "Generation"}
+        </span>
+      </span>
+    </span>
   );
 }
 
