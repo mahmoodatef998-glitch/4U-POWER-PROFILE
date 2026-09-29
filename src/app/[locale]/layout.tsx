@@ -37,6 +37,9 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = { themeColor: "#060c18", width: "device-width", initialScale: 1 };
 
+// Only /en and /ar exist; anything else (e.g. /favicon.ico) is a hard 404 instead of rendering with a bogus locale.
+export const dynamicParams = false;
+
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
 }
