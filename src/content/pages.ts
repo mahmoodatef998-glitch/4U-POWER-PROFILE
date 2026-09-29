@@ -20,6 +20,45 @@ export const home = {
       { en: "UAE · KSA · Iraq", ar: "الإمارات · السعودية · العراق" },
     ],
   },
+  /** Scroll-story chapters shown under the assembling generator (hero). */
+  story: [
+    {
+      kicker: { en: "01 — The heart", ar: "01 — القلب" },
+      title: { en: "Engines you can trust in 50 °C", ar: "محركات تعتمد عليها في حرارة 50 درجة" },
+      body: {
+        en: "Perkins, Cummins, Kubota, Volvo Penta and Chinese engine platforms from 10 to 2500 kVA — quoted side by side so you choose on facts, not brand loyalty.",
+        ar: "محركات بيركنز وكمنز وكوبوتا وفولفو بنتا والمحركات الصينية من 10 إلى 2500 ك.ف.أ، نقدّمها لك جنباً إلى جنب لتختار بالأرقام لا بالاسم.",
+      },
+      stat: { en: "10–2500 kVA", ar: "10–2500 ك.ف.أ" },
+    },
+    {
+      kicker: { en: "02 — Gulf-proof cooling", ar: "02 — تبريد مصمم للخليج" },
+      title: { en: "Sized for August, not the catalogue", ar: "مصمم لصيف أغسطس، لا لأرقام الكتالوج" },
+      body: {
+        en: "High-ambient radiators, canopies and site derating specified for UAE, Saudi and Iraqi summers — the output you are quoted is the output you get on site.",
+        ar: "مبردات للحرارة العالية وكبائن ومعامل خفض قدرة محسوب لصيف الإمارات والسعودية والعراق، فالقدرة في عرض السعر هي نفسها في الموقع.",
+      },
+      stat: { en: "50 °C rated", ar: "حتى 50 °م" },
+    },
+    {
+      kicker: { en: "03 — Automatic control", ar: "03 — تحكم أوتوماتيكي" },
+      title: { en: "Power back in 5–15 seconds", ar: "الكهرباء تعود خلال 5–15 ثانية" },
+      body: {
+        en: "AMF controllers and ATS panels from 63 A to 4000 A start the set and transfer your load the moment the grid drops — no one needs to be on site.",
+        ar: "وحدات تحكم AMF ولوحات ATS من 63 إلى 4000 أمبير تشغّل المولد وتنقل الحمل لحظة انقطاع الشبكة، دون الحاجة لوجود أحد في الموقع.",
+      },
+      stat: { en: "63–4000 A ATS", ar: "ATS من 63–4000 أمبير" },
+    },
+    {
+      kicker: { en: "04 — Ready to ship", ar: "04 — جاهز للشحن" },
+      title: { en: "Ready in Sharjah. Delivered to your site.", ar: "جاهز في الشارقة ويصل إلى موقعك" },
+      body: {
+        en: "From SAIF Zone to the UAE in days, overland to Saudi Arabia, by sea or road to Iraq — with datasheets and export paperwork done for you.",
+        ar: "من المنطقة الحرة بالشارقة إلى الإمارات خلال أيام، وبراً إلى السعودية، وبحراً أو براً إلى العراق، مع النشرات الفنية ومستندات التصدير جاهزة.",
+      },
+      stat: { en: "UAE · KSA · Iraq", ar: "الإمارات · السعودية · العراق" },
+    },
+  ],
   brands: {
     title: { en: "Engine platforms we supply", ar: "المحركات التي نوردها" },
     note: {

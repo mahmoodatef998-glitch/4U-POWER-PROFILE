@@ -39,37 +39,35 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
 
   return (
     <>
-      {/* ------------------------------------------------ HERO: scroll-to-assemble generator */}
+      {/* ------------------------------------------------ HERO: scroll story — generator assembles, copy advances in chapters */}
       <HeroAssembly
-        strings={{
-          scroll: locale === "ar" ? "مرّر لتجميع المولد" : "Scroll to assemble",
-          assembled: locale === "ar" ? "مولد متكامل — جاهز للتسليم" : "Fully assembled — ready to ship",
-          progress: L(home.hero.h1),
-        }}
-      >
-        <p className="eyebrow">
-          <BadgeCheck className="size-4" aria-hidden />
-          {L(home.hero.eyebrow)}
-        </p>
-        <h1 className="mt-4 text-[2.35rem] text-ink sm:text-6xl lg:text-[3.75rem] xl:text-[4.25rem] rtl:text-[1.9rem] rtl:sm:text-5xl rtl:lg:text-[3.25rem]">
-          {L(home.hero.h1)}
-        </h1>
-        <p className="mt-4 hidden max-w-xl text-base leading-7 text-muted sm:block lg:text-lg">{L(home.hero.lead)}</p>
-        <div className="mt-6 flex flex-col gap-2.5 sm:flex-row sm:gap-3">
-          <WhatsAppButton location="hero" size="lg" />
-          <Link href="/calculator" className={buttonVariants({ variant: "dark", size: "lg" })}>
-            {t("cta.tryCalculator")}
-            <ArrowRight className="flip-rtl" aria-hidden />
-          </Link>
-        </div>
-        <ul className="mt-6 hidden flex-wrap gap-2 sm:flex">
-          {home.hero.chips.map((c) => (
-            <li key={c.en} className="rounded-full border border-ink-950/10 bg-white/70 px-3.5 py-1.5 text-sm font-bold text-ink backdrop-blur">
-              {L(c)}
-            </li>
-          ))}
-        </ul>
-      </HeroAssembly>
+        strings={{ scroll: locale === "ar" ? "مرّر لتجميع المولد" : "Scroll to assemble", label: L(home.hero.h1) }}
+        chapters={home.story.map((c) => ({ kicker: L(c.kicker), title: L(c.title), body: L(c.body), stat: L(c.stat) }))}
+        outroCta={<WhatsAppButton location="hero_outro" />}
+        intro={
+          <div className="grid h-full content-start gap-4 lg:grid-cols-12 lg:content-center lg:items-center lg:gap-8">
+            <div className="lg:col-span-8">
+              <p className="eyebrow">
+                <BadgeCheck className="size-4" aria-hidden />
+                {L(home.hero.eyebrow)}
+              </p>
+              <h1 className="mt-2 text-[1.9rem] text-ink sm:text-5xl lg:text-[3.4rem] xl:text-6xl rtl:text-[1.6rem] rtl:sm:text-4xl rtl:lg:text-[2.6rem]">
+                {L(home.hero.h1)}
+              </h1>
+            </div>
+            <div className="lg:col-span-4">
+              <p className="hidden text-sm leading-6 text-muted lg:block">{L(home.hero.lead)}</p>
+              <div className="mt-0 flex gap-2 lg:mt-4">
+                <WhatsAppButton location="hero" className="flex-1 lg:flex-none" />
+                <Link href="/calculator" className={`${buttonVariants({ variant: "dark" })} flex-1 lg:flex-none`}>
+                  {t("cta.tryCalculator")}
+                  <ArrowRight className="flip-rtl" aria-hidden />
+                </Link>
+              </div>
+            </div>
+          </div>
+        }
+      />
 
       {/* ------------------------------------------------ BRAND STRIP */}
       <section aria-labelledby="brands-title" className="border-b border-line bg-white">
