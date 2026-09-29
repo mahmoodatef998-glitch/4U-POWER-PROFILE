@@ -84,18 +84,18 @@ export default async function NewsPostPage({ params }: Props) {
         </p>
       </PageHero>
 
-      <article className="section bg-white">
+      <article className="section bg-navy-900">
         <div className="container-x grid gap-12 lg:grid-cols-12">
           <div className="lg:col-span-8">
             {p.cover_image && (
-              <div className="relative mb-10 aspect-[1200/630] overflow-hidden rounded-3xl bg-ink-900">
+              <div className="relative mb-10 aspect-[1200/630] overflow-hidden rounded-3xl bg-navy-950">
                 <Image src={p.cover_image} alt={title} fill priority sizes="(min-width:1024px) 60vw, 100vw" className="object-cover" />
               </div>
             )}
             <Markdown source={ar ? p.body_ar : p.body_en} />
           </div>
           <aside className="lg:col-span-4">
-            <div className="on-dark rounded-3xl bg-ink-900 p-6 text-white lg:sticky lg:top-28">
+            <div className="on-dark rounded-3xl bg-navy-950 p-6 text-white lg:sticky lg:top-28">
               <p className="text-lg font-extrabold">{ar ? "تحتاج مساعدة في الاختيار؟" : "Need help choosing?"}</p>
               <p className="mt-2 text-sm leading-6 text-white/75">
                 {ar ? "أرسل لنا الحمل أو القدرة المطلوبة وسيرد مهندس خلال ساعة عمل." : "Send us your load or required kVA — an engineer replies within the working hour."}

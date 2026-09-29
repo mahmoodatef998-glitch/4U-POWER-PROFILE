@@ -50,7 +50,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
         intro={L(about.intro)}
       />
 
-      <section className="section bg-white">
+      <section className="section bg-navy-900">
         <div className="container-x grid gap-12 lg:grid-cols-12">
           <Reveal className="lg:col-span-7">
             <SectionHeading title={L(about.story.title)} />
@@ -87,8 +87,8 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
           {/* CONTENT_TODO: add owner headshots and short bios. */}
           <ul className="mt-10 grid gap-6 sm:grid-cols-2 lg:max-w-3xl">
             {company.owners.map((o) => (
-              <li key={o} className="flex items-center gap-4 rounded-2xl border border-line bg-white p-6">
-                <span className="grid size-14 place-items-center rounded-full bg-ink-900 text-brand-400">
+              <li key={o} className="flex items-center gap-4 rounded-2xl border border-line bg-navy-900 p-6">
+                <span className="grid size-14 place-items-center rounded-full bg-navy-950 text-brand-400">
                   <UserRound className="size-7" aria-hidden />
                 </span>
                 <div>
@@ -101,7 +101,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
         </div>
       </section>
 
-      <section className="section bg-white" aria-labelledby="why-title">
+      <section className="section bg-navy-900" aria-labelledby="why-title">
         <div className="container-x">
           <SectionHeading id="why-title" title={L(about.why.title)} />
           <ul className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
@@ -118,7 +118,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
 
       <section className="section bg-surface" aria-labelledby="cert-title">
         <div className="container-x">
-          <div className="flex flex-col gap-6 rounded-3xl border border-dashed border-zinc-300 bg-white p-8 sm:flex-row sm:items-center">
+          <div className="flex flex-col gap-6 rounded-3xl border border-dashed border-zinc-300 bg-navy-900 p-8 sm:flex-row sm:items-center">
             <Award className="size-12 shrink-0 text-zinc-400" aria-hidden />
             <div>
               <h2 id="cert-title" className="text-xl">{L(about.certs.title)}</h2>

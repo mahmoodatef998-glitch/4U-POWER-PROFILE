@@ -18,7 +18,7 @@ const F = ({ name, label, textarea, rows = 3, dir, hint }: { name: string; label
 export function PostForm() {
   const [state, action, pending] = useActionState(createPost, null);
   return (
-    <form action={action} className="grid gap-4 rounded-2xl border border-line bg-white p-6">
+    <form action={action} className="grid gap-4 rounded-2xl border border-line bg-navy-900 p-6">
       {state?.error && <p className="rounded-xl bg-red-50 p-3 text-sm text-red-800">{state.error}</p>}
       <F name="slug" label="URL slug" hint="e.g. generator-maintenance-tips-uae" />
       <div className="grid gap-4 md:grid-cols-2">

@@ -54,9 +54,8 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
         }}
       />
 
-      {/* One continuous night-sky canvas for the rest of the page: the glow layer sticks to the viewport */}
-      <div className="on-dark relative isolate bg-navy-950 text-white">
-        <div aria-hidden className="nebula pointer-events-none sticky top-0 -z-10 -mb-[100vh] h-screen" />
+      {/* Rest of the page sits on the site-wide night-sky canvas (see layout) */}
+      <div className="on-dark relative text-white">
 
         {/* ---------------------------------------------- INTRO: pinned headline + cards that stack as you scroll */}
         <section className="relative pb-20 pt-16 sm:pt-24 lg:pb-32" aria-labelledby="hero-title">

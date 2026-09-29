@@ -70,7 +70,7 @@ export default async function MarketPage({ params }: Props) {
         </div>
       </PageHero>
 
-      <section className="section bg-white">
+      <section className="section bg-navy-900">
         <div className="container-x">
           <SectionHeading title={ar ? `لماذا فوريو باور في ${name}` : `Why 4U Power for ${name}`} />
           <ul className="mt-10 grid gap-6 md:grid-cols-3">
@@ -83,7 +83,7 @@ export default async function MarketPage({ params }: Props) {
             ))}
           </ul>
           <div className="mt-10 grid gap-6 lg:grid-cols-2">
-            <div className="on-dark rounded-2xl bg-ink-900 p-6 text-white">
+            <div className="on-dark rounded-2xl bg-navy-950 p-6 text-white">
               <h3 className="flex items-center gap-2 text-lg">
                 <Ship className="size-5 text-brand-400" aria-hidden />
                 {ar ? "الشحن والتسليم" : "Shipping & delivery"}
@@ -113,7 +113,7 @@ export default async function MarketPage({ params }: Props) {
         </section>
       )}
 
-      {m.faq.length > 0 && <FaqBlock locale={locale} items={m.faq} title={ar ? "الأسئلة الشائعة" : "Frequently asked questions"} eyebrow={locale === "ar" ? "أسئلة وأجوبة" : "FAQ"} className="bg-white" />}
+      {m.faq.length > 0 && <FaqBlock locale={locale} items={m.faq} title={ar ? "الأسئلة الشائعة" : "Frequently asked questions"} eyebrow={locale === "ar" ? "أسئلة وأجوبة" : "FAQ"} className="bg-navy-900" />}
       <CtaBanner
         title={ar ? `اطلب عرض سعر للتوريد إلى ${name}` : `Get a quotation for delivery to ${name}`}
         body={ar ? "أرسل القدرة ومدينة التسليم وسنرد بالخيارات والسعر ومدة الشحن." : "Send the kVA and delivery city — we reply with options, pricing and shipping time."}

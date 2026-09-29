@@ -96,7 +96,7 @@ export default async function ProductPage({ params }: Props) {
         title={name}
         intro={description}
         aside={
-          <div className="relative aspect-[4/3] overflow-hidden rounded-3xl bg-ink-900 ring-1 ring-white/10">
+          <div className="relative aspect-[4/3] overflow-hidden rounded-3xl bg-navy-950 ring-1 ring-white/10">
             {p.images[0] && <Image src={p.images[0]} alt={name} fill priority sizes="(min-width:1024px) 40vw, 100vw" className="object-cover" />}
           </div>
         }
@@ -119,7 +119,7 @@ export default async function ProductPage({ params }: Props) {
         </div>
       </PageHero>
 
-      <section className="section bg-white">
+      <section className="section bg-navy-900">
         <div className="container-x grid gap-12 lg:grid-cols-12">
           <div className="lg:col-span-7">
             <h2 className="text-2xl sm:text-3xl">{t("products.specs")}</h2>
@@ -140,7 +140,7 @@ export default async function ProductPage({ params }: Props) {
             {p.images.length > 1 && (
               <ul className="mt-8 grid grid-cols-2 gap-4">
                 {p.images.map((img, i) => (
-                  <li key={img} className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-ink-900">
+                  <li key={img} className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-navy-950">
                     <Image src={img} alt={`${name} — ${i + 1}`} fill sizes="(min-width:1024px) 28vw, 50vw" className="object-cover" />
                   </li>
                 ))}
@@ -154,7 +154,7 @@ export default async function ProductPage({ params }: Props) {
                 download
                 className="mt-8 flex items-center gap-4 rounded-2xl border border-line p-5 transition hover:border-brand-500 hover:bg-brand-50"
               >
-                <span className="grid size-12 place-items-center rounded-xl bg-ink-900 text-brand-400">
+                <span className="grid size-12 place-items-center rounded-xl bg-navy-950 text-brand-400">
                   <FileText className="size-6" aria-hidden />
                 </span>
                 <span className="flex-1 font-bold text-ink">{t("cta.downloadDatasheet")}</span>

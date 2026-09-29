@@ -16,7 +16,7 @@ export function ProjectGrid({ projects, labels }: { projects: Project[]; labels:
   const sectors = useMemo(() => [...new Set(projects.map((p) => p.sector))], [projects]);
   const list = projects.filter((p) => (country === "all" || p.country === country) && (sector === "all" || p.sector === sector));
   const chip = (a: boolean) =>
-    cn("rounded-full border px-3.5 py-2 text-sm font-semibold transition", a ? "border-ink-900 bg-ink-900 text-white" : "border-line bg-white text-zinc-700 hover:border-zinc-400");
+    cn("rounded-full border px-3.5 py-2 text-sm font-semibold transition", a ? "border-ink-900 bg-navy-950 text-white" : "border-line bg-navy-900 text-zinc-700 hover:border-zinc-400");
 
   return (
     <div>
@@ -43,10 +43,10 @@ export function ProjectGrid({ projects, labels }: { projects: Project[]; labels:
           const title = locale === "ar" ? p.title_ar : p.title_en;
           return (
             <li key={p.slug}>
-              <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-white">
-                <div className="relative aspect-[4/3] bg-ink-900">
+              <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-navy-900">
+                <div className="relative aspect-[4/3] bg-navy-950">
                   {p.images[0] && <Image src={p.images[0]} alt={title} fill sizes="(min-width:1024px) 33vw, 50vw" className="object-cover" />}
-                  <span className="absolute start-3 top-3 rounded-full bg-ink-950/85 px-2.5 py-1 text-xs font-bold text-white">{sectorLabels[p.sector][locale]}</span>
+                  <span className="absolute start-3 top-3 rounded-full bg-navy-950/85 px-2.5 py-1 text-xs font-bold text-white">{sectorLabels[p.sector][locale]}</span>
                 </div>
                 <div className="flex flex-1 flex-col p-5">
                   <h2 className="text-lg leading-snug">{title}</h2>

@@ -91,7 +91,7 @@ export function ProductLines({ items, labels }: { items: ProductLine[]; labels: 
                 <span
                   key={`p-${active}`}
                   aria-hidden
-                  className="absolute inset-x-4 bottom-2.5 h-0.5 origin-left animate-tab-progress rounded-full bg-ink-950/35 rtl:origin-right"
+                  className="absolute inset-x-4 bottom-2.5 h-0.5 origin-left animate-tab-progress rounded-full bg-navy-950/35 rtl:origin-right"
                   style={{ animationDuration: `${AUTOPLAY_MS}ms` }}
                 />
               )}
@@ -155,7 +155,7 @@ export function ProductLines({ items, labels }: { items: ProductLine[]; labels: 
                 <div className="lg:col-span-7">
                   <div className="relative mx-auto aspect-[16/11] w-full max-w-xl">
                     <div aria-hidden className="absolute inset-[12%] rounded-full blur-3xl" style={{ backgroundColor: "var(--glow)" }} />
-                    <div className={cn("relative h-full overflow-hidden rounded-2xl border border-white/10 bg-ink-900", on && !reduce && "animate-float")}>
+                    <div className={cn("relative h-full overflow-hidden rounded-2xl border border-white/10 bg-navy-950", on && !reduce && "animate-float")}>
                       <Image src={it.image} alt={it.title} fill sizes="(min-width:1024px) 50vw, 100vw" className="object-cover" />
                     </div>
                   </div>

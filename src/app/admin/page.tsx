@@ -40,13 +40,13 @@ export default async function AdminLeads() {
           ["Calculator runs (30d)", calc30 ?? 0],
           ["Calculator → lead (30d)", calcConv ?? 0],
         ].map(([k, v]) => (
-          <div key={k} className="rounded-2xl border border-line bg-white p-5">
+          <div key={k} className="rounded-2xl border border-line bg-navy-900 p-5">
             <dt className="text-sm text-muted">{k}</dt>
             <dd className="mt-1 text-3xl font-extrabold">{v}</dd>
           </div>
         ))}
       </dl>
-      <div className="mt-8 overflow-x-auto rounded-2xl border border-line bg-white">
+      <div className="mt-8 overflow-x-auto rounded-2xl border border-line bg-navy-900">
         <table className="w-full min-w-[900px] text-left text-sm">
           <thead className="bg-surface text-xs uppercase text-muted">
             <tr>
@@ -83,7 +83,7 @@ export default async function AdminLeads() {
                         <option key={s}>{s}</option>
                       ))}
                     </select>
-                    <button className="rounded-lg bg-ink-900 px-3 py-1 font-bold text-white">Save</button>
+                    <button className="rounded-lg bg-navy-950 px-3 py-1 font-bold text-white">Save</button>
                   </form>
                 </td>
               </tr>

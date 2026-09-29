@@ -59,7 +59,11 @@ export default async function LocaleLayout({ children, params }: { children: Rea
         <JsonLd data={organizationSchema(locale as Locale)} />
         <NextIntlClientProvider>
           <Header />
-          <main id="main">{children}</main>
+          <main id="main" className="relative isolate">
+            {/* night-sky glow that follows the viewport across every page */}
+            <div aria-hidden className="nebula pointer-events-none sticky top-0 -z-10 -mb-[100vh] h-screen" />
+            {children}
+          </main>
           <Footer />
           <FloatingCta />
           <UtmCapture />

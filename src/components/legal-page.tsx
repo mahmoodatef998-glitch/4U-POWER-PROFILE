@@ -17,7 +17,7 @@ export async function LegalPage({ locale, doc, path }: { locale: Locale; doc: Le
         title={title}
         intro={t("common.updated", { date: formatDate(doc.updated, locale) })}
       />
-      <section className="section bg-white">
+      <section className="section bg-navy-900">
         <div className="container-x max-w-3xl">
           <p className="text-[1.0625rem] leading-8 text-zinc-700">{pick(doc.intro, locale)}</p>
           {doc.sections.map((s) => (

@@ -14,7 +14,7 @@ export default async function AdminNews({ searchParams }: { searchParams: Promis
       <div>
         <h1 className="text-2xl font-extrabold">News posts</h1>
         {created && <p className="mt-4 rounded-xl bg-emerald-50 p-3 text-emerald-800">Post published. It is live on /en/news and /ar/news.</p>}
-        <ul className="mt-6 divide-y divide-line rounded-2xl border border-line bg-white">
+        <ul className="mt-6 divide-y divide-line rounded-2xl border border-line bg-navy-900">
           {posts.map((p) => (
             <li key={p.id} className="flex items-center justify-between gap-4 px-5 py-3">
               <div>

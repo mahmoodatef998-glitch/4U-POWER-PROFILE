@@ -61,14 +61,14 @@ export function ProductCatalog({ products }: { products: Product[] }) {
   const chip = (active: boolean) =>
     cn(
       "rounded-full border px-3.5 py-2 text-sm font-semibold transition",
-      active ? "border-ink-900 bg-ink-900 text-white" : "border-line bg-white text-zinc-700 hover:border-zinc-400",
+      active ? "border-ink-900 bg-navy-950 text-white" : "border-line bg-navy-900 text-zinc-700 hover:border-zinc-400",
     );
-  const select = "mt-2 block w-full rounded-xl border border-zinc-300 bg-white px-3 py-2.5 text-sm font-semibold focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30";
+  const select = "mt-2 block w-full rounded-xl border border-zinc-300 bg-navy-900 px-3 py-2.5 text-sm font-semibold focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30";
 
   return (
     <div className="grid gap-8 lg:grid-cols-12">
       <aside className="lg:col-span-3" aria-labelledby="filters-title">
-        <div className="rounded-2xl border border-line bg-white p-5 lg:sticky lg:top-24">
+        <div className="rounded-2xl border border-line bg-navy-900 p-5 lg:sticky lg:top-24">
           <div className="flex items-center justify-between">
             <h2 id="filters-title" className="flex items-center gap-2 text-base font-extrabold">
               <SlidersHorizontal className="size-4 text-brand-600" aria-hidden />

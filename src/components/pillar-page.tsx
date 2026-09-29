@@ -59,7 +59,7 @@ export async function PillarPage({
         </div>
       </PageHero>
 
-      <section className="border-b border-line bg-white">
+      <section className="border-b border-line bg-navy-900">
         <dl className="container-x grid grid-cols-2 divide-line py-8 lg:grid-cols-4 lg:divide-x rtl:lg:divide-x-reverse">
           {pillar.highlights.map((h) => (
             <div key={h.title.en} className="flex flex-col-reverse px-2 py-3 lg:px-6">
@@ -70,7 +70,7 @@ export async function PillarPage({
         </dl>
       </section>
 
-      <section className="section bg-white">
+      <section className="section bg-navy-900">
         <div className="container-x grid gap-12 lg:grid-cols-12">
           <div className="space-y-14 lg:col-span-8">
             {pillar.sections.map((s) => (
@@ -95,7 +95,7 @@ export async function PillarPage({
             ))}
           </div>
           <aside className="lg:col-span-4">
-            <div className="on-dark rounded-3xl bg-ink-900 p-6 text-white lg:sticky lg:top-28">
+            <div className="on-dark rounded-3xl bg-navy-950 p-6 text-white lg:sticky lg:top-28">
               <p className="text-lg font-extrabold">{L(pillar.cta.title)}</p>
               <p className="mt-2 text-sm leading-6 text-white/75">{L(pillar.cta.body)}</p>
               <div className="mt-5 grid gap-2">
@@ -127,7 +127,7 @@ export async function PillarPage({
         </div>
       </section>
 
-      <section className="section bg-white" aria-labelledby="pcalc-title">
+      <section className="section bg-navy-900" aria-labelledby="pcalc-title">
         <div className="container-x grid gap-10 lg:grid-cols-12 lg:items-start">
           <div className="lg:col-span-5">
             <SectionHeading id="pcalc-title" eyebrow={t("nav.calculator")} title={t("calc.teaserTitle")} intro={t("calc.teaserBody")} />
@@ -141,7 +141,7 @@ export async function PillarPage({
       <FaqBlock locale={locale} items={faq} title={faqTitle} eyebrow={locale === "ar" ? "أسئلة وأجوبة" : "FAQ"} />
 
       {related.length > 0 && (
-        <section className="section bg-white" aria-labelledby="rel-title">
+        <section className="section bg-navy-900" aria-labelledby="rel-title">
           <div className="container-x">
             <SectionHeading id="rel-title" eyebrow={t("nav.news")} title={locale === "ar" ? "مقالات ذات صلة" : "Related guides"} />
             <ul className="mt-10 grid gap-6 md:grid-cols-3">

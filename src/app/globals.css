@@ -11,13 +11,13 @@
   --color-ink-200: #d4d4d8;
 
   /* Brand yellow — sampled from the logo (#FFDF58) */
-  --color-brand-50: #fffbe8;
+  --color-brand-50: rgb(255 214 60 / 0.08);
   --color-brand-100: #fff4c2;
   --color-brand-300: #ffeb99;
   --color-brand-400: #ffdf58;
   --color-brand-500: #ffd426;
   --color-brand-600: #e6b800;
-  --color-brand-700: #7a5900;   /* yellow-family text on white: 6.6:1 */
+  --color-brand-700: #ffd24a;   /* yellow-family text on the navy theme */
 
   /* Deep navy for immersive dark sections (hybrid with the Upscayl-style glass look) */
   --color-navy-950: #0a0f1f;
@@ -39,10 +39,30 @@
 
   --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
 
-  --color-ink: #111113;
-  --color-muted: #52525b;
-  --color-line: #e4e4e7;
-  --color-surface: #f4f4f2;
+  /* Site-wide night theme: semantic "ink/muted/line/surface" tokens resolve to light-on-navy values */
+  --color-ink: #eef1f8;
+  --color-muted: #9aa3b8;
+  --color-line: rgb(255 255 255 / 0.1);
+  --color-surface: rgb(255 255 255 / 0.03);
+
+  /* neutral greys remapped for dark UI (forms, tracks, prose) */
+  --color-zinc-50: #141b33;
+  --color-zinc-100: #1a2240;
+  --color-zinc-200: #263050;
+  --color-zinc-300: #36405e;
+  --color-zinc-400: #4b5575;
+  --color-zinc-500: #8e97ab;
+  --color-zinc-700: #c9cfdc;
+  --color-zinc-800: #dde2ec;
+  /* status colours for dark UI */
+  --color-red-50: #2a1320;
+  --color-red-700: #ff9a9a;
+  --color-red-800: #ffb4b4;
+  --color-emerald-50: #0f2a22;
+  --color-emerald-100: #123a2e;
+  --color-emerald-200: #1e5a45;
+  --color-emerald-800: #7ee2b8;
+  --color-emerald-900: #a6f0cf;
 
   --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
   --font-display: var(--font-barlow), var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
@@ -79,9 +99,9 @@
 }
 
 @layer base {
-  html { overflow-x: clip; -webkit-text-size-adjust: 100%; scroll-behavior: smooth; scroll-padding-top: 5rem; }
+  html { color-scheme: dark; overflow-x: clip; -webkit-text-size-adjust: 100%; scroll-behavior: smooth; scroll-padding-top: 5rem; }
   body {
-    @apply bg-white text-ink antialiased;
+    @apply bg-navy-950 text-ink antialiased;
     font-family: var(--font-sans);
     text-rendering: optimizeLegibility;
   }

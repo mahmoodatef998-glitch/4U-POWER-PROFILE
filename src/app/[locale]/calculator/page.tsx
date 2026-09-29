@@ -62,7 +62,7 @@ export default async function CalculatorPage({ params }: { params: Promise<{ loc
             <ol className="mt-6 space-y-5">
               {steps.map(([title, body], i) => (
                 <li key={title} className="flex gap-4">
-                  <span className="grid size-9 shrink-0 place-items-center rounded-full bg-ink-900 font-extrabold text-brand-400">{i + 1}</span>
+                  <span className="grid size-9 shrink-0 place-items-center rounded-full bg-navy-950 font-extrabold text-brand-400">{i + 1}</span>
                   <div>
                     <h3 className="font-bold text-ink">{title}</h3>
                     <p className="mt-1 text-sm leading-6 text-muted">{body}</p>
@@ -70,7 +70,7 @@ export default async function CalculatorPage({ params }: { params: Promise<{ loc
                 </li>
               ))}
             </ol>
-            <div className="mt-8 rounded-2xl border border-line bg-white p-5 text-sm leading-6 text-muted">
+            <div className="mt-8 rounded-2xl border border-line bg-navy-900 p-5 text-sm leading-6 text-muted">
               <p className="font-bold text-ink">{ar ? "المعادلات المستخدمة" : "Formulas used"}</p>
               <p className="mt-2" dir="ltr">kVA = kW ÷ PF</p>
               <p dir="ltr">kVA = √3 × V × I ÷ 1000 (3-phase)</p>
@@ -79,7 +79,7 @@ export default async function CalculatorPage({ params }: { params: Promise<{ loc
           </aside>
         </div>
       </section>
-      <FaqBlock locale={locale} items={[homeFaq[0]!, homeFaq[5]!, generatorsFaq[1]!, atsFaq[0]!]} title={ar ? "أسئلة حول اختيار الحجم" : "Sizing questions"} eyebrow={locale === "ar" ? "أسئلة وأجوبة" : "FAQ"} className="bg-white" />
+      <FaqBlock locale={locale} items={[homeFaq[0]!, homeFaq[5]!, generatorsFaq[1]!, atsFaq[0]!]} title={ar ? "أسئلة حول اختيار الحجم" : "Sizing questions"} eyebrow={locale === "ar" ? "أسئلة وأجوبة" : "FAQ"} className="bg-navy-900" />
     </>
   );
 }

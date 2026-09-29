@@ -3,10 +3,10 @@ import { Link } from "@/i18n/navigation";
 import { buttonVariants } from "./ui/button";
 import { CallButton, WhatsAppButton } from "./cta-buttons";
 
-export async function CtaBanner({ title, body, message, location, dark }: { title: string; body: string; message?: string; location: string; dark?: boolean }) {
+export async function CtaBanner({ title, body, message, location }: { title: string; body: string; message?: string; location: string; dark?: boolean }) {
   const t = await getTranslations("cta");
   return (
-    <section className={dark ? "relative py-16 sm:py-24" : "bg-white py-16 sm:py-20"}>
+    <section className="relative py-16 sm:py-24">
       <div className="container-x">
         <div className="on-dark spotlight relative overflow-hidden rounded-[2rem] border border-white/10 bg-navy-900 px-6 py-12 text-white sm:px-12 lg:flex lg:items-center lg:justify-between lg:gap-10 lg:py-14">
           <div className="grid-bg pointer-events-none absolute inset-0 opacity-60" aria-hidden />

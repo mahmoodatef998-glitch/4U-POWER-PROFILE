@@ -1,6 +1,6 @@
 "use client";
 
-import { LazyMotion, domAnimation, m, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform } from "framer-motion";
+import { LazyMotion, domAnimation, m, useInView, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform } from "framer-motion";
 import { Children, Fragment, useEffect, useRef, useState, type ElementType, type PointerEvent, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
@@ -38,6 +38,8 @@ export function SplitText({
   delay?: number;
 }) {
   const reduce = useReducedMotion();
+  const ref = useRef<HTMLElement>(null);
+  const inView = useInView(ref, { once: true, margin: "0px 0px -8% 0px" });
   const words = parseMarks(text);
   const marked = words.some((w) => w.em);
   const tone = (em: boolean) => (marked && !em ? "opacity-45" : undefined);
@@ -54,7 +56,8 @@ export function SplitText({
     );
   return (
     <LazyMotion features={domAnimation} strict>
-      <Tag id={id} className={className}>
+      {/* observe the heading itself: the word spans start fully clipped by their masks, so they can't be observed */}
+      <Tag ref={ref} id={id} className={className}>
         {words.map((w, i) => (
           <Fragment key={i}>
             {i > 0 && " "}
@@ -62,8 +65,7 @@ export function SplitText({
               <m.span
                 className="inline-block will-change-transform"
                 initial={{ y: "110%" }}
-                whileInView={{ y: "0%" }}
-                viewport={{ once: true, margin: "0px 0px -8% 0px" }}
+                animate={inView ? { y: "0%" } : { y: "110%" }}
                 transition={{ duration: 0.9, delay: delay + i * 0.045, ease: EASE }}
               >
                 {w.w}

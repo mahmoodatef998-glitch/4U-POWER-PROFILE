@@ -5,7 +5,7 @@ import "./globals.css";
 export default function GlobalNotFound() {
   return (
     <html lang="en">
-      <body className="grid min-h-screen place-items-center bg-ink-950 p-6 text-center text-white">
+      <body className="grid min-h-screen place-items-center bg-navy-950 p-6 text-center text-white">
         <div>
           <p className="text-6xl font-extrabold text-brand-400">404</p>
           <h1 className="mt-4 text-2xl font-bold">Page not found</h1>

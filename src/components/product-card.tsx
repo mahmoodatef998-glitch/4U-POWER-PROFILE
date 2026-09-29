@@ -22,8 +22,8 @@ export function ProductCard({ product, headingLevel = "h3" }: { product: Product
   const href = `/products/${product.slug}`;
 
   return (
-    <article className={`line-${product.category} grad-border group relative flex h-full flex-col overflow-hidden rounded-3xl border border-line bg-white shadow-[0_1px_2px_rgb(10_10_11/0.04)] transition-[translate,box-shadow] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1 hover:shadow-[0_24px_48px_-24px_rgb(10_10_11/0.35)]`}>
-      <div className="relative aspect-[4/3] overflow-hidden bg-ink-900">
+    <article className={`line-${product.category} grad-border group relative flex h-full flex-col overflow-hidden rounded-3xl border border-line bg-navy-900 shadow-[0_1px_2px_rgb(10_10_11/0.04)] transition-[translate,box-shadow] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1 hover:shadow-[0_24px_48px_-24px_rgb(10_10_11/0.35)]`}>
+      <div className="relative aspect-[4/3] overflow-hidden bg-navy-950">
         {product.images[0] && (
           <Image
             src={product.images[0]}
@@ -34,7 +34,7 @@ export function ProductCard({ product, headingLevel = "h3" }: { product: Product
           />
         )}
         <div className="absolute start-3 top-3 flex flex-wrap gap-1.5">
-          <span className="rounded-full bg-ink-950/85 px-2.5 py-1 text-xs font-bold text-white backdrop-blur">
+          <span className="rounded-full bg-navy-950/85 px-2.5 py-1 text-xs font-bold text-white backdrop-blur">
             {categoryLabels[product.category][locale]}
           </span>
           {kva && (
@@ -73,7 +73,7 @@ export function ProductCard({ product, headingLevel = "h3" }: { product: Product
         <div className="relative z-10 mt-auto flex items-center gap-2 pt-5">
           <Link
             href={{ pathname: "/contact", query: { product: product.slug } }}
-            className="inline-flex h-10 flex-1 items-center justify-center rounded-full bg-ink-900 px-4 text-sm font-bold text-white transition hover:bg-ink-700"
+            className="inline-flex h-10 flex-1 items-center justify-center rounded-full border border-white/15 bg-white/[0.06] px-4 text-sm font-semibold text-white transition hover:bg-white/10"
           >
             {t("cta.quote")}
           </Link>

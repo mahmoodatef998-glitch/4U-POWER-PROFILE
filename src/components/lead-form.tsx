@@ -66,7 +66,7 @@ export function LeadForm({ source: sourceProp = "contact_form", productSlug: slu
   }
 
   const err = (k: "name" | "phone" | "email") => (state.errors?.[k] ? t(state.errors[k] as "errName") : null);
-  const field = "mt-1.5 block w-full rounded-xl border border-zinc-300 bg-white px-4 py-3 text-base text-ink placeholder:text-zinc-500 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30 aria-[invalid=true]:border-red-600";
+  const field = "mt-1.5 block w-full rounded-xl border border-zinc-300 bg-navy-900 px-4 py-3 text-base text-ink placeholder:text-zinc-500 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30 aria-[invalid=true]:border-red-600";
   const label = "text-sm font-bold text-ink";
 
   return (

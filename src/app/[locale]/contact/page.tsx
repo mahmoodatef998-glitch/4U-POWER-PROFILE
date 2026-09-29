@@ -67,7 +67,7 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
       <section className="section bg-surface">
         <div className="container-x grid gap-10 lg:grid-cols-12">
           <div className="lg:col-span-7">
-            <div className="rounded-3xl border border-line bg-white p-6 sm:p-8">
+            <div className="rounded-3xl border border-line bg-navy-900 p-6 sm:p-8">
               <h2 className="text-2xl">{t("form.title")}</h2>
               <p className="mt-2 text-sm text-muted">{t("common.responseTime")}</p>
               <div className="mt-6">
@@ -76,12 +76,12 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
             </div>
           </div>
           <div className="space-y-6 lg:col-span-5">
-            <section aria-labelledby="nap-title" className="rounded-3xl border border-line bg-white p-6 sm:p-8">
+            <section aria-labelledby="nap-title" className="rounded-3xl border border-line bg-navy-900 p-6 sm:p-8">
               <h2 id="nap-title" className="text-xl">{ar ? "بيانات الشركة" : "Company details"}</h2>
               <ul className="mt-6 space-y-5">
                 {nap.map(({ icon: Icon, label, value }) => (
                   <li key={label} className="flex gap-4">
-                    <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-ink-900 text-brand-400">
+                    <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-navy-950 text-brand-400">
                       <Icon className="size-5" aria-hidden />
                     </span>
                     <div className="text-sm leading-6 text-zinc-700">
@@ -95,7 +95,7 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
                 {t("footer.license", { no: company.licenseNo })} · {ar ? company.licenseAuthorityAr : company.licenseAuthority}
               </p>
             </section>
-            <div className="overflow-hidden rounded-3xl border border-line bg-white">
+            <div className="overflow-hidden rounded-3xl border border-line bg-navy-900">
               <iframe
                 title={ar ? "خريطة موقع فوريو باور جينيريشن في سيف زون الشارقة" : "Map: 4U Power Generation, SAIF Zone, Sharjah"}
                 src={mapSrc}

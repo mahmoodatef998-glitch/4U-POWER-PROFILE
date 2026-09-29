@@ -40,7 +40,7 @@ export default async function MarketsPage({ params }: { params: Promise<{ locale
           </div>
         }
       />
-      <section className="section bg-white">
+      <section className="section bg-navy-900">
         <div className="container-x">
           <ul className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {marketPages.map((m) => {
@@ -51,7 +51,7 @@ export default async function MarketsPage({ params }: { params: Promise<{ locale
                     href={`/markets/${m.code}`}
                     className={cn(
                       "group flex h-full flex-col rounded-2xl border p-6 transition hover:-translate-y-1 hover:shadow-xl",
-                      primary ? "border-brand-500/40 bg-brand-50/60" : "border-line bg-white",
+                      primary ? "border-brand-500/40 bg-brand-50/60" : "border-line bg-navy-900",
                     )}
                   >
                     <span className="text-4xl" aria-hidden>{marketFlags[m.code]}</span>

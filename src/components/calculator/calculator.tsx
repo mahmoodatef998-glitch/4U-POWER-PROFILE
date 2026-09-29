@@ -204,11 +204,11 @@ export function Calculator({ products, variant = "full" }: { products: Product[]
 
   const steps = [t("step1"), t("step2"), t("step3"), t("step4")];
   const field =
-    "mt-1.5 block w-full rounded-xl border border-zinc-300 bg-white px-4 py-3 text-lg font-bold tabular-nums focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30";
+    "mt-1.5 block w-full rounded-xl border border-zinc-300 bg-navy-900 px-4 py-3 text-lg font-bold tabular-nums focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30";
   const seg = (active: boolean) =>
     cn(
       "flex-1 rounded-full px-4 py-2.5 text-sm font-bold transition",
-      active ? "bg-ink-900 text-white shadow" : "text-zinc-700 hover:bg-white",
+      active ? "bg-navy-950 text-white shadow" : "text-zinc-700 hover:bg-navy-900",
     );
 
   /* ------------------------------------------------------------ Step 1: load */
@@ -300,7 +300,7 @@ export function Calculator({ products, variant = "full" }: { products: Product[]
                   onClick={() => setType(lt)}
                   className={cn(
                     "flex flex-col items-center gap-2 rounded-2xl border p-3 text-center text-sm font-bold transition",
-                    active ? "border-brand-500 bg-brand-50 text-ink ring-2 ring-brand-500/30" : "border-line bg-white text-zinc-700 hover:border-zinc-400",
+                    active ? "border-brand-500 bg-brand-50 text-ink ring-2 ring-brand-500/30" : "border-line bg-navy-900 text-zinc-700 hover:border-zinc-400",
                   )}
                 >
                   <Icon className={cn("size-6", active ? "text-brand-600" : "text-zinc-500")} aria-hidden />
@@ -364,7 +364,7 @@ export function Calculator({ products, variant = "full" }: { products: Product[]
   /* ------------------------------------------------------------ Result */
   const resultView = (
     <div ref={resultRef} tabIndex={-1} aria-live="polite" className="focus:outline-none">
-      <div className="on-dark relative overflow-hidden rounded-2xl bg-ink-900 p-6 text-white sm:p-8">
+      <div className="on-dark relative overflow-hidden rounded-2xl bg-navy-950 p-6 text-white sm:p-8">
         <div className="grid-bg pointer-events-none absolute inset-0 opacity-50" aria-hidden />
         <div className="relative grid gap-6 sm:grid-cols-2 sm:items-end">
           <div>
@@ -422,7 +422,7 @@ export function Calculator({ products, variant = "full" }: { products: Product[]
                       trackEvent("calculator_quote_click", { kva: result.recommendedKva, product: p.slug, channel: "whatsapp" });
                       trackEvent("whatsapp_click", { location: "calculator_match", product: p.slug });
                     }}
-                    className="mt-3 inline-flex items-center gap-1.5 text-sm font-bold text-[#095c2e] hover:underline"
+                    className="mt-3 inline-flex items-center gap-1.5 text-sm font-bold text-emerald-400 hover:underline"
                   >
                     <WhatsAppIcon className="size-4" />
                     {t("quoteThis")}
@@ -487,7 +487,7 @@ export function Calculator({ products, variant = "full" }: { products: Product[]
   /* ------------------------------------------------------------ Layout */
   if (widget) {
     return (
-      <div className="rounded-3xl border border-line bg-white p-5 shadow-[0_30px_60px_-30px_rgb(10_10_11/0.35)] sm:p-7">
+      <div className="rounded-3xl border border-line bg-navy-900 p-5 shadow-[0_30px_60px_-30px_rgb(10_10_11/0.35)] sm:p-7">
         <div className="flex items-center gap-2 text-sm font-bold text-ink">
           <Zap className="size-5 text-brand-600" aria-hidden />
           {t("title")}
@@ -499,7 +499,7 @@ export function Calculator({ products, variant = "full" }: { products: Product[]
   }
 
   return (
-    <div className="rounded-3xl border border-line bg-white p-5 shadow-[0_30px_60px_-30px_rgb(10_10_11/0.35)] sm:p-8">
+    <div className="rounded-3xl border border-line bg-navy-900 p-5 shadow-[0_30px_60px_-30px_rgb(10_10_11/0.35)] sm:p-8">
       <ol className="grid grid-cols-4 gap-2" aria-label={t("title")}>
         {steps.map((s, i) => {
           const idx = i + 1;
