@@ -78,12 +78,15 @@ def comp_at(x, y):
 
 engine_block = comp_at(900, 450)  # engine + radiator + expansion tank
 genset_left = comp_at(300, 500)  # control panel + alternator
+# expansion tank + its pipe (sits on the engine) must stay with the engine, not the radiator
+yy = np.arange(H)[:, None].repeat(W, 1)
+tank = (xx >= 1110) & (xx < 1220) & (yy < 300)
 parts = {
     "end-cover": comp_at(100, 500),
     "control-panel": genset_left & (xx < 365),
     "alternator": genset_left & (xx >= 365),
-    "engine": engine_block & (xx < 1172),
-    "radiator": engine_block & (xx >= 1172),
+    "engine": engine_block & ((xx < 1172) | tank),
+    "radiator": engine_block & (xx >= 1172) & ~tank,
     "air-filter": comp_at(600, 130),
     "silencer": comp_at(930, 100),
     "base-frame": comp_at(700, 760),

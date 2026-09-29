@@ -39,33 +39,50 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
 
   return (
     <>
-      {/* ------------------------------------------------ HERO: scroll story — generator assembles, copy advances in chapters */}
+      {/* ------------------------------------------------ HERO: full-frame generator assembles on scroll */}
       <HeroAssembly
+        words={[locale === "ar" ? "طاقة" : "POWER", ...home.story.map((c) => L(c.word))]}
         strings={{ scroll: locale === "ar" ? "مرّر لتجميع المولد" : "Scroll to assemble", label: L(home.hero.h1) }}
-        chapters={home.story.map((c) => ({ kicker: L(c.kicker), title: L(c.title), body: L(c.body), stat: L(c.stat), word: L(c.word) }))}
-        introWord={locale === "ar" ? "طاقة" : "POWER"}
-        outroCta={<WhatsAppButton location="hero_outro" />}
-        intro={
-          <div className="flex h-full flex-col justify-end">
-            <p className="eyebrow">
-              <BadgeCheck className="size-4" aria-hidden />
-              {L(home.hero.eyebrow)}
-            </p>
-            <div className="mt-2 flex flex-wrap items-end justify-between gap-x-10 gap-y-3">
-              <h1 className="max-w-4xl text-[1.9rem] text-ink sm:text-5xl lg:text-6xl rtl:text-[1.6rem] rtl:sm:text-4xl rtl:lg:text-5xl">
+      />
+
+      {/* ------------------------------------------------ INTRO: headline + the four things behind every set */}
+      <section className="relative overflow-hidden bg-white pb-16 pt-14 sm:pb-20 sm:pt-20" aria-labelledby="hero-title">
+        <div className="container-x">
+          <div className="grid gap-8 lg:grid-cols-12 lg:items-end">
+            <Reveal className="lg:col-span-8">
+              <p className="eyebrow">
+                <BadgeCheck className="size-4" aria-hidden />
+                {L(home.hero.eyebrow)}
+              </p>
+              <h1 id="hero-title" className="mt-4 text-[2.25rem] text-ink sm:text-6xl lg:text-7xl rtl:text-[1.9rem] rtl:sm:text-5xl rtl:lg:text-6xl">
                 {L(home.hero.h1)}
               </h1>
-              <div className="flex w-full gap-2 sm:w-auto">
-                <WhatsAppButton location="hero" className="flex-1 sm:flex-none" />
-                <Link href="/calculator" className={`${buttonVariants({ variant: "dark" })} flex-1 sm:flex-none`}>
+            </Reveal>
+            <Reveal className="lg:col-span-4" delay={0.1}>
+              <p className="text-base leading-7 text-muted sm:text-lg">{L(home.hero.lead)}</p>
+              <div className="mt-6 flex flex-col gap-2.5 sm:flex-row">
+                <WhatsAppButton location="hero" size="lg" />
+                <Link href="/calculator" className={buttonVariants({ variant: "dark", size: "lg" })}>
                   {t("cta.tryCalculator")}
                   <ArrowRight className="flip-rtl" aria-hidden />
                 </Link>
               </div>
-            </div>
+            </Reveal>
           </div>
-        }
-      />
+
+          <ul className="mt-14 grid gap-px overflow-hidden rounded-3xl border border-line bg-line sm:grid-cols-2 lg:grid-cols-4">
+            {home.story.map((c, i) => (
+              <Reveal as="li" key={c.kicker.en} delay={i * 0.06} className="group relative flex flex-col bg-white p-6 transition-colors hover:bg-surface sm:p-7">
+                <span className="font-display text-sm font-extrabold tracking-widest text-brand-700 rtl:tracking-normal">{String(i + 1).padStart(2, "0")}</span>
+                <p className="mt-6 font-display text-3xl font-extrabold uppercase text-ink rtl:font-[family-name:var(--font-arabic)] rtl:text-2xl">{L(c.stat)}</p>
+                <h2 className="mt-3 text-xl leading-tight text-ink rtl:text-lg">{L(c.title)}</h2>
+                <p className="mt-3 text-sm leading-6 text-muted">{L(c.body)}</p>
+                <span className="absolute inset-x-0 bottom-0 h-1 origin-left scale-x-0 bg-brand-400 transition-transform duration-300 group-hover:scale-x-100 rtl:origin-right" aria-hidden />
+              </Reveal>
+            ))}
+          </ul>
+        </div>
+      </section>
 
       {/* ------------------------------------------------ BRAND STRIP */}
       <section aria-labelledby="brands-title" className="border-b border-line bg-white">
