@@ -1,0 +1,94 @@
+"use client";
+
+import { Gauge, Cog } from "lucide-react";
+import Image from "next/image";
+import { useLocale, useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
+import { categoryLabels, engineBrandLabels, fuelLabels } from "@/content/taxonomy";
+import { trackEvent } from "@/lib/analytics";
+import { whatsappUrl } from "@/lib/site";
+import { FUEL_ICONS, kvaLabel } from "@/lib/product-meta";
+import type { Product } from "@/lib/types";
+import type { Locale } from "@/lib/utils";
+import { WhatsAppIcon } from "./icons";
+
+export function ProductCard({ product, headingLevel = "h3" }: { product: Product; headingLevel?: "h2" | "h3" }) {
+  const locale = useLocale() as Locale;
+  const t = useTranslations();
+  const name = locale === "ar" ? product.name_ar : product.name_en;
+  const kva = product.category === "generator" ? kvaLabel(product, locale, t("common.kva")) : null;
+  const FuelIcon = product.fuel_type ? FUEL_ICONS[product.fuel_type] : null;
+  const H = headingLevel;
+  const href = `/products/${product.slug}`;
+
+  return (
+    <article className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-white shadow-[0_1px_2px_rgb(10_20_38/0.04)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_24px_48px_-24px_rgb(10_20_38/0.35)]">
+      <div className="relative aspect-[4/3] overflow-hidden bg-navy-900">
+        {product.images[0] && (
+          <Image
+            src={product.images[0]}
+            alt={name}
+            fill
+            sizes="(min-width:1024px) 33vw, (min-width:640px) 50vw, 100vw"
+            className="object-cover transition duration-500 group-hover:scale-[1.03]"
+          />
+        )}
+        <div className="absolute start-3 top-3 flex flex-wrap gap-1.5">
+          <span className="rounded-full bg-navy-950/85 px-2.5 py-1 text-xs font-bold text-white backdrop-blur">
+            {categoryLabels[product.category][locale]}
+          </span>
+          {kva && (
+            <span className="inline-flex items-center gap-1 rounded-full bg-amber-500 px-2.5 py-1 text-xs font-extrabold text-navy-950">
+              <Gauge className="size-3.5" aria-hidden />
+              <span dir="ltr">{kva}</span>
+            </span>
+          )}
+        </div>
+      </div>
+
+      <div className="flex flex-1 flex-col p-5">
+        <H className="text-lg leading-snug text-ink">
+          <Link href={href} className="after:absolute after:inset-0 after:content-[''] focus-visible:outline-none">
+            {name}
+          </Link>
+        </H>
+        <dl className="mt-3 flex flex-wrap gap-x-4 gap-y-1.5 text-sm text-muted">
+          {product.engine_brand && (
+            <div className="flex items-center gap-1.5">
+              <dt className="sr-only">{t("common.engine")}</dt>
+              <Cog className="size-4 text-amber-600" aria-hidden />
+              <dd>{engineBrandLabels[product.engine_brand]?.[locale] ?? product.engine_brand}</dd>
+            </div>
+          )}
+          {product.fuel_type && FuelIcon && (
+            <div className="flex items-center gap-1.5">
+              <dt className="sr-only">{t("common.fuel")}</dt>
+              <FuelIcon className="size-4 text-amber-600" aria-hidden />
+              <dd>{fuelLabels[product.fuel_type][locale]}</dd>
+            </div>
+          )}
+        </dl>
+        <p className="mt-3 line-clamp-3 text-sm leading-6 text-muted">{locale === "ar" ? product.description_ar : product.description_en}</p>
+
+        <div className="relative z-10 mt-auto flex items-center gap-2 pt-5">
+          <Link
+            href={{ pathname: "/contact", query: { product: product.slug } }}
+            className="inline-flex h-10 flex-1 items-center justify-center rounded-full bg-navy-900 px-4 text-sm font-bold text-white transition hover:bg-navy-700"
+          >
+            {t("cta.quote")}
+          </Link>
+          <a
+            href={whatsappUrl(t("cta.whatsappProduct", { product: name }))}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => trackEvent("whatsapp_click", { location: "product_card", product: product.slug })}
+            aria-label={`${t("cta.whatsapp")} — ${name}`}
+            className="grid size-10 shrink-0 place-items-center rounded-full bg-[#128C4B] text-white transition hover:bg-[#0f7a41]"
+          >
+            <WhatsAppIcon className="size-5" />
+          </a>
+        </div>
+      </div>
+    </article>
+  );
+}

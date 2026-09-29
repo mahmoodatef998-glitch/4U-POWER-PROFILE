@@ -1,0 +1,74 @@
+@import "tailwindcss";
+
+@theme {
+  --color-navy-950: #060c18;
+  --color-navy-900: #0a1426;
+  --color-navy-800: #111f3a;
+  --color-navy-700: #1b2d50;
+  --color-navy-600: #2a3f68;
+  --color-navy-300: #9fb0cf;
+  --color-navy-200: #c6d1e6;
+
+  --color-amber-300: #ffd27a;
+  --color-amber-400: #ffbe3d;
+  --color-amber-500: #f5a524;
+  --color-amber-600: #d98a0b;
+  --color-amber-700: #a85f00;   /* accent text on white: 5.3:1 */
+
+  --color-ink: #0a1426;
+  --color-muted: #475569;
+  --color-line: #e2e8f0;
+  --color-surface: #f5f7fa;
+
+  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  --font-arabic: var(--font-plex-arabic), var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+
+  --animate-kenburns: kenburns 24s ease-out both;
+  @keyframes kenburns {
+    from { transform: scale(1.08) translate3d(0, 0, 0); }
+    to { transform: scale(1) translate3d(0, 0, 0); }
+  }
+}
+
+@layer base {
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; scroll-padding-top: 5rem; }
+  body {
+    @apply bg-white text-ink antialiased;
+    font-family: var(--font-sans);
+    text-rendering: optimizeLegibility;
+  }
+  html[dir="rtl"] body { font-family: var(--font-arabic); }
+  h1, h2, h3, h4 { @apply font-extrabold tracking-tight text-balance; }
+  html[dir="rtl"] :is(h1, h2, h3, h4) { @apply tracking-normal; letter-spacing: 0; }
+  :focus-visible { @apply outline-2 outline-offset-2 outline-amber-500; }
+  ::selection { @apply bg-amber-400 text-navy-950; }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+  }
+}
+
+@layer components {
+  .container-x { @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8; }
+  .section { @apply py-16 sm:py-20 lg:py-24; }
+  .eyebrow { @apply inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.18em] text-amber-700; }
+  html[dir="rtl"] .eyebrow { @apply tracking-normal text-sm normal-case; }
+  .on-dark .eyebrow, .eyebrow-dark { @apply text-amber-400; }
+  .grid-bg {
+    background-image:
+      linear-gradient(to right, rgb(255 255 255 / 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(255 255 255 / 0.05) 1px, transparent 1px);
+    background-size: 48px 48px;
+  }
+  .flip-rtl { @apply rtl:-scale-x-100; }
+
+  /* Long-form article typography */
+  .prose-4u { @apply text-[1.0625rem] leading-8 text-slate-700; }
+  .prose-4u > * + * { @apply mt-5; }
+  .prose-4u h2 { @apply mt-12 text-2xl text-ink sm:text-3xl; }
+  .prose-4u h3 { @apply mt-8 text-xl text-ink; }
+  .prose-4u a { @apply font-semibold text-amber-700 underline decoration-amber-500/40 underline-offset-4 hover:decoration-amber-600; }
+  .prose-4u ul { @apply list-disc space-y-2 ps-6 marker:text-amber-600; }
+  .prose-4u ol { @apply list-decimal space-y-2 ps-6 marker:font-bold marker:text-amber-700; }
+  .prose-4u strong { @apply font-bold text-ink; }
+  .prose-4u blockquote { @apply rounded-xl border-s-4 border-amber-500 bg-amber-50 px-5 py-4 text-slate-800; }
+}

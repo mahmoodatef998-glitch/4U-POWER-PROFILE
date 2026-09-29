@@ -1,0 +1,312 @@
+import type { NewsPost } from "@/lib/types";
+
+export const newsPart1: NewsPost[] = [
+  {
+    slug: "how-to-choose-the-right-kva-generator",
+    title_en: "How to Choose the Right kVA Generator for Your Site",
+    title_ar: "كيف تختار مولد الكهرباء بالقدرة المناسبة (ك.ف.أ) لموقعك",
+    meta_title_en: "How to Choose the Right kVA Generator Size | 4U Power UAE",
+    meta_title_ar: "كيف تختار حجم المولد المناسب بالكيلو فولت أمبير | فوريو باور",
+    excerpt_en:
+      "Undersize a generator and it trips when the chiller starts; oversize it and you pay for fuel and wet-stacking you never needed. Here is the sizing method our engineers use.",
+    excerpt_ar:
+      "المولد الصغير يفصل عند تشغيل المكيف المركزي، والمولد الكبير يستهلك وقوداً ويتعرض لمشاكل التشغيل بحمل منخفض. هذه هي الطريقة التي يستخدمها مهندسونا لاختيار الحجم الصحيح.",
+    cover_image: "/images/news/kva-sizing.svg",
+    published_at: "2026-06-02T08:00:00Z",
+    is_published: true,
+    body_en: `Choosing a generator is mostly a sizing question. Get the kVA right and everything else — price, fuel use, service life — falls into place. Get it wrong and you either trip the breaker every time a motor starts, or you run a large engine at 20% load and slowly damage it.
+
+## Step 1: List what must run on generator power
+
+Walk the site and write down every load that must keep running during an outage: air-conditioning, lifts, pumps, lighting, IT racks, cold rooms, production machines. For each one note the **running power in kW** (from the nameplate) and whether it is a **motor**.
+
+If you only know the current, you can convert it. For a three-phase 400 V supply:
+
+- kW ≈ 1.732 × 400 × amps × power factor ÷ 1000
+- As a quick rule, 1 amp per phase at 400 V ≈ 0.69 kVA
+
+## Step 2: Convert kW to kVA
+
+Generators are rated in **kVA** (apparent power) because the alternator must carry the full current regardless of power factor. Your equipment uses **kW** (real power).
+
+**kVA = kW ÷ power factor**
+
+Most mixed commercial and industrial loads sit around 0.8 power factor — which is also the standard rating point for diesel generators. So 160 kW of load needs a 200 kVA generator at minimum.
+
+## Step 3: Allow for motor starting
+
+A direct-on-line motor can draw five to seven times its running current for a few seconds while it starts. The generator must absorb that surge without the voltage collapsing. Soft starters and VFDs cut this dramatically, so always tell us how your large motors are started.
+
+The practical check: running load **plus** the extra starting demand of the largest motor must stay within what the generator can deliver for a few seconds.
+
+## Step 4: Add a safety margin — but not too much
+
+We normally add **20–25%** on top of the calculated running kVA. That margin covers:
+
+- motor starting and inrush from transformers and LED drivers
+- the derating needed at 45–50 °C ambient in the Gulf
+- modest future growth
+
+Going far beyond that is counter-productive. Diesel engines that run below roughly 30% load for long periods suffer from "wet stacking" — unburnt fuel accumulating in the exhaust — which raises maintenance cost.
+
+## Step 5: Round up to a real product
+
+Generators come in standard ratings (20, 30, 50, 100, 150, 200, 250, 350, 500 kVA and so on). Round up to the nearest one, then decide on engine brand and enclosure. See our [diesel generator range](/en/generators) for the ratings we supply from 10 to 2500 kVA.
+
+## Don't forget the transfer switch
+
+A generator only takes over automatically if it is paired with an **automatic transfer switch**. Size the ATS to the generator's full-load current — roughly kVA × 1.44 at 400 V. Our guide [ATS panels explained](/en/news/ats-panels-explained) covers this in detail.
+
+## Use the calculator, then talk to an engineer
+
+Our free [kVA calculator](/en/calculator) runs through these steps for you and suggests matching units from our catalog. Send the result to us on WhatsApp and an engineer will confirm the selection against your actual load list — usually the same working day.`,
+    body_ar: `اختيار المولد هو في الأساس مسألة تحديد الحجم. إذا اخترت القدرة الصحيحة بالكيلو فولت أمبير فإن كل شيء آخر — السعر واستهلاك الوقود وعمر المحرك — يصبح في مكانه. أما إذا أخطأت، فإما أن يفصل القاطع كلما بدأ محرك بالعمل، أو يعمل محرك كبير بحمل 20% فيتضرر تدريجياً.
+
+## الخطوة 1: حدد ما يجب تشغيله على المولد
+
+تجوّل في الموقع واكتب كل حمل يجب أن يستمر أثناء انقطاع الكهرباء: التكييف والمصاعد والمضخات والإنارة وأجهزة الخوادم وغرف التبريد وماكينات الإنتاج. لكل حمل سجّل **القدرة التشغيلية بالكيلوواط** من لوحة البيانات، وهل هو **محرك** أم لا.
+
+إذا كنت تعرف التيار فقط يمكنك التحويل. لتغذية ثلاثية الفاز 400 فولت:
+
+- الكيلوواط ≈ 1.732 × 400 × الأمبير × معامل القدرة ÷ 1000
+- كقاعدة سريعة: كل 1 أمبير لكل فاز على 400 فولت ≈ 0.69 ك.ف.أ
+
+## الخطوة 2: حوّل الكيلوواط إلى كيلو فولت أمبير
+
+تُقنن المولدات بالـ **ك.ف.أ** (القدرة الظاهرية) لأن الدينامو يجب أن يتحمل التيار الكامل بغض النظر عن معامل القدرة، بينما تستهلك أجهزتك **كيلوواط** (القدرة الفعلية).
+
+**ك.ف.أ = الكيلوواط ÷ معامل القدرة**
+
+معظم الأحمال التجارية والصناعية المختلطة تكون حول معامل قدرة 0.8، وهو أيضاً نقطة التقنين القياسية لمولدات الديزل. لذلك يحتاج حمل 160 كيلوواط إلى مولد 200 ك.ف.أ كحد أدنى.
+
+## الخطوة 3: احسب تيار بدء المحركات
+
+المحرك الذي يبدأ مباشرة على الخط قد يسحب من خمسة إلى سبعة أضعاف تياره التشغيلي لبضع ثوانٍ. يجب أن يتحمل المولد هذه الزيادة دون انهيار الجهد. أجهزة البدء الناعم ومغيرات السرعة تقلل ذلك كثيراً، لذا أخبرنا دائماً بطريقة تشغيل محركاتك الكبيرة.
+
+الاختبار العملي: الحمل التشغيلي **مضافاً إليه** الطلب الإضافي لبدء أكبر محرك يجب أن يبقى ضمن ما يستطيع المولد توفيره لبضع ثوانٍ.
+
+## الخطوة 4: أضف هامش أمان — دون مبالغة
+
+نضيف عادةً **من 20 إلى 25%** فوق القدرة التشغيلية المحسوبة. هذا الهامش يغطي:
+
+- بدء المحركات وتيار الاندفاع من المحولات ومشغلات الإنارة
+- خفض القدرة المطلوب في حرارة 45–50 درجة في الخليج
+- التوسع المستقبلي المعقول
+
+تجاوز ذلك بكثير يأتي بنتيجة عكسية؛ فمحركات الديزل التي تعمل تحت 30% من حملها لفترات طويلة تعاني من تراكم الوقود غير المحترق في العادم، ما يرفع تكلفة الصيانة.
+
+## الخطوة 5: اختر أقرب منتج حقيقي
+
+تأتي المولدات بقدرات قياسية (20، 30، 50، 100، 150، 200، 250، 350، 500 ك.ف.أ وهكذا). اختر القدرة الأعلى الأقرب ثم حدد نوع المحرك والهيكل. اطلع على [مولدات الديزل لدينا](/ar/generators) من 10 إلى 2500 ك.ف.أ.
+
+## لا تنسَ لوحة التحويل
+
+لا يتولى المولد التغذية تلقائياً إلا إذا كان مقترناً بـ **لوحة تحويل أوتوماتيكي ATS**. اختر سعة اللوحة حسب تيار الحمل الكامل للمولد — تقريباً ك.ف.أ × 1.44 على 400 فولت. مقالنا [شرح لوحات ATS](/ar/news/ats-panels-explained) يشرح ذلك بالتفصيل.
+
+## استخدم الحاسبة ثم تحدث مع مهندس
+
+[حاسبة القدرة المجانية](/ar/calculator) تنفذ هذه الخطوات وتقترح وحدات مناسبة من الكتالوج. أرسل النتيجة لنا على الواتساب وسيؤكد مهندسنا الاختيار حسب قائمة أحمالك الفعلية، عادةً في نفس يوم العمل.`,
+  },
+  {
+    slug: "ats-panels-explained",
+    title_en: "ATS Panels Explained: Why Every Generator Needs One",
+    title_ar: "شرح لوحات ATS: لماذا يحتاج كل مولد إلى لوحة تحويل أوتوماتيكي",
+    meta_title_en: "ATS Panels Explained: Why Every Generator Needs One | 4U",
+    meta_title_ar: "شرح لوحات ATS ولماذا يحتاجها كل مولد | فوريو باور",
+    excerpt_en:
+      "A generator without an automatic transfer switch is just an engine waiting for someone to arrive. What an ATS does, how to size one, and the mistakes we see most often in the UAE.",
+    excerpt_ar:
+      "المولد بدون لوحة تحويل أوتوماتيكي مجرد محرك ينتظر أن يأتي أحد لتشغيله. ما وظيفة لوحة ATS وكيف تختار سعتها وما الأخطاء الأكثر شيوعاً في الإمارات.",
+    cover_image: "/images/news/ats-explained.svg",
+    published_at: "2026-06-16T08:00:00Z",
+    is_published: true,
+    body_en: `When mains power fails at 2 a.m., who starts the generator? If the answer is "the watchman", your building is running on hope. An **automatic transfer switch (ATS) panel** removes the human from the loop.
+
+## What an ATS actually does
+
+An ATS panel sits between the utility supply, the generator and your main distribution board. Its controller continuously monitors mains voltage and frequency. When it detects a failure it:
+
+1. waits a few seconds to ignore short dips
+2. sends a start signal to the generator
+3. waits until generator voltage and frequency are stable
+4. switches the load from mains to generator
+5. when mains returns and stays healthy, switches back and lets the engine cool down before stopping it
+
+The whole sequence normally takes **5–15 seconds**, most of it engine start and warm-up.
+
+## Types of ATS panel
+
+- **Motorised changeover switch** — compact and cost-effective, common from 63 A to about 1600 A.
+- **Contactor-based ATS** — simple and fast, suited to smaller ratings.
+- **ACB-based changeover** — two interlocked air circuit breakers, used from roughly 630 A to 4000 A where protection and metering are needed too.
+
+## How to size an ATS
+
+Match the ATS rating to the **generator's full-load current**, or the incoming mains breaker if that is larger. At 400 V three-phase:
+
+**Current (A) ≈ kVA × 1.443**
+
+So a 250 kVA generator produces about 361 A, and needs a **400 A** ATS. A 500 kVA set needs about 722 A — so an **800 A** panel.
+
+## 3-pole or 4-pole?
+
+A **4-pole ATS** switches the neutral as well as the phases. It is recommended when the generator's neutral is earthed separately from the utility neutral, and where earth-leakage protection must work correctly on both sources. In many UAE installations 4-pole is the safer default — we confirm against your earthing arrangement.
+
+## Mistakes we see on site
+
+- **ATS sized to the load, not the generator.** When the site grows the ATS becomes the bottleneck.
+- **No mechanical interlock.** Both sources must never be connected at the same time.
+- **No cool-down timer.** Stopping a hot turbocharged engine immediately shortens its life.
+- **Panels without IP protection** installed in dusty plant rooms or outdoors.
+
+## Where to go next
+
+Browse our [ATS panel range](/en/ats-panels) from 63 A to 4000 A, or use the [kVA calculator](/en/calculator), which also recommends the ATS rating for the generator it selects. If you already have a generator, send us its nameplate photo on WhatsApp and we will propose the matching panel.`,
+    body_ar: `عندما تنقطع الكهرباء في الثانية فجراً، من سيشغّل المولد؟ إذا كانت الإجابة "الحارس"، فإن مبناك يعمل على الأمل. **لوحة التحويل الأوتوماتيكي ATS** تلغي الحاجة لتدخل الإنسان.
+
+## ماذا تفعل لوحة ATS فعلياً؟
+
+تقع لوحة ATS بين كهرباء الشبكة والمولد ولوحة التوزيع الرئيسية. تراقب وحدة التحكم فيها جهد وتردد الشبكة باستمرار، وعند اكتشاف الانقطاع:
+
+1. تنتظر بضع ثوانٍ لتجاهل الانخفاضات القصيرة
+2. ترسل إشارة تشغيل للمولد
+3. تنتظر حتى يستقر جهد المولد وتردده
+4. تنقل الحمل من الشبكة إلى المولد
+5. عند عودة الكهرباء واستقرارها، تعيد الحمل للشبكة وتترك المحرك يبرد قبل إيقافه
+
+يستغرق التسلسل عادةً **من 5 إلى 15 ثانية**، ومعظمها زمن تشغيل المحرك واستقراره.
+
+## أنواع لوحات ATS
+
+- **مفتاح تحويل مُحرّك (Motorised)** — صغير الحجم واقتصادي، شائع من 63 أمبير حتى حوالي 1600 أمبير.
+- **ATS بالكونتاكتورات** — بسيط وسريع ومناسب للسعات الصغيرة.
+- **تحويل بقواطع ACB** — قاطعان هوائيان متشابكان، يستخدم من حوالي 630 إلى 4000 أمبير عندما تكون الحماية والقياس مطلوبة أيضاً.
+
+## كيف تختار سعة لوحة ATS؟
+
+يجب أن تساوي سعة اللوحة **تيار الحمل الكامل للمولد**، أو قاطع التغذية الرئيسي إن كان أكبر. على 400 فولت ثلاثي الفاز:
+
+**التيار (أمبير) ≈ ك.ف.أ × 1.443**
+
+فالمولد 250 ك.ف.أ ينتج حوالي 361 أمبير ويحتاج لوحة **400 أمبير**. والمولد 500 ك.ف.أ ينتج حوالي 722 أمبير، أي لوحة **800 أمبير**.
+
+## ثلاثية أم رباعية الأقطاب؟
+
+لوحة **ATS رباعية الأقطاب** تفصل خط التعادل مع الفازات. ويوصى بها عندما يكون تعادل المولد مؤرضاً بشكل منفصل عن تعادل الشبكة، وعندما يجب أن تعمل حماية التسرب الأرضي بشكل صحيح على المصدرين. في كثير من تركيبات الإمارات تكون الرباعية هي الخيار الأكثر أماناً، ونؤكد ذلك حسب نظام التأريض لديك.
+
+## أخطاء نراها في المواقع
+
+- **اختيار سعة ATS حسب الحمل وليس حسب المولد**، فتصبح اللوحة عنق الزجاجة عند توسع الموقع.
+- **عدم وجود تشابك ميكانيكي**؛ يجب ألا يتصل المصدران معاً أبداً.
+- **عدم وجود مؤقت تبريد**؛ إيقاف محرك تيربو ساخن فوراً يقصّر عمره.
+- **لوحات بدون حماية IP** مركّبة في غرف مغبرة أو في الخارج.
+
+## الخطوة التالية
+
+تصفح [لوحات ATS لدينا](/ar/ats-panels) من 63 إلى 4000 أمبير، أو استخدم [حاسبة القدرة](/ar/calculator) التي تقترح أيضاً سعة لوحة ATS للمولد المختار. إذا كان لديك مولد بالفعل، أرسل لنا صورة لوحة بياناته على الواتساب وسنقترح اللوحة المناسبة.`,
+  },
+  {
+    slug: "perkins-vs-cummins-vs-kubota-engine-brand-uae",
+    title_en: "Perkins vs Cummins vs Kubota: Choosing an Engine Brand in the UAE",
+    title_ar: "بيركنز أم كمنز أم كوبوتا: كيف تختار ماركة محرك المولد في الإمارات",
+    meta_title_en: "Perkins vs Cummins vs Kubota Generators in the UAE | 4U Power",
+    meta_title_ar: "بيركنز أم كمنز أم كوبوتا؟ أفضل محرك مولد في الإمارات",
+    excerpt_en:
+      "The engine is roughly half the cost of a generator and most of its reputation. An honest comparison of the brands we supply — and where each one makes the most sense.",
+    excerpt_ar:
+      "المحرك يمثل تقريباً نصف تكلفة المولد ومعظم سمعته. مقارنة صريحة بين الماركات التي نوردها، ومتى يكون كل منها الخيار الأنسب.",
+    cover_image: "/images/news/engine-brands.svg",
+    published_at: "2026-07-01T08:00:00Z",
+    is_published: true,
+    body_en: `"Which engine is best?" is the most common question we get on WhatsApp. The honest answer: it depends on the kVA, the duty and where the set will be serviced. Here is how we think about the brands we supply.
+
+## Perkins
+
+Perkins engines power a large share of the generators sold in the GCC, especially below 500 kVA.
+
+- **Strengths:** very wide parts and service availability across the UAE, Saudi Arabia and Iraq; good fuel economy; familiar to almost every generator technician.
+- **Best for:** commercial buildings, villas, telecom, standby applications from 10 to 500 kVA, and heavy-duty 4000 Series units up to 2500 kVA.
+
+## Cummins
+
+Cummins builds its own engines and alternators and has a strong reputation on heavy sites.
+
+- **Strengths:** robust load acceptance (handles large motor starts well), strong performance on prime and continuous duty, extensive dealer network.
+- **Best for:** construction sites, industrial plants, rental fleets and large prime-power installations, including containerised 1000–2500 kVA sets.
+
+## Kubota
+
+Kubota specialises in small, very quiet engines.
+
+- **Strengths:** low noise, compact size, smooth running.
+- **Best for:** 10–40 kVA sets for villas, clinics, shops, events and anywhere noise complaints are a risk.
+
+## Volvo Penta
+
+- **Strengths:** excellent fuel efficiency and clean emissions in the 80–700 kVA range.
+- **Best for:** hotels, commercial towers and sites where running cost over the life of the set matters most.
+
+## Chinese engine series
+
+Modern Chinese engine platforms have matured considerably.
+
+- **Strengths:** significantly lower purchase price, adequate performance for many standby applications.
+- **Best for:** budget-driven projects, agriculture, and construction where the set will be replaced after the project.
+- **Watch for:** parts availability in your specific location — we confirm the engine brand and support options in every quotation.
+
+## How to decide
+
+Ask three questions:
+
+1. **Standby or prime?** For long daily run hours (common in Iraq and South Africa), prioritise heavy-duty engines and service access.
+2. **Who will service it?** Choose a brand your maintenance contractor already supports.
+3. **What matters more — capex or opex?** Cheaper engines can cost more over ten years in fuel and downtime.
+
+We don't push one brand. Tell us your kVA and application and we will quote two or three engine options side by side. Browse the [generator range](/en/generators) or start with the [kVA calculator](/en/calculator).`,
+    body_ar: `"أي محرك أفضل؟" هو السؤال الأكثر شيوعاً على الواتساب. والإجابة الصريحة: يعتمد ذلك على القدرة ونوع التشغيل ومكان صيانة المولد. هكذا نقيّم الماركات التي نوردها.
+
+## بيركنز (Perkins)
+
+محركات بيركنز تشغّل نسبة كبيرة من المولدات المباعة في الخليج، خاصة تحت 500 ك.ف.أ.
+
+- **نقاط القوة:** قطع غيار وخدمة متوفرة بشكل واسع في الإمارات والسعودية والعراق، استهلاك وقود جيد، ومعروفة لدى كل فنيي المولدات تقريباً.
+- **الأنسب لـ:** المباني التجارية والفلل والاتصالات والاستخدام الاحتياطي من 10 إلى 500 ك.ف.أ، ووحدات الفئة 4000 للخدمة الشاقة حتى 2500 ك.ف.أ.
+
+## كمنز (Cummins)
+
+تصنع كمنز محركاتها ودينامواتها بنفسها ولها سمعة قوية في المواقع الثقيلة.
+
+- **نقاط القوة:** تحمّل ممتاز للأحمال المفاجئة وبدء المحركات الكبيرة، أداء قوي في التشغيل الأساسي والمستمر، وشبكة وكلاء واسعة.
+- **الأنسب لـ:** مواقع الإنشاءات والمصانع وأساطيل التأجير ومحطات التشغيل الأساسي الكبيرة، بما فيها وحدات الحاويات من 1000 إلى 2500 ك.ف.أ.
+
+## كوبوتا (Kubota)
+
+تتخصص كوبوتا في المحركات الصغيرة والهادئة جداً.
+
+- **نقاط القوة:** ضوضاء منخفضة وحجم صغير وتشغيل سلس.
+- **الأنسب لـ:** مولدات من 10 إلى 40 ك.ف.أ للفلل والعيادات والمحلات والفعاليات وأي مكان تكون فيه الضوضاء مشكلة.
+
+## فولفو بنتا (Volvo Penta)
+
+- **نقاط القوة:** كفاءة ممتازة في استهلاك الوقود وانبعاثات منخفضة في نطاق 80–700 ك.ف.أ.
+- **الأنسب لـ:** الفنادق والأبراج التجارية والمواقع التي تهمها تكلفة التشغيل على مدى عمر المولد.
+
+## المحركات الصينية
+
+تطورت منصات المحركات الصينية الحديثة بشكل كبير.
+
+- **نقاط القوة:** سعر شراء أقل بشكل ملحوظ وأداء كافٍ لكثير من تطبيقات الطاقة الاحتياطية.
+- **الأنسب لـ:** المشاريع ذات الميزانية المحدودة والزراعة ومواقع الإنشاءات التي يُستبدل فيها المولد بعد انتهاء المشروع.
+- **انتبه إلى:** توفر قطع الغيار في موقعك تحديداً — نؤكد ماركة المحرك وخيارات الدعم في كل عرض سعر.
+
+## كيف تقرر؟
+
+اسأل ثلاثة أسئلة:
+
+1. **احتياطي أم أساسي؟** لساعات التشغيل اليومية الطويلة (الشائعة في العراق وجنوب أفريقيا) اختر محركات الخدمة الشاقة وسهولة الصيانة.
+2. **من سيقوم بالصيانة؟** اختر ماركة يدعمها مقاول الصيانة لديك.
+3. **ما الأهم: تكلفة الشراء أم التشغيل؟** المحركات الأرخص قد تكلف أكثر خلال عشر سنوات في الوقود والأعطال.
+
+نحن لا نفرض ماركة معينة. أخبرنا بالقدرة والاستخدام وسنقدم لك عرضاً بخيارين أو ثلاثة محركات جنباً إلى جنب. تصفح [مولدات الديزل](/ar/generators) أو ابدأ بـ [حاسبة القدرة](/ar/calculator).`,
+  },
+];
