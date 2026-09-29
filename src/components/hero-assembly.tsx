@@ -66,27 +66,58 @@ const pct = (v: number, of: number) => `${(v / of) * 100}%`;
 const clamp01 = (v: number) => Math.min(1, Math.max(0, v));
 const band = (v: number, [a, b, c, d]: [number, number, number, number]) =>
   v < a ? 0 : v < b ? clamp01((v - a) / (b - a || 1)) : v <= c ? 1 : v < d ? 1 - clamp01((v - c) / (d - c)) : 0;
-/** smooth ease-in-out (quint) — parts accelerate off the rack and settle softly into place */
-const ease = (t: number) => (t < 0.5 ? 16 * t ** 5 : 1 - (-2 * t + 2) ** 5 / 2);
+/** smooth ease-in-out (cubic) plus a small overshoot-and-settle at the end — parts "clunk" into place */
+const ease = (u: number) => {
+  const base = u < 0.5 ? 4 * u ** 3 : 1 - (-2 * u + 2) ** 3 / 2;
+  const settle = u > 0.72 ? 0.035 * Math.sin(Math.PI * ((u - 0.72) / 0.28)) : 0;
+  return base + settle;
+};
 
-function useAssembly(part: Part, progress: MotionValue<number>) {
+/** extra spread of the exploded state, away from the machine's centre (0.15 = 15% wider); less vertically so the exhaust stack stays in frame */
+const SPREAD = 0.15;
+const SPREAD_Y = 0.05;
+const CENTRE = { x: 1032, y: 656 };
+
+/**
+ * Per-part motion: start 15% further out than the render, travel on a short arc with a slight tilt,
+ * overshoot a touch and settle. While waiting its turn a part hovers gently as the visitor scrolls.
+ */
+function useAssembly(part: Part, progress: MotionValue<number>, index: number) {
   const [a, b] = part.win;
-  const k = useTransform(progress, (v) => (b > a ? ease(clamp01((v - a) / (b - a))) : 1));
-  // translate is relative to the layer's own box; scale pivots on its top-left corner
-  const x = useTransform(k, (t) => `${(((part.tx - part.x) * t) / part.w) * 100}%`);
-  const y = useTransform(k, (t) => `${(((part.ty - part.y) * t) / part.h) * 100}%`);
-  const scale = useTransform(k, (t) => 1 + (part.s - 1) * t);
-  return { x, y, scale };
+  const sx = SPREAD * (part.x + part.w / 2 - CENTRE.x);
+  const sy = SPREAD_Y * (part.y + part.h / 2 - CENTRE.y);
+  const dist = Math.hypot(part.tx - part.x - sx, part.ty - part.y - sy);
+  const arc = Math.min(90, dist * 0.18);
+  const tilt = (index % 2 ? 1 : -1) * Math.min(4, 1 + dist / 120);
+  const phase = index * 1.7;
+
+  const u = useTransform(progress, (v) => (b > a ? clamp01((v - a) / (b - a)) : 1));
+  const px = useTransform(u, (t) => {
+    const k = ease(t);
+    return sx + (part.tx - part.x - sx) * k;
+  });
+  const py = useTransform([u, progress], ([t, v]: number[]) => {
+    const k = ease(t!);
+    const lift = -arc * Math.sin(Math.PI * t!);
+    const hover = 7 * Math.sin(v! * 26 + phase) * (1 - Math.min(1, t! * 3));
+    return sy + (part.ty - part.y - sy) * k + lift + hover;
+  });
+  // translate is relative to the layer's own box; scale/rotate pivot on its top-left corner
+  const x = useTransform(px, (d) => `${(d / part.w) * 100}%`);
+  const y = useTransform(py, (d) => `${(d / part.h) * 100}%`);
+  const scale = useTransform(u, (t) => 1 + (part.s - 1) * Math.min(1, ease(t)));
+  const rotate = useTransform(u, (t) => tilt * Math.sin(Math.PI * t));
+  return { x, y, scale, rotate };
 }
 
 const box = (p: Part) => ({ left: pct(p.x, CANVAS.w), top: pct(p.y, CANVAS.h), width: pct(p.w, CANVAS.w), height: pct(p.h, CANVAS.h) });
 
-function Layer({ part, progress, priority }: { part: Part; progress: MotionValue<number>; priority?: boolean }) {
-  const { x, y, scale } = useAssembly(part, progress);
+function Layer({ part, index, progress, priority }: { part: Part; index: number; progress: MotionValue<number>; priority?: boolean }) {
+  const { x, y, scale, rotate } = useAssembly(part, progress, index);
   const [, b] = part.win;
   const opacity = useTransform(progress, (v) => (part.hideAfter ? 1 - clamp01((v - b) / 0.04) : 1 - clamp01((v - LOCK[1]) / 0.04)));
   return (
-    <m.div className="absolute origin-top-left will-change-transform [backface-visibility:hidden]" style={{ ...box(part), x, y, scale, opacity, zIndex: part.z }}>
+    <m.div className="absolute origin-top-left will-change-transform [backface-visibility:hidden]" style={{ ...box(part), x, y, scale, rotate, opacity, zIndex: part.z }}>
       <Image
         src={`/images/hero/layers/${part.id}.webp`}
         alt=""
@@ -106,10 +137,10 @@ function Layer({ part, progress, priority }: { part: Part; progress: MotionValue
 }
 
 /** Pin + label that rides with its part and is visible only while that part travels into place. */
-function Callout({ part, progress, locale }: { part: Part; progress: MotionValue<number>; locale: Locale }) {
+function Callout({ part, index, progress, locale }: { part: Part; index: number; progress: MotionValue<number>; locale: Locale }) {
   const [a, b] = part.win;
   const opacity = useTransform(progress, (v) => band(v, [a - 0.01, a + 0.03, b - 0.06, b - 0.02]));
-  const { x, y, scale } = useAssembly(part, progress);
+  const { x, y, scale } = useAssembly(part, progress, index);
   if (!part.label || !part.anchor) return null;
   return (
     <m.div className="pointer-events-none absolute hidden origin-top-left sm:block" style={{ ...box(part), x, y, scale, opacity, zIndex: 20 }} aria-hidden>
@@ -122,6 +153,30 @@ function Callout({ part, progress, locale }: { part: Part; progress: MotionValue
         <span className="whitespace-nowrap rounded-md bg-ink-950 px-2.5 py-1 text-xs font-bold text-white shadow-lg">{part.label[locale]}</span>
       </div>
     </m.div>
+  );
+}
+
+/** Warm ring that pulses where a part lands */
+function Landing({ part, progress }: { part: Part; progress: MotionValue<number> }) {
+  const [, b] = part.win;
+  const t = useTransform(progress, (v) => clamp01((v - (b - 0.03)) / 0.07));
+  const opacity = useTransform(t, (k) => (k <= 0 || k >= 1 ? 0 : Math.sin(Math.PI * k) * 0.9));
+  const scale = useTransform(t, (k) => 0.3 + 1.2 * k);
+  const w = part.w * part.s;
+  return (
+    <m.div
+      aria-hidden
+      className="pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 rounded-[50%] border border-brand-400/50 bg-[radial-gradient(closest-side,rgb(255_214_60/0.5),transparent)]"
+      style={{
+        left: pct(part.tx + w / 2, CANVAS.w),
+        top: pct(part.ty + part.h * part.s * 0.85, CANVAS.h),
+        width: pct(w * 0.9, CANVAS.w),
+        aspectRatio: "3 / 1",
+        opacity,
+        scale,
+        zIndex: 12,
+      }}
+    />
   );
 }
 
@@ -193,9 +248,10 @@ export function HeroAssembly({ words, strings }: { words: string[]; strings: { s
               className="relative shrink-0 [--hero-vw:118vw] max-sm:[--hero-vw:104vw]"
               style={{ aspectRatio: `${CANVAS.w} / ${CANVAS.h}`, width: `min(${CANVAS.w}px, var(--hero-vw), calc((100svh - 7.5rem) * ${ASPECT.toFixed(4)}))` }}
             >
-              {!still && PARTS.map((p) => <Layer key={p.id} part={p} progress={progress} priority={p.id === "engine" || p.id === "base-frame"} />)}
+              {!still && PARTS.map((p, i) => <Layer key={p.id} part={p} index={i} progress={progress} priority={p.id === "engine" || p.id === "base-frame"} />)}
+              {!still && PARTS.map((p) => (p.label ? <Landing key={p.id} part={p} progress={progress} /> : null))}
               <Assembled progress={progress} still={still} />
-              {!still && PARTS.map((p) => <Callout key={p.id} part={p} progress={progress} locale={locale} />)}
+              {!still && PARTS.map((p, i) => <Callout key={p.id} part={p} index={i} progress={progress} locale={locale} />)}
               {!still && <LockFlash progress={progress} />}
               <div className="absolute inset-x-[12%] bottom-[-2%] -z-10 h-[8%] rounded-[50%] bg-ink-950/20 blur-2xl" aria-hidden />
             </div>
