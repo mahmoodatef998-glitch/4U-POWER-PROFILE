@@ -1,7 +1,7 @@
 import type { Product, SpecRow } from "@/lib/types";
 
 /**
- * Seed catalog. Mirrors the Supabase `products` table (see supabase/seed.sql, generated from this file).
+ * Seed catalog. Mirrors the Supabase `products` table (see supabase/seed/*.sql, generated from this file).
  * CONTENT_TODO: replace illustrative images in /public/images/products with real product photos,
  * and replace the placeholder datasheet with real PDFs per model.
  */

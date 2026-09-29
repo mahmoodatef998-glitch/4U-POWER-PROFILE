@@ -19,7 +19,8 @@ async function fromSupabase<T>(table: string, order: { column: string; ascending
     console.error(`[data] ${table}:`, error.message);
     return null;
   }
-  return data as T[];
+  // An empty content table (fresh project, seed not loaded yet) must never render an empty site.
+  return data.length ? (data as T[]) : null;
 }
 
 export const getProducts = cache(async (): Promise<Product[]> => {

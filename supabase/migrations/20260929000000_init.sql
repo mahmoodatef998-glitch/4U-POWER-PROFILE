@@ -122,7 +122,7 @@ create table if not exists public.calculator_submissions (
 create index if not exists calc_created_idx on public.calculator_submissions (created_at desc);
 
 -- ---------------------------------------------------------------- updated_at trigger
-create or replace function public.touch_updated_at() returns trigger language plpgsql as $$
+create or replace function public.touch_updated_at() returns trigger language plpgsql set search_path = '' as $$
 begin new.updated_at = now(); return new; end $$;
 
 drop trigger if exists products_touch on public.products;
