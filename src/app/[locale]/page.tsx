@@ -113,7 +113,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
       </section>
 
       {/* ------------------------------------------------ WHO WE ARE + STATS */}
-      <section className="section bg-white">
+      <section className="section overflow-x-clip bg-white">
         <div className="container-x grid gap-12 lg:grid-cols-12 lg:items-center">
           <Reveal className="lg:col-span-6" from="start">
             <SectionHeading eyebrow={L(home.who.eyebrow)} title={L(home.who.title)} intro={L(home.who.body)} />

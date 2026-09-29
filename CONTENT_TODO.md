@@ -8,7 +8,7 @@ No stock photo hosts were reachable from the build environment. All images are t
 
 | Image | File | Used on | Replace with |
 |---|---|---|---|
-| Hero (scroll assembly) | `public/images/hero/layers/*.webp`, cut from `assets/source/exploded-view.jpg` by `scripts/generate-brand-assets.py` | Home hero | ✅ Client render in use. For a cinematic upgrade, supply per-part renders or a 3D model (see README → Hero) |
+| Hero (scroll assembly) | `public/images/hero/layers/*.webp`, cut from `assets/source/exploded-v2.webp` + `assembled-v2.webp` by `scripts/generate-brand-assets.py` | Home hero | ✅ Client render in use. For a cinematic upgrade, supply per-part renders or a 3D model (see README → Hero) |
 | Canopy genset | `public/images/products/generator-canopy.svg` | Perkins/Cummins/Kubota/Volvo/hybrid products, home category | Real canopy generator photos |
 | Open-frame genset | `public/images/products/generator-open.svg` | Several generator products | Real open-frame photos |
 | Containerised genset | `public/images/products/generator-container.svg` | 250–2500 kVA, gas | Real containerised photos |

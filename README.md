@@ -54,10 +54,11 @@ supabase/seed/*.sql       generated seed data (run in order)
 
 ## Hero: scroll-to-assemble generator
 
-`src/components/hero-assembly.tsx` pins the hero while the visitor scrolls. The 8 parts of the client's exploded-view render (engine, alternator, radiator, end cover, control panel, air filter, silencer, base frame) travel from their exploded positions to the assembled set, one after another. Numbered callouts fade out as each part moves in.
+`src/components/hero-assembly.tsx` pins the hero while the visitor scrolls. Parts cut from the client's exploded render (`assets/source/exploded-v2.webp`: engine, alternator, radiator, control panel, air filter, silencer, base frame, AV mounts) glide onto their spots in the matching assembled render (`assets/source/assembled-v2.webp`), which cross-fades in at the end so the final frame is the real, correctly built set. Labels ride with each part while it moves.
 
-- No video: pure GPU transforms on ~200 KB of WebP layers. Honours `prefers-reduced-motion` (shows the assembled set, no pinning).
-- Tune the choreography in the `PARTS` array (`dx/dy` = assembled offset in canvas px, `win` = scroll window).
+- No video: GPU transform/opacity only on ~750 KB of native-resolution WebP (2000×1333 canvas). Honours `prefers-reduced-motion` (shows the assembled set, no pinning).
+- Layers are rebuilt by `python3 scripts/generate-brand-assets.py`; tune the choreography in the `PARTS` array (`tx/ty/s` = assembled position and scale, `win` = scroll window) and `LOCK` (cross-fade window).
+- New renders: keep both images on the same camera and canvas, plain white background, parts separated by visible gaps.
 - **Cinematic upgrade path:** have a 3D artist render the assembly (Blender / KeyShot) as ~120 transparent frames, then swap the layer stage for a canvas image-sequence scrubber. Same scroll logic.
 
 ## Conversion tracking (for Google Ads)

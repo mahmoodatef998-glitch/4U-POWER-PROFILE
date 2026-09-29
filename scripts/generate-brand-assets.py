@@ -1,7 +1,7 @@
 """
 Builds every brand asset from the two client-supplied sources in assets/source/:
   logo.jpg           -> public/brand/logo-{full,mark}-{light,dark}.png, icons, favicon
-  exploded-view.jpg  -> public/images/hero/layers/*.webp (hero scroll-assembly parts), OG image
+  exploded-v2.webp + assembled-v2.webp -> public/images/hero/layers/*.webp (hero scroll-assembly), OG image
 Run: pip install pillow numpy scipy && python3 scripts/generate-brand-assets.py
 """
 import json
@@ -59,74 +59,64 @@ tile(180, radius=0).save(ROOT / "src/app/apple-icon.png")
 tile(512).save(ROOT / "public/images/logo-mark.png")
 tile(64).save(ROOT / "src/app/favicon.ico", sizes=[(16, 16), (32, 32), (48, 48)])
 
-# ------------------------------------------------------------------ hero layers
-ex = np.asarray(Image.open(SRC / "exploded-view.jpg").convert("RGB")).astype(float)
-H, W, _ = ex.shape
-d = 255 - np.min(ex, axis=2)
-mask = d > 28
-mask[850:, :] = False  # legend block
-mask[:115, :460] = False  # title block
-opened = ndi.binary_opening(mask, structure=np.ones((7, 7)))  # drops text + leader lines
-lab, _ = ndi.label(opened)
-alpha = np.clip((d - 10) * 4, 0, 255)
-xx = np.arange(W)[None, :].repeat(H, 0)
-
-
-def comp_at(x, y):
-    return lab == lab[y, x]
-
-
-engine_block = comp_at(900, 450)  # engine + radiator + expansion tank
-genset_left = comp_at(300, 500)  # control panel + alternator
-# expansion tank + its pipe (sits on the engine) must stay with the engine, not the radiator
-yy = np.arange(H)[:, None].repeat(W, 1)
-tank = (xx >= 1110) & (xx < 1220) & (yy < 300)
-parts = {
-    "end-cover": comp_at(100, 500),
-    "control-panel": genset_left & (xx < 365),
-    "alternator": genset_left & (xx >= 365),
-    "engine": engine_block & ((xx < 1172) | tank),
-    "radiator": engine_block & (xx >= 1172) & ~tank,
-    "air-filter": comp_at(600, 130),
-    "silencer": comp_at(930, 100),
-    "base-frame": comp_at(700, 760),
+# ------------------------------------------------------------------ hero layers (v2 renders)
+# exploded-v2 and assembled-v2 share one camera and a 2000x1333 canvas on a white backdrop.
+# Parts are cut from the exploded render at native resolution; TARGETS place each one over its
+# spot in the assembled render (top-left x, y, uniform scale), tuned by overlaying both renders.
+# The assembled render itself is matted and cross-faded in last, so the final frame is exact.
+TARGETS = {
+    "base-frame": (410, 858, 1.04),
+    "mounts": (724, 900, 1.0),
+    "radiator": (1478, 215, 1.06),
+    "engine": (725, 370, 1.05),
+    "alternator": (360, 568, 1.06),
+    "control-panel": (120, 450, 1.18),
+    "silencer": (932, 59, 1.075),
+    "air-filter": (559, 256, 1.075),
 }
-# yellow leader lines / callout dots sitting on dark parts (original-image coords)
-cleanup = {
-    "radiator": [(1285, 140, 1375, 365)],
-    "base-frame": [(700, 640, 860, 800), (640, 775, 700, 805)],
-    "end-cover": [(22, 338, 50, 362)],
-    "alternator": [(370, 370, 395, 420), (490, 338, 515, 368)],
-    "control-panel": [(222, 390, 245, 412)],
+# a pixel on each part (exploded coords); mounts are the two loose AV mounts
+SEEDS = {
+    "base-frame": [(1000, 1150)],
+    "mounts": [(1390, 870), (764, 900)],
+    "radiator": [(1700, 600)],
+    "engine": [(1100, 600)],
+    "alternator": [(500, 700)],
+    "control-panel": [(130, 650)],
+    "silencer": [(1200, 200)],
+    "air-filter": [(700, 260)],
 }
-meta = {}
-for name, m in parts.items():
-    a = np.where(ndi.binary_dilation(m, iterations=5), alpha, 0)
-    rgb = ex.copy()
-    er, eg, eb = rgb[..., 0], rgb[..., 1], rgb[..., 2]
-    ylw = (er > 150) & (eg > 110) & (eb < 120) & (er - eb > 70)
-    sel = np.zeros(a.shape, bool)
-    for x0, y0, x1, y1 in cleanup.get(name, []):
-        sel[y0:y1, x0:x1] = True
-    bad = ndi.binary_dilation(ylw & sel, iterations=2) & sel
-    if bad.any():
-        _, (iy, ix) = ndi.distance_transform_edt(bad, return_indices=True)
-        rgb, a = rgb[iy, ix], a[iy, ix]
-    ys, xs = np.where(a > 20)
+
+
+def matte(rgb):
+    """white-backdrop matte: solid mask (holes filled) with a 1px soft edge"""
+    d = (254 - rgb).max(axis=2)
+    m = ndi.binary_fill_holes(ndi.binary_closing(d > 14, iterations=3))
+    soft = ndi.gaussian_filter(m.astype(float), 0.7)
+    return m, np.clip(soft * 255, 0, 255)
+
+
+ex = np.asarray(Image.open(SRC / "exploded-v2.webp").convert("RGB")).astype(float)
+mask, alpha = matte(ex)
+lab, _ = ndi.label(mask)
+meta = {"canvas": {"w": ex.shape[1], "h": ex.shape[0]}, "parts": {}}
+for name, seeds in SEEDS.items():
+    m = np.isin(lab, [lab[y, x] for x, y in seeds])
+    a = np.where(ndi.binary_dilation(m, iterations=2), alpha, 0)
+    ys, xs = np.where(a > 8)
     x0, x1, y0, y1 = xs.min(), xs.max() + 1, ys.min(), ys.max() + 1
-    Image.fromarray(np.dstack([rgb, a]).astype(np.uint8)[y0:y1, x0:x1], "RGBA").save(LAYERS / f"{name}.webp", quality=86, method=6)
-    meta[name] = dict(x=int(x0), y=int(y0), w=int(x1 - x0), h=int(y1 - y0))
+    Image.fromarray(np.dstack([ex, a]).astype(np.uint8)[y0:y1, x0:x1], "RGBA").save(LAYERS / f"{name}.webp", quality=90, method=6)
+    tx, ty, sc = TARGETS[name]
+    meta["parts"][name] = dict(x=int(x0), y=int(y0), w=int(x1 - x0), h=int(y1 - y0), tx=tx, ty=ty, s=sc)
+
+asm = np.asarray(Image.open(SRC / "assembled-v2.webp").convert("RGB")).astype(float)
+_, a_asm = matte(asm)
+assembled = Image.fromarray(np.dstack([asm, a_asm]).astype(np.uint8), "RGBA")
+assembled.save(LAYERS / "assembled.webp", quality=90, method=6)
 (LAYERS / "layers.json").write_text(json.dumps(meta, indent=2))
 print("layers:", meta)
 
 # ------------------------------------------------------------------ OG image (assembled set)
-ASSEMBLED = {"base-frame": (0, 0), "engine": (-8, 26), "alternator": (-18, 44), "radiator": (-34, 40),
-             "end-cover": (196, 36), "control-panel": (86, 22), "air-filter": (118, 96), "silencer": (2, 78)}
-ORDER = ["base-frame", "end-cover", "alternator", "engine", "radiator", "control-panel", "air-filter", "silencer"]
-scene = Image.new("RGBA", (1536, 840), (0, 0, 0, 0))
-for n in ORDER:
-    v, (dx, dy) = meta[n], ASSEMBLED[n]
-    scene.alpha_composite(Image.open(LAYERS / f"{n}.webp").convert("RGBA"), (v["x"] + dx, v["y"] + dy))
+scene = assembled
 scene = scene.crop(scene.getbbox())
 scene.thumbnail((640, 380), Image.LANCZOS)
 
