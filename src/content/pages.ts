@@ -24,6 +24,7 @@ export const home = {
   story: [
     {
       kicker: { en: "01 — The heart", ar: "01 — القلب" },
+      word: { en: "ENGINE", ar: "المحرك" },
       title: { en: "Engines you can trust in 50 °C", ar: "محركات تعتمد عليها في حرارة 50 درجة" },
       body: {
         en: "Perkins, Cummins, Kubota, Volvo Penta and Chinese engine platforms from 10 to 2500 kVA — quoted side by side so you choose on facts, not brand loyalty.",
@@ -33,6 +34,7 @@ export const home = {
     },
     {
       kicker: { en: "02 — Gulf-proof cooling", ar: "02 — تبريد مصمم للخليج" },
+      word: { en: "COOLING", ar: "التبريد" },
       title: { en: "Sized for August, not the catalogue", ar: "مصمم لصيف أغسطس، لا لأرقام الكتالوج" },
       body: {
         en: "High-ambient radiators, canopies and site derating specified for UAE, Saudi and Iraqi summers — the output you are quoted is the output you get on site.",
@@ -42,6 +44,7 @@ export const home = {
     },
     {
       kicker: { en: "03 — Automatic control", ar: "03 — تحكم أوتوماتيكي" },
+      word: { en: "CONTROL", ar: "التحكم" },
       title: { en: "Power back in 5–15 seconds", ar: "الكهرباء تعود خلال 5–15 ثانية" },
       body: {
         en: "AMF controllers and ATS panels from 63 A to 4000 A start the set and transfer your load the moment the grid drops — no one needs to be on site.",
@@ -51,6 +54,7 @@ export const home = {
     },
     {
       kicker: { en: "04 — Ready to ship", ar: "04 — جاهز للشحن" },
+      word: { en: "DELIVERY", ar: "التسليم" },
       title: { en: "Ready in Sharjah. Delivered to your site.", ar: "جاهز في الشارقة ويصل إلى موقعك" },
       body: {
         en: "From SAIF Zone to the UAE in days, overland to Saudi Arabia, by sea or road to Iraq — with datasheets and export paperwork done for you.",

@@ -42,24 +42,22 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
       {/* ------------------------------------------------ HERO: scroll story — generator assembles, copy advances in chapters */}
       <HeroAssembly
         strings={{ scroll: locale === "ar" ? "مرّر لتجميع المولد" : "Scroll to assemble", label: L(home.hero.h1) }}
-        chapters={home.story.map((c) => ({ kicker: L(c.kicker), title: L(c.title), body: L(c.body), stat: L(c.stat) }))}
+        chapters={home.story.map((c) => ({ kicker: L(c.kicker), title: L(c.title), body: L(c.body), stat: L(c.stat), word: L(c.word) }))}
+        introWord={locale === "ar" ? "طاقة" : "POWER"}
         outroCta={<WhatsAppButton location="hero_outro" />}
         intro={
-          <div className="grid h-full content-start gap-4 lg:grid-cols-12 lg:content-center lg:items-center lg:gap-8">
-            <div className="lg:col-span-8">
-              <p className="eyebrow">
-                <BadgeCheck className="size-4" aria-hidden />
-                {L(home.hero.eyebrow)}
-              </p>
-              <h1 className="mt-2 text-[1.9rem] text-ink sm:text-5xl lg:text-[3.4rem] xl:text-6xl rtl:text-[1.6rem] rtl:sm:text-4xl rtl:lg:text-[2.6rem]">
+          <div className="flex h-full flex-col justify-end">
+            <p className="eyebrow">
+              <BadgeCheck className="size-4" aria-hidden />
+              {L(home.hero.eyebrow)}
+            </p>
+            <div className="mt-2 flex flex-wrap items-end justify-between gap-x-10 gap-y-3">
+              <h1 className="max-w-4xl text-[1.9rem] text-ink sm:text-5xl lg:text-6xl rtl:text-[1.6rem] rtl:sm:text-4xl rtl:lg:text-5xl">
                 {L(home.hero.h1)}
               </h1>
-            </div>
-            <div className="lg:col-span-4">
-              <p className="hidden text-sm leading-6 text-muted lg:block">{L(home.hero.lead)}</p>
-              <div className="mt-0 flex gap-2 lg:mt-4">
-                <WhatsAppButton location="hero" className="flex-1 lg:flex-none" />
-                <Link href="/calculator" className={`${buttonVariants({ variant: "dark" })} flex-1 lg:flex-none`}>
+              <div className="flex w-full gap-2 sm:w-auto">
+                <WhatsAppButton location="hero" className="flex-1 sm:flex-none" />
+                <Link href="/calculator" className={`${buttonVariants({ variant: "dark" })} flex-1 sm:flex-none`}>
                   {t("cta.tryCalculator")}
                   <ArrowRight className="flip-rtl" aria-hidden />
                 </Link>
