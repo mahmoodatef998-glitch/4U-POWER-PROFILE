@@ -37,10 +37,10 @@ export async function Footer() {
   ];
 
   return (
-    <footer className="on-dark bg-ink-950 pb-24 text-white/80 md:pb-0">
+    <footer className="on-dark border-t border-white/10 bg-navy-950 pb-24 text-white/80 md:pb-0">
       <div className="container-x grid gap-12 py-16 lg:grid-cols-12">
         <div className="lg:col-span-4">
-          <Link href="/" aria-label={nav("home")} className="inline-block">
+          <Link href="/" className="inline-block">
             <Brand />
           </Link>
           <p className="mt-5 max-w-sm text-sm leading-6 text-white/70">{t("tagline")}</p>

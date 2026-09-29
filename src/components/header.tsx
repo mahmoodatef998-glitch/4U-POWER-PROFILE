@@ -80,14 +80,14 @@ export function Header() {
     <header
       className={cn(
         "sticky top-0 z-50 border-b transition-colors duration-300",
-        scrolled ? "border-white/10 bg-ink-950/95 backdrop-blur" : "border-transparent bg-ink-950",
+        scrolled ? "border-white/10 bg-navy-950/85 backdrop-blur-xl" : "border-transparent bg-navy-950",
       )}
     >
       <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:start-4 focus:top-3 focus:z-50 focus:rounded-full focus:bg-brand-500 focus:px-4 focus:py-2 focus:font-bold focus:text-ink-950">
         {t("skip")}
       </a>
       <div className="container-x flex h-16 items-center justify-between gap-4 lg:h-18">
-        <Link href="/" aria-label={t("home")} className="rounded-lg">
+        <Link href="/" className="rounded-lg">
           <Brand />
         </Link>
 

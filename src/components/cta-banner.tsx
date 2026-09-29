@@ -3,12 +3,12 @@ import { Link } from "@/i18n/navigation";
 import { buttonVariants } from "./ui/button";
 import { CallButton, WhatsAppButton } from "./cta-buttons";
 
-export async function CtaBanner({ title, body, message, location }: { title: string; body: string; message?: string; location: string }) {
+export async function CtaBanner({ title, body, message, location, dark }: { title: string; body: string; message?: string; location: string; dark?: boolean }) {
   const t = await getTranslations("cta");
   return (
-    <section className="bg-white py-16 sm:py-20">
+    <section className={dark ? "bg-navy-950 py-16 sm:py-24" : "bg-white py-16 sm:py-20"}>
       <div className="container-x">
-        <div className="on-dark relative overflow-hidden rounded-[2rem] bg-navy-950 px-6 py-12 text-white sm:px-12 lg:flex lg:items-center lg:justify-between lg:gap-10 lg:py-14">
+        <div className="on-dark spotlight relative overflow-hidden rounded-[2rem] border border-white/10 bg-navy-900 px-6 py-12 text-white sm:px-12 lg:flex lg:items-center lg:justify-between lg:gap-10 lg:py-14">
           <div className="grid-bg pointer-events-none absolute inset-0 opacity-60" aria-hidden />
           <div className="aurora pointer-events-none absolute inset-0" aria-hidden />
           <div className="absolute inset-x-0 top-0 h-1 bg-[linear-gradient(90deg,var(--color-line-gen-a),var(--color-line-gen-b),var(--color-line-mdb-b),var(--color-line-sw-b),var(--color-line-ats-b))]" aria-hidden />

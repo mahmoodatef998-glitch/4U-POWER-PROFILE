@@ -104,14 +104,14 @@ for name, seeds in SEEDS.items():
     a = np.where(ndi.binary_dilation(m, iterations=2), alpha, 0)
     ys, xs = np.where(a > 8)
     x0, x1, y0, y1 = xs.min(), xs.max() + 1, ys.min(), ys.max() + 1
-    Image.fromarray(np.dstack([ex, a]).astype(np.uint8)[y0:y1, x0:x1], "RGBA").save(LAYERS / f"{name}.webp", quality=90, method=6)
+    Image.fromarray(np.dstack([ex, a]).astype(np.uint8)[y0:y1, x0:x1], "RGBA").save(LAYERS / f"{name}.webp", quality=88, method=6)
     tx, ty, sc = TARGETS[name]
     meta["parts"][name] = dict(x=int(x0), y=int(y0), w=int(x1 - x0), h=int(y1 - y0), tx=tx, ty=ty, s=sc)
 
 asm = np.asarray(Image.open(SRC / "assembled-v2.webp").convert("RGB")).astype(float)
 _, a_asm = matte(asm)
 assembled = Image.fromarray(np.dstack([asm, a_asm]).astype(np.uint8), "RGBA")
-assembled.save(LAYERS / "assembled.webp", quality=90, method=6)
+assembled.save(LAYERS / "assembled.webp", quality=82, method=6)
 (LAYERS / "layers.json").write_text(json.dumps(meta, indent=2))
 print("layers:", meta)
 

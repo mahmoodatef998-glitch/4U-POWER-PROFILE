@@ -185,7 +185,7 @@ function Assembled({ progress, still }: { progress: MotionValue<number>; still: 
   const opacity = useTransform(progress, (v) => clamp01((v - LOCK[0]) / (LOCK[1] - LOCK[0])));
   return (
     <m.div className="absolute inset-0 [backface-visibility:hidden]" style={{ opacity: still ? 1 : opacity, zIndex: 15 }}>
-      <Image src="/images/hero/layers/assembled.webp" alt="" width={CANVAS.w} height={CANVAS.h} loading="eager" decoding="async" draggable={false} unoptimized className="size-full select-none" />
+      <Image src="/images/hero/layers/assembled.webp" alt="" width={CANVAS.w} height={CANVAS.h} loading="eager" fetchPriority={still ? "high" : "low"} decoding="async" draggable={false} unoptimized className="size-full select-none" />
     </m.div>
   );
 }

@@ -7,6 +7,7 @@ import type { ReactNode } from "react";
 import { Analytics, GtmNoScript } from "@/components/analytics";
 import { FloatingCta } from "@/components/floating-cta";
 import { Footer } from "@/components/footer";
+import { SpotlightTracker } from "@/components/fx";
 import { Header } from "@/components/header";
 import { JsonLd } from "@/components/json-ld";
 import { UtmCapture } from "@/components/utm-capture";
@@ -62,6 +63,7 @@ export default async function LocaleLayout({ children, params }: { children: Rea
           <Footer />
           <FloatingCta />
           <UtmCapture />
+          <SpotlightTracker />
         </NextIntlClientProvider>
         <Analytics />
       </body>
