@@ -1,229 +1,198 @@
 "use client";
 
-import { LazyMotion, domAnimation, m, useMotionValueEvent, useReducedMotion, useScroll, useSpring, useTransform, type MotionValue } from "framer-motion";
-import { ArrowLeft, ArrowRight, Phone } from "lucide-react";
+import { useInView, useReducedMotion } from "framer-motion";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import Image from "next/image";
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useId, useRef, useState, type KeyboardEvent, type PointerEvent } from "react";
 import { Link } from "@/i18n/navigation";
-import { trackEvent } from "@/lib/analytics";
-import { company, telUrl, whatsappUrl } from "@/lib/site";
 import type { Category } from "@/lib/types";
 import { cn } from "@/lib/utils";
-import { SplitText } from "./fx";
-import { WhatsAppIcon } from "./icons";
 
-export type ProductLine = { id: Category; title: string; body: string; image: string; href: string; wa: string };
-type Labels = { region: string; explore: string; whatsapp: string; call: string; prev: string; next: string; hint: string; total: string };
+export type ProductLine = { id: Category; title: string; body: string; image: string; href: string };
 
-/** Share of a screen height of scrolling per card. */
-const PER_CARD = 0.6;
+const AUTOPLAY_MS = 2500;
 
 /**
- * Pinned, full-bleed "card deck": vertical scrolling surfs through the product lines. Cards sit on a
- * diagonal in 3D — the focused card large and bright in the centre, the others receding along the
- * diagonal — and everything moves continuously on a soft spring. Arrows/dots scroll the page, so the
- * scrollbar and the deck always agree. The stage is always dark (cinematic), in both site themes.
+ * Auto-rotating showcase of the product lines: one panel, the line name as a big headline inside it,
+ * slim progress dots and arrows at the bottom. Pauses on hover/focus/touch and when off-screen.
+ * Every slide stays in the DOM (inactive ones inert) so all copy is crawlable.
  */
-export function ProductLines({ items, labels, eyebrow, title }: { items: ProductLine[]; labels: Labels; eyebrow: string; title: string }) {
-  const reduce = useReducedMotion();
-  const section = useRef<HTMLDivElement>(null);
+export function ProductLines({ items, labels }: { items: ProductLine[]; labels: { tablist: string; explore: string; quote: string; prev: string; next: string } }) {
   const [active, setActive] = useState(0);
-  const [geo, setGeo] = useState({ dx: 380, dy: 90, dir: 1 });
+  const [hold, setHold] = useState(false);
+  const reduce = useReducedMotion();
+  const ref = useRef<HTMLElement>(null);
+  const inView = useInView(ref, { amount: 0.35 });
+  const uid = useId();
+  const swipe = useRef<number | null>(null);
+  const playing = !hold && inView && !reduce;
   const n = items.length;
 
   useEffect(() => {
-    const measure = () => {
-      const w = window.innerWidth;
-      const h = window.innerHeight;
-      const mobile = w < 640;
-      setGeo({ dx: mobile ? w * 0.7 : Math.min(w * 0.24, 420), dy: mobile ? 0 : Math.min(h * 0.09, 80), dir: document.documentElement.dir === "rtl" ? -1 : 1 });
-    };
-    measure();
-    window.addEventListener("resize", measure);
-    return () => window.removeEventListener("resize", measure);
-  }, []);
+    if (!playing) return;
+    const id = window.setTimeout(() => setActive((a) => (a + 1) % n), AUTOPLAY_MS);
+    return () => window.clearTimeout(id);
+  }, [playing, active, n]);
 
-  const { scrollYProgress } = useScroll({ target: section, offset: ["start start", "end end"] });
-  const smooth = useSpring(scrollYProgress, { stiffness: 70, damping: 20, mass: 0.6, restDelta: 0.0002 });
-  const pos = useTransform(smooth, (p) => Math.min(n - 1, Math.max(0, p * (n - 1))));
-  useMotionValueEvent(pos, "change", (v) => setActive(Math.round(v)));
+  const go = (d: number) => setActive((a) => (a + d + n) % n);
+  const rtl = () => document.documentElement.dir === "rtl";
 
-  /** Scroll the page so card i is in focus (keeps the deck and the scrollbar in sync). */
-  const goTo = (i: number) => {
-    const el = section.current;
-    if (!el) return;
-    const k = Math.max(0, Math.min(n - 1, i));
-    const top = el.getBoundingClientRect().top + window.scrollY;
-    const range = el.offsetHeight - window.innerHeight;
-    window.scrollTo({ top: top + (range * k) / (n - 1), behavior: "smooth" });
+  const onKey = (e: KeyboardEvent) => {
+    if (e.key === "ArrowRight") go(rtl() ? -1 : 1);
+    else if (e.key === "ArrowLeft") go(rtl() ? 1 : -1);
+    else return;
+    e.preventDefault();
+  };
+  const onDown = (e: PointerEvent) => {
+    if (e.pointerType !== "mouse") swipe.current = e.clientX;
+  };
+  const onUp = (e: PointerEvent) => {
+    if (swipe.current == null) return;
+    const dx = e.clientX - swipe.current;
+    swipe.current = null;
+    if (Math.abs(dx) > 40) go((dx < 0 ? 1 : -1) * (rtl() ? -1 : 1));
   };
 
-  if (reduce)
-    return (
-      <div className="stage-dark bg-navy-950 py-16 text-white">
-        <div className="container-x">
-          <Heading eyebrow={eyebrow} title={title} total={labels.total} />
-          <ul className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {items.map((it, i) => (
-              <li key={it.id} className="h-[30rem]">
-                <Card item={it} index={i} total={n} labels={labels} focused />
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
-    );
+  const current = items[active]!;
 
   return (
-    <LazyMotion features={domAnimation} strict>
-      <div ref={section} className="stage-dark relative" style={{ height: `${100 + (n - 1) * PER_CARD * 100}svh` }} role="region" aria-label={labels.region}>
-        <div className="sticky top-0 h-svh overflow-hidden bg-navy-950 text-white">
-          {/* stage lighting follows the active line */}
-          <div aria-hidden className={cn(`line-${items[active]!.id}`, "pointer-events-none absolute inset-0")}>
-            <div className="absolute start-1/2 top-1/2 size-[70vmin] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-60 blur-[110px] transition-[background-color] duration-1000 rtl:translate-x-1/2" style={{ backgroundColor: "var(--glow)" }} />
-          </div>
-          <div aria-hidden className="grid-bg pointer-events-none absolute inset-0 [mask-image:radial-gradient(ellipse_at_center,black_30%,transparent_80%)]" />
+    <section
+      ref={ref}
+      aria-roledescription="carousel"
+      aria-label={labels.tablist}
+      onKeyDown={onKey}
+      onMouseEnter={() => setHold(true)}
+      onMouseLeave={() => setHold(false)}
+      onFocusCapture={() => setHold(true)}
+      onBlurCapture={() => setHold(false)}
+      onPointerDown={onDown}
+      onPointerUp={onUp}
+      className={cn(`line-${current.id}`, "relative overflow-hidden rounded-[2rem] border border-white/10 bg-navy-900/90 shadow-[0_40px_80px_-40px_rgb(0_0_0/0.6)] backdrop-blur-xl")}
+    >
+      {/* colour wash follows the active line */}
+      <div aria-hidden className="absolute inset-x-0 top-0 h-1.5 transition-[background] duration-700" style={{ background: "var(--grad)" }} />
+      <div aria-hidden className="pointer-events-none absolute -end-24 -top-24 size-[18rem] rounded-full blur-3xl transition-[background-color] duration-1000 sm:size-[32rem]" style={{ backgroundColor: "var(--glow)" }} />
+      <div aria-hidden className="grid-bg pointer-events-none absolute inset-0 opacity-40" />
 
-          {/* headline + counter */}
-          <div className="container-x relative z-0 flex items-start justify-between gap-6 pt-22 sm:pt-26 [@media(max-height:800px)]:sm:pt-22">
-            <Heading eyebrow={eyebrow} title={title} total={labels.total} />
-            <p className="font-display text-5xl leading-none font-extrabold tabular-nums text-white sm:text-7xl lg:text-8xl" dir="ltr" aria-live="polite">
-              {String(active + 1).padStart(2, "0")}
-            </p>
-          </div>
-
-          {/* the deck */}
-          <div className="absolute inset-0 z-10 [perspective:1800px]">
-            {items.map((it, i) => (
-              <DeckCard key={it.id} index={i} pos={pos} geo={geo} onSelect={() => goTo(i)} focused={i === active}>
-                <Card item={it} index={i} total={n} labels={labels} focused={i === active} />
-              </DeckCard>
-            ))}
-          </div>
-
-          {/* controls */}
-          <div className="container-x absolute inset-x-0 bottom-24 z-[60] flex items-center justify-between gap-4 md:bottom-8">
-            <div className="flex gap-2">
-              <button type="button" onClick={() => goTo(active - 1)} aria-label={labels.prev} className="grid size-12 place-items-center rounded-full border border-white/20 bg-white/5 backdrop-blur transition hover:bg-white/15">
-                <ArrowLeft className="flip-rtl size-5" aria-hidden />
-              </button>
-              <button type="button" onClick={() => goTo(active + 1)} aria-label={labels.next} className="grid size-12 place-items-center rounded-full border border-white/20 bg-white/5 backdrop-blur transition hover:bg-white/15">
-                <ArrowRight className="flip-rtl size-5" aria-hidden />
-              </button>
-            </div>
-            <div className="flex flex-col items-center gap-3">
-              <div className="flex items-center">
-                {items.map((it, i) => (
-                  <button
-                    key={it.id}
-                    type="button"
-                    onClick={() => goTo(i)}
-                    aria-label={it.title}
-                    aria-current={i === active ? "true" : undefined}
-                    className="group grid h-6 min-w-6 place-items-center"
+      <div className="relative grid" aria-live={playing ? "off" : "polite"}>
+        {items.map((it, i) => {
+          const on = i === active;
+          return (
+            <div
+              key={it.id}
+              id={`${uid}-slide-${i}`}
+              role="group"
+              aria-roledescription="slide"
+              aria-label={`${i + 1} / ${n}: ${it.title}`}
+              inert={!on}
+              className={cn(
+                `line-${it.id}`,
+                "grid gap-8 p-6 pb-24 [grid-area:1/1] sm:p-10 sm:pb-28 lg:grid-cols-12 lg:items-center lg:gap-10 lg:p-14 lg:pb-28",
+                on ? "pointer-events-auto" : "pointer-events-none",
+              )}
+            >
+              <div className="lg:col-span-6">
+                <p
+                  className={cn("font-display text-sm font-extrabold tracking-[0.25em] text-white/45 transition-opacity duration-500 rtl:tracking-normal", on ? "opacity-100" : "opacity-0")}
+                  dir="ltr"
+                >
+                  {String(i + 1).padStart(2, "0")} / {String(n).padStart(2, "0")}
+                </p>
+                {/* headline slides up out of a mask */}
+                <div className="mt-3 overflow-hidden pb-2">
+                  <h3
+                    className={cn(
+                      "grad-text text-5xl leading-[0.98] font-bold tracking-[-0.04em] transition-[translate,opacity] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] sm:text-6xl lg:text-7xl xl:text-[5.5rem] rtl:text-5xl rtl:leading-tight rtl:tracking-normal rtl:lg:text-6xl",
+                      on ? "translate-y-0 opacity-100" : "translate-y-[60%] opacity-0",
+                    )}
                   >
-                    <span className={cn("block h-1.5 rounded-full transition-all duration-500", i === active ? "w-9 bg-white" : "w-1.5 bg-white/35 group-hover:bg-white/60")} />
-                  </button>
-                ))}
+                    {it.title}
+                  </h3>
+                </div>
+                <p
+                  className={cn(
+                    "mt-5 max-w-md text-base leading-7 text-white/70 transition-[translate,opacity] delay-100 duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] sm:text-lg",
+                    on ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0",
+                  )}
+                >
+                  {it.body}
+                </p>
+                <div
+                  className={cn(
+                    "mt-8 flex flex-col gap-3 transition-[translate,opacity] delay-150 duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] sm:flex-row",
+                    on ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0",
+                  )}
+                >
+                  <Link
+                    href={it.href}
+                    className="group/cta inline-flex h-12 items-center justify-center gap-2 rounded-full px-6 font-bold text-ink-950 shadow-[0_12px_32px_-12px_var(--glow)] transition-[translate,box-shadow] duration-300 hover:-translate-y-0.5"
+                    style={{ background: "var(--grad)" }}
+                  >
+                    {labels.explore}
+                    <span className="sr-only"> — {it.title}</span>
+                    <ArrowRight className="flip-rtl size-4 transition-transform duration-300 group-hover/cta:translate-x-1 rtl:group-hover/cta:-translate-x-1" aria-hidden />
+                  </Link>
+                  <Link
+                    href="/contact"
+                    className="inline-flex h-12 items-center justify-center rounded-full border border-white/20 bg-white/5 px-6 font-bold text-white transition-[translate,background-color] duration-300 hover:-translate-y-0.5 hover:bg-white/10"
+                  >
+                    {labels.quote}
+                  </Link>
+                </div>
               </div>
-              <p className="hidden text-[0.7rem] font-semibold tracking-[0.3em] text-white/60 uppercase sm:block rtl:tracking-normal">{labels.hint}</p>
+
+              <div className="lg:col-span-6">
+                <div
+                  className={cn(
+                    "relative mx-auto aspect-[16/11] w-full max-w-xl transition-[translate,opacity,scale] duration-[900ms] ease-[cubic-bezier(0.22,1,0.36,1)]",
+                    on ? "translate-x-0 scale-100 opacity-100" : "translate-x-8 scale-95 opacity-0 rtl:-translate-x-8",
+                  )}
+                >
+                  <div aria-hidden className="absolute inset-[12%] rounded-full blur-3xl" style={{ backgroundColor: "var(--glow)" }} />
+                  <div className={cn("relative h-full overflow-hidden rounded-2xl border border-white/10 bg-navy-950", on && !reduce && "animate-float")}>
+                    <Image src={it.image} alt={it.title} fill sizes="(min-width:1024px) 45vw, 100vw" className="object-cover" />
+                  </div>
+                </div>
+              </div>
             </div>
-            <div className="hidden w-[6.5rem] sm:block" aria-hidden />
-          </div>
+          );
+        })}
+      </div>
+
+      {/* controls: progress dots + arrows */}
+      <div className="absolute inset-x-6 bottom-6 flex items-center justify-between gap-4 sm:inset-x-10 sm:bottom-8 lg:inset-x-14">
+        <div className="flex flex-1 items-center gap-1.5 sm:gap-2">
+          {items.map((it, i) => (
+            <button
+              key={it.id}
+              type="button"
+              onClick={() => setActive(i)}
+              aria-controls={`${uid}-slide-${i}`}
+              aria-current={i === active ? "true" : undefined}
+              aria-label={it.title}
+              title={it.title}
+              className={cn("relative h-1.5 overflow-hidden rounded-full bg-white/15 transition-[width] duration-500", i === active ? "w-12 sm:w-16" : "w-4 hover:bg-white/30 sm:w-6")}
+            >
+              {i === active && (
+                <span
+                  key={`p-${active}-${playing}`}
+                  aria-hidden
+                  className={cn("absolute inset-0 origin-left rounded-full rtl:origin-right", playing ? "animate-tab-progress" : "")}
+                  style={{ background: "var(--grad)", animationDuration: `${AUTOPLAY_MS}ms`, transform: playing ? undefined : "scaleX(1)" }}
+                />
+              )}
+            </button>
+          ))}
+        </div>
+        <div className="flex gap-2">
+          <button type="button" onClick={() => go(-1)} aria-label={labels.prev} className="grid size-11 place-items-center rounded-full border border-white/15 bg-white/5 text-white transition hover:bg-white/10">
+            <ArrowLeft className="flip-rtl size-5" aria-hidden />
+          </button>
+          <button type="button" onClick={() => go(1)} aria-label={labels.next} className="grid size-11 place-items-center rounded-full border border-white/15 bg-white/5 text-white transition hover:bg-white/10">
+            <ArrowRight className="flip-rtl size-5" aria-hidden />
+          </button>
         </div>
       </div>
-    </LazyMotion>
-  );
-}
-
-function Heading({ eyebrow, title, total }: { eyebrow: string; title: string; total: string }) {
-  return (
-    <div className="min-w-0 max-w-2xl">
-      <p className="text-xs font-bold tracking-[0.3em] text-white/60 uppercase rtl:text-sm rtl:tracking-normal [@media(max-height:800px)]:hidden">{eyebrow}</p>
-      <SplitText
-        id="cat-title"
-        text={title}
-        className="mt-3 text-2xl leading-[1.05] font-bold tracking-[-0.035em] text-white sm:text-4xl lg:text-5xl rtl:leading-tight rtl:tracking-normal [@media(max-height:800px)]:sm:mt-0 [@media(max-height:800px)]:sm:text-3xl"
-      />
-      <p className="mt-3 hidden text-xs font-bold tracking-[0.3em] text-white/60 uppercase sm:block rtl:text-sm rtl:tracking-normal [@media(max-height:800px)]:sm:hidden">{total}</p>
-    </div>
-  );
-}
-
-/** Places one card on the 3D diagonal according to its distance from the scroll position. */
-function DeckCard({ index, pos, geo, focused, onSelect, children }: { index: number; pos: MotionValue<number>; geo: { dx: number; dy: number; dir: number }; focused: boolean; onSelect: () => void; children: ReactNode }) {
-  const o = useTransform(pos, (v) => index - v);
-  const x = useTransform(o, (v) => v * geo.dx * geo.dir);
-  const y = useTransform(o, (v) => -v * geo.dy);
-  const z = useTransform(o, (v) => -Math.abs(v) * 220);
-  const rotateY = useTransform(o, (v) => -Math.max(-2, Math.min(2, v)) * 14 * geo.dir);
-  const opacity = useTransform(o, (v) => Math.max(0, 1 - Math.max(0, Math.abs(v) - 0.4) * 0.45));
-  const zIndex = useTransform(o, (v) => 50 - Math.round(Math.abs(v) * 10));
-  const filter = useTransform(o, (v) => `brightness(${(1 - Math.min(1, Math.abs(v)) * 0.45).toFixed(3)})`);
-
-  return (
-    <m.div
-      className="absolute start-1/2 top-[13rem] h-[max(28rem,calc(100svh-23.5rem))] w-[min(84vw,26rem)] [translate:-50%_0] will-change-transform sm:top-[5.25rem] sm:h-[min(56rem,calc(100svh-10.5rem))] sm:w-[min(46vw,36rem)] rtl:[translate:50%_0]"
-      style={{ x, y, z, rotateY, opacity, zIndex, filter }}
-      inert={!focused}
-      onClick={focused ? undefined : onSelect}
-    >
-      <div className={cn("h-full", !focused && "cursor-pointer")}>{children}</div>
-    </m.div>
-  );
-}
-
-function Card({ item: it, index, total, labels, focused }: { item: ProductLine; index: number; total: number; labels: Labels; focused: boolean }) {
-  return (
-    <article
-      className={cn(
-        `line-${it.id}`,
-        "relative flex h-full flex-col overflow-hidden rounded-[1.75rem] border bg-navy-900 text-white shadow-[0_50px_100px_-40px_rgb(0_0_0/0.9)] transition-[border-color] duration-500",
-        focused ? "border-white/30" : "border-white/10",
-      )}
-    >
-      <div className="relative min-h-[10rem] flex-1">
-        <Image src={it.image} alt={it.title} fill sizes="(min-width:640px) 26rem, 80vw" className="object-cover" />
-        <div aria-hidden className="absolute inset-x-0 top-0 h-1.5" style={{ background: "var(--grad)" }} />
-        <span className="absolute start-4 top-4 rounded-full bg-black/55 px-3 py-1 text-xs font-bold text-white backdrop-blur" dir="ltr">
-          {String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
-        </span>
-        <div aria-hidden className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-navy-900 via-navy-900/70 to-transparent" />
-      </div>
-
-      <div className="relative -mt-20 flex flex-col gap-3 p-5 sm:p-6">
-        <h3 className="text-2xl leading-tight font-bold tracking-tight sm:text-3xl rtl:tracking-normal" style={{ backgroundImage: "var(--grad)", WebkitBackgroundClip: "text", backgroundClip: "text", color: "transparent" }}>
-          {it.title}
-        </h3>
-        <p className="line-clamp-2 text-sm leading-6 text-white/75">{it.body}</p>
-
-        <div className="mt-1 flex items-center gap-1.5 sm:gap-2">
-          <a
-            href={whatsappUrl(it.wa)}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={() => trackEvent("whatsapp_click", { location: "product_deck", category: it.id })}
-            className="inline-flex h-11 min-w-0 flex-1 items-center justify-center gap-1.5 rounded-full bg-[#0B7038] px-3 text-[0.8rem] font-bold sm:px-4 sm:text-sm text-[#fff] shadow-[0_10px_24px_-10px_rgb(18_140_75/0.8)] transition hover:bg-[#095c2e]"
-          >
-            <WhatsAppIcon className="size-4" />
-            {labels.whatsapp}
-          </a>
-          <a
-            href={telUrl}
-            onClick={() => trackEvent("call_click", { location: "product_deck", category: it.id })}
-            aria-label={`${labels.call} ${company.phone}`}
-            className="inline-flex h-11 shrink-0 items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-3 text-[0.8rem] font-semibold sm:px-4 sm:text-sm text-white backdrop-blur transition hover:bg-white/20"
-          >
-            <Phone className="size-4" aria-hidden />
-            <span dir="ltr" className="whitespace-nowrap">{company.phone}</span>
-          </a>
-        </div>
-        <Link href={it.href} className="group/cta inline-flex items-center gap-1.5 text-sm font-semibold text-white/80 hover:text-white">
-          {labels.explore}
-          <span className="sr-only"> — {it.title}</span>
-          <ArrowRight className="flip-rtl size-4 transition-transform group-hover/cta:translate-x-1 rtl:group-hover/cta:-translate-x-1" aria-hidden />
-        </Link>
-      </div>
-    </article>
+    </section>
   );
 }

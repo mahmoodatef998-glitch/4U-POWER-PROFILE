@@ -246,30 +246,25 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
           </div>
         </section>
 
-        {/* ---------------------------------------------- PRODUCT LINES: pinned 3D card deck, scroll to surf */}
-        <section className="relative mt-16 sm:mt-24" aria-labelledby="cat-title">
-          <ProductLines
-            eyebrow={L(home.categories.eyebrow)}
-            title={L(home.categories.title)}
-            items={CATEGORIES.map((c) => ({
-              id: c,
-              title: L(categoryLabels[c]),
-              body: L(home.categories.items[c].body),
-              image: home.categories.items[c].image,
-              href: categoryHref[c],
-              wa: t("cta.whatsappPage", { topic: L(categoryLabels[c]) }),
-            }))}
-            labels={{
-              region: stripMarks(L(home.categories.title)),
-              explore: t("cta.learnMore"),
-              whatsapp: t("cta.whatsapp"),
-              call: t("cta.callUs"),
-              prev: t("calc.back"),
-              next: t("calc.next"),
-              hint: locale === "ar" ? "مرّر للتصفح" : "Scroll to surf",
-              total: locale === "ar" ? `(${CATEGORIES.length}) خطوط منتجات` : `(${CATEGORIES.length}) product lines`,
-            }}
-          />
+        {/* ---------------------------------------------- PRODUCT LINES: stacked gradient tabs */}
+        <section className="section relative" aria-labelledby="cat-title">
+          <div className="container-x relative">
+            <Reveal>
+              <SectionHeading id="cat-title" dark eyebrow={L(home.categories.eyebrow)} title={L(home.categories.title)} />
+            </Reveal>
+            <Reveal className="mt-12" delay={0.1}>
+              <ProductLines
+                items={CATEGORIES.map((c) => ({
+                  id: c,
+                  title: L(categoryLabels[c]),
+                  body: L(home.categories.items[c].body),
+                  image: home.categories.items[c].image,
+                  href: categoryHref[c],
+                }))}
+                labels={{ tablist: stripMarks(L(home.categories.title)), explore: t("cta.learnMore"), quote: t("cta.quote"), prev: t("calc.back"), next: t("calc.next") }}
+              />
+            </Reveal>
+          </div>
         </section>
 
         {/* ---------------------------------------------- AFTER-SALES: warranty + service band */}
