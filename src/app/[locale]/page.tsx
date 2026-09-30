@@ -261,7 +261,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
                   image: home.categories.items[c].image,
                   href: categoryHref[c],
                 }))}
-                labels={{ tablist: stripMarks(L(home.categories.title)), explore: t("cta.learnMore"), quote: t("cta.quote") }}
+                labels={{ tablist: stripMarks(L(home.categories.title)), explore: t("cta.learnMore"), quote: t("cta.quote"), prev: t("calc.back"), next: t("calc.next") }}
               />
             </Reveal>
           </div>
