@@ -85,7 +85,7 @@ export function ProductLines({ items, labels, eyebrow, title }: { items: Product
           <div aria-hidden className="grid-bg pointer-events-none absolute inset-0 [mask-image:radial-gradient(ellipse_at_center,black_30%,transparent_80%)]" />
 
           {/* headline + counter */}
-          <div className="container-x relative z-[60] flex items-start justify-between gap-6 pt-22 sm:pt-26 [@media(max-height:800px)]:sm:pt-22">
+          <div className="container-x relative z-0 flex items-start justify-between gap-6 pt-22 sm:pt-26 [@media(max-height:800px)]:sm:pt-22">
             <Heading eyebrow={eyebrow} title={title} total={labels.total} />
             <p className="font-display text-5xl leading-none font-extrabold tabular-nums text-white sm:text-7xl lg:text-8xl" dir="ltr" aria-live="polite">
               {String(active + 1).padStart(2, "0")}
@@ -93,7 +93,7 @@ export function ProductLines({ items, labels, eyebrow, title }: { items: Product
           </div>
 
           {/* the deck */}
-          <div className="absolute inset-0 [perspective:1600px]">
+          <div className="absolute inset-0 z-10 [perspective:1800px]">
             {items.map((it, i) => (
               <DeckCard key={it.id} index={i} pos={pos} geo={geo} onSelect={() => goTo(i)} focused={i === active}>
                 <Card item={it} index={i} total={n} labels={labels} focused={i === active} />
@@ -163,7 +163,7 @@ function DeckCard({ index, pos, geo, focused, onSelect, children }: { index: num
 
   return (
     <m.div
-      className="absolute start-1/2 top-[13.5rem] h-[max(24rem,min(36rem,calc(100svh-22rem)))] w-[min(82vw,25rem)] [translate:-50%_0] will-change-transform sm:top-[15rem] sm:h-[max(26rem,min(38rem,calc(100svh-20rem)))] sm:w-[min(42vw,28rem)] rtl:[translate:50%_0] [@media(max-height:800px)]:sm:top-[10.5rem] [@media(max-height:800px)]:sm:h-[max(25rem,calc(100svh-15.5rem))]"
+      className="absolute start-1/2 top-[13rem] h-[max(28rem,calc(100svh-23.5rem))] w-[min(84vw,26rem)] [translate:-50%_0] will-change-transform sm:top-[5.25rem] sm:h-[min(56rem,calc(100svh-10.5rem))] sm:w-[min(46vw,36rem)] rtl:[translate:50%_0]"
       style={{ x, y, z, rotateY, opacity, zIndex, filter }}
       inert={!focused}
       onClick={focused ? undefined : onSelect}
