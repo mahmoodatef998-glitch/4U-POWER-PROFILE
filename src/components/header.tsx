@@ -10,6 +10,7 @@ import { trackEvent } from "@/lib/analytics";
 import { company, telUrl } from "@/lib/site";
 import { cn } from "@/lib/utils";
 import { WhatsAppButton } from "./cta-buttons";
+import { QuoteCart } from "./quote-cart";
 import { ThemeToggle } from "./theme-toggle";
 
 const NAV = [
@@ -18,6 +19,7 @@ const NAV = [
   { href: "/switchgear", key: "switchgear", top: true },
   { href: "/products", key: "products", top: true },
   { href: "/calculator", key: "calculator", top: true },
+  { href: "/industries", key: "industries" },
   { href: "/projects", key: "projects" },
   { href: "/markets", key: "markets" },
   { href: "/news", key: "news", top: true },
@@ -118,6 +120,7 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-1 sm:gap-2">
+          <QuoteCart />
           <ThemeToggle />
           <LanguageSwitch className="hidden sm:inline-flex" />
           <a

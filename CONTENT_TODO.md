@@ -24,8 +24,11 @@ No stock photo hosts were reachable from the build environment. All images are t
 **How to replace:** upload photos to Supabase Storage (see `DEPLOYMENT.md`) and put the URLs into the `images` column of `products` / `projects`, or `cover_image` of `news_posts`. Alternatively, drop files into `public/images/...` with the same filename and change the extension in `src/content/*.ts`.
 
 ## 2. Datasheets
-- `public/datasheets/4u-datasheet-placeholder.pdf` is a single "available on request" PDF, and every product points to it.
-- Replace it per product: upload real PDFs and set `spec_sheet_url` in the `products` table.
+- Every product has a generated, printable datasheet at `/{locale}/products/{slug}/datasheet` (branded A4, "Download / print PDF"). Visitors unlock it with name + WhatsApp number; each unlock is a lead with `source = 'datasheet'`.
+- To serve a real manufacturer PDF instead, upload it and set `spec_sheet_url` on the product (any URL that is not the placeholder). The same lead gate applies.
+
+## 2b. Industry pages
+- `src/content/industries.ts` holds the six sector pages (`/industries/...`). Replace the "typical sizing" lines with your own figures and add real projects per sector as they happen.
 
 ## 3. Business facts to confirm
 

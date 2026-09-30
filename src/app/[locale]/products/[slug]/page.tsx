@@ -1,9 +1,10 @@
-import { Download, FileText } from "lucide-react";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { CallButton, WhatsAppButton } from "@/components/cta-buttons";
+import { DatasheetGate } from "@/components/datasheet-gate";
 import { JsonLd } from "@/components/json-ld";
+import { AddToQuoteButton } from "@/components/quote-cart";
 import { LeadForm } from "@/components/lead-form";
 import { PageHero } from "@/components/page-hero";
 import { ProductCard } from "@/components/product-card";
@@ -113,9 +114,7 @@ export default async function ProductPage({ params }: Props) {
         </ul>
         <div className="flex flex-col gap-3 sm:flex-row">
           <WhatsAppButton location="product_hero" message={waMessage} size="lg" />
-          <a href="#request" className="inline-flex h-13 items-center justify-center rounded-full bg-brand-500 px-7 font-bold text-ink-950 hover:bg-brand-400">
-            {t("cta.requestSpec")}
-          </a>
+          <AddToQuoteButton product={p} variant="hero" />
         </div>
       </PageHero>
 
@@ -148,19 +147,14 @@ export default async function ProductPage({ params }: Props) {
             )}
             <p className="mt-3 text-xs text-muted">{t("common.placeholderImage")}</p>
 
-            {p.spec_sheet_url && (
-              <a
-                href={p.spec_sheet_url}
-                download
-                className="mt-8 flex items-center gap-4 rounded-2xl border border-line p-5 transition hover:border-brand-500 hover:bg-brand-50"
-              >
-                <span className="grid size-12 place-items-center rounded-xl bg-navy-950 text-brand-400">
-                  <FileText className="size-6" aria-hidden />
-                </span>
-                <span className="flex-1 font-bold text-ink">{t("cta.downloadDatasheet")}</span>
-                <Download className="size-5 text-brand-700" aria-hidden />
-              </a>
-            )}
+            <div className="mt-8">
+              <DatasheetGate
+                slug={p.slug}
+                productName={name}
+                // a real per-model PDF when one is uploaded; otherwise the generated printable sheet
+                href={p.spec_sheet_url && !p.spec_sheet_url.includes("placeholder") ? p.spec_sheet_url : `/products/${p.slug}/datasheet`}
+              />
+            </div>
           </div>
 
           <div id="request" className="scroll-mt-24 lg:col-span-5">

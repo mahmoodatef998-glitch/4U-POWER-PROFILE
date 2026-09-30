@@ -11,6 +11,7 @@ import { FUEL_ICONS, kvaLabel } from "@/lib/product-meta";
 import type { Product } from "@/lib/types";
 import type { Locale } from "@/lib/utils";
 import { WhatsAppIcon } from "./icons";
+import { AddToQuoteButton } from "./quote-cart";
 
 export function ProductCard({ product, headingLevel = "h3" }: { product: Product; headingLevel?: "h2" | "h3" }) {
   const locale = useLocale() as Locale;
@@ -77,6 +78,7 @@ export function ProductCard({ product, headingLevel = "h3" }: { product: Product
           >
             {t("cta.quote")}
           </Link>
+          <AddToQuoteButton product={product} />
           <a
             href={whatsappUrl(t("cta.whatsappProduct", { product: name }))}
             target="_blank"

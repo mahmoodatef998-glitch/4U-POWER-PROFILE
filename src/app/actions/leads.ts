@@ -20,7 +20,7 @@ const LeadSchema = z.object({
   email: z.union([z.literal(""), z.string().trim().email("errEmail").max(200)]),
   country: z.string().trim().max(60).optional().default(""),
   message: z.string().trim().max(3000).optional().default(""),
-  source: z.enum(["contact_form", "quote_form", "calculator", "product"]).default("contact_form"),
+  source: z.enum(["contact_form", "quote_form", "calculator", "product", "datasheet", "rfq"]).default("contact_form"),
   source_page: z.string().max(300).optional().default(""),
   product_slug: z.string().max(120).optional().default(""),
   calculated_kva: z.coerce.number().positive().max(100000).optional().or(z.literal("").transform(() => undefined)),

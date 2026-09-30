@@ -2,7 +2,7 @@
 
 import { CheckCircle2, Loader2 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
-import { useActionState, useEffect, useId, useState } from "react";
+import { useActionState, useEffect, useId, useState, type ReactNode } from "react";
 import { submitLead, type LeadState } from "@/app/actions/leads";
 import { marketNames } from "@/content/taxonomy";
 import { trackEvent } from "@/lib/analytics";
@@ -14,7 +14,7 @@ import { Button } from "./ui/button";
 import { WhatsAppButton } from "./cta-buttons";
 
 type Props = {
-  source?: "contact_form" | "quote_form" | "calculator" | "product";
+  source?: "contact_form" | "quote_form" | "calculator" | "product" | "datasheet" | "rfq";
   productSlug?: string;
   productName?: string;
   calculatedKva?: number;
@@ -23,11 +23,17 @@ type Props = {
   compact?: boolean;
   /** slug → localized name; when set, a `?product=` URL param pre-fills the form (keeps the page static). */
   productNames?: Record<string, string>;
+  /** name + phone + email only (e.g. the datasheet download gate) */
+  minimal?: boolean;
+  /** replaces the default thank-you panel */
+  success?: ReactNode;
+  onSuccess?: () => void;
+  submitLabel?: string;
 };
 
 const initial: LeadState = { status: "idle" };
 
-export function LeadForm({ source: sourceProp = "contact_form", productSlug: slugProp, productName: nameProp, calculatedKva, calcSubmissionId, defaultMessage, compact, productNames }: Props) {
+export function LeadForm({ source: sourceProp = "contact_form", productSlug: slugProp, productName: nameProp, calculatedKva, calcSubmissionId, defaultMessage, compact, productNames, minimal, success, onSuccess, submitLabel }: Props) {
   const t = useTranslations("form");
   const locale = useLocale() as Locale;
   const [state, action, pending] = useActionState(submitLead, initial);
@@ -52,9 +58,12 @@ export function LeadForm({ source: sourceProp = "contact_form", productSlug: slu
   useEffect(() => {
     if (state.status === "success") {
       trackEvent("generate_lead", { source, product: productSlug, kva: calculatedKva });
+      onSuccess?.();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.status, source, productSlug, calculatedKva]);
 
+  if (state.status === "success" && success) return <>{success}</>;
   if (state.status === "success") {
     return (
       <div role="status" className="rounded-2xl border border-emerald-200 bg-emerald-50 p-6 text-emerald-900">
@@ -77,7 +86,7 @@ export function LeadForm({ source: sourceProp = "contact_form", productSlug: slu
         </p>
       )}
 
-      <div className={cn("grid gap-4", !compact && "sm:grid-cols-2")}>
+      <div className={cn("grid gap-4", !compact && !minimal && "sm:grid-cols-2")}>
         <div>
           <label htmlFor={`${uid}-name`} className={label}>
             {t("name")} <span className="text-red-700" aria-hidden>*</span>
@@ -97,7 +106,7 @@ export function LeadForm({ source: sourceProp = "contact_form", productSlug: slu
           <input id={`${uid}-email`} name="email" type="email" autoComplete="email" dir="ltr" aria-invalid={!!err("email")} aria-describedby={err("email") ? `${uid}-email-e` : undefined} className={cn(field, "rtl:text-right")} />
           {err("email") && <p id={`${uid}-email-e`} className="mt-1 text-sm font-semibold text-red-700">{err("email")}</p>}
         </div>
-        <div>
+        <div className={minimal ? "hidden" : undefined}>
           <label htmlFor={`${uid}-country`} className={label}>{t("country")}</label>
           <select id={`${uid}-country`} name="country" defaultValue="uae" className={field}>
             {MARKETS.map((m) => (
@@ -108,13 +117,13 @@ export function LeadForm({ source: sourceProp = "contact_form", productSlug: slu
         </div>
       </div>
 
-      <div>
+      <div className={minimal ? "hidden" : undefined}>
         <label htmlFor={`${uid}-message`} className={label}>{t("message")}</label>
         <textarea
           key={productName ?? "none"}
           id={`${uid}-message`}
           name="message"
-          rows={compact ? 3 : 4}
+          rows={compact ? 3 : defaultMessage && defaultMessage.split("\n").length > 3 ? 7 : 4}
           defaultValue={defaultMessage ?? (productName ? `${productName}` : "")}
           placeholder={t("messagePlaceholder")}
           className={field}
@@ -138,7 +147,7 @@ export function LeadForm({ source: sourceProp = "contact_form", productSlug: slu
 
       <Button type="submit" size="lg" disabled={pending} className="w-full sm:w-auto">
         {pending && <Loader2 className="animate-spin" aria-hidden />}
-        {pending ? t("submitting") : t("submit")}
+        {pending ? t("submitting") : (submitLabel ?? t("submit"))}
       </Button>
       <p className="text-xs text-muted">
         <Link href="/privacy" className="underline decoration-zinc-300 underline-offset-2 hover:text-brand-700">

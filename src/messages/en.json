@@ -16,7 +16,8 @@
     "skip": "Skip to content",
     "switchLang": "العربية",
     "switchLangLabel": "Switch to Arabic",
-    "primary": "Main navigation"
+    "primary": "Main navigation",
+    "industries": "Industries"
   },
   "cta": {
     "whatsapp": "WhatsApp",
@@ -154,5 +155,42 @@
     "title": "Something went wrong",
     "body": "Please try again. If the problem continues, contact us on WhatsApp.",
     "retry": "Try again"
+  },
+  "rfq": {
+    "add": "Add to quote",
+    "added": "In your quote",
+    "addAria": "Add {product} to your quote request",
+    "open": "Quote request",
+    "openAria": "Open quote request ({count} items)",
+    "title": "Your quote request",
+    "subtitle": "Build one request for the generator, ATS and panels together — one engineer prices the whole system.",
+    "empty": "Your quote is empty",
+    "emptyBody": "Add generators, ATS panels or switchgear from the catalog and send one request for everything.",
+    "browse": "Browse products",
+    "qty": "Quantity",
+    "inc": "Increase quantity of {product}",
+    "dec": "Decrease quantity of {product}",
+    "remove": "Remove {product}",
+    "clear": "Clear all",
+    "send": "Send quote request",
+    "sendWhatsApp": "Send list on WhatsApp",
+    "whatsappIntro": "Hi 4U Power, please quote the following:",
+    "messageIntro": "Please quote the following items:",
+    "notes": "Site, delivery city or special requirements:",
+    "success": "Request received. An engineer will price the full list and reply — usually within the working hour.",
+    "itemsCount": "{count, plural, one {# item} other {# items}}"
+  },
+  "datasheet": {
+    "cta": "Download datasheet (PDF)",
+    "title": "Get the datasheet",
+    "body": "Enter your name and WhatsApp number and the datasheet opens instantly. We may follow up once with pricing — no spam.",
+    "submit": "Open datasheet",
+    "ready": "Your datasheet is ready",
+    "open": "Open datasheet",
+    "print": "Download / print PDF",
+    "back": "Back to product",
+    "note": "Specifications are typical and confirmed per order. Final ratings depend on site conditions.",
+    "docTitle": "Product datasheet",
+    "issued": "Issued"
   }
 }

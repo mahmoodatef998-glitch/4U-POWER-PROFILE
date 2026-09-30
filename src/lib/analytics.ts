@@ -8,7 +8,10 @@ export type ConversionEvent =
   | "call_click"
   | "generate_lead"
   | "calculator_complete"
-  | "calculator_quote_click";
+  | "calculator_quote_click"
+  | "add_to_quote"
+  | "rfq_submit"
+  | "datasheet_download";
 
 type Params = Record<string, string | number | boolean | undefined>;
 
@@ -24,6 +27,7 @@ const META_EVENTS: Partial<Record<ConversionEvent, string>> = {
   whatsapp_click: "Contact",
   call_click: "Contact",
   generate_lead: "Lead",
+  add_to_quote: "AddToCart",
   calculator_quote_click: "Lead",
 };
 

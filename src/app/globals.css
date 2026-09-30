@@ -317,3 +317,12 @@
 /* Arabic leading must win over the line-height baked into Tailwind's text-* size utilities (unlayered) */
 html[dir="rtl"] :is(h1, h2) { line-height: 1.4; }
 html[dir="rtl"] :is(h3, h4) { line-height: 1.5; }
+
+/* Print: only the page content (datasheets, articles) — no site chrome, always on white */
+@media print {
+  @page { size: A4; margin: 10mm; }
+  html, body { background: #fff !important; }
+  header.sticky, footer, .no-print, .nebula, .fixed { display: none !important; }
+  main { isolation: auto !important; }
+  .sheet { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}

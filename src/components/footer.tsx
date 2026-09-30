@@ -28,6 +28,7 @@ export async function Footer() {
       title: t("company"),
       links: [
         { href: "/about", label: nav("about") },
+        { href: "/industries", label: nav("industries") },
         { href: "/projects", label: nav("projects") },
         { href: "/markets", label: nav("markets") },
         { href: "/news", label: nav("news") },

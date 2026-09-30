@@ -10,11 +10,13 @@ import { FaqBlock } from "@/components/faq-block";
 import { Magnetic, Parallax, RotatingWords, SplitText, StackCards, Tilt3D } from "@/components/fx";
 import { Counter, Reveal } from "@/components/motion";
 import { ProductLines } from "@/components/product-lines";
+import { IndustryIcon } from "@/components/industry-icon";
 import { NewsCard } from "@/components/news-card";
 import { SectionHeading } from "@/components/section-heading";
 import { TestimonialsCarousel } from "@/components/testimonials";
 import { buttonVariants } from "@/components/ui/button";
 import { homeFaq } from "@/content/faq";
+import { industries } from "@/content/industries";
 import { home } from "@/content/pages";
 import { pageSeo } from "@/content/seo";
 import { categoryHref, categoryLabels, engineBrands, engineBrandLabels, marketFlags, marketNames, primaryMarkets, secondaryMarkets } from "@/content/taxonomy";
@@ -146,6 +148,20 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
               />
             </h2>
           </div>
+
+          <ul className="container-x relative mt-10 flex flex-wrap justify-center gap-2">
+            {industries.map((ind) => (
+              <li key={ind.slug}>
+                <Link
+                  href={`/industries/${ind.slug}`}
+                  className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-sm font-medium text-white/80 backdrop-blur transition hover:border-brand-500/50 hover:text-white"
+                >
+                  <IndustryIcon icon={ind.icon} className="size-4 text-brand-400" />
+                  {L(ind.name)}
+                </Link>
+              </li>
+            ))}
+          </ul>
 
           {/* engine platforms marquee */}
           <div className="container-x relative mt-16 flex flex-col gap-2 sm:flex-row sm:items-baseline sm:justify-between">
