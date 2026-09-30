@@ -42,7 +42,7 @@ export function SplitText({
   const inView = useInView(ref, { once: true, margin: "0px 0px -8% 0px" });
   const words = parseMarks(text);
   const marked = words.some((w) => w.em);
-  const tone = (em: boolean) => (marked && !em ? "opacity-45" : undefined);
+  const tone = (em: boolean) => (marked && !em ? "opacity-60" : undefined);
   if (reduce)
     return (
       <Tag id={id} className={className}>
