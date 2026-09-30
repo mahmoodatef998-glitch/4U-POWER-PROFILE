@@ -14,7 +14,7 @@ const AUTOPLAY_MS = 2500;
 
 /**
  * Auto-rotating showcase of the product lines: one panel, the line name as a big headline inside it,
- * slim progress dots and arrows at the bottom. Pauses on hover/focus/touch and when off-screen.
+ * slim progress dots and arrows at the bottom. Keeps rotating on hover; pauses only for keyboard focus and when off-screen.
  * Every slide stays in the DOM (inactive ones inert) so all copy is crawlable.
  */
 export function ProductLines({ items, labels }: { items: ProductLine[]; labels: { tablist: string; explore: string; quote: string; prev: string; next: string } }) {
@@ -61,9 +61,8 @@ export function ProductLines({ items, labels }: { items: ProductLine[]; labels: 
       aria-roledescription="carousel"
       aria-label={labels.tablist}
       onKeyDown={onKey}
-      onMouseEnter={() => setHold(true)}
-      onMouseLeave={() => setHold(false)}
-      onFocusCapture={() => setHold(true)}
+      // keeps rotating under the mouse; only keyboard focus pauses it (so keyboard users can reach the links)
+      onFocusCapture={(e) => setHold((e.target as HTMLElement).matches(":focus-visible"))}
       onBlurCapture={() => setHold(false)}
       onPointerDown={onDown}
       onPointerUp={onUp}
