@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600">
+<defs>
+<linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1c1c20"/><stop offset="1" stop-color="#0a0a0b"/></linearGradient>
+<radialGradient id="gl" cx="0.7" cy="0.35" r="0.6"><stop offset="0" stop-color="#ffd426" stop-opacity=".22"/><stop offset="1" stop-color="#ffd426" stop-opacity="0"/></radialGradient>
+<pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse"><path d="M32 0H0V32" fill="none" stroke="#fff" stroke-opacity=".05"/></pattern>
+<linearGradient id="steel" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a3a41"/><stop offset="1" stop-color="#26262b"/></linearGradient>
+<linearGradient id="amber" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffdf58"/><stop offset="1" stop-color="#e6b800"/></linearGradient>
+</defs>
+<rect width="800" height="600" fill="url(#bg)"/><rect width="800" height="600" fill="url(#grid)"/><rect width="800" height="600" fill="url(#gl)"/>
+<ellipse cx="400.0" cy="470" rx="336.0" ry="18" fill="#000" opacity=".35"/><line x1="48.0" x2="752.0" y1="470" y2="470" stroke="#a1a1aa" stroke-opacity=".25"/>
+<g>
+<rect x="130" y="230" width="540" height="200" rx="100.0" fill="url(#steel)" stroke="#a1a1aa" stroke-opacity=".5"/>
+<rect x="173.2" y="266.0" width="453.59999999999997" height="10" rx="5" fill="#fff" opacity=".07"/>
+<rect x="211.0" y="424" width="64.8" height="46" fill="#0d0d0f"/><rect x="524.2" y="424" width="64.8" height="46" fill="#0d0d0f"/>
+<rect x="378.4" y="204" width="46" height="30" rx="4" fill="#111113" stroke="#ffd426" stroke-width="2"/>
+<circle cx="292.0" cy="340.0" r="32.0" fill="#111113" stroke="#ffd426" stroke-width="3"/>
+<line x1="292.0" y1="340.0" x2="312.0" y2="324.0" stroke="#ffd426" stroke-width="4"/>
+<rect x="427.0" y="314.0" width="162.0" height="52.0" rx="4" fill="#111113" opacity=".8"/>
+<text x="508.0" y="350.0" font-family="Arial,sans-serif" font-size="26" font-weight="700" fill="#ffd426" text-anchor="middle">DIESEL</text>
+</g>
+</svg>

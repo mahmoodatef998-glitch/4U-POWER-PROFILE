@@ -37,7 +37,7 @@ export const metadata: Metadata = {
   verification: { google: process.env.NEXT_PUBLIC_GSC_VERIFICATION || undefined },
 };
 
-export const viewport: Viewport = { themeColor: "#0a0a0b", width: "device-width", initialScale: 1 };
+export const viewport: Viewport = { themeColor: "#f4f6fb", width: "device-width", initialScale: 1 };
 
 // Only /en and /ar exist; anything else (e.g. /favicon.ico) is a hard 404 instead of rendering with a bogus locale.
 export const dynamicParams = false;
@@ -58,7 +58,7 @@ export default async function LocaleLayout({ children, params }: { children: Rea
     <html
       lang={ar ? "ar" : "en"}
       dir={ar ? "rtl" : "ltr"}
-      data-theme="dark"
+      data-theme="light"
       suppressHydrationWarning
       className={`${manrope.variable} ${barlow.variable} ${plexArabic.variable} ${readexArabic.variable}`}
     >

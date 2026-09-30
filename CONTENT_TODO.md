@@ -27,6 +27,10 @@ No stock photo hosts were reachable from the build environment. All images are t
 - Every product has a generated, printable datasheet at `/{locale}/products/{slug}/datasheet` (branded A4, "Download / print PDF"). Visitors unlock it with name + WhatsApp number; each unlock is a lead with `source = 'datasheet'`.
 - To serve a real manufacturer PDF instead, upload it and set `spec_sheet_url` on the product (any URL that is not the placeholder). The same lead gate applies.
 
+## 2a. Warranty & new product lines
+- The site states a **12-month warranty on every product** (`src/content/services.ts`, product cards/pages, datasheets, FAQ). Confirm the exact start point (delivery vs commissioning) and exclusions with your terms and adjust `warranty.points`.
+- Solar, light towers, fuel tanks, canopies, trailers, load banks, MV switchgear, MCC/VFD, PFC and PLC panels live in `src/content/products-2.ts`. Specs are typical ranges — replace with your actual models as they are confirmed. Run `npm run seed:sql` and the products seed to sync the database.
+
 ## 2b. Industry pages
 - `src/content/industries.ts` holds the six sector pages (`/industries/...`). Replace the "typical sizing" lines with your own figures and add real projects per sector as they happen.
 

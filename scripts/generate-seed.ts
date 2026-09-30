@@ -3,7 +3,7 @@
  * offline fallback always start identical. Run: npm run seed:sql
  *
  * Output is split into small files (Supabase SQL editor paste limit) and uses dollar-quoted strings
- * so copy/paste can never break quoting. Every file is idempotent — safe to run twice.
+ * so copy/paste can never break quoting. Every file is idempotent — safe to run twice (products are upserted).
  */
 import { mkdirSync, rmSync, writeFileSync } from "node:fs";
 import { products } from "../src/content/products";
@@ -30,12 +30,17 @@ const file = (name: string) => {
 
 file("01_products.sql");
 
+// Products are managed in code (no admin UI), so re-running the seed syncs catalog changes to the database.
+const PRODUCT_SYNC = ["category", "name_en", "name_ar", "kva_min", "kva_max", "engine_brand", "fuel_type", "description_en", "description_ar", "specs", "spec_sheet_url", "images", "sort_order", "is_published"]
+  .map((c) => `${c}=excluded.${c}`)
+  .join(",");
+
 for (const p of products) {
   out.push(
     `insert into public.products (category,slug,name_en,name_ar,kva_min,kva_max,engine_brand,fuel_type,description_en,description_ar,specs,spec_sheet_url,images,sort_order,is_published) values (${[
       q(p.category), q(p.slug), q(p.name_en), q(p.name_ar), q(p.kva_min), q(p.kva_max), q(p.engine_brand), q(p.fuel_type),
       q(p.description_en), q(p.description_ar), json(p.specs), q(p.spec_sheet_url), q(p.images), q(p.sort_order), q(p.is_published),
-    ].join(",")}) on conflict (slug) do nothing;`,
+    ].join(",")}) on conflict (slug) do update set ${PRODUCT_SYNC};`,
   );
 }
 file("02_projects_testimonials.sql");

@@ -108,6 +108,14 @@ export const home = {
         body: { en: "Parallel 2–16 generators with load sharing.", ar: "تشغيل 2 إلى 16 مولداً على التوازي مع توزيع الأحمال." },
         image: "/images/products/sync-panel.svg",
       },
+      solar: {
+        body: { en: "Solar panels, solar stations and parks, solar light towers and battery storage.", ar: "ألواح شمسية ومحطات ومزارع طاقة شمسية وأبراج إنارة شمسية وأنظمة تخزين بالبطاريات." },
+        image: "/images/products/solar-pv.svg",
+      },
+      accessories: {
+        body: { en: "Fuel tanks, light towers, acoustic canopies, trailers and load banks.", ar: "خزانات وقود وأبراج إنارة وكبائن عازلة للصوت ومقطورات وأحمال اختبار." },
+        image: "/images/products/fuel-tank.svg",
+      },
     },
   },
   coverage: {

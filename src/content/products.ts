@@ -1,4 +1,5 @@
 import type { Product, SpecRow } from "@/lib/types";
+import { extraProducts } from "./products-2";
 
 /**
  * Seed catalog. Mirrors the Supabase `products` table (see supabase/seed/*.sql, generated from this file).
@@ -21,7 +22,7 @@ const genCommon = (voltage = "400/230 V, 3-phase, 50 Hz (60 Hz on request)"): Sp
   s("Ambient rating", "ظروف التشغيل", "Configured for 50 °C GCC ambient", "مهيأ لحرارة الخليج حتى 50 °م"),
 ];
 
-export const products: Product[] = [
+const coreProducts: Product[] = [
   {
     category: "generator",
     slug: "perkins-diesel-generator-10-200kva",
@@ -401,3 +402,5 @@ export const products: Product[] = [
     is_published: true,
   },
 ];
+
+export const products: Product[] = [...coreProducts, ...extraProducts].sort((a, b) => a.sort_order - b.sort_order);

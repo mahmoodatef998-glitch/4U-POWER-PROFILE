@@ -49,6 +49,7 @@ export default async function DatasheetPage({ params }: Props) {
     ...(kva ? [{ k: t("products.kvaRange"), v: kva }] : []),
     ...(p.engine_brand ? [{ k: t("common.engine"), v: engineBrandLabels[p.engine_brand]?.[locale] ?? p.engine_brand }] : []),
     ...(p.fuel_type ? [{ k: t("common.fuel"), v: fuelLabels[p.fuel_type][locale] }] : []),
+    { k: ar ? "الضمان" : "Warranty", v: t("common.warrantyLong") },
   ];
   const today = new Date().toISOString().slice(0, 10);
 

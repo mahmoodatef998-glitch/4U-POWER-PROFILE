@@ -33,11 +33,11 @@ export default async function ProductsPage({ params }: { params: Promise<{ local
           { name: t("nav.products"), path: "/products" },
         ]}
         eyebrow={ar ? "الكتالوج" : "Catalog"}
-        title={ar ? "المولدات ولوحات ATS ولوحات الكهرباء" : "Generators, ATS Panels & Switchgear Catalog"}
+        title={ar ? "كتالوج المولدات واللوحات والطاقة الشمسية" : "Generators, Switchgear & Solar Catalog"}
         intro={
           ar
-            ? "فلتر حسب الفئة والقدرة ونوع الوقود وماركة المحرك، ثم اطلب عرض سعر أو راسلنا على الواتساب مباشرة من أي منتج."
-            : "Filter by category, kVA, fuel type and engine brand — then request a quote or WhatsApp us straight from any product."
+            ? "مولدات ولوحات ATS وجهد منخفض ومتوسط وأنظمة شمسية وخزانات وقود وأبراج إنارة، وكلها بضمان سنة. فلتر حسب الفئة والقدرة والوقود، ثم اطلب عرض سعر أو راسلنا على الواتساب."
+            : "Generators, ATS, LV & MV switchgear, solar systems, fuel tanks and light towers — every product with a 1-year warranty. Filter by category, kVA and fuel, then request a quote or WhatsApp us."
         }
       />
       <section className="section bg-surface">

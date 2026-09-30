@@ -1,6 +1,6 @@
 "use client";
 
-import { Gauge, Cog } from "lucide-react";
+import { Gauge, Cog, ShieldCheck } from "lucide-react";
 import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
@@ -69,6 +69,10 @@ export function ProductCard({ product, headingLevel = "h3" }: { product: Product
             </div>
           )}
         </dl>
+        <p className="mt-3 inline-flex w-fit items-center gap-1.5 rounded-full bg-emerald-500/10 px-2.5 py-1 text-xs font-semibold text-emerald-400">
+          <ShieldCheck className="size-3.5" aria-hidden />
+          {t("common.warranty")}
+        </p>
         <p className="mt-3 line-clamp-3 text-sm leading-6 text-muted">{locale === "ar" ? product.description_ar : product.description_en}</p>
 
         <div className="relative z-10 mt-auto flex items-center gap-2 pt-5">

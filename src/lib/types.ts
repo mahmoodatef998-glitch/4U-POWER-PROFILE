@@ -1,4 +1,4 @@
-export const CATEGORIES = ["generator", "ats_panel", "switchgear", "mdb", "sync_panel"] as const;
+export const CATEGORIES = ["generator", "ats_panel", "switchgear", "mdb", "sync_panel", "solar", "accessories"] as const;
 export type Category = (typeof CATEGORIES)[number];
 
 export const FUEL_TYPES = ["diesel", "gas", "hybrid", "solar"] as const;

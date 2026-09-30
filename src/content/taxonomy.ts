@@ -7,6 +7,8 @@ export const categoryLabels: Record<Category, L10n> = {
   switchgear: { en: "Switchgear", ar: "لوحات الجهد المنخفض" },
   mdb: { en: "MDB", ar: "لوحات التوزيع MDB" },
   sync_panel: { en: "Synchronizing Panels", ar: "لوحات التزامن" },
+  solar: { en: "Solar Energy", ar: "الطاقة الشمسية" },
+  accessories: { en: "Fuel Tanks & Accessories", ar: "خزانات الوقود والملحقات" },
 };
 
 /** Where each category's pillar page lives. */
@@ -16,6 +18,8 @@ export const categoryHref: Record<Category, string> = {
   switchgear: "/switchgear",
   mdb: "/switchgear#mdb",
   sync_panel: "/switchgear#synchronizing-panels",
+  solar: "/products?category=solar",
+  accessories: "/products?category=accessories",
 };
 
 export const fuelLabels: Record<FuelType, L10n> = {

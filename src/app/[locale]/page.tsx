@@ -1,4 +1,4 @@
-import { ArrowRight, BadgeCheck, CheckCircle2 } from "lucide-react";
+import { ArrowRight, BadgeCheck, CheckCircle2, FlaskConical, ShieldCheck, Wrench } from "lucide-react";
 import Image from "next/image";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Calculator } from "@/components/calculator/calculator";
@@ -264,6 +264,34 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
                 labels={{ tablist: stripMarks(L(home.categories.title)), explore: t("cta.learnMore"), quote: t("cta.quote") }}
               />
             </Reveal>
+          </div>
+        </section>
+
+        {/* ---------------------------------------------- AFTER-SALES: warranty + service band */}
+        <section className="relative px-2 sm:px-4" aria-labelledby="svc-band-title">
+          <div className="mx-auto grid max-w-7xl gap-4 rounded-[2rem] border border-white/10 bg-white/[0.03] p-6 backdrop-blur sm:p-8 lg:grid-cols-4 lg:items-center">
+            <div>
+              <SplitText as="h2" id="svc-band-title" className="text-2xl leading-tight text-white sm:text-3xl" text={locale === "ar" ? "بعد البيع، **نحن معك**" : "After the sale, **we stay**"} />
+              <Link href="/services" className="mt-3 inline-flex items-center gap-2 text-sm font-semibold text-brand-400 hover:underline">
+                {t("nav.services")}
+                <ArrowRight className="flip-rtl size-4" aria-hidden />
+              </Link>
+            </div>
+            {[
+              { I: ShieldCheck, c: "text-emerald-400 bg-emerald-500/15", t: t("common.warrantyLong"), b: locale === "ar" ? "على كل مولد ولوحة ونظام شمسي وملحق." : "On every generator, panel, solar system and accessory." },
+              { I: Wrench, c: "text-brand-400 bg-brand-500/15", t: locale === "ar" ? "صيانة وعقود سنوية" : "Maintenance & AMC", b: locale === "ar" ? "زيارات مجدولة وتقرير مكتوب في كل زيارة." : "Scheduled visits with a written report every time." },
+              { I: FlaskConical, c: "text-sky-400 bg-sky-500/15", t: locale === "ar" ? "اختبار وتشغيل" : "Testing & commissioning", b: locale === "ar" ? "اختبار بأحمال حقيقية وتسليم بالمستندات." : "Load-bank tests and documented handover." },
+            ].map(({ I, c, t: title, b }) => (
+              <div key={title} className="flex gap-4 rounded-2xl border border-white/10 bg-navy-900/60 p-5">
+                <span className={`grid size-11 shrink-0 place-items-center rounded-xl ${c}`}>
+                  <I className="size-5" aria-hidden />
+                </span>
+                <div>
+                  <p className="font-semibold text-white">{title}</p>
+                  <p className="mt-1 text-sm leading-6 text-white/60">{b}</p>
+                </div>
+              </div>
+            ))}
           </div>
         </section>
 

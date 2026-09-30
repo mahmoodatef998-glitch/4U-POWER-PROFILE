@@ -190,7 +190,7 @@ export const industries: Industry[] = [
       { en: "Two smaller synchronised sets instead of one oversized set", ar: "مولدان أصغر على التزامن بدلاً من مولد واحد كبير أكثر من اللازم" },
       { en: "Overland delivery to Saudi Arabia and Iraq with export documents", ar: "شحن بري إلى السعودية والعراق مع مستندات التصدير" },
     ],
-    products: ["cummins-diesel-generator-20-500kva", "chinese-engine-generator-series-20-1000kva", "main-distribution-board-mdb"],
+    products: ["cummins-diesel-generator-20-500kva", "diesel-light-tower", "generator-fuel-tanks"],
     faq: [
       {
         q: { en: "Standby or prime rating for a construction site?", ar: "قدرة احتياطية أم أساسية لموقع الإنشاءات؟" },
@@ -382,7 +382,7 @@ export const industries: Industry[] = [
       { en: "AMF controllers for automatic start on schedule or level switch", ar: "وحدات تحكم AMF للتشغيل التلقائي حسب الجدول أو مفتاح المنسوب" },
       { en: "Export to Iraq, Kenya and South Africa with documents", ar: "تصدير إلى العراق وكينيا وجنوب أفريقيا مع المستندات" },
     ],
-    products: ["solar-hybrid-power-system-10-100kva", "kubota-silent-generator-10-40kva", "perkins-diesel-generator-10-200kva"],
+    products: ["solar-pv-panels", "solar-hybrid-power-system-10-100kva", "kubota-silent-generator-10-40kva"],
     faq: [
       {
         q: { en: "What size generator for a 30 HP pump?", ar: "ما حجم المولد لمضخة 30 حصاناً؟" },

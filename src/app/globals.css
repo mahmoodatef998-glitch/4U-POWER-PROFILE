@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-/* `light:` variant — active when <html data-theme="light"> (dark is the default brand theme) */
+/* `light:` variant — active when <html data-theme="light"> (light is the default; "dark" is the night theme) */
 @custom-variant light (&:where([data-theme="light"], [data-theme="light"] *));
 
 @theme {
@@ -276,6 +276,8 @@
   .line-ats_panel { --grad-ink: linear-gradient(120deg, #15803d, #0f766e); --grad: linear-gradient(120deg, var(--color-line-ats-a), var(--color-line-ats-b)); --glow: rgb(45 212 150 / 0.3); }
   .line-switchgear { --grad-ink: linear-gradient(120deg, #1d4ed8, #4f46e5); --grad: linear-gradient(120deg, var(--color-line-sw-a), var(--color-line-sw-b)); --glow: rgb(110 140 250 / 0.32); }
   .line-mdb { --grad-ink: linear-gradient(120deg, #9333ea, #db2777); --grad: linear-gradient(120deg, var(--color-line-mdb-a), var(--color-line-mdb-b)); --glow: rgb(210 120 230 / 0.3); }
+  .line-solar { --grad-ink: linear-gradient(120deg, #a16207, #15803d); --grad: linear-gradient(120deg, #fde047, #84cc16); --glow: rgb(190 220 60 / 0.3); }
+  .line-accessories { --grad-ink: linear-gradient(120deg, #9a3412, #475569); --grad: linear-gradient(120deg, #fb923c, #94a3b8); --glow: rgb(240 150 80 / 0.28); }
   .line-sync_panel { --grad-ink: linear-gradient(120deg, #0e7490, #4338ca); --grad: linear-gradient(120deg, var(--color-line-sync-a), var(--color-line-sync-b)); --glow: rgb(60 170 240 / 0.3); }
 
   /* Long-form article typography */

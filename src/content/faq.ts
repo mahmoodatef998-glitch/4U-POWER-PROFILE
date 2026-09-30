@@ -4,6 +4,13 @@ export type Faq = { q: L10n; a: L10n };
 
 export const homeFaq: Faq[] = [
   {
+    q: { en: "Do your products come with a warranty?", ar: "هل منتجاتكم مشمولة بالضمان؟" },
+    a: {
+      en: "Yes — every product we supply carries a 12-month warranty against defects in materials and workmanship, and manufacturer warranties on engines, alternators and solar modules are passed on in full. We also offer maintenance contracts to keep your equipment covered and running.",
+      ar: "نعم، كل منتج نورّده مشمول بضمان 12 شهراً ضد عيوب المواد والتصنيع، وتنتقل إليك ضمانات المصنّعين على المحركات والدينامو والألواح الشمسية كاملة. كما نقدم عقود صيانة لتبقى معداتك تعمل ومشمولة بالضمان.",
+    },
+  },
+  {
     q: { en: "What size generator do I need?", ar: "ما حجم المولد الذي أحتاجه؟" },
     a: {
       en: "Add up the running load in kW, divide by the power factor (usually 0.8) to get kVA, then add a 20–25% margin for motor starting and future growth. Our free kVA calculator does this for you and suggests matching models.",

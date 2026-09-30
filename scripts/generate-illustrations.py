@@ -171,6 +171,97 @@ write("news/diesel-vs-gas.svg", frame(NW, NH, '<path d="M330 150c90 120 140 190 
 write("news/switchgear-maintenance.svg", frame(NW, NH, panel(90, 110, 620, 440, 4, "sg") + '<rect x="780" y="120" width="330" height="420" rx="18" fill="#16161a" stroke="%s"/>' % LINE + "".join(f'<rect x="820" y="{180+i*80}" width="36" height="36" rx="8" fill="none" stroke="{AMBER}" stroke-width="5"/><path d="M828 {198+i*80}l9 9 16-18" stroke="{AMBER}" stroke-width="6" fill="none"/><rect x="880" y="{188+i*80}" width="190" height="18" rx="9" fill="{STEEL_L}"/>' for i in range(4))))
 write("news/export-markets.svg", frame(NW, NH, '<circle cx="600" cy="315" r="230" fill="none" stroke="%s" stroke-opacity=".35" stroke-width="2"/><ellipse cx="600" cy="315" rx="110" ry="230" fill="none" stroke="%s" stroke-opacity=".25"/><line x1="370" x2="830" y1="315" y2="315" stroke="%s" stroke-opacity=".25"/>' % (LINE, LINE, LINE) + '<path d="M640 300Q560 200 470 230M640 300Q600 170 560 150M640 300Q700 420 560 470" stroke="%s" stroke-width="5" fill="none"/>' % AMBER + '<circle cx="640" cy="300" r="14" fill="%s"/><circle cx="470" cy="230" r="10" fill="#fff"/><circle cx="560" cy="150" r="10" fill="#fff"/><circle cx="560" cy="470" r="8" fill="%s"/>' % (AMBER, LINE), glow=(0.53, 0.47)))
 
+# ---------------------------------------------------------------- solar, lighting, fuel & accessories
+def pv_module(x, y, w, h, skew=40):
+    """Tilted PV module: cell grid on a parallelogram."""
+    cells = []
+    rows, cols = 4, 6
+    for r in range(rows):
+        for c in range(cols):
+            fx0, fx1 = c / cols, (c + 1) / cols
+            fy0, fy1 = r / rows, (r + 1) / rows
+            pts = " ".join(f"{x + fx*w + (1-fy)*skew:.1f},{y + fy*h:.1f}" for fx, fy in ((fx0, fy0), (fx1, fy0), (fx1, fy1), (fx0, fy1)))
+            cells.append(f'<polygon points="{pts}" fill="#1e3a8a" stroke="#93c5fd" stroke-opacity=".35" stroke-width="1.5"/>')
+    edge = f'<polygon points="{x+skew},{y} {x+w+skew},{y} {x+w},{y+h} {x},{y+h}" fill="#0f1b3d" stroke="{LINE}" stroke-opacity=".6" stroke-width="3"/>'
+    shine = f'<polygon points="{x+skew+w*0.1},{y+4} {x+skew+w*0.35},{y+4} {x+w*0.2},{y+h-4} {x+w*0.02},{y+h-4}" fill="#fff" opacity=".06"/>'
+    return edge + "".join(cells) + shine
+
+
+def pv_array(x, y, n=3, w=190, h=120, gap=24):
+    legs = "".join(f'<path d="M{x+i*(w+gap)+30} {y+h} v70 M{x+i*(w+gap)+w-20} {y+h} v40" stroke="{LINE}" stroke-width="6" stroke-opacity=".6"/>' for i in range(n))
+    return legs + "".join(pv_module(x + i * (w + gap), y, w, h) for i in range(n))
+
+
+def sun(cx, cy, r):
+    rays = "".join(f'<line x1="{cx}" y1="{cy-r-14}" x2="{cx}" y2="{cy-r-34}" stroke="{AMBER}" stroke-width="6" stroke-linecap="round" transform="rotate({a} {cx} {cy})"/>' for a in range(0, 360, 45))
+    return f'<circle cx="{cx}" cy="{cy}" r="{r}" fill="url(#amber)"/>' + rays
+
+
+def light_tower(x, base, solar=False):
+    """Trailer-mounted light tower: mast, 4 LED heads, body, wheels; optional PV panel on the body."""
+    beam = f'<polygon points="{x+60},{base-380} {x+210},{base-380} {x+330},{base-120} {x-60},{base-120}" fill="#fff6c2" opacity=".07"/>'
+    mast = f'<rect x="{x+118}" y="{base-380}" width="14" height="300" fill="url(#steel)" stroke="{LINE}" stroke-opacity=".5"/>'
+    bar = f'<rect x="{x+56}" y="{base-414}" width="156" height="6" rx="3" fill="{LINE}" opacity=".7"/>'
+    heads = "".join(f'<rect x="{x+60+i*38}" y="{base-410}" width="32" height="26" rx="4" fill="{NAVY_1}" stroke="{AMBER}" stroke-width="2"/><rect x="{x+64+i*38}" y="{base-386}" width="24" height="6" rx="2" fill="#fff9d6"/>' for i in range(4))
+    body = f'<rect x="{x+20}" y="{base-120}" width="220" height="90" rx="8" fill="url(#amber)"/>' + louvers(x + 34, base - 108, 90, 60, 6)
+    body += f'<rect x="{x+150}" y="{base-104}" width="70" height="40" rx="4" fill="{NAVY_1}" stroke="{LINE}" stroke-opacity=".5"/>'
+    panel_ = pv_module(x + 30, base - 170, 190, 40, 20) if solar else ""
+    wheels = "".join(f'<circle cx="{cx}" cy="{base-22}" r="22" fill="#0d0d0f" stroke="{LINE}" stroke-opacity=".5" stroke-width="4"/>' for cx in (x + 70, x + 190))
+    tow = f'<path d="M{x+240} {base-50} h70" stroke="{LINE}" stroke-width="8" stroke-opacity=".6"/>'
+    return beam + mast + bar + heads + panel_ + body + wheels + tow
+
+
+def fuel_tank(x, y, w, h):
+    return f"""
+<g>
+<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="{h*0.5}" fill="url(#steel)" stroke="{LINE}" stroke-opacity=".5"/>
+<rect x="{x+w*0.08}" y="{y+h*0.18}" width="{w*0.84}" height="10" rx="5" fill="#fff" opacity=".07"/>
+<rect x="{x+w*0.15}" y="{y+h-6}" width="{w*0.12}" height="46" fill="#0d0d0f"/><rect x="{x+w*0.73}" y="{y+h-6}" width="{w*0.12}" height="46" fill="#0d0d0f"/>
+<rect x="{x+w*0.46}" y="{y-26}" width="46" height="30" rx="4" fill="{NAVY_1}" stroke="{AMBER}" stroke-width="2"/>
+<circle cx="{x+w*0.3}" cy="{y+h*0.55}" r="{h*0.16}" fill="{NAVY_1}" stroke="{AMBER}" stroke-width="3"/>
+<line x1="{x+w*0.3}" y1="{y+h*0.55}" x2="{x+w*0.3+h*0.1}" y2="{y+h*0.47}" stroke="{AMBER}" stroke-width="4"/>
+<rect x="{x+w*0.55}" y="{y+h*0.42}" width="{w*0.3}" height="{h*0.26}" rx="4" fill="{NAVY_1}" opacity=".8"/>
+<text x="{x+w*0.7}" y="{y+h*0.6}" font-family="Arial,sans-serif" font-size="{h*0.13:.0f}" font-weight="700" fill="{AMBER}" text-anchor="middle">DIESEL</text>
+</g>"""
+
+
+def trailer(x, base, w):
+    return (f'<rect x="{x}" y="{base-70}" width="{w}" height="18" fill="#0d0d0f" stroke="{LINE}" stroke-opacity=".5"/>'
+            f'<path d="M{x+w} {base-60} h90" stroke="{LINE}" stroke-width="8" stroke-opacity=".6"/>'
+            + "".join(f'<circle cx="{cx}" cy="{base-26}" r="26" fill="#0d0d0f" stroke="{LINE}" stroke-opacity=".5" stroke-width="5"/>' for cx in (x + w * 0.3, x + w * 0.3 + 62)))
+
+
+def load_bank(x, y, w, h):
+    grille = "".join(f'<rect x="{x+w*0.08}" y="{y+h*0.14+i*18}" width="{w*0.5}" height="8" rx="3" fill="#000" opacity=".35"/>' for i in range(int(h*0.7/18)))
+    fx, fy = x + w * 0.78, y + h * 0.45
+    fan = f'<circle cx="{fx}" cy="{fy}" r="{h*0.26}" fill="{NAVY_1}" stroke="{LINE}" stroke-opacity=".5" stroke-width="3"/>'
+    fan += "".join(f'<path d="M{fx} {fy} l{h*0.2} {-h*0.06}" stroke="{LINE}" stroke-width="10" stroke-linecap="round" transform="rotate({a} {fx} {fy})"/>' for a in (0, 120, 240))
+    heat = "".join(f'<path d="M{x+w*0.2+i*40} {y-14} q12 -20 0 -40 q-12 -20 0 -40" stroke="#ef4444" stroke-opacity=".55" stroke-width="4" fill="none"/>' for i in range(4))
+    return f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="8" fill="url(#steel)" stroke="{LINE}" stroke-opacity=".5"/>' + grille + fan + heat + f'<rect x="{x}" y="{y+h-12}" width="{w}" height="12" fill="url(#amber)"/>'
+
+
+def bess(x, y, n=3):
+    out = []
+    for i in range(n):
+        bx = x + i * 150
+        out.append(f'<rect x="{bx}" y="{y}" width="130" height="260" rx="8" fill="url(#steel)" stroke="{LINE}" stroke-opacity=".5"/>')
+        for r in range(6):
+            out.append(f'<rect x="{bx+16}" y="{y+20+r*38}" width="98" height="26" rx="4" fill="{NAVY_1}" stroke="#22c55e" stroke-opacity=".5"/>')
+            out.append(f'<rect x="{bx+22}" y="{y+28+r*38}" width="{30+((r*17+i*11)%50)}" height="10" rx="2" fill="#22c55e" opacity=".75"/>')
+    return "".join(out) + bolt(x + n * 150 + 50, y + 60, 1.6)
+
+
+write("products/solar-pv.svg", frame(W, H, sun(660, 110, 46) + ground(W, 500) + pv_array(70, 250, 3), glow=(0.82, 0.18)))
+write("products/solar-station.svg", frame(W, H, sun(700, 90, 36) + ground(W, 500) + pv_array(40, 190, 3, 170, 90, 20) + pv_array(120, 330, 3, 170, 90, 20), glow=(0.85, 0.15)))
+write("products/solar-light-tower.svg", frame(W, H, sun(680, 100, 36) + ground(W, 520) + light_tower(250, 520, solar=True), glow=(0.5, 0.2)))
+write("products/light-tower.svg", frame(W, H, ground(W, 520) + light_tower(250, 520), glow=(0.45, 0.2)))
+write("products/bess.svg", frame(W, H, ground(W, 480) + bess(120, 200), glow=(0.4, 0.4)))
+write("products/fuel-tank.svg", frame(W, H, ground(W, 470) + fuel_tank(130, 230, 540, 200)))
+write("products/generator-trailer.svg", frame(W, H, ground(W, 500) + canopy(150, 250, 380, 190) + trailer(130, 500, 420)))
+write("products/load-bank.svg", frame(W, H, ground(W, 480) + load_bank(160, 230, 480, 240)))
+write("products/mcc-panel.svg", frame(W, H, ground(W, 500) + panel(100, 120, 600, 380, 5, "sg")))
+write("products/mv-switchgear.svg", frame(W, H, ground(W, 500) + panel(140, 90, 520, 410, 3, "ats") + bolt(400, 60, 1.1)))
+
 # ---------------------------------------------------------------- hero
 write("hero/hero-genset.svg", frame(1200, 900, ground(1200, 760) + container(60, 440, 500, 190) + canopy(620, 480, 440, 250), glow=(0.65, 0.4)))
 print("illustrations written to", ROOT)

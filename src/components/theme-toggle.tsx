@@ -7,13 +7,13 @@ import { cn } from "@/lib/utils";
 
 type Theme = "dark" | "light";
 
-/** Switches <html data-theme> between the night (default) and light themes and remembers the choice. */
+/** Switches <html data-theme> between the light (default) and night themes and remembers the choice. */
 export function ThemeToggle({ className }: { className?: string }) {
   const ar = useLocale() === "ar";
-  const [theme, setTheme] = useState<Theme>("dark");
+  const [theme, setTheme] = useState<Theme>("light");
 
   useEffect(() => {
-    setTheme(document.documentElement.dataset.theme === "light" ? "light" : "dark");
+    setTheme(document.documentElement.dataset.theme === "dark" ? "dark" : "light");
   }, []);
 
   const toggle = () => {

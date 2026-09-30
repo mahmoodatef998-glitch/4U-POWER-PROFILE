@@ -29,12 +29,12 @@ export const pageSeo = {
   },
   products: {
     title: {
-      en: "Generator, ATS Panel & Switchgear Catalog | 4U Power UAE",
-      ar: "كتالوج المولدات ولوحات ATS والتوزيع | فور يو باور الإمارات",
+      en: "Generators, Switchgear & Solar Catalog | 4U Power UAE",
+      ar: "كتالوج المولدات واللوحات والطاقة الشمسية | فور يو باور",
     },
     description: {
-      en: "Browse diesel, gas and hybrid generators from 10 to 2500 kVA plus ATS, switchgear, MDB and sync panels. Filter by kVA, engine and fuel, then get a quote.",
-      ar: "تصفح مولدات الديزل والغاز والهجينة من 10 إلى 2500 ك.ف.أ ولوحات ATS والتوزيع والتزامن. فلتر حسب القدرة والمحرك والوقود واطلب عرض سعر فوراً.",
+      en: "Generators 10–2500 kVA, ATS, LV/MV switchgear, solar PV, fuel tanks and light towers — all with a 1-year warranty. Filter by kVA and fuel, then get a quote.",
+      ar: "مولدات من 10 إلى 2500 ك.ف.أ ولوحات ATS وجهد منخفض ومتوسط وألواح شمسية وخزانات وقود وأبراج إنارة، بضمان سنة. فلتر حسب القدرة والوقود واطلب عرض سعر.",
     },
   },
   generators: {

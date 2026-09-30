@@ -1,3 +1,4 @@
+import { ShieldCheck } from "lucide-react";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
@@ -104,6 +105,10 @@ export default async function ProductPage({ params }: Props) {
       >
         <ul className="mb-8 flex flex-wrap gap-2 text-sm font-bold">
           {kva && <li className="rounded-full bg-brand-500 px-3 py-1.5 text-ink-950" dir="ltr">{kva}</li>}
+          <li className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/15 px-3 py-1.5 text-emerald-400">
+            <ShieldCheck className="size-4" aria-hidden />
+            {t("common.warranty")}
+          </li>
           {p.engine_brand && <li className="rounded-full bg-white/10 px-3 py-1.5">{engineBrandLabels[p.engine_brand]?.[locale] ?? p.engine_brand}</li>}
           {p.fuel_type && FuelIcon && (
             <li className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1.5">

@@ -17,7 +17,8 @@
     "switchLang": "English",
     "switchLangLabel": "التبديل إلى الإنجليزية",
     "primary": "القائمة الرئيسية",
-    "industries": "القطاعات"
+    "industries": "القطاعات",
+    "services": "الصيانة والضمان"
   },
   "cta": {
     "whatsapp": "واتساب",
@@ -48,7 +49,9 @@
     "breadcrumbHome": "الرئيسية",
     "updated": "نُشر في {date}",
     "responseTime": "نرد عادةً خلال ساعة عمل على الواتساب",
-    "placeholderImage": "رسم توضيحي — الصور الفعلية قريباً"
+    "placeholderImage": "رسم توضيحي — الصور الفعلية قريباً",
+    "warranty": "ضمان سنة",
+    "warrantyLong": "ضمان 12 شهراً على كل منتج"
   },
   "products": {
     "filters": "الفلاتر",

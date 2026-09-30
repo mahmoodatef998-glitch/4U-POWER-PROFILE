@@ -20,6 +20,7 @@ const NAV = [
   { href: "/products", key: "products", top: true },
   { href: "/calculator", key: "calculator", top: true },
   { href: "/industries", key: "industries" },
+  { href: "/services", key: "services" },
   { href: "/projects", key: "projects" },
   { href: "/markets", key: "markets" },
   { href: "/news", key: "news", top: true },
