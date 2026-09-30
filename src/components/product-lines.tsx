@@ -1,198 +1,154 @@
 "use client";
 
-import { useInView, useReducedMotion } from "framer-motion";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { LazyMotion, domAnimation, m, useMotionValueEvent, useReducedMotion, useScroll, useSpring, useTransform, type MotionValue } from "framer-motion";
+import { ArrowRight } from "lucide-react";
 import Image from "next/image";
-import { useEffect, useId, useRef, useState, type KeyboardEvent, type PointerEvent } from "react";
+import { useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { Link } from "@/i18n/navigation";
 import type { Category } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
 export type ProductLine = { id: Category; title: string; body: string; image: string; href: string };
-
-const AUTOPLAY_MS = 5500;
+type Labels = { region: string; explore: string; quote: string };
 
 /**
- * Auto-rotating showcase of the product lines: one panel, the line name as a big headline inside it,
- * slim progress dots and arrows at the bottom. Pauses on hover/focus/touch and when off-screen.
- * Every slide stays in the DOM (inactive ones inert) so all copy is crawlable.
+ * Pinned horizontal showcase: the section sticks to the viewport while vertical scrolling slides a row of
+ * large product-line cards sideways (right-to-left in English, left-to-right in Arabic). The scroll length
+ * is measured from the track, so one pixel of wheel = one pixel of travel. Reduced motion → plain stack.
  */
-export function ProductLines({ items, labels }: { items: ProductLine[]; labels: { tablist: string; explore: string; quote: string; prev: string; next: string } }) {
-  const [active, setActive] = useState(0);
-  const [hold, setHold] = useState(false);
+export function ProductLines({ items, labels, heading }: { items: ProductLine[]; labels: Labels; heading?: ReactNode }) {
   const reduce = useReducedMotion();
-  const ref = useRef<HTMLElement>(null);
-  const inView = useInView(ref, { amount: 0.35 });
-  const uid = useId();
-  const swipe = useRef<number | null>(null);
-  const playing = !hold && inView && !reduce;
+  const section = useRef<HTMLDivElement>(null);
+  const viewport = useRef<HTMLDivElement>(null);
+  const track = useRef<HTMLUListElement>(null);
+  const [distance, setDistance] = useState(0);
+  const [rtl, setRtl] = useState(false);
+  const [active, setActive] = useState(0);
   const n = items.length;
 
-  useEffect(() => {
-    if (!playing) return;
-    const id = window.setTimeout(() => setActive((a) => (a + 1) % n), AUTOPLAY_MS);
-    return () => window.clearTimeout(id);
-  }, [playing, active, n]);
+  // measure how far the track has to travel
+  useLayoutEffect(() => {
+    if (reduce) return;
+    setRtl(document.documentElement.dir === "rtl");
+    const measure = () => {
+      if (!track.current || !viewport.current) return;
+      setDistance(Math.max(0, track.current.scrollWidth - viewport.current.clientWidth));
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    if (track.current) ro.observe(track.current);
+    if (viewport.current) ro.observe(viewport.current);
+    return () => ro.disconnect();
+  }, [reduce]);
 
-  const go = (d: number) => setActive((a) => (a + d + n) % n);
-  const rtl = () => document.documentElement.dir === "rtl";
+  const { scrollYProgress } = useScroll({ target: section, offset: ["start start", "end end"] });
+  const progress = useSpring(scrollYProgress, { stiffness: 160, damping: 30, mass: 0.3, restDelta: 0.0005 });
+  const x = useTransform(progress, (p) => (rtl ? 1 : -1) * p * distance);
+  const bar = useTransform(progress, (p) => p);
+  useMotionValueEvent(progress, "change", (p) => setActive(Math.min(n - 1, Math.round(p * (n - 1)))));
 
-  const onKey = (e: KeyboardEvent) => {
-    if (e.key === "ArrowRight") go(rtl() ? -1 : 1);
-    else if (e.key === "ArrowLeft") go(rtl() ? 1 : -1);
-    else return;
-    e.preventDefault();
-  };
-  const onDown = (e: PointerEvent) => {
-    if (e.pointerType !== "mouse") swipe.current = e.clientX;
-  };
-  const onUp = (e: PointerEvent) => {
-    if (swipe.current == null) return;
-    const dx = e.clientX - swipe.current;
-    swipe.current = null;
-    if (Math.abs(dx) > 40) go((dx < 0 ? 1 : -1) * (rtl() ? -1 : 1));
-  };
-
-  const current = items[active]!;
+  if (reduce)
+    return (
+      <div className="container-x">
+        {heading}
+        <ul className="mt-10 grid gap-5">
+          {items.map((it, i) => (
+            <li key={it.id}>
+              <Card item={it} index={i} total={n} labels={labels} />
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
 
   return (
-    <section
-      ref={ref}
-      aria-roledescription="carousel"
-      aria-label={labels.tablist}
-      onKeyDown={onKey}
-      onMouseEnter={() => setHold(true)}
-      onMouseLeave={() => setHold(false)}
-      onFocusCapture={() => setHold(true)}
-      onBlurCapture={() => setHold(false)}
-      onPointerDown={onDown}
-      onPointerUp={onUp}
-      className={cn(`line-${current.id}`, "relative overflow-hidden rounded-[2rem] border border-white/10 bg-navy-900/90 shadow-[0_40px_80px_-40px_rgb(0_0_0/0.6)] backdrop-blur-xl")}
-    >
-      {/* colour wash follows the active line */}
-      <div aria-hidden className="absolute inset-x-0 top-0 h-1.5 transition-[background] duration-700" style={{ background: "var(--grad)" }} />
-      <div aria-hidden className="pointer-events-none absolute -end-24 -top-24 size-[18rem] rounded-full blur-3xl transition-[background-color] duration-1000 sm:size-[32rem]" style={{ backgroundColor: "var(--glow)" }} />
+    <LazyMotion features={domAnimation} strict>
+      {/* the tall wrapper supplies the scroll distance; the inner stage stays pinned */}
+      <div ref={section} className="relative" style={{ height: `calc(100svh + ${distance}px)` }} aria-label={labels.region} role="region">
+        <div className="sticky top-0 flex h-svh flex-col justify-center overflow-hidden pb-24 pt-24 sm:pt-28 md:pb-6">
+          <div className="container-x flex items-end justify-between gap-6">
+            <div className="min-w-0 flex-1">{heading}</div>
+            <p className="hidden shrink-0 font-display text-5xl font-extrabold tabular-nums text-white/15 sm:block" dir="ltr" aria-hidden>
+              <span className="text-white/80">{String(active + 1).padStart(2, "0")}</span> / {String(n).padStart(2, "0")}
+            </p>
+          </div>
+
+          <div ref={viewport} className="mt-8 min-h-0 flex-1 sm:mt-10">
+            <m.ul ref={track} style={{ x }} className="flex h-full w-max gap-5 px-4 will-change-transform sm:gap-6 sm:px-[max(1.5rem,calc((100vw-80rem)/2+2rem))]">
+              {items.map((it, i) => (
+                <li key={it.id} className="h-full w-[86vw] shrink-0 sm:w-[min(78vw,68rem)]">
+                  <FocusCard progress={progress} index={i} total={n}>
+                    <Card item={it} index={i} total={n} labels={labels} />
+                  </FocusCard>
+                </li>
+              ))}
+            </m.ul>
+          </div>
+
+          {/* progress */}
+          <div className="container-x mt-6 flex items-center gap-4">
+            <div className="relative h-1 flex-1 overflow-hidden rounded-full bg-white/10">
+              <m.div className="absolute inset-0 origin-left rounded-full bg-[linear-gradient(90deg,var(--color-line-gen-a),var(--color-line-ats-a),var(--color-line-sw-b),var(--color-line-mdb-b))] rtl:origin-right" style={{ scaleX: bar }} />
+            </div>
+            <p className="text-sm font-semibold text-white/60 sm:hidden" dir="ltr">
+              {active + 1} / {n}
+            </p>
+          </div>
+        </div>
+      </div>
+    </LazyMotion>
+  );
+}
+
+/** Cards ease up to full size as they reach the focus position and settle back as they leave. */
+function FocusCard({ progress, index, total, children }: { progress: MotionValue<number>; index: number; total: number; children: ReactNode }) {
+  const d = useTransform(progress, (p) => Math.min(1, Math.abs(p * (total - 1) - index)));
+  const scale = useTransform(d, (v) => 1 - 0.06 * v);
+  const opacity = useTransform(d, (v) => 1 - 0.35 * v);
+  return (
+    <m.div className="h-full origin-center" style={{ scale, opacity }}>
+      {children}
+    </m.div>
+  );
+}
+
+function Card({ item: it, index, total, labels }: { item: ProductLine; index: number; total: number; labels: Labels }) {
+  return (
+    <article className={cn(`line-${it.id}`, "spotlight relative flex h-full min-h-[26rem] flex-col overflow-hidden rounded-[2rem] border border-white/10 bg-navy-900/90 shadow-[0_40px_80px_-40px_rgb(0_0_0/0.55)] lg:flex-row")}>
+      <div aria-hidden className="absolute inset-x-0 top-0 h-1.5" style={{ background: "var(--grad)" }} />
+      <div aria-hidden className="pointer-events-none absolute -end-24 -top-24 size-[20rem] rounded-full blur-3xl sm:size-[30rem]" style={{ backgroundColor: "var(--glow)" }} />
       <div aria-hidden className="grid-bg pointer-events-none absolute inset-0 opacity-40" />
 
-      <div className="relative grid" aria-live={playing ? "off" : "polite"}>
-        {items.map((it, i) => {
-          const on = i === active;
-          return (
-            <div
-              key={it.id}
-              id={`${uid}-slide-${i}`}
-              role="group"
-              aria-roledescription="slide"
-              aria-label={`${i + 1} / ${n}: ${it.title}`}
-              inert={!on}
-              className={cn(
-                `line-${it.id}`,
-                "grid gap-8 p-6 pb-24 [grid-area:1/1] sm:p-10 sm:pb-28 lg:grid-cols-12 lg:items-center lg:gap-10 lg:p-14 lg:pb-28",
-                on ? "pointer-events-auto" : "pointer-events-none",
-              )}
-            >
-              <div className="lg:col-span-6">
-                <p
-                  className={cn("font-display text-sm font-extrabold tracking-[0.25em] text-white/45 transition-opacity duration-500 rtl:tracking-normal", on ? "opacity-100" : "opacity-0")}
-                  dir="ltr"
-                >
-                  {String(i + 1).padStart(2, "0")} / {String(n).padStart(2, "0")}
-                </p>
-                {/* headline slides up out of a mask */}
-                <div className="mt-3 overflow-hidden pb-2">
-                  <h3
-                    className={cn(
-                      "grad-text text-5xl leading-[0.98] font-bold tracking-[-0.04em] transition-[translate,opacity] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] sm:text-6xl lg:text-7xl xl:text-[5.5rem] rtl:text-5xl rtl:leading-tight rtl:tracking-normal rtl:lg:text-6xl",
-                      on ? "translate-y-0 opacity-100" : "translate-y-[60%] opacity-0",
-                    )}
-                  >
-                    {it.title}
-                  </h3>
-                </div>
-                <p
-                  className={cn(
-                    "mt-5 max-w-md text-base leading-7 text-white/70 transition-[translate,opacity] delay-100 duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] sm:text-lg",
-                    on ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0",
-                  )}
-                >
-                  {it.body}
-                </p>
-                <div
-                  className={cn(
-                    "mt-8 flex flex-col gap-3 transition-[translate,opacity] delay-150 duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] sm:flex-row",
-                    on ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0",
-                  )}
-                >
-                  <Link
-                    href={it.href}
-                    className="group/cta inline-flex h-12 items-center justify-center gap-2 rounded-full px-6 font-bold text-ink-950 shadow-[0_12px_32px_-12px_var(--glow)] transition-[translate,box-shadow] duration-300 hover:-translate-y-0.5"
-                    style={{ background: "var(--grad)" }}
-                  >
-                    {labels.explore}
-                    <span className="sr-only"> — {it.title}</span>
-                    <ArrowRight className="flip-rtl size-4 transition-transform duration-300 group-hover/cta:translate-x-1 rtl:group-hover/cta:-translate-x-1" aria-hidden />
-                  </Link>
-                  <Link
-                    href="/contact"
-                    className="inline-flex h-12 items-center justify-center rounded-full border border-white/20 bg-white/5 px-6 font-bold text-white transition-[translate,background-color] duration-300 hover:-translate-y-0.5 hover:bg-white/10"
-                  >
-                    {labels.quote}
-                  </Link>
-                </div>
-              </div>
-
-              <div className="lg:col-span-6">
-                <div
-                  className={cn(
-                    "relative mx-auto aspect-[16/11] w-full max-w-xl transition-[translate,opacity,scale] duration-[900ms] ease-[cubic-bezier(0.22,1,0.36,1)]",
-                    on ? "translate-x-0 scale-100 opacity-100" : "translate-x-8 scale-95 opacity-0 rtl:-translate-x-8",
-                  )}
-                >
-                  <div aria-hidden className="absolute inset-[12%] rounded-full blur-3xl" style={{ backgroundColor: "var(--glow)" }} />
-                  <div className={cn("relative h-full overflow-hidden rounded-2xl border border-white/10 bg-navy-950", on && !reduce && "animate-float")}>
-                    <Image src={it.image} alt={it.title} fill sizes="(min-width:1024px) 45vw, 100vw" className="object-cover" />
-                  </div>
-                </div>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-
-      {/* controls: progress dots + arrows */}
-      <div className="absolute inset-x-6 bottom-6 flex items-center justify-between gap-4 sm:inset-x-10 sm:bottom-8 lg:inset-x-14">
-        <div className="flex flex-1 items-center gap-1.5 sm:gap-2">
-          {items.map((it, i) => (
-            <button
-              key={it.id}
-              type="button"
-              onClick={() => setActive(i)}
-              aria-controls={`${uid}-slide-${i}`}
-              aria-current={i === active ? "true" : undefined}
-              aria-label={it.title}
-              title={it.title}
-              className={cn("relative h-1.5 overflow-hidden rounded-full bg-white/15 transition-[width] duration-500", i === active ? "w-12 sm:w-16" : "w-4 hover:bg-white/30 sm:w-6")}
-            >
-              {i === active && (
-                <span
-                  key={`p-${active}-${playing}`}
-                  aria-hidden
-                  className={cn("absolute inset-0 origin-left rounded-full rtl:origin-right", playing ? "animate-tab-progress" : "")}
-                  style={{ background: "var(--grad)", animationDuration: `${AUTOPLAY_MS}ms`, transform: playing ? undefined : "scaleX(1)" }}
-                />
-              )}
-            </button>
-          ))}
-        </div>
-        <div className="flex gap-2">
-          <button type="button" onClick={() => go(-1)} aria-label={labels.prev} className="grid size-11 place-items-center rounded-full border border-white/15 bg-white/5 text-white transition hover:bg-white/10">
-            <ArrowLeft className="flip-rtl size-5" aria-hidden />
-          </button>
-          <button type="button" onClick={() => go(1)} aria-label={labels.next} className="grid size-11 place-items-center rounded-full border border-white/15 bg-white/5 text-white transition hover:bg-white/10">
-            <ArrowRight className="flip-rtl size-5" aria-hidden />
-          </button>
+      <div className="relative flex flex-1 flex-col justify-center p-6 sm:p-10 lg:basis-1/2 lg:p-14">
+        <p className="font-display text-sm font-extrabold tracking-[0.25em] text-white/45 rtl:tracking-normal" dir="ltr">
+          {String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
+        </p>
+        <h3 className="grad-text mt-3 text-4xl leading-[0.98] font-bold tracking-[-0.04em] sm:text-6xl xl:text-7xl rtl:leading-tight rtl:tracking-normal">{it.title}</h3>
+        <p className="mt-4 max-w-md text-base leading-7 text-white/70 sm:mt-5 sm:text-lg">{it.body}</p>
+        <div className="mt-6 flex flex-wrap gap-3 sm:mt-8">
+          <Link
+            href={it.href}
+            className="group/cta inline-flex h-12 items-center justify-center gap-2 rounded-full px-6 font-bold text-ink-950 shadow-[0_12px_32px_-12px_var(--glow)] transition-[translate,box-shadow] duration-300 hover:-translate-y-0.5"
+            style={{ background: "var(--grad)" }}
+          >
+            {labels.explore}
+            <span className="sr-only"> — {it.title}</span>
+            <ArrowRight className="flip-rtl size-4 transition-transform duration-300 group-hover/cta:translate-x-1 rtl:group-hover/cta:-translate-x-1" aria-hidden />
+          </Link>
+          <Link
+            href="/contact"
+            className="inline-flex h-12 items-center justify-center rounded-full border border-white/20 bg-white/5 px-6 font-bold text-white transition-[translate,background-color] duration-300 hover:-translate-y-0.5 hover:bg-white/10"
+          >
+            {labels.quote}
+          </Link>
         </div>
       </div>
-    </section>
+
+      <div className="relative min-h-40 flex-1 p-4 pt-0 sm:p-8 sm:pt-0 lg:basis-1/2 lg:p-10 lg:ps-0">
+        <div className="relative h-full overflow-hidden rounded-[1.5rem] border border-white/10 bg-navy-950">
+          <Image src={it.image} alt={it.title} fill sizes="(min-width:1024px) 34vw, 86vw" className="object-cover" />
+        </div>
+      </div>
+    </article>
   );
 }

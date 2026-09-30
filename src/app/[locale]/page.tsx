@@ -179,7 +179,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
                       <Link
                         href={{ pathname: "/products", query: { engine: b } }}
                         tabIndex={copy === 1 ? -1 : undefined}
-                        className="font-display text-3xl font-extrabold uppercase tracking-tight whitespace-nowrap text-white/40 transition-colors duration-300 hover:text-brand-400 sm:text-4xl"
+                        className="font-display text-3xl font-extrabold uppercase tracking-tight whitespace-nowrap text-white/60 transition-colors duration-300 hover:text-brand-400 sm:text-4xl"
                       >
                         {engineBrandLabels[b]?.[locale]}
                       </Link>
@@ -246,25 +246,19 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
           </div>
         </section>
 
-        {/* ---------------------------------------------- PRODUCT LINES: stacked gradient tabs */}
-        <section className="section relative" aria-labelledby="cat-title">
-          <div className="container-x relative">
-            <Reveal>
-              <SectionHeading id="cat-title" dark eyebrow={L(home.categories.eyebrow)} title={L(home.categories.title)} />
-            </Reveal>
-            <Reveal className="mt-12" delay={0.1}>
-              <ProductLines
-                items={CATEGORIES.map((c) => ({
-                  id: c,
-                  title: L(categoryLabels[c]),
-                  body: L(home.categories.items[c].body),
-                  image: home.categories.items[c].image,
-                  href: categoryHref[c],
-                }))}
-                labels={{ tablist: stripMarks(L(home.categories.title)), explore: t("cta.learnMore"), quote: t("cta.quote"), prev: t("calc.back"), next: t("calc.next") }}
-              />
-            </Reveal>
-          </div>
+        {/* ---------------------------------------------- PRODUCT LINES: pinned, scroll-driven horizontal cards */}
+        <section className="relative pt-16 sm:pt-24" aria-labelledby="cat-title">
+          <ProductLines
+            heading={<SectionHeading id="cat-title" dark eyebrow={L(home.categories.eyebrow)} title={L(home.categories.title)} />}
+            items={CATEGORIES.map((c) => ({
+              id: c,
+              title: L(categoryLabels[c]),
+              body: L(home.categories.items[c].body),
+              image: home.categories.items[c].image,
+              href: categoryHref[c],
+            }))}
+            labels={{ region: stripMarks(L(home.categories.title)), explore: t("cta.learnMore"), quote: t("cta.quote") }}
+          />
         </section>
 
         {/* ---------------------------------------------- AFTER-SALES: warranty + service band */}
