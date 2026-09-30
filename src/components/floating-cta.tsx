@@ -29,7 +29,7 @@ export function FloatingCta() {
           target="_blank"
           rel="noopener noreferrer"
           onClick={() => trackEvent("whatsapp_click", { location: "sticky_mobile" })}
-          className="flex h-12 items-center justify-center gap-2 rounded-full bg-[#0B7038] font-bold text-white"
+          className="flex h-12 items-center justify-center gap-2 rounded-full bg-[#0B7038] font-bold text-[#fff]"
         >
           <WhatsAppIcon className="size-5" />
           {t("whatsapp")}
@@ -51,7 +51,7 @@ export function FloatingCta() {
           rel="noopener noreferrer"
           aria-label={t("whatsappUs")}
           onClick={() => trackEvent("whatsapp_click", { location: "sticky_desktop" })}
-          className="group relative grid size-14 place-items-center rounded-full bg-[#0B7038] text-white shadow-xl transition hover:-translate-y-0.5"
+          className="group relative grid size-14 place-items-center rounded-full bg-[#0B7038] text-[#fff] shadow-xl transition hover:-translate-y-0.5"
         >
           <span className="absolute inset-0 animate-ping rounded-full bg-[#25D366]/40 [animation-iteration-count:3]" aria-hidden />
           <WhatsAppIcon className="relative size-7" />

@@ -266,7 +266,7 @@ export function HeroAssembly({ words, strings }: { words: string[]; strings: { s
               <Assembled progress={progress} still={still} />
               {!still && PARTS.map((p, i) => <Callout key={p.id} part={p} index={i} progress={progress} locale={locale} />)}
               {!still && <LockFlash progress={progress} />}
-              <div className="absolute inset-x-[12%] bottom-[-2%] -z-10 h-[8%] rounded-[50%] bg-black/60 blur-2xl" aria-hidden />
+              <div className="absolute inset-x-[12%] bottom-[-2%] -z-10 h-[8%] rounded-[50%] bg-black/60 blur-2xl light:bg-black/15" aria-hidden />
             </div>
           </div>
 

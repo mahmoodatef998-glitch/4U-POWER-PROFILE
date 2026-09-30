@@ -33,7 +33,7 @@ export function CoverageMap({ locale, primary }: { locale: Locale; primary: Mark
       </title>
       <defs>
         <pattern id="dots" width="12" height="12" patternUnits="userSpaceOnUse">
-          <circle cx="1.5" cy="1.5" r="1.2" fill="rgb(255 255 255 / 0.12)" />
+          <circle cx="1.5" cy="1.5" r="1.2" fill="var(--color-white)" fillOpacity="0.12" />
         </pattern>
         <radialGradient id="glow">
           <stop offset="0" stopColor="#ffd426" stopOpacity="0.55" />
@@ -42,7 +42,7 @@ export function CoverageMap({ locale, primary }: { locale: Locale; primary: Mark
       </defs>
       <rect width={W} height={H} fill="url(#dots)" rx="24" />
       {/* equator */}
-      <line x1="0" x2={W} y1={py(0)} y2={py(0)} stroke="rgb(255 255 255 / 0.12)" strokeDasharray="4 6" />
+      <line x1="0" x2={W} y1={py(0)} y2={py(0)} stroke="var(--color-white)" strokeOpacity="0.12" strokeDasharray="4 6" />
       <circle cx={hx} cy={hy} r="70" fill="url(#glow)" />
       {codes
         .filter((c) => c !== "uae")
@@ -58,7 +58,8 @@ export function CoverageMap({ locale, primary }: { locale: Locale; primary: Mark
               key={c}
               d={`M${hx},${hy} Q${mx},${my} ${x},${y}`}
               fill="none"
-              stroke={isPrimary ? "#ffd426" : "rgb(255 255 255 / 0.35)"}
+              stroke={isPrimary ? "#ffd426" : "var(--color-white)"}
+              strokeOpacity={isPrimary ? 1 : 0.35}
               strokeWidth={isPrimary ? 2 : 1.2}
               strokeDasharray={isPrimary ? undefined : "5 5"}
             />
@@ -74,14 +75,15 @@ export function CoverageMap({ locale, primary }: { locale: Locale; primary: Mark
         return (
           <g key={c}>
             {isPrimary && <circle cx={x} cy={y} r="14" fill="#ffd426" opacity="0.18" />}
-            <circle cx={x} cy={y} r={isHub ? 8 : isPrimary ? 6 : 4.5} fill={isPrimary ? "#ffd426" : "#d4d4d8"} stroke="#0a0a0b" strokeWidth="2" />
+            <circle cx={x} cy={y} r={isHub ? 8 : isPrimary ? 6 : 4.5} fill={isPrimary ? "#ffd426" : "#d4d4d8"} stroke="var(--color-navy-950)" strokeWidth="2" />
             <text
               x={x + lab.dx}
               y={y + lab.dy}
               textAnchor={lab.anchor}
               fontSize={isPrimary ? 15 : 13}
               fontWeight={isPrimary ? 800 : 600}
-              fill={isPrimary ? "#ffffff" : "rgb(255 255 255 / 0.75)"}
+              fill="var(--color-white)"
+              fillOpacity={isPrimary ? 1 : 0.75}
               fontFamily="inherit"
             >
               {isHub ? g.city[locale] : marketNames[c][locale].replace("المملكة العربية ", "")}

@@ -2,6 +2,7 @@
 
 import * as Dialog from "@radix-ui/react-dialog";
 import { Menu, Phone, X, Globe } from "lucide-react";
+import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { Link, usePathname } from "@/i18n/navigation";
@@ -9,7 +10,7 @@ import { trackEvent } from "@/lib/analytics";
 import { company, telUrl } from "@/lib/site";
 import { cn } from "@/lib/utils";
 import { WhatsAppButton } from "./cta-buttons";
-import { LogoMark } from "./icons";
+import { ThemeToggle } from "./theme-toggle";
 
 const NAV = [
   { href: "/generators", key: "generators", top: true },
@@ -24,15 +25,16 @@ const NAV = [
   { href: "/contact", key: "contact" },
 ] as const;
 
-/** Site wordmark: bolt mark + "4U Power / Generation". Sits on the dark header/footer. */
+/** Site wordmark: the 4U gear mark (white gear on the night theme, black on light) + "4U Power / Generation". */
 export function Brand({ className }: { className?: string }) {
   const locale = useLocale();
   return (
     <span className={cn("flex items-center gap-2.5", className)}>
-      <LogoMark className="size-9 shrink-0" />
+      <Image src="/brand/logo-mark-dark.png" alt="" width={275} height={375} className="h-10 w-auto shrink-0 light:hidden" priority />
+      <Image src="/brand/logo-mark-light.png" alt="" width={275} height={375} className="hidden h-10 w-auto shrink-0 light:block" priority />
       <span className="leading-none">
         <span className="block text-[1.05rem] font-extrabold tracking-tight text-white">{locale === "ar" ? "فوريو باور" : "4U Power"}</span>
-        <span className="block text-[0.68rem] font-semibold uppercase tracking-[0.2em] text-amber-400 rtl:tracking-normal">
+        <span className="block text-[0.68rem] font-semibold uppercase tracking-[0.2em] text-brand-400 rtl:tracking-normal">
           {locale === "ar" ? "جينيريشن" : "Generation"}
         </span>
       </span>
@@ -116,6 +118,7 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-1 sm:gap-2">
+          <ThemeToggle />
           <LanguageSwitch className="hidden sm:inline-flex" />
           <a
             href={telUrl}

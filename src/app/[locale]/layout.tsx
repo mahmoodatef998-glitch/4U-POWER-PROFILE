@@ -42,6 +42,8 @@ export const viewport: Viewport = { themeColor: "#0a0a0b", width: "device-width"
 // Only /en and /ar exist; anything else (e.g. /favicon.ico) is a hard 404 instead of rendering with a bogus locale.
 export const dynamicParams = false;
 
+const THEME_SCRIPT = `try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t}catch(e){}`;
+
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
 }
@@ -53,7 +55,17 @@ export default async function LocaleLayout({ children, params }: { children: Rea
   const ar = locale === "ar";
 
   return (
-    <html lang={ar ? "ar" : "en"} dir={ar ? "rtl" : "ltr"} className={`${manrope.variable} ${barlow.variable} ${plexArabic.variable}`}>
+    <html
+      lang={ar ? "ar" : "en"}
+      dir={ar ? "rtl" : "ltr"}
+      data-theme="dark"
+      suppressHydrationWarning
+      className={`${manrope.variable} ${barlow.variable} ${plexArabic.variable}`}
+    >
+      <head>
+        {/* apply the saved theme before first paint (no flash) */}
+        <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
+      </head>
       <body className="min-h-screen pb-[4.5rem] md:pb-0">
         <GtmNoScript />
         <JsonLd data={organizationSchema(locale as Locale)} />
