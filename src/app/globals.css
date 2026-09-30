@@ -328,3 +328,19 @@ html[dir="rtl"] :is(h3, h4) { line-height: 1.5; }
   main { isolation: auto !important; }
   .sheet { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 }
+
+/* Always-dark stage (e.g. the product deck) regardless of the site theme */
+.stage-dark {
+  --color-white: #fff;
+  --color-navy-950: #0a0f1f;
+  --color-navy-900: #10172d;
+  --color-navy-800: #182142;
+  --color-navy-700: #243058;
+  color-scheme: dark;
+}
+:root[data-theme="light"] .stage-dark .grid-bg {
+  background-image:
+    linear-gradient(to right, rgb(255 255 255 / 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(255 255 255 / 0.05) 1px, transparent 1px);
+}
+:root[data-theme="light"] .stage-dark .opacity-60 { opacity: 0.6; }
