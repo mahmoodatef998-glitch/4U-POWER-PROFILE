@@ -85,7 +85,7 @@ export function ProductLines({ items, labels, eyebrow, title }: { items: Product
           <div aria-hidden className="grid-bg pointer-events-none absolute inset-0 [mask-image:radial-gradient(ellipse_at_center,black_30%,transparent_80%)]" />
 
           {/* headline + counter */}
-          <div className="container-x relative z-[60] flex items-start justify-between gap-6 pt-22 sm:pt-26">
+          <div className="container-x relative z-[60] flex items-start justify-between gap-6 pt-22 sm:pt-26 [@media(max-height:800px)]:sm:pt-22">
             <Heading eyebrow={eyebrow} title={title} total={labels.total} />
             <p className="font-display text-5xl leading-none font-extrabold tabular-nums text-white sm:text-7xl lg:text-8xl" dir="ltr" aria-live="polite">
               {String(active + 1).padStart(2, "0")}
@@ -139,13 +139,13 @@ export function ProductLines({ items, labels, eyebrow, title }: { items: Product
 function Heading({ eyebrow, title, total }: { eyebrow: string; title: string; total: string }) {
   return (
     <div className="min-w-0 max-w-2xl">
-      <p className="text-xs font-bold tracking-[0.3em] text-white/60 uppercase rtl:text-sm rtl:tracking-normal">{eyebrow}</p>
+      <p className="text-xs font-bold tracking-[0.3em] text-white/60 uppercase rtl:text-sm rtl:tracking-normal [@media(max-height:800px)]:hidden">{eyebrow}</p>
       <SplitText
         id="cat-title"
         text={title}
-        className="mt-3 text-2xl leading-[1.05] font-bold tracking-[-0.035em] text-white sm:text-4xl lg:text-5xl rtl:leading-tight rtl:tracking-normal"
+        className="mt-3 text-2xl leading-[1.05] font-bold tracking-[-0.035em] text-white sm:text-4xl lg:text-5xl rtl:leading-tight rtl:tracking-normal [@media(max-height:800px)]:sm:mt-0 [@media(max-height:800px)]:sm:text-3xl"
       />
-      <p className="mt-3 hidden text-xs font-bold tracking-[0.3em] text-white/60 uppercase sm:block rtl:text-sm rtl:tracking-normal">{total}</p>
+      <p className="mt-3 hidden text-xs font-bold tracking-[0.3em] text-white/60 uppercase sm:block rtl:text-sm rtl:tracking-normal [@media(max-height:800px)]:sm:hidden">{total}</p>
     </div>
   );
 }
@@ -163,7 +163,7 @@ function DeckCard({ index, pos, geo, focused, onSelect, children }: { index: num
 
   return (
     <m.div
-      className="absolute start-1/2 top-[13.5rem] h-[min(31rem,calc(100svh-23rem))] w-[min(80vw,24rem)] [translate:-50%_0] will-change-transform sm:top-[16rem] sm:h-[min(31rem,calc(100svh-22rem))] sm:w-[min(40vw,26rem)] rtl:[translate:50%_0]"
+      className="absolute start-1/2 top-[13.5rem] h-[max(24rem,min(36rem,calc(100svh-22rem)))] w-[min(82vw,25rem)] [translate:-50%_0] will-change-transform sm:top-[15rem] sm:h-[max(26rem,min(38rem,calc(100svh-20rem)))] sm:w-[min(42vw,28rem)] rtl:[translate:50%_0] [@media(max-height:800px)]:sm:top-[10.5rem] [@media(max-height:800px)]:sm:h-[max(25rem,calc(100svh-15.5rem))]"
       style={{ x, y, z, rotateY, opacity, zIndex, filter }}
       inert={!focused}
       onClick={focused ? undefined : onSelect}
@@ -182,7 +182,7 @@ function Card({ item: it, index, total, labels, focused }: { item: ProductLine; 
         focused ? "border-white/30" : "border-white/10",
       )}
     >
-      <div className="relative min-h-0 flex-1">
+      <div className="relative min-h-[10rem] flex-1">
         <Image src={it.image} alt={it.title} fill sizes="(min-width:640px) 26rem, 80vw" className="object-cover" />
         <div aria-hidden className="absolute inset-x-0 top-0 h-1.5" style={{ background: "var(--grad)" }} />
         <span className="absolute start-4 top-4 rounded-full bg-black/55 px-3 py-1 text-xs font-bold text-white backdrop-blur" dir="ltr">
