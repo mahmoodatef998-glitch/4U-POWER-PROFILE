@@ -83,7 +83,7 @@ export const atsFaq: Faq[] = [
     q: { en: "How do I size an ATS panel?", ar: "كيف أختار سعة لوحة ATS؟" },
     a: {
       en: "Match the ATS current rating to the generator's full-load current (or the incoming mains breaker, whichever is higher). At 400 V three-phase, current ≈ kVA × 1.44 — so a 250 kVA generator needs about 360 A, meaning a 400 A ATS.",
-      ar: "يجب أن تساوي سعة ATS تيار الحمل الكامل للمولد (أو قاطع التغذية الرئيسي أيهما أكبر). عند 400 فولت ثلاثي الفاز، التيار ≈ ك.ف.أ × 1.44، فالمولد 250 ك.ف.أ يحتاج حوالي 360 أمبير أي لوحة ATS بسعة 400 أمبير.",
+      ar: "يجب أن تساوي سعة ATS تيار الحمل الكامل للمولد (أو قاطع التغذية الرئيسي أيهما أكبر). عند 400 فولت ثلاثي الأطوار، التيار ≈ ك.ف.أ × 1.44، فالمولد 250 ك.ف.أ يحتاج حوالي 360 أمبير أي لوحة ATS بسعة 400 أمبير.",
     },
   },
   {
@@ -104,10 +104,10 @@ export const atsFaq: Faq[] = [
 
 export const switchgearFaq: Faq[] = [
   {
-    q: { en: "What is the difference between switchgear and an MDB?", ar: "ما الفرق بين لوحة المفاتيح ولوحة التوزيع الرئيسية؟" },
+    q: { en: "What is the difference between switchgear and an MDB?", ar: "ما الفرق بين لوحات Switchgear ولوحة التوزيع الرئيسية (MDB)؟" },
     a: {
       en: "Switchgear is the broad family of panels that switch and protect circuits. An MDB is the specific board that receives the incoming supply and distributes it to sub-boards. On larger sites the main LV switchboard and MDB are often the same assembly.",
-      ar: "لوحات المفاتيح هي العائلة الأوسع من اللوحات التي تقوم بالتوصيل والحماية، أما MDB فهي اللوحة التي تستقبل التغذية الرئيسية وتوزعها على اللوحات الفرعية. في المواقع الكبيرة غالباً ما تكون لوحة الجهد المنخفض الرئيسية وMDB نفس اللوحة.",
+      ar: "لوحات Switchgear (لوحات المفاتيح الكهربائية) هي العائلة الأوسع من اللوحات التي تقوم بالتوصيل والحماية، أما MDB فهي اللوحة التي تستقبل التغذية الرئيسية وتوزعها على اللوحات الفرعية. في المواقع الكبيرة غالباً ما تكون لوحة الجهد المنخفض الرئيسية وMDB نفس اللوحة.",
     },
   },
   {

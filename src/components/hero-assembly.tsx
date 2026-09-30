@@ -44,9 +44,9 @@ const PARTS: Part[] = [
   { id: "base-frame", x: 412, y: 873, w: 1293, h: 412, tx: 410, ty: 858, s: 1.04, win: [0, 0.1], z: 1 },
   { id: "mounts", x: 723, y: 827, w: 709, h: 109, tx: 724, ty: 900, s: 1, win: [0.02, 0.2], z: 2, hideAfter: true },
   { id: "engine", x: 738, y: 323, w: 795, h: 578, tx: 725, ty: 370, s: 1.05, win: [0.04, 0.24], z: 4, label: { en: "Diesel engine", ar: "محرك الديزل" }, anchor: [0.45, 0.45] },
-  { id: "alternator", x: 247, y: 506, w: 503, h: 403, tx: 360, ty: 568, s: 1.06, win: [0.16, 0.36], z: 5, label: { en: "Brushless alternator", ar: "الدينامو بدون فرش" }, anchor: [0.5, 0.05] },
+  { id: "alternator", x: 247, y: 506, w: 503, h: 403, tx: 360, ty: 568, s: 1.06, win: [0.16, 0.36], z: 5, label: { en: "Brushless alternator", ar: "المولّد الكهربائي بدون فرش" }, anchor: [0.5, 0.05] },
   { id: "radiator", x: 1511, y: 228, w: 476, h: 737, tx: 1478, ty: 215, s: 1.06, win: [0.28, 0.48], z: 6, label: { en: "Radiator & cooling fan", ar: "المبرد ومروحة التبريد" }, anchor: [0.2, 0.08] },
-  { id: "control-panel", x: 23, y: 410, w: 225, h: 485, tx: 120, ty: 450, s: 1.18, win: [0.4, 0.58], z: 7, label: { en: "AMF control panel", ar: "لوحة التحكم AMF" }, anchor: [0.6, 0.02] },
+  { id: "control-panel", x: 23, y: 410, w: 225, h: 485, tx: 120, ty: 450, s: 1.18, win: [0.4, 0.58], z: 7, label: { en: "AMF control panel", ar: "لوحة التحكم الآلي AMF" }, anchor: [0.6, 0.02] },
   { id: "silencer", x: 978, y: 21, w: 495, h: 310, tx: 932, ty: 59, s: 1.075, win: [0.52, 0.7], z: 8, label: { en: "Exhaust silencer", ar: "كاتم العادم" }, anchor: [0.35, 0.3] },
   { id: "air-filter", x: 534, y: 142, w: 410, h: 236, tx: 559, ty: 256, s: 1.075, win: [0.62, 0.8], z: 9, label: { en: "Air filter", ar: "فلتر الهواء" }, anchor: [0.08, 0.2] },
 ];
@@ -202,7 +202,7 @@ function BackWord({ index, word, progress }: { index: number; word: string; prog
     <m.span
       aria-hidden
       style={{ opacity, y }}
-      className="pointer-events-none absolute inset-x-0 top-[8%] -z-10 select-none text-center font-display text-[24vw] font-extrabold uppercase leading-none tracking-tight text-white/[0.025] [-webkit-text-stroke:1.5px_rgb(255_255_255/0.07)] sm:text-[19vw] rtl:font-[family-name:var(--font-arabic)] rtl:text-[17vw] rtl:tracking-normal"
+      className="pointer-events-none absolute inset-x-0 top-[8%] -z-10 select-none text-center font-display text-[24vw] font-extrabold uppercase leading-none tracking-tight text-white/[0.025] [-webkit-text-stroke:1.5px_rgb(255_255_255/0.07)] sm:text-[19vw] rtl:font-[family-name:var(--font-arabic-display)] rtl:text-[17vw] rtl:tracking-normal"
     >
       {word}
     </m.span>

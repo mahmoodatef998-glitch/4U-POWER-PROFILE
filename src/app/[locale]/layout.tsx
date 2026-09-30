@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Barlow_Condensed, IBM_Plex_Sans_Arabic, Manrope } from "next/font/google";
+import { Barlow_Condensed, IBM_Plex_Sans_Arabic, Manrope, Readex_Pro } from "next/font/google";
 import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
@@ -18,16 +18,16 @@ import type { Locale } from "@/lib/utils";
 
 const manrope = Manrope({ subsets: ["latin"], variable: "--font-manrope", display: "swap" });
 const barlow = Barlow_Condensed({ subsets: ["latin"], weight: ["800"], variable: "--font-barlow", display: "swap" });
+// Arabic type: IBM Plex Sans Arabic for reading text, Readex Pro (geometric, pairs with Manrope) for headings.
+// "swap" so first-time visitors always get the real Arabic faces; not preloaded, so English pages never download them.
 const plexArabic = IBM_Plex_Sans_Arabic({
   subsets: ["arabic"],
   weight: ["400", "600", "700"],
   variable: "--font-plex-arabic",
-  // "optional" = no late font swap, so zero layout shift on Arabic pages. First-time visitors may see the
-  // device's Arabic system font; the webfont is cached and used from the next page view.
-  display: "optional",
-  // Not preloaded: English pages must not pay for Arabic font files.
+  display: "swap",
   preload: false,
 });
+const readexArabic = Readex_Pro({ subsets: ["arabic"], weight: "variable", variable: "--font-readex", display: "swap", preload: false });
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -60,7 +60,7 @@ export default async function LocaleLayout({ children, params }: { children: Rea
       dir={ar ? "rtl" : "ltr"}
       data-theme="dark"
       suppressHydrationWarning
-      className={`${manrope.variable} ${barlow.variable} ${plexArabic.variable}`}
+      className={`${manrope.variable} ${barlow.variable} ${plexArabic.variable} ${readexArabic.variable}`}
     >
       <head>
         {/* apply the saved theme before first paint (no flash) */}

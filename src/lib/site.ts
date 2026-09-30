@@ -6,9 +6,9 @@ export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || "https://4ugenerato
 
 export const company = {
   brand: "4U Power Generation",
-  brandAr: "فوريو باور جينيريشن",
+  brandAr: "فور يو باور جينيريشن",
   legalName: "4U POWER GENERATION (FZC)",
-  legalNameAr: "فوريو باور جينيريشن (ش.م.ح)",
+  legalNameAr: "فور يو باور جينيريشن (ش.م.ح)",
   licenseNo: "23919",
   licenseAuthority: "Sharjah Airport International Free Zone (SAIF ZONE), Government of Sharjah",
   licenseAuthorityAr: "المنطقة الحرة لمطار الشارقة الدولي (سيف زون)، حكومة الشارقة",

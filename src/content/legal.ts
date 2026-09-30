@@ -8,7 +8,7 @@ export const privacy: LegalDoc = {
   updated: "2026-09-29",
   intro: {
     en: "This policy explains how 4U POWER GENERATION (FZC), SAIF Zone Licence No. 23919 (\"4U\", \"we\"), handles personal data collected through this website. We process data in line with the UAE Federal Decree-Law No. 45 of 2021 on the Protection of Personal Data.",
-    ar: "توضح هذه السياسة كيف تتعامل فوريو باور جينيريشن (ش.م.ح)، رخصة سيف زون رقم 23919 (\"فوريو\" أو \"نحن\") مع البيانات الشخصية التي تُجمع عبر هذا الموقع. نعالج البيانات وفق المرسوم بقانون اتحادي رقم 45 لسنة 2021 بشأن حماية البيانات الشخصية في دولة الإمارات.",
+    ar: "توضح هذه السياسة كيف تتعامل فور يو باور جينيريشن (ش.م.ح)، رخصة سيف زون رقم 23919 (\"فور يو\" أو \"نحن\") مع البيانات الشخصية التي تُجمع عبر هذا الموقع. نعالج البيانات وفق المرسوم بقانون اتحادي رقم 45 لسنة 2021 بشأن حماية البيانات الشخصية في دولة الإمارات.",
   },
   sections: [
     {
@@ -29,7 +29,7 @@ export const privacy: LegalDoc = {
       title: { en: "3. Where it is stored", ar: "3. أين تُخزن" },
       body: {
         en: "Form submissions are stored in a secured database hosted by Supabase and the website is hosted by Vercel; both may process data outside the UAE under appropriate safeguards. Access is limited to authorised 4U staff.",
-        ar: "تُخزن بيانات النماذج في قاعدة بيانات آمنة لدى Supabase، ويُستضاف الموقع لدى Vercel، وقد تتم المعالجة خارج دولة الإمارات مع ضمانات مناسبة. ويقتصر الوصول على موظفي فوريو المصرح لهم.",
+        ar: "تُخزن بيانات النماذج في قاعدة بيانات آمنة لدى Supabase، ويُستضاف الموقع لدى Vercel، وقد تتم المعالجة خارج دولة الإمارات مع ضمانات مناسبة. ويقتصر الوصول على موظفي فور يو المصرح لهم.",
       },
     },
     {
@@ -57,7 +57,7 @@ export const privacy: LegalDoc = {
       title: { en: "7. Contact", ar: "7. التواصل" },
       body: {
         en: "4U POWER GENERATION (FZC), 600 M² Warehouse A2-020, SAIF Zone, P.O. Box 513810, Sharjah, United Arab Emirates.",
-        ar: "فوريو باور جينيريشن (ش.م.ح)، مستودع A2-020 (600 م²)، المنطقة الحرة لمطار الشارقة الدولي، ص.ب 513810، الشارقة، الإمارات العربية المتحدة.",
+        ar: "فور يو باور جينيريشن (ش.م.ح)، مستودع A2-020 (600 م²)، المنطقة الحرة لمطار الشارقة الدولي، ص.ب 513810، الشارقة، الإمارات العربية المتحدة.",
       },
     },
   ],
@@ -68,7 +68,7 @@ export const terms: LegalDoc = {
   updated: "2026-09-29",
   intro: {
     en: "These terms govern your use of the website operated by 4U POWER GENERATION (FZC), SAIF Zone Licence No. 23919. By using the site you accept them.",
-    ar: "تحكم هذه الشروط استخدامك للموقع الذي تديره فوريو باور جينيريشن (ش.م.ح)، رخصة سيف زون رقم 23919، وباستخدامك للموقع فإنك توافق عليها.",
+    ar: "تحكم هذه الشروط استخدامك للموقع الذي تديره فور يو باور جينيريشن (ش.م.ح)، رخصة سيف زون رقم 23919، وباستخدامك للموقع فإنك توافق عليها.",
   },
   sections: [
     {
@@ -82,7 +82,7 @@ export const terms: LegalDoc = {
       title: { en: "2. kVA calculator", ar: "2. حاسبة القدرة" },
       body: {
         en: "The calculator provides an estimate only. It does not replace a site survey or an engineer's load study. 4U accepts no liability for equipment selected solely on the basis of calculator output.",
-        ar: "تقدم الحاسبة تقديراً فقط ولا تغني عن المعاينة الميدانية أو دراسة الأحمال من قبل مهندس. لا تتحمل فوريو أي مسؤولية عن معدات يتم اختيارها بناءً على نتيجة الحاسبة وحدها.",
+        ar: "تقدم الحاسبة تقديراً فقط ولا تغني عن المعاينة الميدانية أو دراسة الأحمال من قبل مهندس. لا تتحمل فور يو أي مسؤولية عن معدات يتم اختيارها بناءً على نتيجة الحاسبة وحدها.",
       },
     },
     {
@@ -103,7 +103,7 @@ export const terms: LegalDoc = {
       title: { en: "5. Liability", ar: "5. المسؤولية" },
       body: {
         en: "To the extent permitted by law, 4U is not liable for indirect or consequential loss arising from use of this website.",
-        ar: "في الحدود التي يسمح بها القانون، لا تتحمل فوريو المسؤولية عن أي خسائر غير مباشرة أو تبعية ناتجة عن استخدام هذا الموقع.",
+        ar: "في الحدود التي يسمح بها القانون، لا تتحمل فور يو المسؤولية عن أي خسائر غير مباشرة أو تبعية ناتجة عن استخدام هذا الموقع.",
       },
     },
     {

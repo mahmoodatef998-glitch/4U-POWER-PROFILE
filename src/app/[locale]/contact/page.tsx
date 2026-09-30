@@ -51,7 +51,7 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
           { name: t("nav.contact"), path: "/contact" },
         ]}
         eyebrow={ar ? "تواصل معنا" : "Get in touch"}
-        title={ar ? "اتصل بفوريو باور جينيريشن — سيف زون، الشارقة" : "Contact 4U Power Generation — SAIF Zone, Sharjah"}
+        title={ar ? "اتصل بفور يو باور جينيريشن — سيف زون، الشارقة" : "Contact 4U Power Generation — SAIF Zone, Sharjah"}
         intro={
           ar
             ? "أسرع طريقة للحصول على سعر هي الواتساب. نرد عادةً خلال ساعة عمل، وخلال نفس اليوم كحد أقصى."
@@ -97,7 +97,7 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
             </section>
             <div className="overflow-hidden rounded-3xl border border-line bg-navy-900">
               <iframe
-                title={ar ? "خريطة موقع فوريو باور جينيريشن في سيف زون الشارقة" : "Map: 4U Power Generation, SAIF Zone, Sharjah"}
+                title={ar ? "خريطة موقع فور يو باور جينيريشن في سيف زون الشارقة" : "Map: 4U Power Generation, SAIF Zone, Sharjah"}
                 src={mapSrc}
                 className="aspect-[4/3] w-full"
                 loading="lazy"

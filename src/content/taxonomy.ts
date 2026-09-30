@@ -4,7 +4,7 @@ import type { L10n } from "@/lib/utils";
 export const categoryLabels: Record<Category, L10n> = {
   generator: { en: "Generators", ar: "المولدات" },
   ats_panel: { en: "ATS Panels", ar: "لوحات ATS" },
-  switchgear: { en: "Switchgear", ar: "لوحات المفاتيح" },
+  switchgear: { en: "Switchgear", ar: "لوحات الجهد المنخفض" },
   mdb: { en: "MDB", ar: "لوحات التوزيع MDB" },
   sync_panel: { en: "Synchronizing Panels", ar: "لوحات التزامن" },
 };

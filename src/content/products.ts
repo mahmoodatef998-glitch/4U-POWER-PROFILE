@@ -15,7 +15,7 @@ const s = (label_en: string, label_ar: string, value_en: string, value_ar = valu
 const DATASHEET = "/datasheets/4u-datasheet-placeholder.pdf";
 
 const genCommon = (voltage = "400/230 V, 3-phase, 50 Hz (60 Hz on request)"): SpecRow[] => [
-  s("Output voltage", "جهد الخرج", voltage, "400/230 فولت، 3 فاز، 50 هرتز (60 هرتز عند الطلب)"),
+  s("Output voltage", "جهد الخرج", voltage, "400/230 فولت، 3 أطوار، 50 هرتز (60 هرتز عند الطلب)"),
   s("Enclosure", "الهيكل", "Open frame or sound-attenuated canopy", "إطار مفتوح أو كابينة عازلة للصوت"),
   s("Controller", "وحدة التحكم", "Deep Sea / ComAp auto-start (AMF)", "Deep Sea / ComAp تشغيل تلقائي (AMF)"),
   s("Ambient rating", "ظروف التشغيل", "Configured for 50 °C GCC ambient", "مهيأ لحرارة الخليج حتى 50 °م"),
@@ -132,7 +132,7 @@ export const products: Product[] = [
     description_en:
       "Ultra-quiet Kubota-powered sets for villas, clinics, retail units and events where noise matters. Compact footprint, single or three-phase output.",
     description_ar:
-      "مولدات هادئة جداً بمحركات كوبوتا للفلل والعيادات والمحلات والفعاليات حيث يهم مستوى الضوضاء. حجم صغير وخرج أحادي أو ثلاثي الفاز.",
+      "مولدات هادئة جداً بمحركات كوبوتا للفلل والعيادات والمحلات والفعاليات حيث يهم مستوى الضوضاء. حجم صغير وخرج أحادي أو ثلاثي الأطوار.",
     specs: [
       s("Power range", "نطاق القدرة", "10 – 40 kVA", "10 – 40 ك.ف.أ"),
       s("Engine", "المحرك", "Kubota D / V series, water-cooled", "كوبوتا فئة D / V، تبريد بالماء"),

@@ -6,7 +6,7 @@ export const newsPart1: NewsPost[] = [
     title_en: "How to Choose the Right kVA Generator for Your Site",
     title_ar: "كيف تختار مولد الكهرباء بالقدرة المناسبة (ك.ف.أ) لموقعك",
     meta_title_en: "How to Choose the Right kVA Generator Size | 4U Power UAE",
-    meta_title_ar: "كيف تختار حجم المولد المناسب بالكيلو فولت أمبير | فوريو باور",
+    meta_title_ar: "كيف تختار حجم المولد المناسب بالكيلو فولت أمبير | فور يو باور",
     excerpt_en:
       "Too small and it trips when the chiller starts; too big and you pay for fuel and wet-stacking. The step-by-step kVA sizing method our engineers use.",
     excerpt_ar:
@@ -66,10 +66,10 @@ Our free [kVA calculator](/en/calculator) runs through these steps for you and s
 
 تجوّل في الموقع واكتب كل حمل يجب أن يستمر أثناء انقطاع الكهرباء: التكييف والمصاعد والمضخات والإنارة وأجهزة الخوادم وغرف التبريد وماكينات الإنتاج. لكل حمل سجّل **القدرة التشغيلية بالكيلوواط** من لوحة البيانات، وهل هو **محرك** أم لا.
 
-إذا كنت تعرف التيار فقط يمكنك التحويل. لتغذية ثلاثية الفاز 400 فولت:
+إذا كنت تعرف التيار فقط يمكنك التحويل. لتغذية ثلاثية الأطوار 400 فولت:
 
 - الكيلوواط ≈ 1.732 × 400 × الأمبير × معامل القدرة ÷ 1000
-- كقاعدة سريعة: كل 1 أمبير لكل فاز على 400 فولت ≈ 0.69 ك.ف.أ
+- كقاعدة سريعة: كل 1 أمبير لكل طور على 400 فولت ≈ 0.69 ك.ف.أ
 
 ## الخطوة 2: حوّل الكيلوواط إلى كيلو فولت أمبير
 
@@ -112,7 +112,7 @@ Our free [kVA calculator](/en/calculator) runs through these steps for you and s
     title_en: "ATS Panels Explained: Why Every Generator Needs One",
     title_ar: "شرح لوحات ATS: لماذا يحتاج كل مولد إلى لوحة تحويل أوتوماتيكي",
     meta_title_en: "ATS Panels Explained: Why Every Generator Needs One | 4U",
-    meta_title_ar: "شرح لوحات ATS ولماذا يحتاجها كل مولد | فوريو باور",
+    meta_title_ar: "شرح لوحات ATS ولماذا يحتاجها كل مولد | فور يو باور",
     excerpt_en:
       "What an automatic transfer switch does, how to size an ATS panel for your generator, and the installation mistakes we see most often across the UAE.",
     excerpt_ar:
@@ -184,7 +184,7 @@ Browse our [ATS panel range](/en/ats-panels) from 63 A to 4000 A, or use the [kV
 
 ## كيف تختار سعة لوحة ATS؟
 
-يجب أن تساوي سعة اللوحة **تيار الحمل الكامل للمولد**، أو قاطع التغذية الرئيسي إن كان أكبر. على 400 فولت ثلاثي الفاز:
+يجب أن تساوي سعة اللوحة **تيار الحمل الكامل للمولد**، أو قاطع التغذية الرئيسي إن كان أكبر. على 400 فولت ثلاثي الأطوار:
 
 **التيار (أمبير) ≈ ك.ف.أ × 1.443**
 
@@ -192,7 +192,7 @@ Browse our [ATS panel range](/en/ats-panels) from 63 A to 4000 A, or use the [kV
 
 ## ثلاثية أم رباعية الأقطاب؟
 
-لوحة **ATS رباعية الأقطاب** تفصل خط التعادل مع الفازات. ويوصى بها عندما يكون تعادل المولد مؤرضاً بشكل منفصل عن تعادل الشبكة، وعندما يجب أن تعمل حماية التسرب الأرضي بشكل صحيح على المصدرين. في كثير من تركيبات الإمارات تكون الرباعية هي الخيار الأكثر أماناً، ونؤكد ذلك حسب نظام التأريض لديك.
+لوحة **ATS رباعية الأقطاب** تفصل خط التعادل مع الأطوار. ويوصى بها عندما يكون تعادل المولد مؤرضاً بشكل منفصل عن تعادل الشبكة، وعندما يجب أن تعمل حماية التسرب الأرضي بشكل صحيح على المصدرين. في كثير من تركيبات الإمارات تكون الرباعية هي الخيار الأكثر أماناً، ونؤكد ذلك حسب نظام التأريض لديك.
 
 ## أخطاء نراها في المواقع
 

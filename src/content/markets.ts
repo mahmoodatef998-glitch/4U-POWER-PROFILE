@@ -48,7 +48,7 @@ export const marketPages: MarketPage[] = [
         title: { en: "Utility-ready panels", ar: "لوحات جاهزة لاعتماد الهيئات" },
         body: {
           en: "MDBs and changeover panels configured to DEWA, SEWA, ADDC/TAQA and FEWA requirements on request.",
-          ar: "لوحات توزيع وتحويل مجهزة حسب متطلبات ديوا وسيوا وأدك/طاقة واتحاد الماء والكهرباء عند الطلب.",
+          ar: "لوحات توزيع وتحويل مجهزة حسب متطلبات ديوا وسيوا وأدك واتحاد الماء والكهرباء عند الطلب.",
         },
       },
       {
@@ -90,7 +90,7 @@ export const marketPages: MarketPage[] = [
     seo: {
       title: {
         en: "Generator & ATS Panel Supplier in Saudi Arabia | 4U Power",
-        ar: "مولدات ديزل ولوحات ATS في السعودية | فوريو باور",
+        ar: "مولدات ديزل ولوحات ATS في السعودية | فور يو باور",
       },
       description: {
         en: "Diesel generators 10–2500 kVA, ATS panels and switchgear exported from Sharjah to Riyadh, Jeddah and Dammam. Perkins, Cummins & Volvo sets for KSA projects.",
@@ -228,7 +228,7 @@ export const marketPages: MarketPage[] = [
     seo: {
       title: {
         en: "Generator & ATS Panel Supplier for Qatar | Doha | 4U Power",
-        ar: "مولدات ولوحات ATS لقطر | توريد إلى الدوحة | فوريو باور",
+        ar: "مولدات ولوحات ATS لقطر | توريد إلى الدوحة | فور يو باور",
       },
       description: {
         en: "Diesel generators, hybrid telecom power and ATS panels shipped from Sharjah to Doha and projects across Qatar. Perkins, Cummins and Volvo Penta options.",
@@ -272,7 +272,7 @@ export const marketPages: MarketPage[] = [
     seo: {
       title: {
         en: "Diesel & Solar-Hybrid Generator Supplier Kenya | 4U Power",
-        ar: "مولدات ديزل وأنظمة شمسية هجينة لكينيا | فوريو باور",
+        ar: "مولدات ديزل وأنظمة شمسية هجينة لكينيا | فور يو باور",
       },
       description: {
         en: "Diesel generators and solar-hybrid power systems exported from the UAE to Nairobi and Mombasa for farms, factories, hotels and off-grid sites in Kenya.",

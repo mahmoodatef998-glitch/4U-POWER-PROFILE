@@ -10,7 +10,7 @@ export const pageSeo = {
   home: {
     title: {
       en: "Diesel Generator & ATS Panel Supplier in UAE | 4U Power",
-      ar: "مولدات ديزل ولوحات ATS في الإمارات | فوريو باور الشارقة",
+      ar: "مولدات ديزل ولوحات ATS في الإمارات | فور يو باور الشارقة",
     },
     description: {
       en: "Diesel generators 10–2500 kVA, ATS panels, switchgear & MDBs from SAIF Zone, Sharjah. Perkins, Cummins, Volvo. Fast delivery to UAE, KSA & Iraq.",
@@ -20,17 +20,17 @@ export const pageSeo = {
   about: {
     title: {
       en: "About 4U Power Generation | Generator Supplier, Sharjah",
-      ar: "من نحن | فوريو باور جينيريشن – مورد مولدات في الشارقة",
+      ar: "من نحن | فور يو باور جينيريشن – مورد مولدات في الشارقة",
     },
     description: {
       en: "4U Power Generation FZC is a SAIF Zone, Sharjah supplier of diesel generators, ATS panels and switchgear serving the UAE, Saudi Arabia and Iraq.",
-      ar: "فوريو باور جينيريشن (ش.م.ح) شركة في المنطقة الحرة لمطار الشارقة لتوريد مولدات الديزل ولوحات ATS ولوحات الكهرباء للإمارات والسعودية والعراق.",
+      ar: "فور يو باور جينيريشن (ش.م.ح) شركة في المنطقة الحرة لمطار الشارقة لتوريد مولدات الديزل ولوحات ATS ولوحات الكهرباء للإمارات والسعودية والعراق.",
     },
   },
   products: {
     title: {
       en: "Generator, ATS Panel & Switchgear Catalog | 4U Power UAE",
-      ar: "كتالوج المولدات ولوحات ATS والتوزيع | فوريو باور الإمارات",
+      ar: "كتالوج المولدات ولوحات ATS والتوزيع | فور يو باور الإمارات",
     },
     description: {
       en: "Browse diesel, gas and hybrid generators from 10 to 2500 kVA plus ATS, switchgear, MDB and sync panels. Filter by kVA, engine and fuel, then get a quote.",
@@ -40,7 +40,7 @@ export const pageSeo = {
   generators: {
     title: {
       en: "Diesel Generator Supplier UAE | 10–2500 kVA | 4U Power",
-      ar: "مولدات ديزل الشارقة والإمارات | 10–2500 ك.ف.أ | فوريو باور",
+      ar: "مولدات ديزل الشارقة والإمارات | 10–2500 ك.ف.أ | فور يو باور",
     },
     description: {
       en: "Perkins, Cummins, Kubota & Volvo diesel generators 10–2500 kVA from Sharjah. Standby & prime sets for industry, towers and sites. WhatsApp for a price.",
@@ -60,7 +60,7 @@ export const pageSeo = {
   switchgear: {
     title: {
       en: "LV Switchgear & MDB Panel Supplier UAE | 4U Power Sharjah",
-      ar: "لوحات كهرباء وتوزيع MDB في الإمارات | فوريو باور الشارقة",
+      ar: "لوحات كهرباء وتوزيع MDB في الإمارات | فور يو باور الشارقة",
     },
     description: {
       en: "Low voltage switchgear, MDB, SMDB, control and generator synchronizing panels to IEC 61439 from Sharjah. Built to your SLD for projects in the UAE and GCC.",
@@ -90,11 +90,11 @@ export const pageSeo = {
   news: {
     title: {
       en: "Generator & ATS Guides and News | 4U Power Generation UAE",
-      ar: "مقالات وأخبار المولدات ولوحات ATS | فوريو باور جينيريشن",
+      ar: "مقالات وأخبار المولدات ولوحات ATS | فور يو باور جينيريشن",
     },
     description: {
       en: "Practical guides on generator sizing, ATS panels, engine brands, switchgear maintenance and export to Saudi Arabia and Iraq from the 4U Power team.",
-      ar: "أدلة عملية حول اختيار حجم المولد ولوحات ATS وماركات المحركات وصيانة لوحات الكهرباء والتصدير للسعودية والعراق من فريق فوريو باور جينيريشن.",
+      ar: "أدلة عملية حول اختيار حجم المولد ولوحات ATS وماركات المحركات وصيانة لوحات الكهرباء والتصدير للسعودية والعراق من فريق فور يو باور جينيريشن.",
     },
   },
   markets: {
@@ -110,7 +110,7 @@ export const pageSeo = {
   contact: {
     title: {
       en: "Contact 4U Power Generation | SAIF Zone Sharjah | WhatsApp",
-      ar: "اتصل بنا | فوريو باور جينيريشن – سيف زون الشارقة | واتساب",
+      ar: "اتصل بنا | فور يو باور جينيريشن – سيف زون الشارقة | واتساب",
     },
     description: {
       en: "Call or WhatsApp +971 52 336 7694 for generator, ATS and switchgear prices. Visit Warehouse A2-020, SAIF Zone, Sharjah, UAE. Same-day replies.",
@@ -120,21 +120,21 @@ export const pageSeo = {
   privacy: {
     title: {
       en: "Privacy Policy | 4U Power Generation FZC, Sharjah, UAE",
-      ar: "سياسة الخصوصية | فوريو باور جينيريشن ش.م.ح – الشارقة",
+      ar: "سياسة الخصوصية | فور يو باور جينيريشن ش.م.ح – الشارقة",
     },
     description: {
       en: "How 4U Power Generation FZC collects, uses and protects personal data submitted through our website, quote forms, calculator and WhatsApp enquiries.",
-      ar: "كيف تجمع فوريو باور جينيريشن (ش.م.ح) البيانات الشخصية المرسلة عبر الموقع ونماذج طلب السعر والحاسبة ورسائل الواتساب وكيف تستخدمها وتحميها.",
+      ar: "كيف تجمع فور يو باور جينيريشن (ش.م.ح) البيانات الشخصية المرسلة عبر الموقع ونماذج طلب السعر والحاسبة ورسائل الواتساب وكيف تستخدمها وتحميها.",
     },
   },
   terms: {
     title: {
       en: "Terms of Use | 4U Power Generation FZC Website, Sharjah",
-      ar: "شروط الاستخدام | موقع فوريو باور جينيريشن ش.م.ح",
+      ar: "شروط الاستخدام | موقع فور يو باور جينيريشن ش.م.ح",
     },
     description: {
       en: "Terms governing use of the 4U Power Generation FZC website, product information, kVA calculator results, quotations and communications with our team.",
-      ar: "الشروط التي تحكم استخدام موقع فوريو باور جينيريشن (ش.م.ح) ومعلومات المنتجات ونتائج حاسبة القدرة وعروض الأسعار والتواصل مع فريق المبيعات لدينا.",
+      ar: "الشروط التي تحكم استخدام موقع فور يو باور جينيريشن (ش.م.ح) ومعلومات المنتجات ونتائج حاسبة القدرة وعروض الأسعار والتواصل مع فريق المبيعات لدينا.",
     },
   },
 } satisfies Record<string, PageSeo>;

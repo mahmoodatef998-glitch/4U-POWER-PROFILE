@@ -23,7 +23,7 @@ export const home = {
   /** Scroll-story chapters shown under the assembling generator (hero). */
   story: [
     {
-      kicker: { en: "01 — The heart", ar: "01 — القلب" },
+      kicker: { en: "01 — The heart", ar: "01 — قلب المولد" },
       word: { en: "ENGINE", ar: "المحرك" },
       title: { en: "Engines you can trust in 50 °C", ar: "محركات تعتمد عليها في حرارة 50 درجة" },
       body: {
@@ -38,7 +38,7 @@ export const home = {
       title: { en: "Sized for August, not the catalogue", ar: "مصمم لصيف أغسطس، لا لأرقام الكتالوج" },
       body: {
         en: "High-ambient radiators, canopies and site derating specified for UAE, Saudi and Iraqi summers — the output you are quoted is the output you get on site.",
-        ar: "مبردات للحرارة العالية وكبائن ومعامل خفض قدرة محسوب لصيف الإمارات والسعودية والعراق، فالقدرة في عرض السعر هي نفسها في الموقع.",
+        ar: "مبردات مصممة للحرارة العالية، وكبائن مناسبة، وحساب دقيق لخفض القدرة في صيف الإمارات والسعودية والعراق؛ فالقدرة المذكورة في عرض السعر هي ما تحصل عليه فعلاً في الموقع.",
       },
       stat: { en: "50 °C rated", ar: "حتى 50 °م" },
     },
@@ -72,10 +72,10 @@ export const home = {
   },
   who: {
     eyebrow: { en: "Who we are", ar: "من نحن" },
-    title: { en: "A power equipment partner **built for speed**", ar: "شريك معدات طاقة **مبني على السرعة**" },
+    title: { en: "A power equipment partner **built for speed**", ar: "شريكك في معدات الطاقة **بسرعة وموثوقية**" },
     body: {
       en: "4U Power Generation FZC is a licensed SAIF Zone company trading power generation, transmission and distribution equipment. We combine a Sharjah warehouse, multi-brand sourcing and hands-on engineering support so contractors and facility owners get the right generator and panel — quoted fast, delivered on time, documented properly.",
-      ar: "فوريو باور جينيريشن (ش.م.ح) شركة مرخصة في المنطقة الحرة لمطار الشارقة لتجارة معدات توليد ونقل وتوزيع الطاقة. نجمع بين مستودع في الشارقة وتوريد متعدد الماركات ودعم هندسي عملي، ليحصل المقاولون وأصحاب المنشآت على المولد واللوحة الصحيحة بعرض سعر سريع وتسليم في الموعد ومستندات كاملة.",
+      ar: "فور يو باور جينيريشن (ش.م.ح) شركة مرخصة في المنطقة الحرة لمطار الشارقة لتجارة معدات توليد ونقل وتوزيع الطاقة. نجمع بين مستودع في الشارقة وتوريد متعدد الماركات ودعم هندسي عملي، ليحصل المقاولون وأصحاب المنشآت على المولد واللوحة الصحيحة بعرض سعر سريع وتسليم في الموعد ومستندات كاملة.",
     },
     points: [
       { en: "Engine-agnostic advice — we quote 2–3 brands side by side", ar: "نصيحة محايدة: نقدم عروضاً لماركتين أو ثلاث جنباً إلى جنب" },
@@ -86,7 +86,7 @@ export const home = {
   },
   categories: {
     eyebrow: { en: "What we supply", ar: "ما نورده" },
-    title: { en: "**Complete** standby & prime **power packages**", ar: "**حلول متكاملة** للطاقة الاحتياطية **والأساسية**" },
+    title: { en: "**Complete** standby & prime **power packages**", ar: "**حلول متكاملة** للطاقة **الاحتياطية والأساسية**" },
     items: {
       generator: {
         body: { en: "Diesel, gas, hybrid & solar-hybrid sets, 10–2500 kVA.", ar: "مولدات ديزل وغاز وهجينة وشمسية من 10 إلى 2500 ك.ف.أ." },
@@ -111,17 +111,17 @@ export const home = {
     },
   },
   coverage: {
-    eyebrow: { en: "Where we deliver", ar: "أين نوصل" },
+    eyebrow: { en: "Where we deliver", ar: "وجهات التسليم" },
     title: { en: "From Sharjah to **six markets** — led by the **UAE, Saudi Arabia and Iraq**", ar: "من الشارقة إلى **ستة أسواق**، في مقدمتها الإمارات والسعودية والعراق" },
     body: {
       en: "Our core markets get stock availability, overland delivery and localised specifications. Qatar, Kenya and South Africa are served by sea and road freight on project basis.",
-      ar: "أسواقنا الرئيسية تحصل على توفر المخزون والشحن البري والمواصفات المحلية، بينما نخدم قطر وكينيا وجنوب أفريقيا بالشحن البحري والبري حسب المشروع.",
+      ar: "نوفّر لأسواقنا الرئيسية مخزوناً جاهزاً وشحناً برياً ومواصفات مطابقة للمتطلبات المحلية، ونخدم قطر وكينيا وجنوب أفريقيا بالشحن البحري والبري حسب كل مشروع.",
     },
     primary: { en: "Core markets", ar: "الأسواق الرئيسية" },
     secondary: { en: "Project markets", ar: "أسواق المشاريع" },
   },
   stats: [
-    { value: 2500, suffix: "", label: { en: "kVA maximum single-set rating", ar: "ك.ف.أ أقصى قدرة لمولد واحد" } },
+    { value: 2500, suffix: "", label: { en: "kVA maximum single-set rating", ar: "أقصى قدرة لمولد واحد (ك.ف.أ)" } },
     { value: 6, suffix: "", label: { en: "countries served from Sharjah", ar: "دول نخدمها من الشارقة" } },
     { value: 5, suffix: "", label: { en: "engine platforms to choose from", ar: "منصات محركات للاختيار" } },
     { value: 4000, suffix: " A", label: { en: "maximum ATS panel rating", ar: "أقصى سعة للوحة ATS (أمبير)" } },
@@ -134,7 +134,7 @@ export const home = {
     eyebrow: { en: "Guides & news", ar: "أدلة وأخبار" },
     title: { en: "**Engineering guides** from our team", ar: "**أدلة هندسية** من فريقنا" },
   },
-  faq: { eyebrow: { en: "FAQ", ar: "الأسئلة الشائعة" }, title: { en: "Generator & ATS questions, **answered**", ar: "إجابات أسئلة **المولدات ولوحات ATS**" } },
+  faq: { eyebrow: { en: "FAQ", ar: "الأسئلة الشائعة" }, title: { en: "Generator & ATS questions, **answered**", ar: "أسئلتكم عن **المولدات ولوحات ATS**" } },
   cta: {
     title: { en: "Need a generator price today?", ar: "تحتاج سعر مولد اليوم؟" },
     body: {
@@ -146,21 +146,21 @@ export const home = {
 
 /* ============================================================ ABOUT */
 export const about = {
-  h1: { en: "About 4U Power Generation FZC", ar: "عن فوريو باور جينيريشن (ش.م.ح)" },
+  h1: { en: "About 4U Power Generation FZC", ar: "عن فور يو باور جينيريشن (ش.م.ح)" },
   intro: {
     en: "A Sharjah-based supplier of diesel generators, ATS panels and switchgear — built to get reliable power to sites across the UAE, Saudi Arabia and Iraq, fast.",
-    ar: "مورد مولدات ديزل ولوحات ATS ولوحات كهرباء مقره الشارقة، هدفه إيصال طاقة موثوقة إلى المواقع في الإمارات والسعودية والعراق بسرعة.",
+    ar: "مورد مولدات ديزل ولوحات ATS ولوحات كهرباء، مقره الشارقة، يوصل طاقة موثوقة إلى المواقع في الإمارات والسعودية والعراق بسرعة.",
   },
   story: {
     title: { en: "Our story", ar: "قصتنا" },
     body: [
       {
         en: "4U Power Generation was licensed in the Sharjah Airport International Free Zone in August 2023 by a team with long experience in generators and electrical panels across the Gulf and Iraq. We saw the same problem again and again: contractors waiting weeks for a quote, generators and transfer switches bought from different suppliers that didn't match, and export documents that held equipment at the border.",
-        ar: "حصلت فوريو باور جينيريشن على ترخيصها في المنطقة الحرة لمطار الشارقة الدولي في أغسطس 2023 على يد فريق يملك خبرة طويلة في المولدات ولوحات الكهرباء في الخليج والعراق. رأينا المشكلة نفسها مراراً: مقاولون ينتظرون أسابيع للحصول على عرض سعر، ومولدات ولوحات تحويل من موردين مختلفين لا تتوافق، ومستندات تصدير تعطل المعدات على الحدود.",
+        ar: "حصلت فور يو باور جينيريشن على ترخيصها في المنطقة الحرة لمطار الشارقة الدولي في أغسطس 2023 على يد فريق يملك خبرة طويلة في المولدات ولوحات الكهرباء في الخليج والعراق. رأينا المشكلة نفسها مراراً: مقاولون ينتظرون أسابيع للحصول على عرض سعر، ومولدات ولوحات تحويل من موردين مختلفين لا تتوافق، ومستندات تصدير تعطل المعدات على الحدود.",
       },
       {
         en: "So we built 4U around three things: stock close to the airport and the Saudi border, multi-brand sourcing so we can recommend what actually fits the job, and one team that sizes the generator, the ATS and the distribution board together.",
-        ar: "لذلك بنينا فوريو باور على ثلاثة أسس: مخزون قريب من المطار والحدود السعودية، وتوريد متعدد الماركات لنوصي بما يناسب المشروع فعلاً، وفريق واحد يحدد حجم المولد ولوحة ATS ولوحة التوزيع معاً.",
+        ar: "لذلك بنينا فور يو باور على ثلاثة أسس: مخزون قريب من المطار والحدود السعودية، وتوريد متعدد الماركات لنوصي بما يناسب المشروع فعلاً، وفريق واحد يحدد حجم المولد ولوحة ATS ولوحة التوزيع معاً.",
       },
     ],
   },
@@ -189,7 +189,7 @@ export const about = {
   },
   leadership: {
     title: { en: "Leadership", ar: "الإدارة" },
-    intro: { en: "4U is owner-managed — you deal directly with the people accountable for your order.", ar: "فوريو باور تُدار من قبل ملاكها، فتتعامل مباشرة مع المسؤولين عن طلبك." },
+    intro: { en: "4U is owner-managed — you deal directly with the people accountable for your order.", ar: "يدير ملّاك فور يو باور الشركة بأنفسهم، فتتعامل مباشرة مع أصحاب القرار في طلبك." },
     role: { en: "Partner & Owner", ar: "شريك ومالك" },
   },
   why: {
@@ -205,7 +205,7 @@ export const about = {
       },
       {
         title: { en: "Honest brand advice", ar: "نصيحة صادقة في الماركات" },
-        body: { en: "We supply several engine platforms, so our recommendation follows your budget and duty — not a single dealership target.", ar: "نورد عدة منصات محركات، لذلك توصيتنا تتبع ميزانيتك ونوع التشغيل وليس هدف وكيل واحد." },
+        body: { en: "We supply several engine platforms, so our recommendation follows your budget and duty — not a single dealership target.", ar: "نورّد عدة منصات محركات، لذلك تتبع توصيتنا ميزانيتك ونوع التشغيل، لا مصلحة وكيل واحد." },
       },
       {
         title: { en: "Export-ready", ar: "جاهزون للتصدير" },
@@ -315,8 +315,8 @@ export const atsPillar: Pillar = {
     ar: "لوحات تحويل أوتوماتيكي تشغّل المولد وتنقل الحمل خلال ثوانٍ من انقطاع الكهرباء، مجهزة حسب المولد ونظام التأريض ومتطلبات الهيئات في الشارقة ودبي وأبوظبي والسعودية والعراق.",
   },
   highlights: [
-    { title: { en: "63 – 4000 A", ar: "63 – 4000 أمبير" }, body: { en: "Motorised, contactor & ACB types", ar: "مُحرّكة أو كونتاكتور أو قواطع ACB" } },
-    { title: { en: "3P / 4P", ar: "3 أو 4 أقطاب" }, body: { en: "Switched neutral where required", ar: "فصل التعادل عند الحاجة" } },
+    { title: { en: "63 – 4000 A", ar: "63 – 4000 أمبير" }, body: { en: "Motorised, contactor & ACB types", ar: "مفتاح مُحرَّك أو كونتاكتور أو قواطع ACB" } },
+    { title: { en: "3P / 4P", ar: "3 أو 4 أقطاب" }, body: { en: "Switched neutral where required", ar: "فصل خط التعادل عند الحاجة" } },
     { title: { en: "5–15 s transfer", ar: "تحويل خلال 5–15 ثانية" }, body: { en: "Adjustable timers & cool-down", ar: "مؤقتات قابلة للضبط وتبريد" } },
     { title: { en: "IP54 / IP65", ar: "IP54 / IP65" }, body: { en: "Indoor or outdoor enclosures", ar: "أغلفة داخلية أو خارجية" } },
   ],
@@ -342,14 +342,14 @@ export const atsPillar: Pillar = {
       title: { en: "Sizing an automatic transfer switch", ar: "كيف تختار سعة لوحة التحويل الأوتوماتيكي" },
       body: {
         en: "Size the ATS to the generator's full-load current, or the incoming mains breaker if larger. At 400 V three-phase, current ≈ kVA × 1.44: a 250 kVA generator needs a 400 A ATS, a 500 kVA set an 800 A panel. Our kVA calculator recommends the ATS rating automatically.",
-        ar: "اختر سعة ATS حسب تيار الحمل الكامل للمولد، أو قاطع التغذية الرئيسي إن كان أكبر. على 400 فولت ثلاثي الفاز يكون التيار ≈ ك.ف.أ × 1.44: فالمولد 250 ك.ف.أ يحتاج لوحة 400 أمبير، والمولد 500 ك.ف.أ يحتاج لوحة 800 أمبير. حاسبة القدرة لدينا تقترح سعة ATS تلقائياً.",
+        ar: "اختر سعة ATS حسب تيار الحمل الكامل للمولد، أو قاطع التغذية الرئيسي إن كان أكبر. على 400 فولت ثلاثي الأطوار يكون التيار ≈ ك.ف.أ × 1.44: فالمولد 250 ك.ف.أ يحتاج لوحة 400 أمبير، والمولد 500 ك.ف.أ يحتاج لوحة 800 أمبير. حاسبة القدرة لدينا تقترح سعة ATS تلقائياً.",
       },
     },
     {
       title: { en: "Built for UAE plant rooms and utility approval", ar: "مصممة لغرف الكهرباء في الإمارات ومتطلبات الهيئات" },
       body: {
         en: "Powder-coated IP54 enclosures (IP65 for outdoor), mechanical and electrical interlocks, clear labelling and function testing before dispatch. Panels can be configured to DEWA, SEWA, ADDC/TAQA or SEC requirements on request.",
-        ar: "أغلفة مطلية IP54 (وIP65 للخارج)، وتشابك ميكانيكي وكهربائي، وتعليم واضح، واختبار وظيفي قبل الشحن. ويمكن تجهيز اللوحات حسب متطلبات ديوا أو سيوا أو أدك/طاقة أو الشركة السعودية للكهرباء عند الطلب.",
+        ar: "أغلفة مطلية IP54 (وIP65 للخارج)، وتشابك ميكانيكي وكهربائي، وتعليم واضح، واختبار وظيفي قبل الشحن. ويمكن تجهيز اللوحات حسب متطلبات هيئة كهرباء ومياه دبي (ديوا) أو هيئة الشارقة (سيوا) أو أبوظبي للتوزيع (أدك) أو الشركة السعودية للكهرباء عند الطلب.",
       },
     },
   ],
@@ -394,7 +394,7 @@ export const switchgearPillar: Pillar = {
       title: { en: "Main distribution boards (MDB, SMDB, DB)", ar: "لوحات التوزيع الرئيسية والفرعية (MDB وSMDB وDB)" },
       body: {
         en: "MDBs from 100 A to 4000 A with tinned copper busbars, clear circuit labelling and test certificates — ready for DEWA, SEWA, ADDC/TAQA or FEWA inspection. We also supply SMDBs and final DBs so the whole distribution system comes from one source.",
-        ar: "لوحات توزيع رئيسية من 100 إلى 4000 أمبير بقضبان نحاسية مقصدرة وتعليم واضح للدوائر وشهادات اختبار، جاهزة لفحص ديوا أو سيوا أو أدك/طاقة أو اتحاد الماء والكهرباء. كما نورد اللوحات الفرعية والنهائية ليأتي نظام التوزيع بالكامل من مصدر واحد.",
+        ar: "لوحات توزيع رئيسية من 100 إلى 4000 أمبير بقضبان نحاسية مقصدرة وتعليم واضح للدوائر وشهادات اختبار، جاهزة لفحص هيئة كهرباء ومياه دبي (ديوا) أو هيئة الشارقة (سيوا) أو أبوظبي للتوزيع (أدك) أو اتحاد الماء والكهرباء. كما نورد اللوحات الفرعية والنهائية ليأتي نظام التوزيع بالكامل من مصدر واحد.",
       },
     },
     {
@@ -422,8 +422,8 @@ export const switchgearPillar: Pillar = {
       ],
     },
   ],
-  productsTitle: { en: "Switchgear, MDB & sync panel range", ar: "مجموعة لوحات الكهرباء والتوزيع والتزامن" },
-  waTopic: { en: "switchgear / MDB panels", ar: "لوحات كهرباء / لوحات توزيع" },
+  productsTitle: { en: "Switchgear, MDB & sync panel range", ar: "مجموعة لوحات الجهد المنخفض والتوزيع والتزامن" },
+  waTopic: { en: "switchgear / MDB panels", ar: "لوحات جهد منخفض / لوحات توزيع" },
   cta: {
     title: { en: "Send your SLD for a switchgear quotation", ar: "أرسل المخطط أحادي الخط للحصول على عرض سعر" },
     body: {

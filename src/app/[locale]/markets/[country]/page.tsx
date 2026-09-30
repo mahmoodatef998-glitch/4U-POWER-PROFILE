@@ -72,7 +72,7 @@ export default async function MarketPage({ params }: Props) {
 
       <section className="section bg-navy-900">
         <div className="container-x">
-          <SectionHeading title={ar ? `لماذا فوريو باور في ${name}` : `Why 4U Power for ${name}`} />
+          <SectionHeading title={ar ? `لماذا فور يو باور في ${name}` : `Why 4U Power for ${name}`} />
           <ul className="mt-10 grid gap-6 md:grid-cols-3">
             {m.points.map((pt) => (
               <li key={pt.title.en} className="rounded-2xl border border-line bg-surface p-6">

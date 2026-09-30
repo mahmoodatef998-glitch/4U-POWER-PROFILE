@@ -184,9 +184,9 @@ Send us photos of your existing panels and nameplates on WhatsApp and we will ad
   {
     slug: "export-markets-uae-ksa-iraq",
     title_en: "4U Power Generation's Export Markets: UAE, KSA & Iraq",
-    title_ar: "أسواق التصدير لدى فوريو باور جينيريشن: الإمارات والسعودية والعراق",
+    title_ar: "أسواق التصدير لدى فور يو باور جينيريشن: الإمارات والسعودية والعراق",
     meta_title_en: "Generator Export from UAE to Saudi Arabia & Iraq | 4U Power",
-    meta_title_ar: "تصدير المولدات من الإمارات إلى السعودية والعراق | فوريو باور",
+    meta_title_ar: "تصدير المولدات من الإمارات إلى السعودية والعراق | فور يو باور",
     excerpt_en:
       "Why we are based in SAIF Zone, Sharjah, and how we deliver generators and panels to the UAE, Saudi Arabia and Iraq — plus Qatar, Kenya and South Africa.",
     excerpt_ar:
@@ -228,7 +228,7 @@ In Iraq, generators often carry sites for many hours every day. We focus on prim
 - WhatsApp updates from order to dispatch
 
 Planning a project in one of these markets? Send us the kVA or load list on WhatsApp — or browse [all markets we serve](/en/markets).`,
-    body_ar: `حصلت فوريو باور جينيريشن (ش.م.ح) على ترخيصها في المنطقة الحرة لمطار الشارقة في أغسطس 2023 بفكرة واضحة: الإمارات هي أفضل مكان في المنطقة لتخزين معدات الطاقة وتجهيزها وشحنها بسرعة. هكذا نخدم كل سوق من أسواقنا الرئيسية.
+    body_ar: `حصلت فور يو باور جينيريشن (ش.م.ح) على ترخيصها في المنطقة الحرة لمطار الشارقة في أغسطس 2023 بفكرة واضحة: الإمارات هي أفضل مكان في المنطقة لتخزين معدات الطاقة وتجهيزها وشحنها بسرعة. هكذا نخدم كل سوق من أسواقنا الرئيسية.
 
 ## لماذا المنطقة الحرة لمطار الشارقة؟
 

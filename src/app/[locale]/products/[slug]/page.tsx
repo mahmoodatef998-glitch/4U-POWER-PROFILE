@@ -28,7 +28,7 @@ type Props = { params: Promise<{ locale: Locale; slug: string }> };
 
 function metaFor(p: NonNullable<Awaited<ReturnType<typeof getProduct>>>, locale: Locale) {
   const name = locale === "ar" ? p.name_ar : p.name_en;
-  const suffix = locale === "ar" ? " | فوريو باور الإمارات" : " | 4U Power UAE";
+  const suffix = locale === "ar" ? " | فور يو باور الإمارات" : " | 4U Power UAE";
   const title = (name + suffix).length <= 62 ? name + suffix : name;
   const raw = locale === "ar" ? p.description_ar : p.description_en;
   const description = raw.length > 155 ? `${raw.slice(0, 152).replace(/\s+\S*$/, "")}…` : raw;

@@ -61,7 +61,7 @@ export function SplitText({
         {words.map((w, i) => (
           <Fragment key={i}>
             {i > 0 && " "}
-            <span className={cn("inline-block overflow-hidden pb-[0.12em] -mb-[0.12em] align-top", tone(w.em))}>
+            <span className={cn("inline-block overflow-hidden pb-[0.12em] -mb-[0.12em] align-top rtl:py-[0.22em] rtl:-my-[0.22em]", tone(w.em))}>
               <m.span
                 className="inline-block will-change-transform"
                 initial={{ y: "110%" }}

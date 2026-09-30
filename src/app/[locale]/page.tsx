@@ -78,7 +78,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
                   <p className="mt-6 max-w-xl text-base leading-7 text-white/60 sm:text-lg">{L(home.hero.lead)}</p>
                   <div className="mt-8 flex flex-col items-start gap-3">
                     <div className="flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] p-1.5 ps-5 backdrop-blur">
-                      <span className="text-sm text-white/70 sm:text-base">{locale === "ar" ? "تحتاج سعر اليوم؟" : "Need a price today?"}</span>
+                      <span className="text-sm text-white/70 sm:text-base">{locale === "ar" ? "تحتاج عرض سعر اليوم؟" : "Need a price today?"}</span>
                       <Magnetic>
                         <WhatsAppButton location="hero" />
                       </Magnetic>
@@ -108,7 +108,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
                     <span className="inline-flex h-1.5 w-12 rounded-full" style={{ background: "var(--grad)" }} aria-hidden />
                     <span className="text-xs font-bold uppercase tracking-[0.2em] text-white/55 rtl:text-sm rtl:tracking-normal">{L(c.kicker)}</span>
                   </div>
-                  <p className="grad-text relative mt-8 font-display text-4xl font-extrabold uppercase sm:text-5xl rtl:font-[family-name:var(--font-arabic)] rtl:text-3xl rtl:sm:text-4xl">{L(c.stat)}</p>
+                  <p className="grad-text relative mt-8 font-display text-4xl font-extrabold uppercase sm:text-5xl rtl:font-[family-name:var(--font-arabic-display)] rtl:text-3xl rtl:sm:text-4xl">{L(c.stat)}</p>
                   <h2 className="relative mt-4 max-w-md text-2xl leading-tight text-white sm:text-3xl rtl:text-xl rtl:sm:text-2xl">{L(c.title)}</h2>
                   <p className="relative mt-4 max-w-lg text-sm leading-7 text-white/60 sm:text-base">{L(c.body)}</p>
                 </article>
@@ -134,7 +134,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
           <div className="container-x relative pt-[9vw] text-center">
             <h2 id="built-title" className="flex flex-col items-center">
               <span className="text-xl font-medium tracking-normal text-white/60 sm:text-3xl">
-                {locale === "ar" ? "طاقة احتياطية وأساسية مصممة لـ" : "Standby & prime power built for"}
+                {locale === "ar" ? "طاقة احتياطية وأساسية مصمَّمة من أجل" : "Standby & prime power built for"}
               </span>
               <RotatingWords
                 className="mt-3 text-5xl text-white sm:text-7xl lg:text-8xl rtl:text-4xl rtl:sm:text-6xl rtl:lg:text-7xl"
@@ -190,7 +190,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
                   ))}
                 </ul>
                 <Link href="/about" className="group mt-8 inline-flex items-center gap-2 font-semibold text-white">
-                  {locale === "ar" ? "تعرّف على فوريو باور جينيريشن" : "About 4U Power Generation"}
+                  {locale === "ar" ? "تعرّف على فور يو باور جينيريشن" : "About 4U Power Generation"}
                   <ArrowRight className="flip-rtl size-4 transition-transform duration-300 group-hover:translate-x-1 rtl:group-hover:-translate-x-1" aria-hidden />
                 </Link>
               </Reveal>

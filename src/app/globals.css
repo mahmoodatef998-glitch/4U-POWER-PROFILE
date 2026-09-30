@@ -69,7 +69,8 @@
 
   --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
   --font-display: var(--font-barlow), var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
-  --font-arabic: var(--font-plex-arabic), var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  --font-arabic: var(--font-plex-arabic), var(--font-manrope), "Segoe UI", Tahoma, sans-serif;
+  --font-arabic-display: var(--font-readex), var(--font-plex-arabic), "Segoe UI", Tahoma, sans-serif;
 
   --animate-float: float 7s ease-in-out infinite;
   @keyframes float {
@@ -148,10 +149,21 @@
   }
   html[dir="rtl"] body { font-family: var(--font-arabic); }
   h1, h2, h3, h4 { @apply font-extrabold tracking-tight text-balance; }
+  p { text-wrap: pretty; }
+  /* numbers line up in tables, counters and spec rows */
+  :is(table, dl, .tabular-nums) { font-variant-numeric: tabular-nums; }
   /* Condensed industrial display face for the big headings (matches the POWER wordmark) */
   h1, h2 { font-family: var(--font-sans); font-weight: 700; letter-spacing: -0.035em; line-height: 1.04; }
-  html[dir="rtl"] :is(h1, h2) { font-family: var(--font-arabic); text-transform: none; line-height: 1.25; font-weight: 700; }
-  html[dir="rtl"] :is(h1, h2, h3, h4) { @apply tracking-normal; letter-spacing: 0; }
+  /* ---- Arabic typography ----
+   * Arabic is a connected script: any letter-spacing breaks the joins, so tracking is zeroed everywhere.
+   * It also needs more leading (tall ascenders, dots and marks) and reads best a touch larger than Latin. */
+  html[dir="rtl"] body { font-size: 1.0625rem; line-height: 1.85; }
+  html[dir="rtl"] :where(*:not([dir="ltr"], [dir="ltr"] *)) { letter-spacing: 0 !important; }
+  html[dir="rtl"] :is(h1, h2, h3, h4) { font-family: var(--font-arabic-display); font-weight: 600; line-height: 1.35; }
+  html[dir="rtl"] :is(h1, h2) { line-height: 1.3; }
+  html[dir="rtl"] :is(p, li, dd) { line-height: 1.9; }
+  /* digits and latin runs inside Arabic (kVA, ATS, model names) keep the Latin face */
+  html[dir="rtl"] [dir="ltr"] { font-family: var(--font-sans); }
   :focus-visible { @apply outline-2 outline-offset-2 outline-brand-500; }
   ::selection { @apply bg-brand-400 text-ink-950; }
   @media (prefers-reduced-motion: reduce) {
@@ -301,3 +313,7 @@
     background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), rgb(255 190 30 / 0.12), transparent 45%);
   }
 }
+
+/* Arabic leading must win over the line-height baked into Tailwind's text-* size utilities (unlayered) */
+html[dir="rtl"] :is(h1, h2) { line-height: 1.4; }
+html[dir="rtl"] :is(h3, h4) { line-height: 1.5; }
