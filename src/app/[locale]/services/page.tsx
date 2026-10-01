@@ -3,12 +3,13 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { CtaBanner } from "@/components/cta-banner";
 import { CallButton, WhatsAppButton } from "@/components/cta-buttons";
 import { FaqBlock } from "@/components/faq-block";
+import { JsonLd } from "@/components/json-ld";
 import { LeadForm } from "@/components/lead-form";
 import { Reveal } from "@/components/motion";
 import { PageHero } from "@/components/page-hero";
 import { SectionHeading } from "@/components/section-heading";
 import { services, servicesFaq, warranty, type Service } from "@/content/services";
-import { buildMetadata } from "@/lib/seo";
+import { buildMetadata, localeUrl, ORG_ID } from "@/lib/seo";
 import { pick, type Locale } from "@/lib/utils";
 
 export const revalidate = 86400;
@@ -43,6 +44,21 @@ export default async function ServicesPage({ params }: { params: Promise<{ local
 
   return (
     <>
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "Service",
+          name: ar ? "صيانة وخدمات المولدات واللوحات الكهربائية" : "Generator & switchgear maintenance services",
+          provider: { "@id": ORG_ID },
+          areaServed: ["AE", "SA", "IQ"].map((c) => ({ "@type": "Country", name: c })),
+          url: localeUrl(locale, "/services"),
+          hasOfferCatalog: {
+            "@type": "OfferCatalog",
+            name: ar ? "الخدمات" : "Services",
+            itemListElement: services.map((s) => ({ "@type": "Offer", itemOffered: { "@type": "Service", name: pick(s.title, locale), description: pick(s.body, locale) } })),
+          },
+        }}
+      />
       <PageHero
         locale={locale}
         crumbs={[

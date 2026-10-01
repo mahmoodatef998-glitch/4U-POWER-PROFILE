@@ -1,13 +1,14 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Suspense } from "react";
 import { CtaBanner } from "@/components/cta-banner";
+import { JsonLd } from "@/components/json-ld";
 import { PageHero } from "@/components/page-hero";
 import { ProductCard } from "@/components/product-card";
 import { ProductCatalog } from "@/components/product-catalog";
 import { home } from "@/content/pages";
 import { pageSeo } from "@/content/seo";
 import { getProducts } from "@/lib/data";
-import { buildMetadata } from "@/lib/seo";
+import { buildMetadata, localeUrl } from "@/lib/seo";
 import { pick, type Locale } from "@/lib/utils";
 
 export const revalidate = 3600;
@@ -26,6 +27,15 @@ export default async function ProductsPage({ params }: { params: Promise<{ local
 
   return (
     <>
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "ItemList",
+          name: ar ? "كتالوج منتجات فور يو باور" : "4U Power product catalog",
+          numberOfItems: products.length,
+          itemListElement: products.map((p, i) => ({ "@type": "ListItem", position: i + 1, url: localeUrl(locale, `/products/${p.slug}`), name: ar ? p.name_ar : p.name_en })),
+        }}
+      />
       <PageHero
         locale={locale}
         crumbs={[

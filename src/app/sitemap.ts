@@ -1,5 +1,7 @@
 import type { MetadataRoute } from "next";
+import { GENERATOR_SIZES, sizeSlug } from "@/content/generator-sizes";
 import { industries } from "@/content/industries";
+import { cities } from "@/content/locations";
 import { marketPages } from "@/content/markets";
 import { getNews, getProducts } from "@/lib/data";
 import { localeUrl } from "@/lib/seo";
@@ -12,6 +14,8 @@ const STATIC: { path: string; priority: number; freq: MetadataRoute.Sitemap[numb
   { path: "/ats-panels", priority: 0.95, freq: "weekly" },
   { path: "/switchgear", priority: 0.95, freq: "weekly" },
   { path: "/products", priority: 0.9, freq: "weekly" },
+  { path: "/generators/sizes", priority: 0.85, freq: "monthly" },
+  { path: "/locations", priority: 0.8, freq: "monthly" },
   { path: "/calculator", priority: 0.85, freq: "monthly" },
   { path: "/industries", priority: 0.8, freq: "monthly" },
   { path: "/services", priority: 0.8, freq: "monthly" },
@@ -39,6 +43,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [products, news] = await Promise.all([getProducts(), getNews()]);
   return [
     ...STATIC.flatMap((s) => entry(s.path, s.priority, s.freq)),
+    ...GENERATOR_SIZES.flatMap((k) => entry(`/generators/${sizeSlug(k)}`, 0.8, "monthly")),
+    ...cities.flatMap((c) => entry(`/locations/${c.slug}`, 0.8, "monthly")),
     ...industries.flatMap((i) => entry(`/industries/${i.slug}`, 0.75, "monthly")),
     ...marketPages.flatMap((m) => entry(`/markets/${m.code}`, m.tier === "primary" ? 0.8 : 0.6, "monthly")),
     ...products.flatMap((p) => entry(`/products/${p.slug}`, 0.75, "monthly")),

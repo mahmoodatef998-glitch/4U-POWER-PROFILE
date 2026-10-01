@@ -1,10 +1,14 @@
 import { MapPin, Phone, Mail, BadgeCheck } from "lucide-react";
 import { getLocale, getTranslations } from "next-intl/server";
+import { sizeSlug } from "@/content/generator-sizes";
+import { cities } from "@/content/locations";
 import { Link } from "@/i18n/navigation";
 import { company, telUrl } from "@/lib/site";
-import type { Locale } from "@/lib/utils";
+import { pick, type Locale } from "@/lib/utils";
 import { Brand } from "./header";
 import { SocialLinks } from "./social-links";
+
+const POPULAR = [20, 30, 50, 100, 150, 200, 250, 300, 500, 750, 1000, 1500, 2000];
 
 export async function Footer() {
   const locale = (await getLocale()) as Locale;
@@ -21,6 +25,7 @@ export async function Footer() {
         { href: "/ats-panels", label: nav("ats") },
         { href: "/switchgear", label: nav("switchgear") },
         { href: "/products", label: nav("products") },
+        { href: "/generators/sizes", label: ar ? "جدول أحجام المولدات" : "Generator size chart" },
         { href: "/calculator", label: nav("calculator") },
       ],
     },
@@ -32,6 +37,7 @@ export async function Footer() {
         { href: "/services", label: nav("services") },
         { href: "/projects", label: nav("projects") },
         { href: "/markets", label: nav("markets") },
+        { href: "/locations", label: ar ? "مناطق التوريد" : "Locations" },
         { href: "/news", label: nav("news") },
         { href: "/contact", label: nav("contact") },
       ],
@@ -84,6 +90,36 @@ export async function Footer() {
               <a href={`mailto:${company.email}`} className="hover:text-brand-400">{company.email}</a>
             </p>
           </address>
+        </div>
+      </div>
+
+      {/* crawlable link band: popular sizes + cities (internal linking for long-tail search) */}
+      <div className="border-t border-white/10">
+        <div className="container-x grid gap-6 py-8 text-sm lg:grid-cols-2">
+          <nav aria-label={ar ? "أحجام شائعة" : "Popular sizes"}>
+            <p className="font-bold text-white">{ar ? "أحجام المولدات الشائعة" : "Popular generator sizes"}</p>
+            <ul className="mt-3 flex flex-wrap gap-x-4 gap-y-2">
+              {POPULAR.map((k) => (
+                <li key={k}>
+                  <Link href={`/generators/${sizeSlug(k)}`} className="hover:text-brand-400" dir="ltr">
+                    {ar ? `${k} ك.ف.أ` : `${k} kVA`}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+          <nav aria-label={ar ? "مناطق التوريد" : "Locations"}>
+            <p className="font-bold text-white">{ar ? "مولدات للبيع في" : "Generators for sale in"}</p>
+            <ul className="mt-3 flex flex-wrap gap-x-4 gap-y-2">
+              {cities.map((c) => (
+                <li key={c.slug}>
+                  <Link href={`/locations/${c.slug}`} className="hover:text-brand-400">
+                    {pick(c.name, locale)}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
         </div>
       </div>
 

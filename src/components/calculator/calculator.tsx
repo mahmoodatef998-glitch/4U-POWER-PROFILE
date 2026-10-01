@@ -6,6 +6,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { logCalculation } from "@/app/actions/calculator";
 import { Link } from "@/i18n/navigation";
+import { GENERATOR_SIZES, sizeSlug } from "@/content/generator-sizes";
 import { engineBrandLabels } from "@/content/taxonomy";
 import { trackEvent } from "@/lib/analytics";
 import { calculate, matchAts, matchProducts, PRESETS, type CalcInput, type LoadItem, type LoadType } from "@/lib/calculator";
@@ -150,6 +151,7 @@ export function Calculator({ products, variant = "full" }: { products: Product[]
   const result = useMemo(() => calculate(input), [input]);
   const matches = useMemo(() => matchProducts(products, result.recommendedKva), [products, result.recommendedKva]);
   const ats = useMemo(() => matchAts(products, result.recommendedKva), [products, result.recommendedKva]);
+  const sizePage = result.overRange ? undefined : GENERATOR_SIZES.find((k) => k >= result.recommendedKva);
   const valid = result.runningKw > 0;
   const showResult = widget ? valid : step === 4;
 
@@ -372,6 +374,11 @@ export function Calculator({ products, variant = "full" }: { products: Product[]
             <p className="mt-2 text-5xl font-extrabold tracking-tight sm:text-6xl">
               <span dir="ltr">{n(result.recommendedKva)}</span> <span className="text-2xl text-brand-400">{tn("kva")}</span>
             </p>
+            {sizePage && (
+              <Link href={`/generators/${sizeSlug(sizePage)}`} className="mt-1 inline-block text-sm font-semibold text-brand-400 underline underline-offset-4">
+                {locale === "ar" ? `مواصفات واستهلاك وقود مولد ${sizePage} ك.ف.أ` : `${sizePage} kVA generator specs & fuel use`}
+              </Link>
+            )}
             {!result.overRange && (
               <p className="mt-2 text-white/80">
                 {t("atsRecommended")}: <strong className="text-white" dir="ltr">{n(result.atsRating)} A</strong>

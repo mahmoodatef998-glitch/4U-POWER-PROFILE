@@ -10,7 +10,7 @@ export const pageSeo = {
   home: {
     title: {
       en: "Diesel Generator & ATS Panel Supplier in UAE | 4U Power",
-      ar: "مولدات ديزل ولوحات ATS في الإمارات | فور يو باور الشارقة",
+      ar: "مولدات كهرباء للبيع ولوحات ATS في الإمارات | فور يو باور",
     },
     description: {
       en: "Diesel generators 10–2500 kVA, ATS panels, switchgear & MDBs from SAIF Zone, Sharjah. Perkins, Cummins, Volvo. Fast delivery to UAE, KSA & Iraq.",
@@ -39,8 +39,8 @@ export const pageSeo = {
   },
   generators: {
     title: {
-      en: "Diesel Generator Supplier UAE | 10–2500 kVA | 4U Power",
-      ar: "مولدات ديزل الشارقة والإمارات | 10–2500 ك.ف.أ | فور يو باور",
+      en: "Diesel Generators for Sale in UAE | 10–2500 kVA | 4U Power",
+      ar: "مولدات كهربائية للبيع في الإمارات | أسعار 10–2500 ك.ف.أ",
     },
     description: {
       en: "Perkins, Cummins, Kubota & Volvo diesel generators 10–2500 kVA from Sharjah. Standby & prime sets for industry, towers and sites. WhatsApp for a price.",

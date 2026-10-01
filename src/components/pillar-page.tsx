@@ -10,6 +10,7 @@ import { PageHero } from "@/components/page-hero";
 import { ProductCard } from "@/components/product-card";
 import { SectionHeading } from "@/components/section-heading";
 import type { Faq } from "@/content/faq";
+import { GENERATOR_SIZES, sizeSlug } from "@/content/generator-sizes";
 import type { Pillar } from "@/content/pages";
 import { Link } from "@/i18n/navigation";
 import { getNews, getProducts } from "@/lib/data";
@@ -126,6 +127,33 @@ export async function PillarPage({
           </ul>
         </div>
       </section>
+
+      {categories.includes("generator") && (
+        <section className="section pt-0 bg-surface" aria-labelledby="sizes-title">
+          <div className="container-x">
+            <div className="flex flex-wrap items-end justify-between gap-4">
+              <h2 id="sizes-title" className="text-2xl text-ink">{locale === "ar" ? "تصفح المولدات حسب القدرة" : "Browse generators by size"}</h2>
+              <Link href="/generators/sizes" className="inline-flex items-center gap-2 font-bold text-brand-700 hover:underline">
+                {locale === "ar" ? "جدول الأحجام كامل" : "Full size chart"}
+                <ArrowRight className="flip-rtl size-4" aria-hidden />
+              </Link>
+            </div>
+            <ul className="mt-6 flex flex-wrap gap-2">
+              {GENERATOR_SIZES.map((k) => (
+                <li key={k}>
+                  <Link
+                    href={`/generators/${sizeSlug(k)}`}
+                    dir="ltr"
+                    className="inline-flex rounded-full border border-line px-4 py-2 text-sm font-semibold text-ink transition hover:border-brand-500/50 hover:bg-white/5"
+                  >
+                    {k} kVA
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+      )}
 
       <section className="section bg-navy-900" aria-labelledby="pcalc-title">
         <div className="container-x grid gap-10 lg:grid-cols-12 lg:items-start">
