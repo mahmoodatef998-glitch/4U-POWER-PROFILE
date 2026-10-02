@@ -150,7 +150,7 @@ export default async function ProductPage({ params }: Props) {
                 ))}
               </ul>
             )}
-            <p className="mt-3 text-xs text-muted">{t("common.placeholderImage")}</p>
+            {p.images.some((i) => i.endsWith(".svg")) && <p className="mt-3 text-xs text-muted">{t("common.placeholderImage")}</p>}
 
             <div className="mt-8">
               <DatasheetGate

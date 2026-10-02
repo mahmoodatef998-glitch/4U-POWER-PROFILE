@@ -90,7 +90,7 @@ export const home = {
     items: {
       generator: {
         body: { en: "Diesel, gas, hybrid & solar-hybrid sets, 10–2500 kVA.", ar: "مولدات ديزل وغاز وهجينة وشمسية من 10 إلى 2500 ك.ف.أ." },
-        image: "/images/products/generator-canopy.svg",
+        image: "/images/products/perkins-diesel-generator-4u.webp",
       },
       ats_panel: {
         body: { en: "Automatic changeover from 63 A to 4000 A.", ar: "تحويل أوتوماتيكي من 63 إلى 4000 أمبير." },

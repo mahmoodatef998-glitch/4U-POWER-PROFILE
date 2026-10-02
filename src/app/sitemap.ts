@@ -5,6 +5,7 @@ import { cities } from "@/content/locations";
 import { marketPages } from "@/content/markets";
 import { getNews, getProducts } from "@/lib/data";
 import { localeUrl } from "@/lib/seo";
+import { SITE_URL } from "@/lib/site";
 
 export const revalidate = 3600;
 
@@ -28,7 +29,7 @@ const STATIC: { path: string; priority: number; freq: MetadataRoute.Sitemap[numb
   { path: "/terms", priority: 0.2, freq: "yearly" },
 ];
 
-function entry(path: string, priority: number, changeFrequency: MetadataRoute.Sitemap[number]["changeFrequency"], lastModified?: string) {
+function entry(path: string, priority: number, changeFrequency: MetadataRoute.Sitemap[number]["changeFrequency"], lastModified?: string, images?: string[]) {
   const languages = { en: localeUrl("en", path), ar: localeUrl("ar", path), "x-default": localeUrl("en", path) };
   return (["en", "ar"] as const).map((l) => ({
     url: localeUrl(l, path),
@@ -36,6 +37,7 @@ function entry(path: string, priority: number, changeFrequency: MetadataRoute.Si
     changeFrequency,
     priority,
     alternates: { languages },
+    ...(images?.length ? { images: images.map((i) => (i.startsWith("http") ? i : `${SITE_URL}${i}`)) } : {}),
   }));
 }
 
@@ -47,7 +49,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...cities.flatMap((c) => entry(`/locations/${c.slug}`, 0.8, "monthly")),
     ...industries.flatMap((i) => entry(`/industries/${i.slug}`, 0.75, "monthly")),
     ...marketPages.flatMap((m) => entry(`/markets/${m.code}`, m.tier === "primary" ? 0.8 : 0.6, "monthly")),
-    ...products.flatMap((p) => entry(`/products/${p.slug}`, 0.75, "monthly")),
+    ...products.flatMap((p) => entry(`/products/${p.slug}`, 0.75, "monthly", undefined, p.images.filter((i) => !i.endsWith(".svg")))),
     ...news.flatMap((n) => entry(`/news/${n.slug}`, 0.7, "monthly", n.published_at)),
   ];
 }

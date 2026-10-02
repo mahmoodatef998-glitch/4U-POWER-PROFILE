@@ -156,7 +156,7 @@ export const extraProducts: Product[] = [
       s("Construction", "التصنيع", "Powder-coated steel, rock-wool lining", "حديد مطلي بالبودرة مع بطانة صوف صخري"),
       s("Ventilation", "التهوية", "Sized airflow for 50 °C ambient", "تدفق هواء محسوب لحرارة 50 °م"),
     ],
-    images: ["/images/products/generator-canopy.svg"],
+    images: ["/images/products/cummins-diesel-generator-4u.webp", "/images/products/generator-canopy.svg"],
     sort_order: 320,
   },
   {
