@@ -56,7 +56,7 @@ export default async function GeneratorSizePage({ params }: Props) {
     name: ar ? `مولد ديزل ${kva} ك.ف.أ` : `${kva} kVA Diesel Generator`,
     description: c.seoDesc,
     url: localeUrl(locale, `/generators/${size}`),
-    image: `${SITE_URL}${kva <= 500 ? "/images/products/cummins-diesel-generator-4u.webp" : "/images/og-default.png"}`,
+    image: `${SITE_URL}${kva <= 500 ? "/images/products/cummins-diesel-generator-4u.webp" : "/images/products/cummins-containerized-generator-4u.webp"}`,
     category: ar ? "مولدات ديزل" : "Diesel generators",
     brand: { "@type": "Brand", name: "4U Power Generation" },
     manufacturer: { "@id": ORG_ID },
