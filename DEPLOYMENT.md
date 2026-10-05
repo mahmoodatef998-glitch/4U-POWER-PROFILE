@@ -37,7 +37,7 @@ This takes about 45 minutes. You need: a GitHub account with access to this repo
 
 | Name | Value | Required |
 |---|---|---|
-| `NEXT_PUBLIC_SITE_URL` | `https://4ugenerators.com` (your final domain, no trailing slash) | ✅ |
+| `NEXT_PUBLIC_SITE_URL` | `https://www.4ugenerators.com` (your final domain, no trailing slash) | ✅ |
 | `NEXT_PUBLIC_SUPABASE_URL` | from step 1.5 | ✅ |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | from step 1.5 | ✅ |
 | `SUPABASE_SERVICE_ROLE_KEY` | from step 1.5 | ✅ |
@@ -71,7 +71,7 @@ This takes about 45 minutes. You need: a GitHub account with access to this repo
 
 1. <https://search.google.com/search-console> → **Add property → Domain** → verify it with the DNS TXT record Google gives you.
    (Or choose the **URL prefix** method → **HTML tag**, copy the `content="…"` value into `NEXT_PUBLIC_GSC_VERIFICATION`, and redeploy.)
-2. **Sitemaps** → submit `https://4ugenerators.com/sitemap.xml`.
+2. **Sitemaps** → submit `https://www.4ugenerators.com/sitemap.xml`.
 3. Use **URL inspection** on `/en`, `/ar`, `/en/ats-panels`, `/en/generators` and `/en/switchgear` → **Request indexing**.
 
 ## 5. Google Analytics 4 + Tag Manager + Google Ads
@@ -91,7 +91,7 @@ Create the profile with the **exact** details below. The website schema uses the
 - **Name:** 4U Power Generation
 - **Address:** 600 M² Warehouse A2-020, SAIF Zone, P.O. Box 513810, Sharjah, United Arab Emirates
 - **Phone:** +971 52 336 7694
-- **Website:** https://4ugenerators.com/en
+- **Website:** https://www.4ugenerators.com/en
 - **Category:** Generator shop (secondary: Electrical equipment supplier)
 
 Then open the pin in Google Maps, and if Warehouse A2-020 sits elsewhere, update `geo` in `src/lib/site.ts`.
@@ -100,7 +100,7 @@ Then open the pin in Google Maps, and if Warehouse A2-020 sits elsewhere, update
 When your accounts exist, paste their URLs into `src/lib/site.ts` → `social`. Empty entries stay hidden automatically.
 
 ## 9. Publishing news (no code)
-Go to `https://4ugenerators.com/admin/news` (log in with `ADMIN_USER` / `ADMIN_PASSWORD`) → fill in both languages → **Publish**. The post goes live on `/en/news` and `/ar/news` and is added to the sitemap.
+Go to `https://www.4ugenerators.com/admin/news` (log in with `ADMIN_USER` / `ADMIN_PASSWORD`) → fill in both languages → **Publish**. The post goes live on `/en/news` and `/ar/news` and is added to the sitemap.
 Aim for 1–2 posts a month. Every post should link to at least one of `/en/generators`, `/en/ats-panels`, `/en/switchgear` or `/en/calculator`.
 
 You can also edit any table directly in **Supabase → Table editor** (products, projects, testimonials, news). Changes show on the site within an hour; new posts from `/admin` show immediately.

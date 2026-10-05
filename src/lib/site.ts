@@ -2,7 +2,7 @@
  * Single source of truth for business identity (from SAIF Zone trade license No. 23919).
  * NAP (Name / Address / Phone) here must match Google Business Profile exactly.
  */
-export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || "https://4ugenerators.com").replace(/\/$/, "");
+export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || "https://www.4ugenerators.com").replace(/\/$/, "");
 
 export const company = {
   brand: "4U Power Generation",
