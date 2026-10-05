@@ -95,8 +95,8 @@ export const terms: LegalDoc = {
     {
       title: { en: "4. Trademarks", ar: "4. العلامات التجارية" },
       body: {
-        en: "Perkins, Cummins, Kubota, Volvo Penta and other names are trademarks of their respective owners and are used only to identify the engines and components we supply. Their use does not imply an official dealership unless expressly stated.",
-        ar: "بيركنز وكمنز وكوبوتا وفولفو بنتا وغيرها علامات تجارية مملوكة لأصحابها، وتُستخدم فقط لتعريف المحركات والمكونات التي نوردها، ولا يعني استخدامها وجود وكالة رسمية ما لم يُذكر ذلك صراحة.",
+        en: "Perkins, Cummins, Kubota, Volvo Penta, Baudouin, Lister Petter and other names are trademarks of their respective owners and are used only to identify the engines and components we supply. Their use does not imply an official dealership unless expressly stated.",
+        ar: "بيركنز وكمنز وكوبوتا وفولفو بنتا وبودوان وليستر بيتر وغيرها علامات تجارية مملوكة لأصحابها، وتُستخدم فقط لتعريف المحركات والمكونات التي نوردها، ولا يعني استخدامها وجود وكالة رسمية ما لم يُذكر ذلك صراحة.",
       },
     },
     {

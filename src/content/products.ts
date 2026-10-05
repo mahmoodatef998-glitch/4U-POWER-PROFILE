@@ -15,8 +15,11 @@ const s = (label_en: string, label_ar: string, value_en: string, value_ar = valu
 
 const DATASHEET = "/datasheets/4u-datasheet-placeholder.pdf";
 
-const genCommon = (voltage = "400/230 V, 3-phase, 50 Hz (60 Hz on request)"): SpecRow[] => [
-  s("Output voltage", "جهد الخرج", voltage, "400/230 فولت، 3 أطوار، 50 هرتز (60 هرتز عند الطلب)"),
+const genCommon = (
+  voltage = "400/230 V, 3-phase, 50 Hz (60 Hz on request)",
+  voltageAr = "400/230 فولت، 3 أطوار، 50 هرتز (60 هرتز عند الطلب)",
+): SpecRow[] => [
+  s("Output voltage", "جهد الخرج", voltage, voltageAr),
   s("Enclosure", "الهيكل", "Open frame or sound-attenuated canopy", "إطار مفتوح أو كابينة عازلة للصوت"),
   s("Controller", "وحدة التحكم", "Deep Sea / ComAp auto-start (AMF)", "Deep Sea / ComAp تشغيل تلقائي (AMF)"),
   s("Ambient rating", "ظروف التشغيل", "Configured for 50 °C GCC ambient", "مهيأ لحرارة الخليج حتى 50 °م"),
@@ -138,11 +141,34 @@ const coreProducts: Product[] = [
       s("Power range", "نطاق القدرة", "10 – 40 kVA", "10 – 40 ك.ف.أ"),
       s("Engine", "المحرك", "Kubota D / V series, water-cooled", "كوبوتا فئة D / V، تبريد بالماء"),
       s("Noise level", "مستوى الضوضاء", "From 62 dB(A) @ 7 m (model dependent)", "من 62 ديسيبل على بعد 7 م (حسب الموديل)"),
-      ...genCommon("400/230 V 3-phase or 230 V single-phase, 50 Hz"),
+      ...genCommon("400/230 V 3-phase or 230 V single-phase, 50 Hz", "400/230 فولت 3 أطوار أو 230 فولت طور واحد، 50 هرتز"),
     ],
     spec_sheet_url: DATASHEET,
     images: ["/images/products/kubota-diesel-generator-4u.webp", "/images/products/generator-canopy.svg"],
     sort_order: 50,
+    is_published: true,
+  },
+  {
+    category: "generator",
+    slug: "lister-petter-generator-7-60kva",
+    name_en: "Lister Petter Generator 7–60 kVA",
+    name_ar: "مولد ليستر بيتر 7–60 كيلو فولت أمبير",
+    kva_min: 7,
+    kva_max: 60,
+    engine_brand: "Lister Petter",
+    fuel_type: "diesel",
+    description_en:
+      "Compact Lister Petter-powered sets built for long, low-maintenance running — a proven choice for farms, telecom sites, workshops and remote cabins.",
+    description_ar:
+      "مولدات صغيرة بمحركات ليستر بيتر مصممة للتشغيل الطويل بصيانة قليلة، خيار مجرب للمزارع ومواقع الاتصالات والورش والمواقع البعيدة.",
+    specs: [
+      s("Power range", "نطاق القدرة", "7 – 60 kVA", "7 – 60 ك.ف.أ"),
+      s("Engine", "المحرك", "Lister Petter industrial diesel", "ليستر بيتر ديزل صناعي"),
+      ...genCommon("400/230 V 3-phase or 230 V single-phase, 50 Hz", "400/230 فولت 3 أطوار أو 230 فولت طور واحد، 50 هرتز"),
+    ],
+    spec_sheet_url: DATASHEET,
+    images: ["/images/products/lister-petter-diesel-generator-4u.webp", "/images/products/generator-canopy.svg"],
+    sort_order: 55,
     is_published: true,
   },
   {
@@ -164,8 +190,32 @@ const coreProducts: Product[] = [
       ...genCommon(),
     ],
     spec_sheet_url: DATASHEET,
-    images: ["/images/products/generator-canopy.svg", "/images/products/generator-open.svg"],
+    images: ["/images/products/volvo-penta-diesel-generator-4u.webp", "/images/products/volvo-penta-containerized-generator-4u.webp", "/images/products/generator-open.svg"],
     sort_order: 60,
+    is_published: true,
+  },
+  {
+    category: "generator",
+    slug: "baudouin-diesel-generator-20-2500kva",
+    name_en: "Baudouin Diesel Generator 20–2500 kVA",
+    name_ar: "مولد ديزل بودوان 20–2500 كيلو فولت أمبير",
+    kva_min: 20,
+    kva_max: 2500,
+    engine_brand: "Baudouin",
+    fuel_type: "diesel",
+    description_en:
+      "Baudouin-powered sets (Weichai group) covering compact canopies to containerised prime-power plants — strong value for industry, construction and long running hours.",
+    description_ar:
+      "مولدات بمحركات بودوان (مجموعة ويتشاي) من الكبائن الصغيرة حتى محطات القدرة الأساسية داخل الحاويات، بقيمة ممتازة للمصانع ومواقع البناء وساعات التشغيل الطويلة.",
+    specs: [
+      s("Power range", "نطاق القدرة", "20 – 2500 kVA", "20 – 2500 ك.ف.أ"),
+      s("Engine", "المحرك", "Baudouin industrial diesel (Weichai group)", "بودوان ديزل صناعي (مجموعة ويتشاي)"),
+      s("Packaging", "التجهيز", "Silent canopy or 20/40 ft container", "كابينة صامتة أو حاوية 20/40 قدم"),
+      ...genCommon(),
+    ],
+    spec_sheet_url: DATASHEET,
+    images: ["/images/products/baudouin-diesel-generator-4u.webp", "/images/products/baudouin-containerized-generator-4u.webp", "/images/products/generator-open.svg"],
+    sort_order: 65,
     is_published: true,
   },
   {

@@ -1,3 +1,4 @@
+import { engineBrandLabels } from "./taxonomy";
 import { amps400, STANDARD_ATS_AMPS } from "@/lib/calculator";
 import type { L10n } from "@/lib/utils";
 import type { Faq } from "./faq";
@@ -33,7 +34,7 @@ export function sizeData(kva: number) {
   // typical split-AC units (2 TR ≈ 2.4 kW running) the set can carry at 80 % of its kW
   const acUnits = Math.max(1, Math.floor((kw * 0.8) / 2.4));
   const enclosure = kva <= 60 ? "canopy" : kva <= 500 ? "canopy-or-open" : kva <= 1250 ? "open-or-container" : "container";
-  const engines = kva <= 40 ? ["Kubota", "Perkins"] : kva <= 200 ? ["Perkins", "Cummins", "Volvo Penta"] : kva <= 700 ? ["Cummins", "Perkins", "Volvo Penta"] : ["Cummins", "Perkins"];
+  const engines = kva <= 40 ? ["Kubota", "Perkins", "Lister Petter"] : kva <= 60 ? ["Perkins", "Cummins", "Lister Petter"] : kva <= 200 ? ["Perkins", "Cummins", "Volvo Penta", "Baudouin"] : kva <= 700 ? ["Cummins", "Perkins", "Volvo Penta", "Baudouin"] : ["Cummins", "Perkins", "Baudouin"];
   return { kva, kw, amps, ats, fuel50, fuel75, fuel100, tank8h, tank24h, primeKva, acUnits, enclosure, engines };
 }
 
@@ -83,7 +84,7 @@ export function sizeCopy(kva: number, locale: "en" | "ar") {
     ? `مولد ديزل ${kva} ك.ف.أ (${n(d.kw)} كيلوواط): التيار ${n(Math.round(d.amps))} أمبير، لوحة ATS ${d.ats} أمبير، استهلاك ${n(Math.round(d.fuel75))} لتر/ساعة. سعر في نفس اليوم وتوصيل من الشارقة.`
     : `${kva} kVA (${n(d.kw)} kW) diesel generator: ${n(Math.round(d.amps))} A full load, ${d.ats} A ATS, ~${n(Math.round(d.fuel75))} L/h at 75% load. Same-day price, delivery from Sharjah.`;
   const intro = ar
-    ? `مولد ${kva} كيلو فولت أمبير يعطي نحو ${n(d.kw)} كيلوواط عند معامل قدرة 0.8، وهو حجم مناسب لـ${b.uses.ar}. نورّده بمحركات ${d.engines.map((e) => ({ Kubota: "كوبوتا", Perkins: "بيركنز", Cummins: "كمنز", "Volvo Penta": "فولفو بنتا" })[e]).join(" أو ")} من مستودعنا في الشارقة، مع لوحة ATS المناسبة وضمان سنة.`
+    ? `مولد ${kva} كيلو فولت أمبير يعطي نحو ${n(d.kw)} كيلوواط عند معامل قدرة 0.8، وهو حجم مناسب لـ${b.uses.ar}. نورّده بمحركات ${d.engines.map((e) => engineBrandLabels[e]?.ar ?? e).join(" أو ")} من مستودعنا في الشارقة، مع لوحة ATS المناسبة وضمان سنة.`
     : `A ${kva} kVA generator delivers about ${n(d.kw)} kW at 0.8 power factor — the right size for ${b.uses.en}. We supply it with ${d.engines.join(", ").replace(/, ([^,]*)$/, " or $1")} engines from our Sharjah warehouse, with a matched ATS panel and a 1-year warranty.`;
 
   const specs: { k: L10n; v: string }[] = [
@@ -93,7 +94,7 @@ export function sizeCopy(kva: number, locale: "en" | "ar") {
     { k: { en: "Matching ATS panel", ar: "لوحة ATS المناسبة" }, v: ar ? `${d.ats} أمبير، 4 أقطاب` : `${d.ats} A, 4-pole` },
     { k: { en: "Fuel use @ 50 / 75 / 100 % load", ar: "استهلاك الوقود عند 50 / 75 / 100% حمل" }, v: ar ? `${n(d.fuel50)} / ${n(d.fuel75)} / ${n(d.fuel100)} لتر/ساعة` : `${n(d.fuel50)} / ${n(d.fuel75)} / ${n(d.fuel100)} L/h` },
     { k: { en: "Base tank for 8 h @ 75 %", ar: "خزان قاعدي لـ 8 ساعات عند 75%" }, v: ar ? `≈ ${n(d.tank8h)} لتر` : `≈ ${n(d.tank8h)} L` },
-    { k: { en: "Engine options", ar: "خيارات المحرك" }, v: ar ? d.engines.map((e) => ({ Kubota: "كوبوتا", Perkins: "بيركنز", Cummins: "كمنز", "Volvo Penta": "فولفو بنتا" })[e]).join("، ") : d.engines.join(", ") },
+    { k: { en: "Engine options", ar: "خيارات المحرك" }, v: ar ? d.engines.map((e) => engineBrandLabels[e]?.ar ?? e).join("، ") : d.engines.join(", ") },
     { k: { en: "Enclosure", ar: "الهيكل" }, v: enclosure[d.enclosure]![locale] },
     { k: { en: "Voltage / frequency", ar: "الجهد / التردد" }, v: ar ? "400/230 فولت، 50 هرتز (60 هرتز للسعودية عند الطلب)" : "400/230 V, 50 Hz (60 Hz for KSA on request)" },
     { k: { en: "Warranty", ar: "الضمان" }, v: ar ? "12 شهراً" : "12 months" },

@@ -20,8 +20,8 @@ export const homeFaq: Faq[] = [
   {
     q: { en: "Which generator sizes do you supply?", ar: "ما أحجام المولدات التي توفرونها؟" },
     a: {
-      en: "Diesel generator sets from 10 kVA to 2500 kVA with Perkins, Cummins, Kubota, Volvo Penta and Chinese engine options, plus gas, hybrid and solar-hybrid systems. Larger plants are built by synchronising several units.",
-      ar: "مولدات ديزل من 10 إلى 2500 ك.ف.أ بمحركات بيركنز وكمنز وكوبوتا وفولفو بنتا والمحركات الصينية، إضافة إلى أنظمة الغاز والهجينة والشمسية الهجينة. المحطات الأكبر تُبنى بتزامن عدة مولدات.",
+      en: "Diesel generator sets from 10 kVA to 2500 kVA with Perkins, Cummins, Kubota, Volvo Penta, Baudouin, Lister Petter and Chinese engine options, plus gas, hybrid and solar-hybrid systems. Larger plants are built by synchronising several units.",
+      ar: "مولدات ديزل من 10 إلى 2500 ك.ف.أ بمحركات بيركنز وكمنز وكوبوتا وفولفو بنتا وبودوان وليستر بيتر والمحركات الصينية، إضافة إلى أنظمة الغاز والهجينة والشمسية الهجينة. المحطات الأكبر تُبنى بتزامن عدة مولدات.",
     },
   },
   {

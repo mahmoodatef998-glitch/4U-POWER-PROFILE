@@ -29,13 +29,15 @@ export const fuelLabels: Record<FuelType, L10n> = {
   solar: { en: "Solar-hybrid", ar: "شمسي هجين" },
 };
 
-export const engineBrands = ["Perkins", "Cummins", "Kubota", "Volvo Penta", "Chinese Engine Series"] as const;
+export const engineBrands = ["Perkins", "Cummins", "Kubota", "Volvo Penta", "Baudouin", "Lister Petter", "Chinese Engine Series"] as const;
 
 export const engineBrandLabels: Record<string, L10n> = {
   Perkins: { en: "Perkins", ar: "بيركنز" },
   Cummins: { en: "Cummins", ar: "كمنز" },
   Kubota: { en: "Kubota", ar: "كوبوتا" },
   "Volvo Penta": { en: "Volvo Penta", ar: "فولفو بنتا" },
+  Baudouin: { en: "Baudouin", ar: "بودوان" },
+  "Lister Petter": { en: "Lister Petter", ar: "ليستر بيتر" },
   "Chinese Engine Series": { en: "Chinese Engine Series", ar: "محركات صينية" },
 };
 
