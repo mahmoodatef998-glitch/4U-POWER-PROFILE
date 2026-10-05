@@ -13,6 +13,8 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  // Inline the (small, ~20 KB) global CSS into each HTML response: removes the render-blocking stylesheet round-trip on first paint.
+  experimental: { inlineCss: true },
   images: {
     formats: ["image/avif", "image/webp"],
     remotePatterns: [{ protocol: "https", hostname: "*.supabase.co", pathname: "/storage/v1/object/public/**" }],

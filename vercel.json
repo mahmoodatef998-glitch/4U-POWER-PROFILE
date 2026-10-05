@@ -4,11 +4,30 @@
   "headers": [
     {
       "source": "/datasheets/(.*)",
-      "headers": [{ "key": "Cache-Control", "value": "public, max-age=86400" }]
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400"
+        }
+      ]
     }
   ],
   "redirects": [
-    { "source": "/index.html", "destination": "/en", "permanent": true },
-    { "source": "/home", "destination": "/en", "permanent": true }
+    {
+      "source": "/index.html",
+      "destination": "/en",
+      "permanent": true
+    },
+    {
+      "source": "/home",
+      "destination": "/en",
+      "permanent": true
+    }
+  ],
+  "crons": [
+    {
+      "path": "/api/indexnow",
+      "schedule": "30 5 * * 1"
+    }
   ]
 }

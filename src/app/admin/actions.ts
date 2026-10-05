@@ -2,7 +2,10 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { after } from "next/server";
 import { z } from "zod";
+import { submitIndexNow } from "@/lib/indexnow";
+import { localeUrl } from "@/lib/seo";
 import { getAdminClient } from "@/lib/supabase/server";
 
 // All admin routes sit behind Basic Auth in middleware; these actions also require the service role.
@@ -51,6 +54,12 @@ export async function createPost(_prev: { error?: string } | null, formData: For
   revalidatePath("/[locale]/news", "page");
   revalidatePath("/[locale]", "page");
   revalidatePath("/sitemap.xml");
+  // tell Bing & co. about the new article straight away (runs after the response is sent)
+  after(() =>
+    submitIndexNow(
+      (["en", "ar"] as const).flatMap((l) => [localeUrl(l, `/news/${d.slug}`), localeUrl(l, "/news")]),
+    ),
+  );
   redirect("/admin/news?created=1");
 }
 

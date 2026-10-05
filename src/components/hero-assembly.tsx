@@ -1,7 +1,6 @@
 "use client";
 
 import { LazyMotion, domAnimation, m, useReducedMotion, useScroll, useSpring, useTransform, type MotionValue } from "framer-motion";
-import Image from "next/image";
 import { useLocale } from "next-intl";
 import { useRef } from "react";
 import { cn, type Locale } from "@/lib/utils";
@@ -112,26 +111,41 @@ function useAssembly(part: Part, progress: MotionValue<number>, index: number) {
 
 const box = (p: Part) => ({ left: pct(p.x, CANVAS.w), top: pct(p.y, CANVAS.h), width: pct(p.w, CANVAS.w), height: pct(p.h, CANVAS.h) });
 
+/** Rendered stage width — mirrors the stage's inline width below (2000px source cap, viewport and height limits). */
+const STAGE_SIZE = `min(${CANVAS.w}px, 118vw, (100vh - 11rem) * ${ASPECT.toFixed(3)})`;
+
+/**
+ * Hand-optimised WebP layer served as-is, with a half-resolution "-md" variant
+ * (scripts/generate-brand-assets.py) so phones download ~1/3 of the bytes. `sizes` is the layer's
+ * share of the stage, letting the browser pick by real rendered width × DPR.
+ */
+function LayerImg({ id, w, h, fetchPriority }: { id: string; w: number; h: number; fetchPriority: "high" | "low" | "auto" }) {
+  const base = `/images/hero/layers/${id}`;
+  return (
+    // eslint-disable-next-line @next/next/no-img-element -- static pre-sized variants; the optimizer would only re-encode them
+    <img
+      src={`${base}.webp`}
+      srcSet={`${base}-md.webp ${Math.round(w / 2)}w, ${base}.webp ${w}w`}
+      sizes={`calc(${STAGE_SIZE} * ${(w / CANVAS.w).toFixed(4)})`}
+      alt=""
+      width={w}
+      height={h}
+      loading="eager"
+      decoding="async"
+      fetchPriority={fetchPriority}
+      draggable={false}
+      className="size-full select-none"
+    />
+  );
+}
+
 function Layer({ part, index, progress, priority }: { part: Part; index: number; progress: MotionValue<number>; priority?: boolean }) {
   const { x, y, scale, rotate } = useAssembly(part, progress, index);
   const [, b] = part.win;
   const opacity = useTransform(progress, (v) => (part.hideAfter ? 1 - clamp01((v - b) / 0.04) : 1 - clamp01((v - LOCK[1]) / 0.04)));
   return (
     <m.div className="absolute origin-top-left will-change-transform [backface-visibility:hidden]" style={{ ...box(part), x, y, scale, rotate, opacity, zIndex: part.z }}>
-      <Image
-        src={`/images/hero/layers/${part.id}.webp`}
-        alt=""
-        width={part.w}
-        height={part.h}
-        priority={priority}
-        fetchPriority={priority ? "high" : "auto"}
-        loading="eager"
-        decoding="async"
-        draggable={false}
-        // served as-is: hand-optimised WebP at native resolution; re-encoding would only lose detail
-        unoptimized
-        className="size-full select-none"
-      />
+      <LayerImg id={part.id} w={part.w} h={part.h} fetchPriority={priority ? "high" : "auto"} />
     </m.div>
   );
 }
@@ -185,7 +199,7 @@ function Assembled({ progress, still }: { progress: MotionValue<number>; still: 
   const opacity = useTransform(progress, (v) => clamp01((v - LOCK[0]) / (LOCK[1] - LOCK[0])));
   return (
     <m.div className="absolute inset-0 [backface-visibility:hidden]" style={{ opacity: still ? 1 : opacity, zIndex: 15 }}>
-      <Image src="/images/hero/layers/assembled.webp" alt="" width={CANVAS.w} height={CANVAS.h} loading="eager" fetchPriority={still ? "high" : "low"} decoding="async" draggable={false} unoptimized className="size-full select-none" />
+      <LayerImg id="assembled" w={CANVAS.w} h={CANVAS.h} fetchPriority={still ? "high" : "low"} />
     </m.div>
   );
 }
