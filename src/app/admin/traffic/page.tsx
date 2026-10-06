@@ -10,7 +10,7 @@ const CHANNELS: Record<string, string> = {
   Referral: "Other websites",
   "Paid Search": "Google Ads",
   "Paid Social": "Social media ads",
-  "Cross-network": "Google Ads (Performance Max)",
+  "Cross-network": "Mixed source (Cross-network)",
   Unassigned: "Unknown (no source recorded)",
 };
 
