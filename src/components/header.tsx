@@ -29,12 +29,12 @@ const NAV = [
   { href: "/contact", key: "contact" },
 ] as const;
 
-/** Site wordmark: the 4U gear mark (white gear with orange 4U on the night theme, black on light) + "4U Power / Generation". */
+/** Site wordmark: the 4U gear mark (gray gear on the night theme, black on light) + "4U Power / Generation". */
 export function Brand({ className }: { className?: string }) {
   const locale = useLocale();
   return (
     <span className={cn("flex items-center gap-2.5", className)}>
-      <Image src="/brand/logo-mark-night.png" alt="" width={275} height={375} className="h-10 w-auto shrink-0 light:hidden" priority />
+      <Image src="/brand/logo-mark-gray.png" alt="" width={275} height={375} className="h-10 w-auto shrink-0 light:hidden" priority />
       <Image src="/brand/logo-mark-light.png" alt="" width={275} height={375} className="hidden h-10 w-auto shrink-0 light:block" priority />
       <span className="leading-none">
         <span className="block text-[1.05rem] font-extrabold tracking-tight text-white">{locale === "ar" ? "فور يو باور" : "4U Power"}</span>
