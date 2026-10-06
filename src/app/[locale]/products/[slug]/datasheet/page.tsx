@@ -66,7 +66,7 @@ export default async function DatasheetPage({ params }: Props) {
       <article className="sheet mx-auto max-w-[210mm] overflow-hidden rounded-2xl bg-[#fff] text-[#111827] shadow-2xl print:max-w-none print:rounded-none print:shadow-none">
         <header className="flex items-center justify-between gap-6 bg-[#0b1022] px-8 py-6 text-[#fff]">
           <div className="flex items-center gap-3">
-            <Image src="/brand/logo-mark-gray.png" alt="" width={275} height={375} className="h-12 w-auto" />
+            <Image src="/brand/logo-mark-dark.png" alt="" width={275} height={375} className="h-12 w-auto" />
             <div className="leading-tight">
               <p className="text-lg font-extrabold">{ar ? company.brandAr : company.brand}</p>
               <p className="text-xs text-[#ffdf58]">{t("datasheet.docTitle")}</p>
