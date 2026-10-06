@@ -59,7 +59,7 @@ for (const t of testimonials) {
   );
 }
 newsPosts.forEach((n, i) => {
-  if (i % 2 === 0) file(`0${3 + i / 2}_news_${i / 2 + 1}.sql`);
+  if (i % 2 === 0) file(`${String(3 + i / 2).padStart(2, "0")}_news_${i / 2 + 1}.sql`);
   out.push(
     `insert into public.news_posts (slug,title_en,title_ar,meta_title_en,meta_title_ar,excerpt_en,excerpt_ar,body_en,body_ar,cover_image,published_at,is_published) values (${[
       q(n.slug), q(n.title_en), q(n.title_ar), q(n.meta_title_en), q(n.meta_title_ar), q(n.excerpt_en), q(n.excerpt_ar),

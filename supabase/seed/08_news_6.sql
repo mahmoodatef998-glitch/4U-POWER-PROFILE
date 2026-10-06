@@ -71,4 +71,99 @@ The costliest outcome is buying the wrong size. Use the [kVA calculator](/en/cal
 ## الحل الوسط: اشترِ الحجم الصحيح من أول مرة
 
 أغلى نتيجة هي شراء حجم خاطئ. استخدم [حاسبة القدرة](/ar/calculator) أو [جدول أحجام المولدات](/ar/generators/sizes)، ثم اطلب منا عرض سعر يوضح التوصيل والتركيب والضمان. نورّد مولدات من 7 إلى 2500 ك.ف.أ من مستودعنا في الشارقة، مع التوصيل في كل الإمارات والتصدير إلى السعودية والعراق.$q$,$q$/images/products/cummins-containerized-generator-4u.webp$q$,$q$2026-10-20T06:00:00Z$q$,true) on conflict (slug) do nothing;
+insert into public.news_posts (slug,title_en,title_ar,meta_title_en,meta_title_ar,excerpt_en,excerpt_ar,body_en,body_ar,cover_image,published_at,is_published) values ($q$generator-for-hospitals-clinics-uae$q$,$q$Generators for Hospitals and Clinics: Sizing, Transfer Time and Redundancy$q$,$q$مولدات المستشفيات والعيادات: الحجم وزمن التحويل والاحتياط$q$,$q$Generator for Hospitals & Clinics in the UAE | 4U Power$q$,$q$مولد للمستشفيات والعيادات في الإمارات | فور يو باور$q$,$q$In healthcare a power cut is a patient-safety event. How to size a hospital or clinic generator, meet 10-second transfer, and plan N+1 redundancy.$q$,$q$في الرعاية الصحية انقطاع الكهرباء حدث يمس سلامة المرضى. كيف تختار مولد المستشفى أو العيادة، وتحقق التحويل خلال 10 ثوانٍ، وتخطط للاحتياط N+1.$q$,$q$In a hospital, a power cut is not an inconvenience — it is a patient-safety event. Healthcare standby power is designed differently from an office or a villa, and consultants in the UAE will check it closely.
+
+## Which loads go on the generator?
+
+Healthcare electrical design splits loads into branches:
+
+- **life-safety** — exit lighting, fire alarm, emergency communications
+- **critical** — operating theatres, ICU, emergency department, critical-care outlets, nurse call
+- **equipment** — medical gas systems, sterilisation, key HVAC, lifts, kitchen and cold storage
+
+All of these must transfer to the generator automatically. Many facilities also put the rest of the building on the generator so departments keep running normally during an outage.
+
+## Transfer time: the 10-second rule
+
+Many UAE healthcare consultants specify to **NFPA 110**, where a Level 1 emergency power system must restore power to emergency loads within **10 seconds**. That means:
+
+- an **AMF controller** that starts the set instantly on mains failure
+- a generator that reaches rated voltage and frequency quickly — jacket-water heaters keep the engine ready
+- a fast, reliable [automatic transfer switch](/en/ats-panels) for each branch
+
+Some loads cannot tolerate even 10 seconds — anaesthesia machines, ICU monitoring, IT and the PACS server. These sit on a **UPS**, which bridges the gap until the generator takes over.
+
+## Redundancy: N+1
+
+A single generator is a single point of failure. Hospitals usually run **two or more sets in parallel** with a [synchronising panel](/en/products/generator-synchronizing-panel), sized so the critical load is still covered if one set fails or is in maintenance (N+1). Synchronised sets also share load efficiently, so engines are not running at a wasteful low load.
+
+## Sizing examples
+
+| Facility | Typical generator |
+| --- | --- |
+| Small clinic or dental centre | 30–80 kVA |
+| Polyclinic or day-surgery centre | 150–400 kVA |
+| Mid-size hospital | 2 × 500 kVA to 2 × 1000 kVA |
+| Large hospital | 3 or more sets, 1000–2000 kVA each |
+
+These are starting points — the real number comes from the load schedule. Our [kVA calculator](/en/calculator) and [size chart](/en/generators/sizes) help with a first estimate.
+
+## Fuel autonomy
+
+Healthcare specifications usually require the set to run for **24 hours or more** without refuelling. Size the base tank or external [fuel tank](/en/products/generator-fuel-tanks) on the expected load, not on the nameplate.
+
+## Testing is part of the design
+
+Emergency generators in healthcare are typically exercised **monthly under load** — for example 30 minutes at not less than 30% of rating — with the transfer switches operated, and load-bank tested at least annually. Plan access for a [load bank](/en/products/load-banks) from day one.
+
+## How we help
+
+We supply Cummins, Perkins and Baudouin sets from 10 to 2500 kVA with AMF controllers, ATS and synchronising panels, plus [maintenance contracts](/en/services) and load-bank testing. Send us your consultant's specification and load schedule on WhatsApp and we will propose a compliant configuration.$q$,$q$في المستشفى، انقطاع الكهرباء ليس مجرد إزعاج بل حدث يمس سلامة المرضى. لذلك تُصمم الطاقة الاحتياطية في المنشآت الصحية بشكل مختلف عن المكاتب أو الفلل، ويدققها الاستشاريون في الإمارات بعناية.
+
+## أي الأحمال توضع على المولد؟
+
+يقسم التصميم الكهربائي للمنشآت الصحية الأحمال إلى فروع:
+
+- **سلامة الأرواح**: إنارة المخارج وإنذار الحريق واتصالات الطوارئ
+- **الحرجة**: غرف العمليات والعناية المركزة والطوارئ ومقابس العناية الحرجة ونداء التمريض
+- **المعدات**: أنظمة الغازات الطبية والتعقيم والتكييف الأساسي والمصاعد والمطبخ والتبريد
+
+كل هذه الأحمال يجب أن تتحول إلى المولد تلقائياً. وكثير من المنشآت تضع باقي المبنى أيضاً على المولد حتى تستمر الأقسام بالعمل بشكل طبيعي أثناء الانقطاع.
+
+## زمن التحويل: قاعدة العشر ثوانٍ
+
+يعتمد كثير من استشاريي الرعاية الصحية في الإمارات على معيار **NFPA 110**، الذي يشترط في أنظمة الطوارئ من المستوى الأول إعادة الكهرباء لأحمال الطوارئ خلال **10 ثوانٍ**. وهذا يعني:
+
+- **وحدة تحكم AMF** تشغّل المولد فور انقطاع الكهرباء
+- مولد يصل إلى الجهد والتردد المقننين بسرعة، وسخانات مياه التبريد تبقي المحرك جاهزاً
+- [لوحة تحويل أوتوماتيكي](/ar/ats-panels) سريعة وموثوقة لكل فرع
+
+بعض الأحمال لا تتحمل حتى 10 ثوانٍ، مثل أجهزة التخدير ومراقبة العناية المركزة وأنظمة تقنية المعلومات وخادم الأشعة. هذه توضع على **UPS** يغطي الفجوة حتى يتولى المولد التغذية.
+
+## الاحتياط: N+1
+
+المولد الواحد نقطة فشل واحدة. لذلك تشغّل المستشفيات عادةً **مولدين أو أكثر على التوازي** عبر [لوحة تزامن](/ar/products/generator-synchronizing-panel)، بحجم يغطي الحمل الحرج حتى لو تعطل أحد المولدات أو كان في الصيانة (N+1). كما أن المولدات المتزامنة تتقاسم الحمل بكفاءة فلا تعمل المحركات بحمل منخفض مُهدر.
+
+## أمثلة على الأحجام
+
+| المنشأة | المولد المعتاد |
+| --- | --- |
+| عيادة صغيرة أو مركز أسنان | 30–80 ك.ف.أ |
+| مجمع عيادات أو مركز جراحة يومية | 150–400 ك.ف.أ |
+| مستشفى متوسط | 2 × 500 حتى 2 × 1000 ك.ف.أ |
+| مستشفى كبير | 3 مولدات أو أكثر، 1000–2000 ك.ف.أ لكل منها |
+
+هذه نقاط بداية، والرقم الحقيقي يأتي من جدول الأحمال. تساعدك [حاسبة القدرة](/ar/calculator) و[جدول الأحجام](/ar/generators/sizes) في التقدير الأولي.
+
+## مدة التشغيل بالوقود
+
+تشترط مواصفات المنشآت الصحية عادةً تشغيل المولد **24 ساعة أو أكثر** دون إعادة تعبئة. اختر سعة الخزان القاعدي أو [خزان الوقود الخارجي](/ar/products/generator-fuel-tanks) حسب الحمل المتوقع وليس حسب لوحة البيانات.
+
+## الاختبار جزء من التصميم
+
+تُشغَّل مولدات الطوارئ في المنشآت الصحية عادةً **شهرياً تحت حمل**، مثلاً 30 دقيقة بحمل لا يقل عن 30% من القدرة مع تشغيل لوحات التحويل، وتُختبر بحمل اختباري سنوياً على الأقل. خطط لمكان توصيل [حمل الاختبار](/ar/products/load-banks) من البداية.
+
+## كيف نساعدك
+
+نورّد مولدات كمنز وبيركنز وبودوان من 10 إلى 2500 ك.ف.أ مع وحدات تحكم AMF ولوحات ATS والتزامن، إضافة إلى [عقود الصيانة](/ar/services) واختبار الحمل. أرسل لنا مواصفات الاستشاري وجدول الأحمال على الواتساب وسنقترح تجهيزاً مطابقاً.$q$,$q$/images/products/cummins-containerized-generator-4u.webp$q$,$q$2026-10-12T06:00:00Z$q$,true) on conflict (slug) do nothing;
 commit;
