@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 /** Protected by HTTP Basic Auth in middleware (ADMIN_USER / ADMIN_PASSWORD). */
 export default function AdminLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" data-theme="light">
       <body className="min-h-screen bg-surface font-sans text-ink">
         <header className="bg-navy-950 text-white">
           <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">

@@ -4,7 +4,7 @@ import * as Slider from "@radix-ui/react-slider";
 import { ArrowLeft, ArrowRight, Building2, Factory, HardHat, Home, Info, Minus, Plus, PartyPopper, RotateCcw, Zap } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useId, useMemo, useRef, useState } from "react";
-import { logCalculation } from "@/app/actions/calculator";
+import { logCalculationRun } from "@/lib/api-client";
 import { Link } from "@/i18n/navigation";
 import { GENERATOR_SIZES, sizeSlug } from "@/content/generator-sizes";
 import { engineBrandLabels } from "@/content/taxonomy";
@@ -163,7 +163,7 @@ export function Calculator({ products, variant = "full" }: { products: Product[]
     const timer = setTimeout(async () => {
       lastLogged.current = key;
       trackEvent("calculator_complete", { kva: result.recommendedKva, mode, variant });
-      const res = await logCalculation({
+      const res = await logCalculationRun({
         mode,
         load_type: mode === "site_builder" ? loadType : null,
         input_kw: mode === "known_load" && unit === "kw" ? kw : result.runningKw,

@@ -3,7 +3,8 @@
 import { Camera, CheckCircle2, Loader2, X } from "lucide-react";
 import { useLocale } from "next-intl";
 import { useEffect, useId, useRef, useState, useTransition, type FormEvent } from "react";
-import { submitPartsRequest, type PartsState } from "@/app/actions/parts";
+import type { PartsState } from "@/app/actions/parts";
+import { submitPartsForm } from "@/lib/api-client";
 import { engineBrandLabels, engineBrands } from "@/content/taxonomy";
 import { trackEvent } from "@/lib/analytics";
 import { cn, type Locale } from "@/lib/utils";
@@ -118,7 +119,7 @@ export function PartsForm() {
     fd.set("source_page", window.location.pathname);
     for (const [k, v] of Object.entries(readUtm())) if (v) fd.set(k, v);
     start(async () => {
-      const res = await submitPartsRequest(fd).catch(() => ({ status: "error" }) as PartsState);
+      const res = await submitPartsForm(fd);
       setState(res);
       if (res.status === "success") trackEvent("generate_lead", { source: "parts", photos: photos.length });
     });

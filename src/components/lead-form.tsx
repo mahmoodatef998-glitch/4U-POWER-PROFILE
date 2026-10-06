@@ -3,7 +3,8 @@
 import { CheckCircle2, Loader2 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useActionState, useEffect, useId, useState, type ReactNode } from "react";
-import { submitLead, type LeadState } from "@/app/actions/leads";
+import type { LeadState } from "@/app/actions/leads";
+import { submitLeadForm } from "@/lib/api-client";
 import { marketNames } from "@/content/taxonomy";
 import { trackEvent } from "@/lib/analytics";
 import { MARKETS } from "@/lib/types";
@@ -36,7 +37,7 @@ const initial: LeadState = { status: "idle" };
 export function LeadForm({ source: sourceProp = "contact_form", productSlug: slugProp, productName: nameProp, calculatedKva, calcSubmissionId, defaultMessage, compact, productNames, minimal, success, onSuccess, submitLabel }: Props) {
   const t = useTranslations("form");
   const locale = useLocale() as Locale;
-  const [state, action, pending] = useActionState(submitLead, initial);
+  const [state, action, pending] = useActionState(submitLeadForm, initial);
   const [utm, setUtm] = useState<Record<string, string>>({});
   const [page, setPage] = useState("");
   const uid = useId();
