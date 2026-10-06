@@ -9,8 +9,12 @@ const CHANNELS: Record<string, string> = {
   "Organic Social": "Social media",
   Referral: "Other websites",
   "Paid Search": "Google Ads",
-  Unassigned: "Unassigned",
+  "Paid Social": "Social media ads",
+  "Cross-network": "Google Ads (Performance Max)",
+  Unassigned: "Unknown (no source recorded)",
 };
+
+const UNKNOWN = (k: string) => (!k || k === "(not set)" ? "Unknown" : k);
 
 function Stat({ label, value, hint }: { label: string; value: string; hint?: string }) {
   return (
@@ -119,7 +123,7 @@ export default async function AdminTraffic() {
               <List rows={(pages?.data ?? []).map((r) => [r.key, fmt(r.users)])} />
             </Panel>
             <Panel title="Countries (30d)">
-              <List rows={(countries?.data ?? []).map((r) => [r.key, fmt(r.users)])} />
+              <List rows={(countries?.data ?? []).map((r) => [UNKNOWN(r.key), fmt(r.users)])} />
             </Panel>
           </div>
         </>
