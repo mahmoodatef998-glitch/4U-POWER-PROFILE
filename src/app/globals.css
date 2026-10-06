@@ -300,6 +300,7 @@
 /* Light-theme touch-ups for accents that were tuned for navy (unlayered so they beat utilities) */
 :root[data-theme="light"] {
   & :is(.text-brand-400, .text-brand-500, .text-brand-600) { color: var(--color-brand-700); }
+  & .hover\:text-brand-400:hover, & .group:hover .group-hover\:text-brand-400 { color: var(--color-brand-700); }
   & .text-emerald-400 { color: #047857; }
   & :is(.eyebrow, .eyebrow-dark) { color: var(--color-brand-700); }
   /* bright gradients are tuned for navy; on white use the deep variant of each line (or deep amber) */
