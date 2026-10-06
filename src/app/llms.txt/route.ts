@@ -22,6 +22,7 @@ export async function GET() {
     `- [Generator size calculator](${u("/calculator")})`,
     `- [Generator size chart (kVA, kW, amps, fuel)](${u("/generators/sizes")})`,
     `- [Services & warranty](${u("/services")})`,
+    `- [Generator spare parts (send a part number or photo)](${u("/spare-parts")})`,
     `- [Contact](${u("/contact")})`,
     "",
     "## Generator sizes",

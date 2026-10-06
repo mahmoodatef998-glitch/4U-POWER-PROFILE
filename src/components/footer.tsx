@@ -35,6 +35,7 @@ export async function Footer() {
         { href: "/about", label: nav("about") },
         { href: "/industries", label: nav("industries") },
         { href: "/services", label: nav("services") },
+        { href: "/spare-parts", label: nav("parts") },
         { href: "/projects", label: nav("projects") },
         { href: "/markets", label: nav("markets") },
         { href: "/locations", label: ar ? "مناطق التوريد" : "Locations" },

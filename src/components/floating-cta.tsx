@@ -28,6 +28,7 @@ export function FloatingCta() {
           href={wa}
           target="_blank"
           rel="noopener noreferrer"
+          data-wa-location="sticky_mobile"
           onClick={() => trackEvent("whatsapp_click", { location: "sticky_mobile" })}
           className="flex h-12 items-center justify-center gap-2 rounded-full bg-[#0B7038] font-bold text-[#fff]"
         >
@@ -49,6 +50,7 @@ export function FloatingCta() {
           href={wa}
           target="_blank"
           rel="noopener noreferrer"
+          data-wa-location="sticky_desktop"
           aria-label={t("whatsappUs")}
           onClick={() => trackEvent("whatsapp_click", { location: "sticky_desktop" })}
           className="group relative grid size-14 place-items-center rounded-full bg-[#0B7038] text-[#fff] shadow-xl transition hover:-translate-y-0.5"

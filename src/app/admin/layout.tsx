@@ -15,6 +15,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
             <span className="font-extrabold">4U Admin</span>
             <nav className="flex gap-4 text-sm font-semibold">
               <Link href="/admin" className="hover:text-brand-400">Leads</Link>
+              <Link href="/admin/whatsapp" className="hover:text-brand-400">WhatsApp</Link>
               <Link href="/admin/news" className="hover:text-brand-400">News</Link>
               <Link href="/en" className="hover:text-brand-400">View site ↗</Link>
             </nav>

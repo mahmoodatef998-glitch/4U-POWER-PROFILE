@@ -11,6 +11,7 @@ import { SpotlightTracker } from "@/components/fx";
 import { Header } from "@/components/header";
 import { JsonLd } from "@/components/json-ld";
 import { UtmCapture } from "@/components/utm-capture";
+import { WhatsAppTracker } from "@/components/whatsapp-tracker";
 import { routing } from "@/i18n/routing";
 import { organizationSchema } from "@/lib/seo";
 import { SITE_URL } from "@/lib/site";
@@ -79,6 +80,7 @@ export default async function LocaleLayout({ children, params }: { children: Rea
           <Footer />
           <FloatingCta />
           <UtmCapture />
+          <WhatsAppTracker />
           <SpotlightTracker />
         </NextIntlClientProvider>
         <Analytics />

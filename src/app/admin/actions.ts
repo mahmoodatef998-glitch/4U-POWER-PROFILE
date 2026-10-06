@@ -15,11 +15,24 @@ function db() {
   return sb;
 }
 
+const STATUSES = ["new", "contacted", "quoted", "won", "lost"] as const;
+const money = z.preprocess((v) => (v === "" || v == null ? null : v), z.coerce.number().min(0).max(1e9).nullable());
+
 export async function updateLeadStatus(formData: FormData) {
   const id = z.string().uuid().parse(formData.get("id"));
-  const status = z.enum(["new", "contacted", "won", "lost"]).parse(formData.get("status"));
-  await db().from("leads").update({ status }).eq("id", id);
+  const status = z.enum(STATUSES).parse(formData.get("status"));
+  const deal_value = money.parse(formData.get("deal_value"));
+  await db().from("leads").update({ status, deal_value }).eq("id", id);
   revalidatePath("/admin");
+}
+
+export async function updateWaClick(formData: FormData) {
+  const id = z.string().uuid().parse(formData.get("id"));
+  const status = z.enum(STATUSES).parse(formData.get("status"));
+  const deal_value = money.parse(formData.get("deal_value"));
+  const notes = z.string().trim().max(1000).parse(formData.get("notes") ?? "") || null;
+  await db().from("whatsapp_clicks").update({ status, deal_value, notes }).eq("id", id);
+  revalidatePath("/admin/whatsapp");
 }
 
 const PostSchema = z.object({

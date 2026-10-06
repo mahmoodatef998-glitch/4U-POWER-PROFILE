@@ -20,6 +20,7 @@ const STATIC: { path: string; priority: number; freq: MetadataRoute.Sitemap[numb
   { path: "/calculator", priority: 0.85, freq: "monthly" },
   { path: "/industries", priority: 0.8, freq: "monthly" },
   { path: "/services", priority: 0.8, freq: "monthly" },
+  { path: "/spare-parts", priority: 0.8, freq: "monthly" },
   { path: "/markets", priority: 0.7, freq: "monthly" },
   { path: "/projects", priority: 0.7, freq: "monthly" },
   { path: "/news", priority: 0.8, freq: "weekly" },

@@ -14,7 +14,11 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   poweredByHeader: false,
   // Inline the (small, ~20 KB) global CSS into each HTML response: removes the render-blocking stylesheet round-trip on first paint.
-  experimental: { inlineCss: true },
+  experimental: {
+    inlineCss: true,
+    // spare-part photos (≤3, downscaled in the browser) go through a server action; stays under Vercel's 4.5 MB body cap
+    serverActions: { bodySizeLimit: "4mb" },
+  },
   images: {
     formats: ["image/avif", "image/webp"],
     remotePatterns: [{ protocol: "https", hostname: "*.supabase.co", pathname: "/storage/v1/object/public/**" }],

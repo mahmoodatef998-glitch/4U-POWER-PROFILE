@@ -16,6 +16,8 @@ type Lead = {
   utm_campaign: string | null;
   gclid: string | null;
   status: string;
+  deal_value: number | null;
+  attachments: string[] | null;
 };
 
 export default async function AdminLeads() {
@@ -29,6 +31,13 @@ export default async function AdminLeads() {
     sb.from("calculator_submissions").select("id", { count: "exact", head: true }).gte("created_at", since).eq("converted_to_lead", true),
   ]);
   const list = (leads ?? []) as Lead[];
+  // spare-part photos live in a private bucket — sign short-lived links for this page view
+  const paths = list.flatMap((l) => l.attachments ?? []);
+  const signed = new Map<string, string>();
+  if (paths.length) {
+    const { data: urls } = await sb.storage.from("lead-files").createSignedUrls(paths, 3600);
+    for (const u of urls ?? []) if (u.path && u.signedUrl) signed.set(u.path, u.signedUrl);
+  }
   const newCount = list.filter((l) => l.status === "new").length;
 
   return (
@@ -68,7 +77,18 @@ export default async function AdminLeads() {
                 <td className="max-w-xs px-4 py-3">
                   {l.calculated_kva && <p className="font-bold">{l.calculated_kva} kVA</p>}
                   {l.product_slug && <p className="text-muted">{l.product_slug}</p>}
-                  <p className="line-clamp-3">{l.message}</p>
+                  <p className="line-clamp-4 whitespace-pre-line">{l.message}</p>
+                  {!!l.attachments?.length && (
+                    <p className="mt-2 flex flex-wrap gap-2">
+                      {l.attachments.map((p, i) =>
+                        signed.get(p) ? (
+                          <a key={p} href={signed.get(p)} target="_blank" rel="noreferrer" className="font-semibold text-brand-700 underline">
+                            Photo {i + 1}
+                          </a>
+                        ) : null,
+                      )}
+                    </p>
+                  )}
                 </td>
                 <td className="px-4 py-3 text-muted">
                   {l.source}
@@ -76,13 +96,14 @@ export default async function AdminLeads() {
                   {l.gclid && <p>Google Ads</p>}
                 </td>
                 <td className="px-4 py-3">
-                  <form action={updateLeadStatus} className="flex gap-2">
+                  <form action={updateLeadStatus} className="flex flex-wrap gap-2">
                     <input type="hidden" name="id" value={l.id} />
                     <select name="status" defaultValue={l.status} className="rounded-lg border border-line px-2 py-1">
-                      {["new", "contacted", "won", "lost"].map((s) => (
+                      {["new", "contacted", "quoted", "won", "lost"].map((s) => (
                         <option key={s}>{s}</option>
                       ))}
                     </select>
+                    <input name="deal_value" type="number" min="0" step="1" defaultValue={l.deal_value ?? ""} placeholder="AED" className="w-24 rounded-lg border border-line px-2 py-1" />
                     <button className="rounded-lg bg-navy-950 px-3 py-1 font-bold text-white">Save</button>
                   </form>
                 </td>

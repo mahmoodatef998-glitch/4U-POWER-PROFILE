@@ -21,6 +21,7 @@ export function WhatsAppButton({ message, className, size = "md", variant = "wha
   return (
     <a
       href={whatsappUrl(message ?? t("whatsappDefault"))}
+      data-wa-location={location}
       target="_blank"
       rel="noopener noreferrer"
       onClick={() => trackEvent("whatsapp_click", { location })}

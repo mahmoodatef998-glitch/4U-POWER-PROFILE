@@ -21,6 +21,7 @@ const NAV = [
   { href: "/calculator", key: "calculator", top: true },
   { href: "/industries", key: "industries" },
   { href: "/services", key: "services" },
+  { href: "/spare-parts", key: "parts" },
   { href: "/projects", key: "projects" },
   { href: "/markets", key: "markets" },
   { href: "/news", key: "news", top: true },
