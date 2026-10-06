@@ -1,10 +1,12 @@
 import Script from "next/script";
 
-const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
+// The GA4 measurement ID is public (it ships in every page). Default to the live property on production only,
+// so preview deployments and local builds never send data; NEXT_PUBLIC_GA_ID overrides it.
+const GA_ID = process.env.NEXT_PUBLIC_GA_ID || (process.env.VERCEL_ENV === "production" ? "G-S9RNFB5JTL" : undefined);
 const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID;
 const PIXEL_ID = process.env.NEXT_PUBLIC_META_PIXEL_ID;
 
-/** GA4 + GTM + Meta Pixel. Each tag renders only when its env var is set. */
+/** GA4 + GTM + Meta Pixel. GTM and Pixel render only when their env var is set. */
 export function Analytics() {
   return (
     <>
