@@ -44,7 +44,9 @@ export const getTestimonials = cache(async (): Promise<Testimonial[]> => {
 
 export const getNews = cache(async (): Promise<NewsPost[]> => {
   const rows = await fromSupabase<NewsPost>("news_posts", { column: "published_at", ascending: false });
-  const list = rows ?? [...seedNews].sort((a, b) => b.published_at.localeCompare(a.published_at));
+  // Database rows win (admin edits / unpublish); bundled articles not yet in the database are still served.
+  const known = new Set((rows ?? []).map((p) => p.slug));
+  const list = [...(rows ?? []), ...seedNews.filter((p) => !known.has(p.slug))].sort((a, b) => b.published_at.localeCompare(a.published_at));
   const now = Date.now();
   return list.filter((p) => p.is_published && new Date(p.published_at).getTime() <= now);
 });

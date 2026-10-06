@@ -309,7 +309,7 @@ export const generatorsPillar: Pillar = {
       ar: "أخبرنا بالقدرة ونوع الوقود ومدينة التسليم، وسنرد بخيارين أو ثلاثة من المحركات مع مدة التسليم وعرض سعر مكتوب.",
     },
   },
-  relatedPosts: ["how-to-choose-the-right-kva-generator", "perkins-vs-cummins-vs-kubota-engine-brand-uae", "diesel-vs-gas-generators-gcc-climate"],
+  relatedPosts: ["generator-price-uae-cost-factors", "generator-size-for-villa-uae", "how-to-choose-the-right-kva-generator"],
 };
 
 export const atsPillar: Pillar = {

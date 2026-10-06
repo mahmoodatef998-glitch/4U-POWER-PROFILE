@@ -290,6 +290,11 @@
   .prose-4u ol { @apply list-decimal space-y-2 ps-6 marker:font-bold marker:text-brand-700; }
   .prose-4u strong { @apply font-bold text-ink; }
   .prose-4u blockquote { @apply rounded-xl border-s-4 border-brand-500 bg-surface px-5 py-4 text-zinc-800; }
+  .prose-4u table { @apply w-full overflow-hidden rounded-2xl border border-line text-start text-base; border-collapse: separate; border-spacing: 0; }
+  .prose-4u th { @apply bg-surface px-4 py-3 text-start font-bold text-ink; }
+  .prose-4u td { @apply border-t border-line px-4 py-3; }
+  .prose-4u :is(th, td):last-child { @apply text-end tabular-nums; }
+  .prose-4u tr:last-child td { @apply font-semibold text-ink; }
 }
 
 /* Light-theme touch-ups for accents that were tuned for navy (unlayered so they beat utilities) */
