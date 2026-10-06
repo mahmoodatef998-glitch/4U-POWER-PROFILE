@@ -1,4 +1,6 @@
 import { updateLeadStatus } from "./actions";
+import Link from "next/link";
+import { gaActiveNow, gaConfigured, gaTotals, safe } from "@/lib/google";
 import { getAdminClient } from "@/lib/supabase/server";
 
 type Lead = {
@@ -30,6 +32,8 @@ export default async function AdminLeads() {
     sb.from("calculator_submissions").select("id", { count: "exact", head: true }).gte("created_at", since),
     sb.from("calculator_submissions").select("id", { count: "exact", head: true }).gte("created_at", since).eq("converted_to_lead", true),
   ]);
+  // visitor strip from GA4 (only when configured; never blocks the leads table)
+  const [visNow, visToday, visWeek] = gaConfigured() ? await Promise.all([safe(gaActiveNow()), safe(gaTotals("today")), safe(gaTotals("6daysAgo"))]) : [null, null, null];
   const list = (leads ?? []) as Lead[];
   // spare-part photos live in a private bucket — sign short-lived links for this page view
   const paths = list.flatMap((l) => l.attachments ?? []);
@@ -42,6 +46,18 @@ export default async function AdminLeads() {
 
   return (
     <div>
+      <Link href="/admin/traffic" className="mb-6 flex flex-wrap items-center gap-x-8 gap-y-2 rounded-2xl border border-line bg-navy-900 px-5 py-4 text-sm hover:border-brand-400">
+        {gaConfigured() ? (
+          <>
+            <span>On the site now: <b className="text-lg">{visNow?.data ?? "—"}</b></span>
+            <span>Visitors today: <b className="text-lg">{visToday?.data?.users ?? "—"}</b></span>
+            <span>Visitors (7 days): <b className="text-lg">{visWeek?.data?.users ?? "—"}</b></span>
+            <span className="ms-auto font-semibold text-brand-700">Visitors &amp; Google search →</span>
+          </>
+        ) : (
+          <span className="font-semibold text-brand-700">Connect Google Analytics &amp; Search Console to see visitors and search terms →</span>
+        )}
+      </Link>
       <h1 className="text-2xl font-extrabold">Leads</h1>
       <dl className="mt-6 grid gap-4 sm:grid-cols-3">
         {[
