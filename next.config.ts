@@ -19,6 +19,22 @@ const nextConfig: NextConfig = {
     formats: ["image/avif", "image/webp"],
     remotePatterns: [{ protocol: "https", hostname: "*.supabase.co", pathname: "/storage/v1/object/public/**" }],
   },
+  // URLs from the previous website on this domain that Google still crawls → closest new page.
+  async redirects() {
+    const old: [string, string][] = [
+      ["/team", "/en/about"],
+      ["/about-us", "/en/about"],
+      ["/our_services", "/en/services"],
+      ["/our-services", "/en/services"],
+      ["/safety-policy", "/en/about"],
+      ["/quality-policy", "/en/about"],
+      ["/quality-policy-2", "/en/about"],
+      ["/contact-us", "/en/contact"],
+      ["/project/:slug*", "/en/projects"],
+      ["/our_projects", "/en/projects"],
+    ];
+    return old.map(([source, destination]) => ({ source, destination, permanent: true }));
+  },
   async headers() {
     return [
       { source: "/:path*", headers: securityHeaders },
