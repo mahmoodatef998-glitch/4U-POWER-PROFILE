@@ -38,6 +38,9 @@ export const company = {
   mapQuery: "SAIF Zone Warehouse A2-020, Sharjah, United Arab Emirates",
 } as const;
 
+/** Business directory listings (same NAP as above) — emitted as schema.org `sameAs` so Google ties them to this site. */
+export const listings = ["https://www.yellowpages-uae.com/4u-power-generation-fzc-188988"] as const;
+
 /** Leave a URL empty to hide that network everywhere. */
 export const social = {
   facebook: "",

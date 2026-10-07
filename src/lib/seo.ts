@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { SITE_URL, company, social } from "./site";
+import { SITE_URL, company, listings, social } from "./site";
 import type { Locale } from "./utils";
 
 export const OG_IMAGE = "/images/og-default.png";
@@ -53,7 +53,7 @@ export const ORG_ID = `${SITE_URL}/#organization`;
 export const BUSINESS_ID = `${SITE_URL}/#localbusiness`;
 
 export function organizationSchema(locale: Locale) {
-  const sameAs = Object.values(social).filter((u) => u && !u.includes("wa.me"));
+  const sameAs = [...Object.values(social).filter((u) => u && !u.includes("wa.me")), ...listings];
   const address = {
     "@type": "PostalAddress",
     streetAddress: locale === "ar" ? company.address.streetAr : company.address.street,
