@@ -214,7 +214,7 @@ export const extraProducts: Product[] = [
       s("Protection", "الحماية", "Numerical protection relays, CT / VT metering", "مرحلات حماية رقمية، قياس بمحولات التيار والجهد"),
       s("Components", "المكونات", "Leading brands such as Schneider Electric, ABB, LS Electric (per specification)", "علامات رائدة مثل شنايدر إلكتريك وABB وLS Electric (حسب المواصفات)"),
     ],
-    images: ["/images/products/mv-switchgear.svg"],
+    images: ["/images/products/mv-switchgear-4u.webp", "/images/products/mv-switchgear.svg"],
     sort_order: 125,
   },
   {
@@ -233,7 +233,7 @@ export const extraProducts: Product[] = [
       s("Standard", "المعيار", "Assembled to IEC 61439", "مجمّعة وفق IEC 61439"),
       s("Integration", "الربط", "PLC / SCADA interface on request", "ربط مع PLC / SCADA عند الطلب"),
     ],
-    images: ["/images/products/mcc-panel.svg"],
+    images: ["/images/products/mcc-vfd-panel-4u.webp", "/images/products/mcc-panel.svg"],
     sort_order: 126,
   },
   {
@@ -251,7 +251,7 @@ export const extraProducts: Product[] = [
       s("Control", "التحكم", "Automatic step controller", "وحدة تحكم أوتوماتيكية بالخطوات"),
       s("Options", "الخيارات", "Detuned reactors (7 % / 14 %), harmonic filters", "ملفات تنقية (7% / 14%) ومرشحات توافقيات"),
     ],
-    images: ["/images/products/switchgear.svg"],
+    images: ["/images/products/capacitor-bank-4u.webp", "/images/products/switchgear.svg"],
     sort_order: 127,
   },
   {
@@ -269,7 +269,7 @@ export const extraProducts: Product[] = [
       s("Applications", "التطبيقات", "Load management, pump control, generator sequencing", "إدارة الأحمال، التحكم بالمضخات، تسلسل تشغيل المولدات"),
       s("Communication", "الاتصال", "Modbus, Ethernet, remote monitoring", "Modbus وEthernet ومراقبة عن بُعد"),
     ],
-    images: ["/images/products/mdb.svg"],
+    images: ["/images/products/plc-control-panel-4u.webp", "/images/products/mdb.svg"],
     sort_order: 128,
   },
 ];

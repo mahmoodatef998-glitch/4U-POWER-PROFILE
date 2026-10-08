@@ -94,19 +94,19 @@ export const home = {
       },
       ats_panel: {
         body: { en: "Automatic changeover from 63 A to 4000 A.", ar: "تحويل أوتوماتيكي من 63 إلى 4000 أمبير." },
-        image: "/images/products/ats-panel.svg",
+        image: "/images/products/ats-panel-63-400a-4u.webp",
       },
       switchgear: {
         body: { en: "LV switchboards and generator control panels.", ar: "لوحات جهد منخفض ولوحات تحكم المولدات." },
-        image: "/images/products/switchgear.svg",
+        image: "/images/products/lv-switchgear-4u.webp",
       },
       mdb: {
         body: { en: "MDB, SMDB and DB panels to utility standards.", ar: "لوحات توزيع رئيسية وفرعية حسب متطلبات الهيئات." },
-        image: "/images/products/mdb.svg",
+        image: "/images/products/mdb-4u.webp",
       },
       sync_panel: {
         body: { en: "Parallel 2–16 generators with load sharing.", ar: "تشغيل 2 إلى 16 مولداً على التوازي مع توزيع الأحمال." },
-        image: "/images/products/sync-panel.svg",
+        image: "/images/products/synchronizing-panel-4u.webp",
       },
       solar: {
         body: { en: "Solar panels, solar stations and parks, solar light towers and battery storage.", ar: "ألواح شمسية ومحطات ومزارع طاقة شمسية وأبراج إنارة شمسية وأنظمة تخزين بالبطاريات." },
