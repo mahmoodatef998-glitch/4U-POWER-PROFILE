@@ -114,7 +114,7 @@ export const home = {
       },
       accessories: {
         body: { en: "Fuel tanks, light towers, acoustic canopies, trailers and load banks.", ar: "خزانات وقود وأبراج إنارة وكبائن عازلة للصوت ومقطورات وأحمال اختبار." },
-        image: "/images/products/fuel-tank.svg",
+        image: "/images/products/diesel-light-tower-4u.webp",
       },
     },
   },

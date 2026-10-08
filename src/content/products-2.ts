@@ -74,7 +74,7 @@ export const extraProducts: Product[] = [
       s("Operation", "التشغيل", "Dusk-to-dawn automatic, timer or manual", "تلقائي من الغروب حتى الشروق، أو بمؤقت أو يدوي"),
       s("Mobility", "التنقل", "Towable trailer with outriggers", "مقطورة قابلة للسحب مع دعامات تثبيت"),
     ],
-    images: ["/images/products/solar-light-tower.svg"],
+    images: ["/images/products/solar-light-tower-4u.webp", "/images/products/solar-light-tower.svg"],
     sort_order: 220,
   },
   {
@@ -117,7 +117,7 @@ export const extraProducts: Product[] = [
       s("Accessories", "الملحقات", "Transfer pumps, level gauge, low/high alarms, leak detection", "مضخات نقل، مؤشر منسوب، إنذارات انخفاض وارتفاع، كشف تسرب"),
       s("Autonomy", "مدة التشغيل", "Sized for 8 h to several days of run time", "بأحجام تكفي من 8 ساعات حتى عدة أيام تشغيل"),
     ],
-    images: ["/images/products/fuel-tank.svg"],
+    images: ["/images/products/fuel-tank-4u.webp", "/images/products/fuel-tank.svg"],
     sort_order: 300,
   },
   {
@@ -137,7 +137,7 @@ export const extraProducts: Product[] = [
       s("Generator", "المولد", "Built-in diesel set with auxiliary socket", "مولد ديزل مدمج مع مقبس خرج إضافي"),
       s("Run time", "مدة التشغيل", "Long-run fuel tank for multi-night operation", "خزان وقود للتشغيل لعدة ليالٍ متواصلة"),
     ],
-    images: ["/images/products/light-tower.svg"],
+    images: ["/images/products/diesel-light-tower-4u.webp", "/images/products/light-tower.svg"],
     sort_order: 310,
   },
   {
@@ -174,7 +174,7 @@ export const extraProducts: Product[] = [
       s("Features", "المزايا", "Brakes, lights, jockey wheel, lifting points", "فرامل وإضاءة وعجلة أمامية ونقاط رفع"),
       s("Options", "الخيارات", "Integrated fuel tank and cable reel", "خزان وقود مدمج وبكرة كابلات"),
     ],
-    images: ["/images/products/generator-trailer.svg"],
+    images: ["/images/products/generator-trailer-4u.webp", "/images/products/generator-trailer.svg"],
     sort_order: 330,
   },
   {
@@ -193,7 +193,7 @@ export const extraProducts: Product[] = [
       s("Control", "التحكم", "Step control with metering and data logging", "تحكم بالخطوات مع القياس وتسجيل البيانات"),
       s("Service", "الخدمة", "Available with our load-bank testing service", "متوفر مع خدمة اختبار الأحمال لدينا"),
     ],
-    images: ["/images/products/load-bank.svg"],
+    images: ["/images/products/load-bank-4u.webp", "/images/products/load-bank.svg"],
     sort_order: 340,
   },
 
