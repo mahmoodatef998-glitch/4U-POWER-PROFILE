@@ -277,7 +277,7 @@ Run your own numbers in the [kVA calculator](/en/calculator), or send us a photo
       "A 500 kVA standby set is not a 500 kVA prime set. What ISO 8528 standby, prime and continuous ratings mean, and why it matters on Gulf sites.",
     excerpt_ar:
       "مولد 500 ك.ف.أ احتياطي ليس مولد 500 ك.ف.أ أساسي. ما معنى التقنين الاحتياطي والأساسي والمستمر حسب ISO 8528، ولماذا يهم ذلك في مواقع الخليج.",
-    cover_image: "/images/products/baudouin-containerized-generator-4u.webp",
+    cover_image: "/images/products/generator-container-2000kva-4u.webp",
     published_at: "2026-10-06T06:00:00Z",
     is_published: true,
     body_en: `Every generator datasheet shows two or three power figures. Mixing them up is the most common — and most expensive — mistake in generator buying. Here is what each rating means under **ISO 8528-1**, and which one your project needs.
@@ -465,7 +465,7 @@ Our [maintenance contracts](/en/services) cover scheduled visits, filters and oi
       "Renting wins for short jobs; buying wins once a set is needed for longer. How to decide using duration, run hours, resale value and service needs.",
     excerpt_ar:
       "الاستئجار أفضل للأعمال القصيرة، والشراء أفضل عندما تحتاج المولد لفترة أطول. كيف تقرر بناءً على المدة وساعات التشغيل وقيمة إعادة البيع والصيانة.",
-    cover_image: "/images/products/cummins-containerized-generator-4u.webp",
+    cover_image: "/images/products/generator-container-2000kva-4u.webp",
     published_at: "2026-10-20T06:00:00Z",
     is_published: true,
     body_en: `Contractors, event organisers and facility managers ask the same question: is it cheaper to rent a generator or to buy one? The answer depends on four numbers you already know.

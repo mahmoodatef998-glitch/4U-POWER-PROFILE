@@ -7,6 +7,7 @@ import { FaqBlock } from "@/components/faq-block";
 import { JsonLd } from "@/components/json-ld";
 import { PageHero } from "@/components/page-hero";
 import { ProductCard } from "@/components/product-card";
+import { generatorImageForKva, withSizeImage } from "@/lib/generator-image";
 import { SectionHeading } from "@/components/section-heading";
 import { GENERATOR_SIZES, sizeCopy, sizeFromSlug, sizeSlug } from "@/content/generator-sizes";
 import { Link } from "@/i18n/navigation";
@@ -56,7 +57,7 @@ export default async function GeneratorSizePage({ params }: Props) {
     name: ar ? `مولد ديزل ${kva} ك.ف.أ` : `${kva} kVA Diesel Generator`,
     description: c.seoDesc,
     url: localeUrl(locale, `/generators/${size}`),
-    image: `${SITE_URL}${kva <= 500 ? "/images/products/cummins-diesel-generator-4u.webp" : "/images/products/cummins-containerized-generator-4u.webp"}`,
+    image: `${SITE_URL}${generatorImageForKva(kva, "Cummins") ?? "/images/products/cummins-diesel-generator-4u.webp"}`,
     category: ar ? "مولدات ديزل" : "Diesel generators",
     brand: { "@type": "Brand", name: "4U Power Generation" },
     manufacturer: { "@id": ORG_ID },
@@ -143,7 +144,7 @@ export default async function GeneratorSizePage({ params }: Props) {
             <ul className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {[...matches, ...(ats ? [ats] : [])].slice(0, 3).map((p) => (
                 <li key={p.slug}>
-                  <ProductCard product={p} />
+                  <ProductCard product={withSizeImage(p, kva)} />
                 </li>
               ))}
             </ul>

@@ -74,7 +74,7 @@ export const extraProducts: Product[] = [
       s("Operation", "التشغيل", "Dusk-to-dawn automatic, timer or manual", "تلقائي من الغروب حتى الشروق، أو بمؤقت أو يدوي"),
       s("Mobility", "التنقل", "Towable trailer with outriggers", "مقطورة قابلة للسحب مع دعامات تثبيت"),
     ],
-    images: ["/images/products/solar-light-tower-4u.webp", "/images/products/solar-light-tower.svg"],
+    images: ["/images/products/solar-light-tower-real-1-4u.webp", "/images/products/solar-light-tower-real-2-4u.webp", "/images/products/solar-light-tower-real-3-4u.webp"],
     sort_order: 220,
   },
   {

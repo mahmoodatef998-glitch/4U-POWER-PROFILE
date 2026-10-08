@@ -12,7 +12,7 @@ export const newsPart4: NewsPost[] = [
       "In healthcare a power cut is a patient-safety event. How to size a hospital or clinic generator, meet 10-second transfer, and plan N+1 redundancy.",
     excerpt_ar:
       "في الرعاية الصحية انقطاع الكهرباء حدث يمس سلامة المرضى. كيف تختار مولد المستشفى أو العيادة، وتحقق التحويل خلال 10 ثوانٍ، وتخطط للاحتياط N+1.",
-    cover_image: "/images/products/cummins-containerized-generator-4u.webp",
+    cover_image: "/images/products/generator-container-2000kva-4u.webp",
     published_at: "2026-10-12T06:00:00Z",
     is_published: true,
     body_en: `In a hospital, a power cut is not an inconvenience — it is a patient-safety event. Healthcare standby power is designed differently from an office or a villa, and consultants in the UAE will check it closely.
@@ -122,7 +122,7 @@ We supply Cummins, Perkins and Baudouin sets from 10 to 2500 kVA with AMF contro
       "Who needs to approve a generator in Dubai, and what inspectors check: changeover interlocks, fuel storage, exhaust, ventilation and noise. A practical checklist.",
     excerpt_ar:
       "من يوافق على تركيب مولد في دبي وماذا يفحص المفتشون: أقفال التحويل وتخزين الوقود والعادم والتهوية والضوضاء. قائمة عملية قبل التركيب.",
-    cover_image: "/images/products/volvo-penta-containerized-generator-4u.webp",
+    cover_image: "/images/products/generator-container-2000kva-4u.webp",
     published_at: "2026-10-15T06:00:00Z",
     is_published: true,
     body_en: `A generator is not just delivered and switched on. In Dubai, a permanent standby set touches the electricity network, fuel storage, fire safety and the neighbours — so several parties have a say. Requirements change and differ by project type, so always confirm the current rules with your consultant and the authorities. This checklist covers what is typically reviewed.
@@ -358,7 +358,7 @@ Multiply the litres per hour by the current diesel price. Over a year, 1–2 lit
       "Not all automatic transfer switches are built the same. Contactor, motorised and ACB-based ATS panels compared, plus 3-pole vs 4-pole and sizing.",
     excerpt_ar:
       "لوحات التحويل الأوتوماتيكي ليست كلها متشابهة. مقارنة بين لوحات ATS بالكونتاكتور والمفتاح الموتورايزد والقاطع الهوائي ACB، مع 3 و4 أقطاب والسعة.",
-    cover_image: "/images/products/perkins-containerized-generator-4u.webp",
+    cover_image: "/images/products/generator-container-2000kva-4u.webp",
     published_at: "2026-10-22T06:00:00Z",
     is_published: true,
     body_en: `Every automatic transfer switch does the same job — move the load from mains to generator and back — but the switching device inside decides how big, how robust and how expensive the panel is. For the basics of how an ATS works, see [ATS panels explained](/en/news/ats-panels-explained). This guide compares the three main types.
