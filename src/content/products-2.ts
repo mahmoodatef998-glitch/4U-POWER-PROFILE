@@ -32,7 +32,7 @@ export const extraProducts: Product[] = [
       s("Mounting", "التثبيت", "Rooftop, ground-mount and carport structures", "هياكل للأسطح والأرض ومظلات السيارات"),
       s("Climate", "ظروف التشغيل", "Selected for high-temperature, dusty GCC sites", "مختارة لمواقع الخليج عالية الحرارة والغبار"),
     ],
-    images: ["/images/products/solar-pv.svg"],
+    images: ["/images/products/solar-pv-panels-4u.webp", "/images/products/solar-pv.svg"],
     sort_order: 200,
   },
   {
@@ -53,7 +53,7 @@ export const extraProducts: Product[] = [
       s("Integration", "الربط", "LV / MV switchgear, ATS, sync with generators, BESS", "لوحات جهد منخفض ومتوسط، ATS، تزامن مع المولدات، تخزين بالبطاريات"),
       s("Monitoring", "المراقبة", "Remote plant monitoring and reporting", "مراقبة المحطة عن بُعد وتقارير الأداء"),
     ],
-    images: ["/images/products/solar-station.svg", "/images/products/solar-pv.svg"],
+    images: ["/images/products/solar-park-4u.webp", "/images/products/solar-pv-panels-4u.webp", "/images/products/solar-station.svg"],
     sort_order: 210,
   },
   {
@@ -94,7 +94,7 @@ export const extraProducts: Product[] = [
       s("Functions", "الوظائف", "Solar shifting, peak shaving, genset hybridisation, backup", "نقل الطاقة الشمسية، خفض الذروة، التشغيل الهجين مع المولد، الطاقة الاحتياطية"),
       s("Cooling", "التبريد", "Air-conditioned enclosures for GCC ambient", "أغلفة مكيفة لحرارة الخليج"),
     ],
-    images: ["/images/products/bess.svg"],
+    images: ["/images/products/bess-battery-storage-4u.webp", "/images/products/bess.svg"],
     sort_order: 230,
   },
 
