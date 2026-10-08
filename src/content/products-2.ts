@@ -214,7 +214,7 @@ export const extraProducts: Product[] = [
       s("Protection", "الحماية", "Numerical protection relays, CT / VT metering", "مرحلات حماية رقمية، قياس بمحولات التيار والجهد"),
       s("Components", "المكونات", "Leading brands such as Schneider Electric, ABB, LS Electric (per specification)", "علامات رائدة مثل شنايدر إلكتريك وABB وLS Electric (حسب المواصفات)"),
     ],
-    images: ["/images/products/mv-switchgear-4u.webp", "/images/products/mv-switchgear.svg"],
+    images: ["/images/products/mv-switchgear-33kv-4u.webp", "/images/products/mv-switchgear.svg"],
     sort_order: 125,
   },
   {
