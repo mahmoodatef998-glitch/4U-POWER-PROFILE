@@ -67,6 +67,7 @@ export function describePage(path: string | null): PageInfo {
     "spare-parts": "Spare parts",
     services: "Services",
     calculator: "kVA calculator",
+    configurator: "3D configurator (the WhatsApp text lists the build)",
     contact: "Contact page",
     models: "Generator model list (all brands)",
     news: slug ? `Article: ${slug.replace(/-/g, " ")}` : "News",

@@ -19,6 +19,7 @@ const STATIC: { path: string; priority: number; freq: MetadataRoute.Sitemap[numb
   { path: "/generators/sizes", priority: 0.85, freq: "monthly" },
   { path: "/locations", priority: 0.8, freq: "monthly" },
   { path: "/calculator", priority: 0.85, freq: "monthly" },
+  { path: "/configurator", priority: 0.7, freq: "monthly" },
   { path: "/industries", priority: 0.8, freq: "monthly" },
   { path: "/services", priority: 0.8, freq: "monthly" },
   { path: "/spare-parts", priority: 0.8, freq: "monthly" },

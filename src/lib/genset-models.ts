@@ -4,6 +4,7 @@ import { perkinsModels } from "@/content/perkins-models";
 import { baudouinModels } from "@/content/baudouin-models";
 import { kubotaModels } from "@/content/kubota-models";
 import { generatorImageForKva } from "./generator-image";
+import type { ConfigModel } from "./configurator";
 import type { SizingModel } from "./sizing";
 import type { Locale } from "./utils";
 
@@ -73,6 +74,31 @@ export const brandList = (locale: Locale) =>
   locale === "ar" ? BRANDS.map((b) => GENSET_BRANDS[b].ar).join(" و") : `${BRANDS.slice(0, -1).join(", ")} & ${BRANDS[BRANDS.length - 1]}`;
 export const modelImage = (m: GensetModel) => generatorImageForKva(m.standbyKva, m.brand) ?? GENSET_BRANDS[m.brand].image;
 export const modelPath = (m: GensetModel) => `/models/${m.slug}`;
+
+/** Every model reduced to what the 3D configurator needs (sent to the browser). */
+export const configModels = (): ConfigModel[] =>
+  gensetModels.map((m) => {
+    const enc = m.enclosed;
+    // very long "enclosed" builds on the sheets are containers, not canopies
+    const containerNote = enc?.container ?? (enc?.l && enc.l > 7000 ? `${Math.round(enc.l / 1000)} m container` : null);
+    const dim = (d: GensetDim | null) => (d && d.l && d.w && d.h ? { l: d.l, w: d.w, h: d.h, kg: d.kg, tankL: d.tankL ?? null } : null);
+    return {
+      slug: m.slug,
+      code: m.code,
+      brand: m.brand,
+      engine: m.engine,
+      standbyKva: m.standbyKva,
+      primeKva: m.primeKva,
+      alternator: [m.alternator.leroySomer, m.alternator.stamford].filter(Boolean).join(" | "),
+      controller: m.controller,
+      open: dim(m.open),
+      canopy: containerNote ? null : dim(enc),
+      containerNote,
+      containerKg: containerNote ? (enc?.kg ?? null) : null,
+      fuel75: m.fuelLph?.p75 ?? null,
+      image: modelImage(m),
+    };
+  });
 
 /** Every model reduced to what the kVA calculator needs (sent to the browser). */
 export const sizingModels = (): SizingModel[] =>

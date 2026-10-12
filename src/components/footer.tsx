@@ -27,6 +27,7 @@ export async function Footer() {
         { href: "/products", label: nav("products") },
         { href: "/generators/sizes", label: ar ? "جدول أحجام المولدات" : "Generator size chart" },
         { href: "/calculator", label: nav("calculator") },
+        { href: "/configurator", label: nav("configurator") },
       ],
     },
     {

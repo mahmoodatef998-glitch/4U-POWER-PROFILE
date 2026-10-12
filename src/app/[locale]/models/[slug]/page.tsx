@@ -1,4 +1,4 @@
-import { ShieldCheck } from "lucide-react";
+import { Box, ShieldCheck } from "lucide-react";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
@@ -8,6 +8,7 @@ import { JsonLd } from "@/components/json-ld";
 import { LeadForm } from "@/components/lead-form";
 import { ModelTable } from "@/components/model-table";
 import { PageHero } from "@/components/page-hero";
+import { buttonVariants } from "@/components/ui/button";
 import { products as seedProducts } from "@/content/products";
 import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
@@ -106,6 +107,10 @@ export default async function ModelPage({ params }: Props) {
         <div className="flex flex-col gap-3 sm:flex-row">
           <WhatsAppButton location={`model_${m.slug}`} message={wa} size="lg" label={ar ? `سعر ${m.code}` : `Get ${m.code} price`} />
           <CallButton location={`model_${m.slug}`} size="lg" variant="ghostDark" />
+          <Link href={`/configurator?model=${m.slug}`} className={buttonVariants({ variant: "ghostDark", size: "lg" })}>
+            <Box aria-hidden />
+            {ar ? "صمّمه 3D" : "Build it in 3D"}
+          </Link>
         </div>
       </PageHero>
 

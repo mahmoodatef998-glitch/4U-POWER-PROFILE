@@ -3,6 +3,7 @@
 import * as Slider from "@radix-ui/react-slider";
 import {
   AlertTriangle,
+  Box,
   ArrowLeft,
   ArrowRight,
   Building2,
@@ -704,6 +705,10 @@ export function Calculator({ products, models, variant = "full" }: { products: P
                         <Link href={`/models/${f.model.slug}`} className="inline-flex items-center gap-1 font-semibold text-brand-700 hover:underline">
                           <FileText className="size-4" aria-hidden />
                           {c.datasheet}
+                        </Link>
+                        <Link href={`/configurator?model=${f.model.slug}${f.units > 1 ? `&units=${Math.min(4, f.units)}` : ""}`} className="inline-flex items-center gap-1 font-semibold text-brand-700 hover:underline">
+                          <Box className="size-4" aria-hidden />
+                          3D
                         </Link>
                         <a
                           href={whatsappUrl(`${waMessage}\n→ ${fitName(f)}`)}

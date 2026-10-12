@@ -19,6 +19,7 @@ const NAV = [
   { href: "/switchgear", key: "switchgear", top: true },
   { href: "/products", key: "products", top: true },
   { href: "/calculator", key: "calculator", top: true },
+  { href: "/configurator", key: "configurator" },
   { href: "/industries", key: "industries" },
   { href: "/services", key: "services" },
   { href: "/spare-parts", key: "parts" },

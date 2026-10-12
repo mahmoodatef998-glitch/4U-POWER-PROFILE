@@ -1,7 +1,7 @@
 "use client";
 
 import { LazyMotion, domAnimation, m, useInView, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform } from "framer-motion";
-import { Children, Fragment, useEffect, useRef, useState, type ElementType, type PointerEvent, type ReactNode } from "react";
+import { Children, Fragment, useEffect, useRef, useState, type PointerEvent, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
@@ -32,13 +32,13 @@ export function SplitText({
   delay = 0,
 }: {
   text: string;
-  as?: ElementType;
+  as?: "h1" | "h2" | "h3";
   className?: string;
   id?: string;
   delay?: number;
 }) {
   const reduce = useReducedMotion();
-  const ref = useRef<HTMLElement>(null);
+  const ref = useRef<HTMLHeadingElement>(null);
   const inView = useInView(ref, { once: true, margin: "0px 0px -8% 0px" });
   const words = parseMarks(text);
   const marked = words.some((w) => w.em);

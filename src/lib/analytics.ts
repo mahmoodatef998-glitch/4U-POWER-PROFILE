@@ -11,7 +11,9 @@ export type ConversionEvent =
   | "calculator_quote_click"
   | "add_to_quote"
   | "rfq_submit"
-  | "datasheet_download";
+  | "datasheet_download"
+  | "configurator_quote_click"
+  | "configurator_snapshot";
 
 type Params = Record<string, string | number | boolean | undefined>;
 
@@ -29,6 +31,7 @@ const META_EVENTS: Partial<Record<ConversionEvent, string>> = {
   generate_lead: "Lead",
   add_to_quote: "AddToCart",
   calculator_quote_click: "Lead",
+  configurator_quote_click: "Lead",
 };
 
 export function trackEvent(event: ConversionEvent, params: Params = {}) {
