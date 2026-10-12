@@ -111,8 +111,13 @@ function useAssembly(part: Part, progress: MotionValue<number>, index: number) {
 
 const box = (p: Part) => ({ left: pct(p.x, CANVAS.w), top: pct(p.y, CANVAS.h), width: pct(p.w, CANVAS.w), height: pct(p.h, CANVAS.h) });
 
+/**
+ * The exploded state reaches ~10% past the canvas (5.6% left, 4.7% right, from SPREAD), so on narrow
+ * screens the canvas is held to the viewport ÷ 1.11 (less a 0.5rem gutter each side) and every part stays in frame.
+ */
+const STAGE_VW = "(100vw - 1rem) / 1.11";
 /** Rendered stage width — mirrors the stage's inline width below (2000px source cap, viewport and height limits). */
-const STAGE_SIZE = `min(${CANVAS.w}px, 118vw, (100vh - 11rem) * ${ASPECT.toFixed(3)})`;
+const STAGE_SIZE = `min(${CANVAS.w}px, ${STAGE_VW}, (100vh - 11rem) * ${ASPECT.toFixed(3)})`;
 
 /**
  * Hand-optimised WebP layer served as-is, with a half-resolution "-md" variant
@@ -272,8 +277,8 @@ export function HeroAssembly({ words, strings }: { words: string[]; strings: { s
           {/* stage: the generator owns the whole frame (never wider than its 2000px source) */}
           <div className="absolute inset-0 flex items-center justify-center px-2 pb-10 pt-16 sm:px-6 max-md:pb-24">
             <div
-              className="relative shrink-0 [--hero-vw:118vw] max-sm:[--hero-vw:104vw]"
-              style={{ aspectRatio: `${CANVAS.w} / ${CANVAS.h}`, width: `min(${CANVAS.w}px, var(--hero-vw), calc((100svh - 11rem) * ${ASPECT.toFixed(4)}))` }}
+              className="relative shrink-0"
+              style={{ aspectRatio: `${CANVAS.w} / ${CANVAS.h}`, width: `min(${CANVAS.w}px, calc(${STAGE_VW}), calc((100svh - 11rem) * ${ASPECT.toFixed(4)}))` }}
             >
               {!still && PARTS.map((p, i) => <Layer key={p.id} part={p} index={i} progress={progress} priority={p.id === "engine" || p.id === "base-frame"} />)}
               {!still && PARTS.map((p) => (p.label ? <Landing key={p.id} part={p} progress={progress} /> : null))}

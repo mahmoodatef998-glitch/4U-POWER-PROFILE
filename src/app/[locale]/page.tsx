@@ -193,7 +193,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
         </section>
 
         {/* ---------------------------------------------- WHY 4U: bento panel */}
-        <section className="relative px-2 py-10 sm:px-4 sm:py-16" aria-labelledby="why-title">
+        <section className="relative overflow-x-clip px-2 py-10 sm:px-4 sm:py-16" aria-labelledby="why-title">
           <div className="mx-auto max-w-[88rem] rounded-[2.5rem] border border-white/10 bg-white/[0.025] p-4 backdrop-blur-sm sm:p-8 lg:p-10">
             <div className="grid gap-4 lg:grid-cols-6 lg:grid-rows-[auto_auto]">
               <Reveal className="spotlight rounded-[1.75rem] border border-white/10 bg-navy-900/70 p-7 sm:p-10 lg:col-span-3 lg:row-span-2" from="start">
