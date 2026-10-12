@@ -1,6 +1,7 @@
 import { cumminsModels } from "@/content/cummins-models";
 import type { GensetBrand, GensetDim, GensetModel, GensetModelData } from "@/content/genset-types";
 import { perkinsModels } from "@/content/perkins-models";
+import { baudouinModels } from "@/content/baudouin-models";
 import { kubotaModels } from "@/content/kubota-models";
 import { generatorImageForKva } from "./generator-image";
 import type { Locale } from "./utils";
@@ -30,11 +31,18 @@ export const GENSET_BRANDS: Record<GensetBrand, { ar: string; small: string; lar
     isSmall: () => true,
     image: "/images/products/kubota-diesel-generator-4u.webp",
   },
+  Baudouin: {
+    ar: "بودوان",
+    small: "baudouin-diesel-generator-20-2500kva",
+    large: "baudouin-diesel-generator-20-2500kva",
+    isSmall: () => true,
+    image: "/images/products/baudouin-diesel-generator-4u.webp",
+  },
 };
 export const BRANDS = Object.keys(GENSET_BRANDS) as GensetBrand[];
 
 const tag = (brand: GensetBrand) => (m: GensetModelData): GensetModel => ({ ...m, brand });
-export const gensetModels: GensetModel[] = [...perkinsModels.map(tag("Perkins")), ...cumminsModels.map(tag("Cummins")), ...kubotaModels.map(tag("Kubota"))];
+export const gensetModels: GensetModel[] = [...perkinsModels.map(tag("Perkins")), ...cumminsModels.map(tag("Cummins")), ...kubotaModels.map(tag("Kubota")), ...baudouinModels.map(tag("Baudouin"))];
 export const brandModels = (brand: GensetBrand) => gensetModels.filter((m) => m.brand === brand);
 
 export const getModel = (slug: string) => gensetModels.find((m) => m.slug === slug) ?? null;
@@ -160,7 +168,11 @@ export function modelSpecSections(m: GensetModel, locale: Locale): SpecSection[]
       title: L(locale, "Control & protection", "التحكم والحماية"),
       rows: [
         ...row("Controller", "وحدة التحكم", `Deep Sea ${m.controller}${L(locale, " — auto start / AMF", " — تشغيل تلقائي / AMF")}`),
-        ...row("Main breaker", "القاطع الرئيسي", m.breaker === "schneider-acb" ? L(locale, "Schneider ACB", "قاطع هوائي شنايدر (ACB)") : L(locale, "3-pole LS MCCB", "قاطع LS ثلاثي الأقطاب (MCCB)")),
+        ...row("Main breaker", "القاطع الرئيسي", m.breaker === "schneider-acb"
+            ? L(locale, "Schneider ACB", "قاطع هوائي شنايدر (ACB)")
+            : m.breaker === "ls"
+              ? L(locale, "3-pole LS Electric", "قاطع LS Electric ثلاثي الأقطاب")
+              : L(locale, "3-pole LS MCCB", "قاطع LS ثلاثي الأقطاب (MCCB)")),
         ...row(
           "Shutdowns & alarms",
           "الإنذارات والإيقاف",

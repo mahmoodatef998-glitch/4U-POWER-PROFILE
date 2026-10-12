@@ -1,4 +1,4 @@
-export type GensetBrand = "Perkins" | "Cummins" | "Kubota";
+export type GensetBrand = "Perkins" | "Cummins" | "Kubota" | "Baudouin";
 
 export type Aspiration =
   | "na"
@@ -42,8 +42,8 @@ export type GensetModelData = {
   noiseDb: number | null;
   open: GensetDim | null;
   enclosed: GensetDim | null;
-  /** main breaker; LS MCCB unless stated */
-  breaker?: "ls-mccb" | "schneider-acb";
+  /** main breaker; LS MCCB unless stated ("ls" = LS Electric, type not stated in the sheet) */
+  breaker?: "ls-mccb" | "ls" | "schneider-acb";
   /** radiator design ambient, °C; 50 unless stated */
   ambientC?: number | null;
 };
