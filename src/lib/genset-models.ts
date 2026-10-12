@@ -1,6 +1,7 @@
 import { cumminsModels } from "@/content/cummins-models";
 import type { GensetBrand, GensetDim, GensetModel, GensetModelData } from "@/content/genset-types";
 import { perkinsModels } from "@/content/perkins-models";
+import { kubotaModels } from "@/content/kubota-models";
 import { generatorImageForKva } from "./generator-image";
 import type { Locale } from "./utils";
 
@@ -22,11 +23,18 @@ export const GENSET_BRANDS: Record<GensetBrand, { ar: string; small: string; lar
     isSmall: (m) => m.standbyKva <= 500,
     image: "/images/products/cummins-diesel-generator-4u.webp",
   },
+  Kubota: {
+    ar: "كوبوتا",
+    small: "kubota-silent-generator-10-40kva",
+    large: "kubota-silent-generator-10-40kva",
+    isSmall: () => true,
+    image: "/images/products/kubota-diesel-generator-4u.webp",
+  },
 };
 export const BRANDS = Object.keys(GENSET_BRANDS) as GensetBrand[];
 
 const tag = (brand: GensetBrand) => (m: GensetModelData): GensetModel => ({ ...m, brand });
-export const gensetModels: GensetModel[] = [...perkinsModels.map(tag("Perkins")), ...cumminsModels.map(tag("Cummins"))];
+export const gensetModels: GensetModel[] = [...perkinsModels.map(tag("Perkins")), ...cumminsModels.map(tag("Cummins")), ...kubotaModels.map(tag("Kubota"))];
 export const brandModels = (brand: GensetBrand) => gensetModels.filter((m) => m.brand === brand);
 
 export const getModel = (slug: string) => gensetModels.find((m) => m.slug === slug) ?? null;
@@ -51,6 +59,9 @@ export function nearestModels(kva: number, brands: GensetBrand[] = BRANDS): Gens
 }
 
 export const brandName = (brand: GensetBrand, locale: Locale) => (locale === "ar" ? GENSET_BRANDS[brand].ar : brand);
+/** "Perkins, Cummins & Kubota" / "بيركنز وكمنز وكوبوتا" */
+export const brandList = (locale: Locale) =>
+  locale === "ar" ? BRANDS.map((b) => GENSET_BRANDS[b].ar).join(" و") : `${BRANDS.slice(0, -1).join(", ")} & ${BRANDS[BRANDS.length - 1]}`;
 export const modelImage = (m: GensetModel) => generatorImageForKva(m.standbyKva, m.brand) ?? GENSET_BRANDS[m.brand].image;
 export const modelPath = (m: GensetModel) => `/models/${m.slug}`;
 
@@ -103,7 +114,7 @@ export function modelSpecSections(m: GensetModel, locale: Locale): SpecSection[]
       rows: [
         ...row("Make / model", "الماركة / الموديل", `${m.brand} ${m.engine}`),
         ...row("Cylinders", "عدد الأسطوانات", `${m.cylinders} ${m.layout === "V" ? L(locale, "in 60° V", "على شكل V") : L(locale, "in-line", "على خط واحد")}`),
-        ...row("Displacement", "السعة", `${fmt(m.displacementL, locale)} ${L(locale, "L", "لتر")}`),
+        ...row("Displacement", "السعة", `${new Intl.NumberFormat(locale === "ar" ? "ar-AE" : "en-AE", { maximumFractionDigits: 3 }).format(m.displacementL)} ${L(locale, "L", "لتر")}`),
         ...row("Bore × stroke", "القطر × الشوط", `${m.boreStrokeMm} mm`),
         ...row("Aspiration", "التنفس", ASPIRATION[m.aspiration][locale === "ar" ? 1 : 0]),
         ...row("Governing", "منظم السرعة", m.governing === "electronic" ? L(locale, "Electronic", "إلكتروني") : L(locale, "Mechanical", "ميكانيكي")),
@@ -127,7 +138,7 @@ export function modelSpecSections(m: GensetModel, locale: Locale): SpecSection[]
       title: L(locale, "Fuel consumption", "استهلاك الوقود"),
       rows: m.fuelLph
         ? [
-            ...row("50 % prime load", "عند 50% من الحمل", lph(m.fuelLph.p50)),
+            ...row("50 % prime load", "عند 50% من الحمل", m.fuelLph.p50 ? lph(m.fuelLph.p50) : null),
             ...row("75 % prime load", "عند 75% من الحمل", lph(m.fuelLph.p75)),
             ...row("100 % prime load", "عند 100% من الحمل", lph(m.fuelLph.p100)),
             ...row("Standby rating", "عند القدرة الاحتياطية", m.fuelLph.standby ? lph(m.fuelLph.standby) : null),

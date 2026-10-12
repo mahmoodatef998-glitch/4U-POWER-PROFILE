@@ -68,7 +68,7 @@ export function describePage(path: string | null): PageInfo {
     services: "Services",
     calculator: "kVA calculator",
     contact: "Contact page",
-    models: "Generator model list (Perkins & Cummins)",
+    models: "Generator model list (all brands)",
     news: slug ? `Article: ${slug.replace(/-/g, " ")}` : "News",
     projects: "Projects",
   };

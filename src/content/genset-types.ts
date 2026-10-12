@@ -1,4 +1,4 @@
-export type GensetBrand = "Perkins" | "Cummins";
+export type GensetBrand = "Perkins" | "Cummins" | "Kubota";
 
 export type Aspiration =
   | "na"
@@ -35,7 +35,7 @@ export type GensetModelData = {
   alternator: { leroySomer: string; stamford: string | null };
   controller: string;
   /** litres / hour at 50 %, 75 %, 100 % prime load and at standby rating */
-  fuelLph: { p50: number; p75: number; p100: number; standby: number | null } | null;
+  fuelLph: { p50: number | null; p75: number; p100: number; standby: number | null } | null;
   coolantL: number | null;
   oilL: number | null;
   /** sound pressure, dB(A) @ 7 m, canopy */
