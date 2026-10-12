@@ -143,7 +143,7 @@ export default async function GeneratorSizePage({ params }: Props) {
       <section className="section pt-0" aria-labelledby="model-title">
         <div className="container-x">
           <h2 id="model-title" className="text-2xl text-ink sm:text-3xl">
-            {models.length === 1 ? (ar ? `موديل بيركنز ${kva} ك.ف.أ` : `The ${kva} kVA Perkins model`) : ar ? `أقرب موديلات بيركنز لـ ${kva} ك.ف.أ` : `Closest Perkins models to ${kva} kVA`}
+            {models.every((m) => m.standbyKva === kva) ? (ar ? `موديلات ${kva} ك.ف.أ — بيركنز وكمنز` : `${kva} kVA models — Perkins & Cummins`) : ar ? `أقرب موديلات بيركنز وكمنز لـ ${kva} ك.ف.أ` : `Closest Perkins & Cummins models to ${kva} kVA`}
           </h2>
           <p className="mt-2 text-muted">{ar ? "افتح الموديل لرؤية المواصفات الكاملة وتحميل الداتا شيت." : "Open a model for full specifications and its downloadable datasheet."}</p>
           <div className="mt-6">

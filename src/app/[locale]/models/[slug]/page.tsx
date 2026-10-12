@@ -11,7 +11,7 @@ import { PageHero } from "@/components/page-hero";
 import { products as seedProducts } from "@/content/products";
 import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
-import { gensetModels, getModel, modelImage, modelName, modelPath, modelSpecSections, productForModel, ratingNotes } from "@/lib/genset-models";
+import { brandModels, brandName, gensetModels, getModel, modelImage, modelName, modelPath, modelSpecSections, productForModel, ratingNotes } from "@/lib/genset-models";
 import { buildMetadata, localeUrl } from "@/lib/seo";
 import { SITE_URL } from "@/lib/site";
 import type { Locale } from "@/lib/utils";
@@ -27,13 +27,14 @@ export async function generateMetadata({ params }: Props) {
   const m = getModel(slug);
   if (!m) return {};
   const ar = locale === "ar";
+  const brand = brandName(m.brand, locale);
   return buildMetadata({
     locale,
     path: modelPath(m),
-    title: ar ? `مولد بيركنز ${m.standbyKva} ك.ف.أ ${m.code} | المواصفات والداتا شيت` : `${m.code} Perkins ${m.standbyKva} kVA Generator | Specs & Datasheet`,
+    title: ar ? `مولد ${brand} ${m.standbyKva} ك.ف.أ ${m.code} | المواصفات والداتا شيت` : `${m.code} ${brand} ${m.standbyKva} kVA Generator | Specs & Datasheet`,
     description: ar
-      ? `مولد ديزل ${m.standbyKva} ك.ف.أ احتياطي / ${m.primeKva} ك.ف.أ أساسي بمحرك بيركنز ${m.engine}. المواصفات واستهلاك الوقود والمقاسات وتحميل الداتا شيت من فور يو باور الإمارات.`
-      : `${m.standbyKva} kVA standby / ${m.primeKva} kVA prime diesel generator with Perkins ${m.engine} engine. Specs, fuel consumption, dimensions and PDF datasheet from 4U Power, UAE.`,
+      ? `مولد ديزل ${m.standbyKva} ك.ف.أ احتياطي / ${m.primeKva} ك.ف.أ أساسي بمحرك ${brand} ${m.engine}. المواصفات واستهلاك الوقود والمقاسات وتحميل الداتا شيت من فور يو باور الإمارات.`
+      : `${m.standbyKva} kVA standby / ${m.primeKva} kVA prime diesel generator with ${brand} ${m.engine} engine. Specs, fuel consumption, dimensions and PDF datasheet from 4U Power, UAE.`,
     image: modelImage(m),
   });
 }
@@ -48,14 +49,16 @@ export default async function ModelPage({ params }: Props) {
   const name = modelName(m, locale);
   const sections = modelSpecSections(m, locale);
   const parent = seedProducts.find((p) => p.slug === productForModel(m));
-  const idx = gensetModels.indexOf(m);
-  const neighbours = gensetModels.slice(Math.max(0, idx - 2), idx + 3);
+  const brand = brandName(m.brand, locale);
+  const range = brandModels(m.brand);
+  const idx = range.indexOf(m);
+  const neighbours = range.slice(Math.max(0, idx - 2), idx + 3);
   const wa = ar
-    ? `مرحباً، أرغب في عرض سعر للمولد ${m.code} (بيركنز ${m.standbyKva} ك.ف.أ). مدينة التسليم: `
-    : `Hi, I need a price for the ${m.code} (${m.standbyKva} kVA Perkins). Delivery city: `;
+    ? `مرحباً، أرغب في عرض سعر للمولد ${m.code} (${brand} ${m.standbyKva} ك.ف.أ). مدينة التسليم: `
+    : `Hi, I need a price for the ${m.code} (${m.standbyKva} kVA ${brand}). Delivery city: `;
   const intro = ar
-    ? `قدرة احتياطية ${m.standbyKva} ك.ف.أ وأساسية ${m.primeKva} ك.ف.أ بمحرك بيركنز ${m.engine} ودينامو ليروي سومر أو ستامفورد ووحدة تحكم ديب سي. متوفر مفتوحاً أو بكابينة عازلة للصوت${m.enclosed?.container ? " أو داخل حاوية" : ""}، مع التوريد والتركيب والتشغيل في الإمارات.`
-    : `${m.standbyKva} kVA standby / ${m.primeKva} kVA prime, powered by a Perkins ${m.engine} engine with a Leroy-Somer or Stamford alternator and Deep Sea controller. Supplied open or in a silent canopy${m.enclosed?.container ? " or container" : ""}, with delivery, installation and commissioning across the UAE.`;
+    ? `قدرة احتياطية ${m.standbyKva} ك.ف.أ وأساسية ${m.primeKva} ك.ف.أ بمحرك ${brand} ${m.engine} ودينامو ليروي سومر أو ستامفورد ووحدة تحكم ديب سي. متوفر مفتوحاً أو بكابينة عازلة للصوت${m.enclosed?.container ? " أو داخل حاوية" : ""}، مع التوريد والتركيب والتشغيل في الإمارات.`
+    : `${m.standbyKva} kVA standby / ${m.primeKva} kVA prime, powered by a ${brand} ${m.engine} engine with a Leroy-Somer or Stamford alternator and Deep Sea controller. Supplied open or in a silent canopy${m.enclosed?.container ? " or container" : ""}, with delivery, installation and commissioning across the UAE.`;
 
   const schema = {
     "@context": "https://schema.org",
@@ -82,7 +85,7 @@ export default async function ModelPage({ params }: Props) {
           ...(parent ? [{ name: ar ? parent.name_ar : parent.name_en, path: `/products/${parent.slug}` }] : []),
           { name: m.code, path: modelPath(m) },
         ]}
-        eyebrow={ar ? "مولدات بيركنز · 50 هرتز" : "Perkins generating set · 50 Hz"}
+        eyebrow={ar ? `مولدات ${brand} · 50 هرتز` : `${brand} generating set · 50 Hz`}
         title={name}
         intro={intro}
         aside={
@@ -94,7 +97,7 @@ export default async function ModelPage({ params }: Props) {
         <ul className="mb-8 flex flex-wrap gap-2 text-sm font-bold" dir="ltr">
           <li className="rounded-full bg-brand-500 px-3 py-1.5 text-ink-950">{`${m.standbyKva} kVA standby`}</li>
           <li className="rounded-full bg-white/10 px-3 py-1.5">{`${m.primeKva} kVA prime`}</li>
-          <li className="rounded-full bg-white/10 px-3 py-1.5">{`Perkins ${m.engine}`}</li>
+          <li className="rounded-full bg-white/10 px-3 py-1.5">{`${m.brand} ${m.engine}`}</li>
           <li className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/15 px-3 py-1.5 text-emerald-400">
             <ShieldCheck className="size-4" aria-hidden />
             {t("common.warranty")}
@@ -155,8 +158,8 @@ export default async function ModelPage({ params }: Props) {
           <div className="mt-6">
             <ModelTable models={neighbours} locale={locale} highlight={m.slug} />
           </div>
-          <Link href="/models" className="mt-5 inline-block text-sm font-semibold text-brand-700 hover:underline">
-            {ar ? `كل موديلات بيركنز (${gensetModels.length}) ←` : `All ${gensetModels.length} Perkins models →`}
+          <Link href={`/models#${m.brand.toLowerCase()}`} className="mt-5 inline-block text-sm font-semibold text-brand-700 hover:underline">
+            {ar ? `كل موديلات ${brand} (${range.length}) ←` : `All ${range.length} ${brand} models →`}
           </Link>
         </div>
       </section>

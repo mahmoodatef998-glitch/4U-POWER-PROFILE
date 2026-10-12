@@ -4,49 +4,9 @@
  * displacement, bore × stroke) is the published Perkins engine-family data. Fuel figures that were not internally
  * consistent in the source sheet are left null ("on request").
  */
-export type Aspiration =
-  | "na"
-  | "turbo"
-  | "turbo-aa"
-  | "twin-turbo-aa"
-  | "turbo-water";
+import type { GensetModelData } from "./genset-types";
 
-export type GensetDim = {
-  l?: number;
-  w?: number;
-  h?: number;
-  tankL?: number | null;
-  kg: number | null;
-  container?: string;
-};
-
-export type GensetModel = {
-  slug: string;
-  code: string;
-  standbyKva: number;
-  standbyKw: number;
-  primeKva: number;
-  primeKw: number;
-  engine: string;
-  cylinders: number;
-  layout: "inline" | "V";
-  displacementL: number;
-  boreStrokeMm: string;
-  aspiration: Aspiration;
-  governing: "mechanical" | "electronic";
-  alternator: { leroySomer: string; stamford: string | null };
-  controller: string;
-  /** litres / hour at 50 %, 75 %, 100 % prime load and at standby rating */
-  fuelLph: { p50: number; p75: number; p100: number; standby: number } | null;
-  coolantL: number | null;
-  oilL: number | null;
-  /** sound pressure, dB(A) @ 7 m, canopy */
-  noiseDb: number | null;
-  open: GensetDim | null;
-  enclosed: GensetDim | null;
-};
-
-export const perkinsModels: GensetModel[] = [
+export const perkinsModels: GensetModelData[] = [
   {
     slug: "4u-p9-9",
     code: "4U-P9.9",

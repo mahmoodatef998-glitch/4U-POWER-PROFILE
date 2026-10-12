@@ -1,28 +1,57 @@
-import { perkinsModels, type GensetDim, type GensetModel } from "@/content/perkins-models";
+import { cumminsModels } from "@/content/cummins-models";
+import type { GensetBrand, GensetDim, GensetModel, GensetModelData } from "@/content/genset-types";
+import { perkinsModels } from "@/content/perkins-models";
 import { generatorImageForKva } from "./generator-image";
 import type { Locale } from "./utils";
 
-export type { GensetModel } from "@/content/perkins-models";
-export const gensetModels = perkinsModels;
+export type { GensetBrand, GensetModel } from "@/content/genset-types";
 
-/** Perkins catalogue products; models split between them on prime rating (≤ 200 kVA prime → small range). */
-export const PERKINS_SMALL = "perkins-diesel-generator-10-200kva";
-export const PERKINS_LARGE = "perkins-diesel-generator-250-2500kva";
+/** Per engine brand: Arabic name, the two catalogue products its models split between, and the fallback photo. */
+export const GENSET_BRANDS: Record<GensetBrand, { ar: string; small: string; large: string; isSmall: (m: GensetModel) => boolean; image: string }> = {
+  Perkins: {
+    ar: "بيركنز",
+    small: "perkins-diesel-generator-10-200kva",
+    large: "perkins-diesel-generator-250-2500kva",
+    isSmall: (m) => m.primeKva <= 200,
+    image: "/images/products/perkins-diesel-generator-4u.webp",
+  },
+  Cummins: {
+    ar: "كمنز",
+    small: "cummins-diesel-generator-20-500kva",
+    large: "cummins-diesel-generator-550-2500kva",
+    isSmall: (m) => m.standbyKva <= 500,
+    image: "/images/products/cummins-diesel-generator-4u.webp",
+  },
+};
+export const BRANDS = Object.keys(GENSET_BRANDS) as GensetBrand[];
+
+const tag = (brand: GensetBrand) => (m: GensetModelData): GensetModel => ({ ...m, brand });
+export const gensetModels: GensetModel[] = [...perkinsModels.map(tag("Perkins")), ...cumminsModels.map(tag("Cummins"))];
+export const brandModels = (brand: GensetBrand) => gensetModels.filter((m) => m.brand === brand);
 
 export const getModel = (slug: string) => gensetModels.find((m) => m.slug === slug) ?? null;
-export const productForModel = (m: GensetModel) => (m.primeKva <= 200 ? PERKINS_SMALL : PERKINS_LARGE);
+export const productForModel = (m: GensetModel) => (GENSET_BRANDS[m.brand].isSmall(m) ? GENSET_BRANDS[m.brand].small : GENSET_BRANDS[m.brand].large);
 export const modelsForProduct = (productSlug: string) => gensetModels.filter((m) => productForModel(m) === productSlug);
 
-/** The model(s) a buyer asking for `kva` should see: an exact standby match, else the nearest below and above. */
-export function nearestModels(kva: number): GensetModel[] {
-  const exact = gensetModels.find((m) => m.standbyKva === kva);
-  if (exact) return [exact];
-  const below = [...gensetModels].reverse().find((m) => m.standbyKva < kva);
-  const above = gensetModels.find((m) => m.standbyKva > kva);
+/** The model(s) of one brand a buyer asking for `kva` should see: every exact standby match, else the nearest below and above. */
+function nearestOfBrand(kva: number, brand: GensetBrand): GensetModel[] {
+  const list = brandModels(brand);
+  const exact = list.filter((m) => m.standbyKva === kva);
+  if (exact.length) return exact;
+  const below = [...list].reverse().find((m) => m.standbyKva < kva);
+  const above = list.find((m) => m.standbyKva > kva);
   return [below, above].filter((m): m is GensetModel => !!m);
 }
 
-export const modelImage = (m: GensetModel) => generatorImageForKva(m.standbyKva, "Perkins") ?? "/images/products/perkins-diesel-generator-4u.webp";
+/** Nearest models across brands, ordered by rating then brand; a brand whose range stops far from `kva` is left out. */
+export function nearestModels(kva: number, brands: GensetBrand[] = BRANDS): GensetModel[] {
+  const all = brands.flatMap((b) => nearestOfBrand(kva, b));
+  const close = all.filter((m) => m.standbyKva >= kva / 1.6 && m.standbyKva <= kva * 1.6);
+  return (close.length ? close : all).sort((a, b) => a.standbyKva - b.standbyKva || BRANDS.indexOf(a.brand) - BRANDS.indexOf(b.brand));
+}
+
+export const brandName = (brand: GensetBrand, locale: Locale) => (locale === "ar" ? GENSET_BRANDS[brand].ar : brand);
+export const modelImage = (m: GensetModel) => generatorImageForKva(m.standbyKva, m.brand) ?? GENSET_BRANDS[m.brand].image;
 export const modelPath = (m: GensetModel) => `/models/${m.slug}`;
 
 const fmt = (n: number, locale: Locale) => new Intl.NumberFormat(locale === "ar" ? "ar-AE" : "en-AE", { maximumFractionDigits: 1 }).format(n);
@@ -31,17 +60,23 @@ const L = (locale: Locale, en: string, ar: string) => (locale === "ar" ? ar : en
 const ASPIRATION: Record<GensetModel["aspiration"], [string, string]> = {
   na: ["Naturally aspirated", "تنفس طبيعي"],
   turbo: ["Turbocharged", "تيربو"],
+  "turbo-ac": ["Turbocharged & aftercooled", "تيربو مع تبريد لاحق (Aftercooled)"],
   "turbo-aa": ["Turbocharged, air-to-air charge cooled", "تيربو مع تبريد هواء الشحن (هواء-هواء)"],
   "twin-turbo-aa": ["Twin-turbocharged, air-to-air charge cooled", "تيربو مزدوج مع تبريد هواء الشحن"],
   "turbo-water": ["Turbocharged, water charge cooled", "تيربو مع تبريد مائي لهواء الشحن"],
 };
 
 export function modelName(m: GensetModel, locale: Locale) {
-  return L(locale, `${m.code} — ${fmt(m.standbyKva, locale)} kVA Perkins diesel generator`, `${m.code} — مولد ديزل بيركنز ${fmt(m.standbyKva, locale)} ك.ف.أ`);
+  return L(locale, `${m.code} — ${fmt(m.standbyKva, locale)} kVA ${m.brand} diesel generator`, `${m.code} — مولد ديزل ${GENSET_BRANDS[m.brand].ar} ${fmt(m.standbyKva, locale)} ك.ف.أ`);
 }
 
 const dimText = (d: GensetDim | null, locale: Locale) =>
-  !d ? null : d.container ? (locale === "ar" ? d.container.replace("custom container", "حاوية مخصصة").replace("ISO HC container", "حاوية ISO عالية") : d.container) : `${d.l} × ${d.w} × ${d.h} mm`;
+  !d ? null
+  : d.container
+    ? locale === "ar"
+      ? d.container.replace("custom container", "حاوية مخصصة").replace("ISO HC container", "حاوية ISO عالية").replace(/^(\d+) ft container$/, "حاوية $1 قدم")
+      : d.container
+    : `${d.l} × ${d.w} × ${d.h} mm`;
 
 export type SpecSection = { title: string; rows: { k: string; v: string }[] };
 
@@ -51,6 +86,7 @@ export function modelSpecSections(m: GensetModel, locale: Locale): SpecSection[]
   const kw = (n: number) => `${fmt(n, locale)} ${L(locale, "kW", "ك.و")}`;
   const row = (en: string, ar: string, v: string | null | undefined) => (v ? [{ k: L(locale, en, ar), v }] : []);
   const lph = (n: number) => `${fmt(n, locale)} ${L(locale, "L/h", "لتر/ساعة")}`;
+  const ambient = m.ambientC === undefined ? 50 : m.ambientC;
   const sections: SpecSection[] = [
     {
       title: L(locale, "Output ratings", "القدرات"),
@@ -65,13 +101,13 @@ export function modelSpecSections(m: GensetModel, locale: Locale): SpecSection[]
     {
       title: L(locale, "Engine", "المحرك"),
       rows: [
-        ...row("Make / model", "الماركة / الموديل", `Perkins ${m.engine}`),
+        ...row("Make / model", "الماركة / الموديل", `${m.brand} ${m.engine}`),
         ...row("Cylinders", "عدد الأسطوانات", `${m.cylinders} ${m.layout === "V" ? L(locale, "in 60° V", "على شكل V") : L(locale, "in-line", "على خط واحد")}`),
         ...row("Displacement", "السعة", `${fmt(m.displacementL, locale)} ${L(locale, "L", "لتر")}`),
         ...row("Bore × stroke", "القطر × الشوط", `${m.boreStrokeMm} mm`),
         ...row("Aspiration", "التنفس", ASPIRATION[m.aspiration][locale === "ar" ? 1 : 0]),
         ...row("Governing", "منظم السرعة", m.governing === "electronic" ? L(locale, "Electronic", "إلكتروني") : L(locale, "Mechanical", "ميكانيكي")),
-        ...row("Cooling", "التبريد", L(locale, "Water cooled, radiator for 50 °C ambient", "تبريد مائي، رادياتير لحرارة محيطة 50°م")),
+        ...row("Cooling", "التبريد", ambient ? L(locale, `Water cooled, radiator for ${fmt(ambient, "en")} °C ambient`, `تبريد مائي، رادياتير لحرارة محيطة ${fmt(ambient, locale)}°م`) : L(locale, "Water cooled", "تبريد مائي")),
         ...row("Coolant capacity", "سعة سائل التبريد", m.coolantL ? `${fmt(m.coolantL, locale)} ${L(locale, "L", "لتر")}` : null),
         ...row("Lube oil capacity", "سعة الزيت", m.oilL ? `${fmt(m.oilL, locale)} ${L(locale, "L", "لتر")}` : null),
       ],
@@ -94,7 +130,7 @@ export function modelSpecSections(m: GensetModel, locale: Locale): SpecSection[]
             ...row("50 % prime load", "عند 50% من الحمل", lph(m.fuelLph.p50)),
             ...row("75 % prime load", "عند 75% من الحمل", lph(m.fuelLph.p75)),
             ...row("100 % prime load", "عند 100% من الحمل", lph(m.fuelLph.p100)),
-            ...row("Standby rating", "عند القدرة الاحتياطية", lph(m.fuelLph.standby)),
+            ...row("Standby rating", "عند القدرة الاحتياطية", m.fuelLph.standby ? lph(m.fuelLph.standby) : null),
           ]
         : row("Fuel consumption", "استهلاك الوقود", L(locale, "On request", "عند الطلب")),
     },
@@ -113,7 +149,7 @@ export function modelSpecSections(m: GensetModel, locale: Locale): SpecSection[]
       title: L(locale, "Control & protection", "التحكم والحماية"),
       rows: [
         ...row("Controller", "وحدة التحكم", `Deep Sea ${m.controller}${L(locale, " — auto start / AMF", " — تشغيل تلقائي / AMF")}`),
-        ...row("Main breaker", "القاطع الرئيسي", L(locale, "3-pole LS MCCB", "قاطع LS ثلاثي الأقطاب (MCCB)")),
+        ...row("Main breaker", "القاطع الرئيسي", m.breaker === "schneider-acb" ? L(locale, "Schneider ACB", "قاطع هوائي شنايدر (ACB)") : L(locale, "3-pole LS MCCB", "قاطع LS ثلاثي الأقطاب (MCCB)")),
         ...row(
           "Shutdowns & alarms",
           "الإنذارات والإيقاف",

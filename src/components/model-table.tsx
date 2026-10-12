@@ -11,7 +11,7 @@ export function ModelTable({ models, locale, highlight }: { models: GensetModel[
   return (
     <div className="overflow-x-auto rounded-2xl border border-line">
       <table className="w-full min-w-[34rem] text-start text-sm">
-        <caption className="sr-only">{ar ? "موديلات مولدات بيركنز" : "Perkins generator models"}</caption>
+        <caption className="sr-only">{ar ? "موديلات مولدات فور يو" : "4U generator models"}</caption>
         <thead className="bg-surface text-xs uppercase tracking-wide text-muted">
           <tr>
             <th scope="col" className="px-4 py-3 text-start">{ar ? "الموديل" : "Model"}</th>
@@ -30,7 +30,7 @@ export function ModelTable({ models, locale, highlight }: { models: GensetModel[
               </th>
               <td className="px-4 py-3 font-semibold tabular-nums text-ink">{fmt(m.standbyKva, locale)}</td>
               <td className="px-4 py-3 tabular-nums text-muted">{fmt(m.primeKva, locale)}</td>
-              <td className="px-4 py-3 text-muted" dir="ltr">{m.engine}</td>
+              <td className="px-4 py-3 text-muted" dir="ltr">{`${m.brand} ${m.engine}`}</td>
               <td className="px-4 py-3 tabular-nums text-muted">{m.fuelLph ? fmt(m.fuelLph.p100, locale) : "—"}</td>
               <td className="px-4 py-3 text-end">
                 <Link href={modelPath(m)} className="inline-flex items-center gap-1.5 font-semibold text-brand-700 hover:underline">

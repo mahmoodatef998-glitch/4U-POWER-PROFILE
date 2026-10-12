@@ -5,7 +5,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { PrintButton } from "@/components/print-button";
 import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
-import { gensetModels, getModel, modelImage, modelName, modelPath, modelSpecSections, ratingNotes } from "@/lib/genset-models";
+import { brandName, gensetModels, getModel, modelImage, modelName, modelPath, modelSpecSections, ratingNotes } from "@/lib/genset-models";
 import { buildMetadata } from "@/lib/seo";
 import { company } from "@/lib/site";
 import { formatDate, type Locale } from "@/lib/utils";
@@ -65,13 +65,13 @@ export default async function ModelDatasheetPage({ params }: Props) {
 
         <div className="grid gap-8 px-8 pt-8 sm:grid-cols-5">
           <div className="sm:col-span-3">
-            <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#7a5900]">{ar ? "مولد ديزل · بيركنز · 50 هرتز" : "Diesel generator · Perkins · 50 Hz"}</p>
+            <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#7a5900]">{ar ? `مولد ديزل · ${brandName(m.brand, locale)} · 50 هرتز` : `Diesel generator · ${m.brand} · 50 Hz`}</p>
             <h1 className="mt-2 text-4xl leading-tight font-extrabold tracking-tight text-[#0b1022]" dir="ltr">{m.code}</h1>
             <dl className="mt-5 grid grid-cols-2 gap-3">
               {[
                 { k: ar ? "احتياطي (Standby)" : "Standby (ESP)", v: `${m.standbyKva} kVA · ${m.standbyKw} kW` },
                 { k: ar ? "أساسي (Prime)" : "Prime (PRP)", v: `${m.primeKva} kVA · ${m.primeKw} kW` },
-                { k: ar ? "المحرك" : "Engine", v: `Perkins ${m.engine}` },
+                { k: ar ? "المحرك" : "Engine", v: `${m.brand} ${m.engine}` },
                 { k: ar ? "الجهد" : "Voltage", v: "400/230 V · 3ph · 50 Hz" },
               ].map((f) => (
                 <div key={f.k} className="rounded-xl border border-[#e5e7eb] p-3">

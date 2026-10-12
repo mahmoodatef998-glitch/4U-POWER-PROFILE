@@ -28,8 +28,8 @@ export function describePage(path: string | null): PageInfo {
     const m = getModel(slug);
     if (m)
       return {
-        title: `${m.code} — ${m.standbyKva} kVA Perkins`,
-        detail: `Standby ${m.standbyKva} kVA / Prime ${m.primeKva} kVA · Perkins ${m.engine} · ${m.alternator.leroySomer}${m.fuelLph ? ` · ${m.fuelLph.p100} L/h @100%` : ""}`,
+        title: `${m.code} — ${m.standbyKva} kVA ${m.brand}`,
+        detail: `Standby ${m.standbyKva} kVA / Prime ${m.primeKva} kVA · ${m.brand} ${m.engine} · ${m.alternator.leroySomer}${m.fuelLph ? ` · ${m.fuelLph.p100} L/h @100%` : ""}`,
         href,
         datasheet: `/${locale}/models/${m.slug}/datasheet`,
       };
@@ -40,7 +40,7 @@ export function describePage(path: string | null): PageInfo {
       const models = nearestModels(kva);
       return {
         title: `${kva} kVA generator (size page)`,
-        detail: models.length ? `Matching Perkins: ${models.map((m) => m.code).join(" / ")}` : undefined,
+        detail: models.length ? `Matching models: ${models.map((m) => m.code).join(" / ")}` : undefined,
         href,
         datasheet: models.length === 1 ? `/${locale}/models/${models[0]!.slug}/datasheet` : undefined,
       };
@@ -68,7 +68,7 @@ export function describePage(path: string | null): PageInfo {
     services: "Services",
     calculator: "kVA calculator",
     contact: "Contact page",
-    models: "Perkins model list",
+    models: "Generator model list (Perkins & Cummins)",
     news: slug ? `Article: ${slug.replace(/-/g, " ")}` : "News",
     projects: "Projects",
   };
