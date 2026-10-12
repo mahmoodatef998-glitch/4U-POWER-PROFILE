@@ -20,6 +20,11 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
               <Link href="/admin/news" className="hover:text-brand-400">News</Link>
               <Link href="/en" className="hover:text-brand-400">View site ↗</Link>
             </nav>
+            {/* paste the "Ref: 4U-XXXXX" code from a WhatsApp chat to see what the customer was looking at */}
+            <form action="/admin/whatsapp" className="flex">
+              <input name="q" placeholder="Ref 4U-XXXXX" aria-label="Find WhatsApp ref" className="w-36 rounded-s-lg bg-white/10 px-3 py-1.5 text-sm uppercase text-white placeholder:text-white/50 focus:outline-none" />
+              <button className="rounded-e-lg bg-brand-500 px-3 py-1.5 text-sm font-bold text-ink-950">Find</button>
+            </form>
           </div>
         </header>
         <main className="mx-auto max-w-6xl px-4 py-8">{children}</main>

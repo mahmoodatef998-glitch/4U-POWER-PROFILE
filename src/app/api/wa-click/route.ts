@@ -8,6 +8,7 @@ export const dynamic = "force-dynamic";
 const Click = z.object({
   ref: z.string().regex(WA_REF_RE),
   page: z.string().max(300).optional(),
+  page_title: z.string().max(160).optional(),
   location: z.string().max(80).optional(),
   locale: z.enum(["en", "ar"]).optional(),
   referrer: z.string().max(300).optional(),

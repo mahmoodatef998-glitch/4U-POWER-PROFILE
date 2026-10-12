@@ -1,11 +1,14 @@
 import { updateWaClick } from "../actions";
 import { getAdminClient } from "@/lib/supabase/server";
+import { SITE_URL } from "@/lib/site";
+import { describePage } from "@/lib/wa-page";
 
 type Click = {
   id: string;
   ref: string;
   created_at: string;
   page: string | null;
+  page_title: string | null;
   location: string | null;
   locale: string | null;
   referrer: string | null;
@@ -45,7 +48,9 @@ function top(rows: Click[], key: (c: Click) => string, n = 8) {
 export default async function AdminWhatsApp({ searchParams }: { searchParams: Promise<{ q?: string }> }) {
   const sb = getAdminClient();
   if (!sb) return <p className="rounded-xl bg-brand-50 p-4">Supabase is not configured.</p>;
-  const q = ((await searchParams).q ?? "").trim().toUpperCase();
+  const raw = ((await searchParams).q ?? "").trim().toUpperCase();
+  // accept a pasted chat line ("Ref: 4U-WP6RM\nPage: …") as well as the bare code
+  const q = /4U-[A-Z0-9]{4,6}/.exec(raw)?.[0] ?? raw;
 
   const since = new Date(Date.now() - 30 * 864e5).toISOString();
   let query = sb.from("whatsapp_clicks").select("*").order("created_at", { ascending: false }).limit(300);
@@ -69,6 +74,8 @@ export default async function AdminWhatsApp({ searchParams }: { searchParams: Pr
         <button className="rounded-xl bg-navy-950 px-4 py-2 font-bold text-white">Search</button>
       </form>
 
+      {q && list.length === 1 && <RefCard c={list[0]!} />}
+
       <dl className="mt-6 grid gap-4 sm:grid-cols-4">
         {[
           ["Clicks (30d)", fmt(last30.length)],
@@ -85,7 +92,7 @@ export default async function AdminWhatsApp({ searchParams }: { searchParams: Pr
 
       <div className="mt-6 grid gap-4 lg:grid-cols-2">
         {[
-          ["Top pages (30d)", top(last30, (c) => c.page ?? "—")],
+          ["Top pages (30d)", top(last30, (c) => describePage(c.page).title)],
           ["Top channels (30d)", top(last30, channel)],
         ].map(([title, rows]) => (
           <div key={title as string} className="rounded-2xl border border-line bg-navy-900 p-5">
@@ -118,8 +125,8 @@ export default async function AdminWhatsApp({ searchParams }: { searchParams: Pr
                 <td className="whitespace-nowrap px-4 py-3 text-muted">{when(c.created_at)}</td>
                 <td className="whitespace-nowrap px-4 py-3 font-mono font-bold">{c.ref}</td>
                 <td className="max-w-xs px-4 py-3">
-                  <p className="truncate">{c.page}</p>
-                  {c.location && <p className="text-muted">{c.location}</p>}
+                  <p className="truncate font-semibold">{describePage(c.page).title}</p>
+                  <p className="truncate text-muted">{c.page}{c.location ? ` · ${c.location}` : ""}</p>
                 </td>
                 <td className="px-4 py-3">
                   <p className="font-semibold">{channel(c)}</p>
@@ -149,5 +156,33 @@ export default async function AdminWhatsApp({ searchParams }: { searchParams: Pr
         </table>
       </div>
     </div>
+  );
+}
+
+/** Everything sales needs to answer a chat that arrived with this ref: what the visitor looked at, specs and datasheet. */
+function RefCard({ c }: { c: Click }) {
+  const info = describePage(c.page);
+  const link = "rounded-xl bg-navy-950 px-4 py-2 text-sm font-bold text-white hover:bg-navy-800";
+  return (
+    <section className="mt-6 max-w-3xl rounded-2xl border-2 border-brand-500 bg-navy-900 p-6">
+      <p className="font-mono text-sm font-bold text-brand-700">{c.ref} · {when(c.created_at)} · {c.locale === "ar" ? "Arabic" : "English"} visitor</p>
+      <h2 className="mt-2 text-2xl font-extrabold">{info.title}</h2>
+      {c.page_title && c.page_title !== info.title && <p className="mt-1 text-muted">“{c.page_title}”</p>}
+      {info.detail && <p className="mt-3 font-semibold">{info.detail}</p>}
+      {info.market && <p className="mt-2 inline-block rounded-lg bg-brand-50 px-3 py-1 text-sm font-bold">Market: {info.market}</p>}
+      <p className="mt-3 text-sm text-muted">
+        Came from <b>{channel(c)}</b>
+        {c.utm_campaign ? ` · campaign ${c.utm_campaign}` : ""}
+        {c.location ? ` · button: ${c.location}` : ""}
+      </p>
+      <div className="mt-5 flex flex-wrap gap-2">
+        {info.href && (
+          <a href={`${SITE_URL}${info.href}`} target="_blank" rel="noopener" className={link}>Open the page they saw</a>
+        )}
+        {info.datasheet && (
+          <a href={`${SITE_URL}${info.datasheet}`} target="_blank" rel="noopener" className={link}>Open datasheet (send as PDF)</a>
+        )}
+      </div>
+    </section>
   );
 }
