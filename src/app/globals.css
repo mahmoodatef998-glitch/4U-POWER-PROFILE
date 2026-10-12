@@ -333,6 +333,8 @@ html[dir="rtl"] :is(h3, h4) { line-height: 1.5; }
   header.sticky, footer, .no-print, .nebula, .fixed { display: none !important; }
   main { isolation: auto !important; }
   .sheet { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  /* the site footer is hidden above; a datasheet's own footer (company + licence) must still print */
+  .sheet footer { display: flex !important; }
 }
 
 /* Always-dark stage (e.g. the product deck) regardless of the site theme */

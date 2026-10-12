@@ -4,6 +4,7 @@ import { industries } from "@/content/industries";
 import { cities } from "@/content/locations";
 import { marketPages } from "@/content/markets";
 import { getNews, getProducts } from "@/lib/data";
+import { gensetModels, modelImage, modelPath } from "@/lib/genset-models";
 import { localeUrl } from "@/lib/seo";
 import { SITE_URL } from "@/lib/site";
 
@@ -51,6 +52,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...industries.flatMap((i) => entry(`/industries/${i.slug}`, 0.75, "monthly")),
     ...marketPages.flatMap((m) => entry(`/markets/${m.code}`, m.tier === "primary" ? 0.8 : 0.6, "monthly")),
     ...products.flatMap((p) => entry(`/products/${p.slug}`, 0.75, "monthly", undefined, p.images.filter((i) => !i.endsWith(".svg")))),
+    ...entry("/models", 0.7, "monthly"),
+    ...gensetModels.flatMap((m) => entry(modelPath(m), 0.6, "monthly", undefined, [modelImage(m)])),
     ...news.flatMap((n) => entry(`/news/${n.slug}`, 0.7, "monthly", n.published_at)),
   ];
 }

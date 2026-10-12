@@ -7,6 +7,7 @@ import { DatasheetGate } from "@/components/datasheet-gate";
 import { JsonLd } from "@/components/json-ld";
 import { AddToQuoteButton } from "@/components/quote-cart";
 import { LeadForm } from "@/components/lead-form";
+import { ModelTable } from "@/components/model-table";
 import { PageHero } from "@/components/page-hero";
 import { ProductCard } from "@/components/product-card";
 import { FUEL_ICONS, kvaLabel } from "@/lib/product-meta";
@@ -14,6 +15,7 @@ import { SectionHeading } from "@/components/section-heading";
 import { categoryHref, categoryLabels, engineBrandLabels, fuelLabels } from "@/content/taxonomy";
 import { products as seedProducts } from "@/content/products";
 import { getProduct, getProducts } from "@/lib/data";
+import { modelsForProduct } from "@/lib/genset-models";
 import { buildMetadata, localeUrl } from "@/lib/seo";
 import { SITE_URL } from "@/lib/site";
 import { routing } from "@/i18n/routing";
@@ -61,6 +63,7 @@ export default async function ProductPage({ params }: Props) {
   const fill = related.length < 3 ? all.filter((o) => o.slug !== p.slug && o.category !== p.category).slice(0, 3 - related.length) : [];
   const waMessage = t("cta.whatsappProduct", { product: name });
   const catPath = categoryHref[p.category].split("#")[0] as string;
+  const models = modelsForProduct(p.slug);
 
   const productSchema = {
     "@context": "https://schema.org",
@@ -177,6 +180,21 @@ export default async function ProductPage({ params }: Props) {
           </div>
         </div>
       </section>
+
+      {models.length > 0 && (
+        <section className="section" aria-labelledby="models-title">
+          <div className="container-x">
+            <SectionHeading
+              id="models-title"
+              eyebrow={ar ? `${models.length} موديل` : `${models.length} models`}
+              title={ar ? "اختر القدرة وحمّل الداتا شيت" : "Pick your rating and download its datasheet"}
+            />
+            <div className="mt-8">
+              <ModelTable models={models} locale={locale} />
+            </div>
+          </div>
+        </section>
+      )}
 
       <section className="section bg-surface" aria-labelledby="related-title">
         <div className="container-x">

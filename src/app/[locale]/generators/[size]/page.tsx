@@ -8,6 +8,8 @@ import { JsonLd } from "@/components/json-ld";
 import { PageHero } from "@/components/page-hero";
 import { ProductCard } from "@/components/product-card";
 import { generatorImageForKva, withSizeImage } from "@/lib/generator-image";
+import { ModelTable } from "@/components/model-table";
+import { nearestModels } from "@/lib/genset-models";
 import { SectionHeading } from "@/components/section-heading";
 import { GENERATOR_SIZES, sizeCopy, sizeFromSlug, sizeSlug } from "@/content/generator-sizes";
 import { Link } from "@/i18n/navigation";
@@ -47,6 +49,7 @@ export default async function GeneratorSizePage({ params }: Props) {
   const products = await getProducts();
   const matches = matchProducts(products, kva);
   const ats = matchAts(products, kva);
+  const models = nearestModels(kva);
   const wa = ar ? `مرحباً، أرغب في عرض سعر لمولد ${kva} ك.ف.أ — مدينة التسليم: ` : `Hi, I need a price for a ${kva} kVA generator — delivery city: `;
   const idx = (GENERATOR_SIZES as readonly number[]).indexOf(kva);
   const near = GENERATOR_SIZES.filter((_, i) => Math.abs(i - idx) <= 3 && i !== idx);
@@ -133,6 +136,18 @@ export default async function GeneratorSizePage({ params }: Props) {
                 {t("cta.tryCalculator")} →
               </Link>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="section pt-0" aria-labelledby="model-title">
+        <div className="container-x">
+          <h2 id="model-title" className="text-2xl text-ink sm:text-3xl">
+            {models.length === 1 ? (ar ? `موديل بيركنز ${kva} ك.ف.أ` : `The ${kva} kVA Perkins model`) : ar ? `أقرب موديلات بيركنز لـ ${kva} ك.ف.أ` : `Closest Perkins models to ${kva} kVA`}
+          </h2>
+          <p className="mt-2 text-muted">{ar ? "افتح الموديل لرؤية المواصفات الكاملة وتحميل الداتا شيت." : "Open a model for full specifications and its downloadable datasheet."}</p>
+          <div className="mt-6">
+            <ModelTable models={models} locale={locale} />
           </div>
         </div>
       </section>
