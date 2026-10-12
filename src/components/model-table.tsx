@@ -9,7 +9,7 @@ const fmt = (n: number, locale: Locale) => new Intl.NumberFormat(locale === "ar"
 export function ModelTable({ models, locale, highlight }: { models: GensetModel[]; locale: Locale; highlight?: string }) {
   const ar = locale === "ar";
   return (
-    <div className="overflow-x-auto rounded-2xl border border-line">
+    <div className="relative overflow-x-auto rounded-2xl border border-line">
       <table className="w-full min-w-[34rem] text-start text-sm">
         <caption className="sr-only">{ar ? "موديلات مولدات فور يو" : "4U generator models"}</caption>
         <thead className="bg-surface text-xs uppercase tracking-wide text-muted">

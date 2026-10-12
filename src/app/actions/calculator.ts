@@ -18,6 +18,8 @@ const CalcSchema = z.object({
   matched_product_slug: z.string().max(120).nullable(),
   locale: z.enum(["en", "ar"]),
   source_page: z.string().max(300),
+  /** sizing inputs and the models recommended (duty, site, motor, picks …) */
+  details: z.record(z.string(), z.unknown()).optional(),
 });
 
 export type CalcLog = z.infer<typeof CalcSchema>;

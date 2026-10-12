@@ -2,6 +2,7 @@ import { ArrowRight, BadgeCheck, CheckCircle2, FlaskConical, ShieldCheck, Wrench
 import Image from "next/image";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Calculator } from "@/components/calculator/calculator";
+import { sizingModels } from "@/lib/genset-models";
 import { CoverageMap } from "@/components/coverage-map";
 import { CtaBanner } from "@/components/cta-banner";
 import { WhatsAppButton } from "@/components/cta-buttons";
@@ -314,7 +315,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
                 <span className="size-2.5 rounded-full bg-white/15" />
               </div>
               <div className="overflow-hidden rounded-[1.5rem] text-start">
-                <Calculator products={calcProducts} variant="widget" />
+                <Calculator products={calcProducts} models={sizingModels()} variant="widget" />
               </div>
             </div>
           </Tilt3D>

@@ -4,6 +4,7 @@ import { perkinsModels } from "@/content/perkins-models";
 import { baudouinModels } from "@/content/baudouin-models";
 import { kubotaModels } from "@/content/kubota-models";
 import { generatorImageForKva } from "./generator-image";
+import type { SizingModel } from "./sizing";
 import type { Locale } from "./utils";
 
 export type { GensetBrand, GensetModel } from "@/content/genset-types";
@@ -72,6 +73,21 @@ export const brandList = (locale: Locale) =>
   locale === "ar" ? BRANDS.map((b) => GENSET_BRANDS[b].ar).join(" و") : `${BRANDS.slice(0, -1).join(", ")} & ${BRANDS[BRANDS.length - 1]}`;
 export const modelImage = (m: GensetModel) => generatorImageForKva(m.standbyKva, m.brand) ?? GENSET_BRANDS[m.brand].image;
 export const modelPath = (m: GensetModel) => `/models/${m.slug}`;
+
+/** Every model reduced to what the kVA calculator needs (sent to the browser). */
+export const sizingModels = (): SizingModel[] =>
+  gensetModels.map((m) => ({
+    slug: m.slug,
+    code: m.code,
+    brand: m.brand,
+    engine: m.engine,
+    standbyKva: m.standbyKva,
+    standbyKw: m.standbyKw,
+    primeKva: m.primeKva,
+    primeKw: m.primeKw,
+    fuel: m.fuelLph ? [m.fuelLph.p50, m.fuelLph.p75, m.fuelLph.p100, m.fuelLph.standby] : null,
+    tankL: m.enclosed?.tankL ?? m.open?.tankL ?? null,
+  }));
 
 const fmt = (n: number, locale: Locale) => new Intl.NumberFormat(locale === "ar" ? "ar-AE" : "en-AE", { maximumFractionDigits: 1 }).format(n);
 const L = (locale: Locale, en: string, ar: string) => (locale === "ar" ? ar : en);

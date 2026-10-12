@@ -1,6 +1,7 @@
 import { ArrowRight, Zap } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { Calculator } from "@/components/calculator/calculator";
+import { sizingModels } from "@/lib/genset-models";
 import { CtaBanner } from "@/components/cta-banner";
 import { CallButton, WhatsAppButton } from "@/components/cta-buttons";
 import { FaqBlock } from "@/components/faq-block";
@@ -160,8 +161,8 @@ export async function PillarPage({
           <div className="lg:col-span-5">
             <SectionHeading id="pcalc-title" eyebrow={t("nav.calculator")} title={t("calc.teaserTitle")} intro={t("calc.teaserBody")} />
           </div>
-          <div className="lg:col-span-7">
-            <Calculator products={calcProducts} variant="widget" />
+          <div className="min-w-0 lg:col-span-7">
+            <Calculator products={calcProducts} models={sizingModels()} variant="widget" />
           </div>
         </div>
       </section>
