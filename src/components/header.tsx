@@ -128,6 +128,7 @@ export function Header() {
           <LanguageSwitch className="hidden sm:inline-flex" />
           <a
             href={telUrl}
+            data-call-location="header"
             onClick={() => trackEvent("call_click", { location: "header" })}
             className="hidden h-10 items-center gap-2 whitespace-nowrap rounded-full px-3 text-sm font-bold text-white hover:bg-white/10 2xl:inline-flex"
           >

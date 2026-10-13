@@ -6,6 +6,7 @@ import { after } from "next/server";
 import { z } from "zod";
 import { submitIndexNow } from "@/lib/indexnow";
 import { localeUrl } from "@/lib/seo";
+import { LOST_REASON_KEYS, MANUAL_SOURCE_KEYS, STATUSES, type LostReason, type ManualSource, type SalesTable } from "@/lib/sales";
 import { getAdminClient } from "@/lib/supabase/server";
 
 // All admin routes sit behind Basic Auth in middleware; these actions also require the service role.
@@ -15,24 +16,47 @@ function db() {
   return sb;
 }
 
-const STATUSES = ["new", "contacted", "quoted", "won", "lost"] as const;
 const money = z.preprocess((v) => (v === "" || v == null ? null : v), z.coerce.number().min(0).max(1e9).nullable());
+const text = (max: number) => z.preprocess((v) => (typeof v === "string" && v.trim() ? v.trim() : null), z.string().max(max).nullable());
+const PATHS: Record<SalesTable, string> = { leads: "/admin", whatsapp_clicks: "/admin/whatsapp", call_clicks: "/admin/calls" };
 
-export async function updateLeadStatus(formData: FormData) {
-  const id = z.string().uuid().parse(formData.get("id"));
-  const status = z.enum(STATUSES).parse(formData.get("status"));
-  const deal_value = money.parse(formData.get("deal_value"));
-  await db().from("leads").update({ status, deal_value }).eq("id", id);
-  revalidatePath("/admin");
+/** Status, deal value, owner, lost reason and notes — the same sales fields on leads, WhatsApp clicks and call clicks. */
+const SalesUpdate = z.object({
+  table: z.enum(["leads", "whatsapp_clicks", "call_clicks"]),
+  id: z.string().uuid(),
+  status: z.enum(STATUSES),
+  deal_value: money,
+  owner: text(60),
+  lost_reason: z.preprocess((v) => v || null, z.enum(LOST_REASON_KEYS as [LostReason, ...LostReason[]]).nullable()),
+  notes: text(1000),
+});
+
+export async function updateSales(formData: FormData) {
+  const { table, id, ...fields } = SalesUpdate.parse(Object.fromEntries(formData));
+  // contacted_at / closed_at are stamped by the sales_stamps trigger
+  const { error } = await db().from(table).update(fields).eq("id", id);
+  if (error) throw new Error(error.message);
+  revalidatePath(PATHS[table]);
+  revalidatePath("/admin/report");
 }
 
-export async function updateWaClick(formData: FormData) {
-  const id = z.string().uuid().parse(formData.get("id"));
-  const status = z.enum(STATUSES).parse(formData.get("status"));
-  const deal_value = money.parse(formData.get("deal_value"));
-  const notes = z.string().trim().max(1000).parse(formData.get("notes") ?? "") || null;
-  await db().from("whatsapp_clicks").update({ status, deal_value, notes }).eq("id", id);
-  revalidatePath("/admin/whatsapp");
+/** An enquiry that reached sales outside the website buttons (direct call, WhatsApp without a ref, walk-in, referral). */
+const ManualLead = z.object({
+  name: z.string().trim().min(2).max(120),
+  phone: z.string().trim().min(6).max(40),
+  source: z.enum(MANUAL_SOURCE_KEYS as [ManualSource, ...ManualSource[]]),
+  message: text(2000),
+  owner: text(60),
+  status: z.enum(STATUSES),
+  deal_value: money,
+});
+
+export async function addLead(formData: FormData) {
+  const d = ManualLead.parse(Object.fromEntries(formData));
+  const { error } = await db().from("leads").insert({ ...d, source_page: "admin" });
+  if (error) throw new Error(error.message);
+  revalidatePath("/admin");
+  revalidatePath("/admin/report");
 }
 
 const PostSchema = z.object({

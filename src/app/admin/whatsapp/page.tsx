@@ -1,4 +1,6 @@
-import { updateWaClick } from "../actions";
+import { OwnerList, SalesForm } from "../sales-form";
+import { trafficSource } from "@/lib/sales";
+import { loadOwners } from "@/lib/sales-data";
 import { getAdminClient } from "@/lib/supabase/server";
 import { SITE_URL } from "@/lib/site";
 import { describePage } from "@/lib/wa-page";
@@ -18,26 +20,15 @@ type Click = {
   gclid: string | null;
   status: string;
   deal_value: number | null;
+  owner: string | null;
+  lost_reason: string | null;
   notes: string | null;
 };
 
 const fmt = (n: number) => new Intl.NumberFormat("en-AE", { maximumFractionDigits: 0 }).format(n);
 const when = (d: string) => new Date(d).toLocaleString("en-GB", { timeZone: "Asia/Dubai", dateStyle: "short", timeStyle: "short" });
 
-/** Channel label: Google Ads click id wins, then UTM source, then the referring site, else direct. */
-function channel(c: Click) {
-  if (c.gclid) return "Google Ads";
-  if (c.utm_source) return [c.utm_source, c.utm_medium].filter(Boolean).join(" / ");
-  if (c.referrer) {
-    try {
-      const host = new URL(c.referrer).hostname.replace(/^www\./, "");
-      if (!host.includes("4ugenerators")) return host;
-    } catch {
-      /* ignore */
-    }
-  }
-  return "direct / organic";
-}
+const channel = (c: Click) => trafficSource(c);
 
 function top(rows: Click[], key: (c: Click) => string, n = 8) {
   const m = new Map<string, number>();
@@ -55,7 +46,7 @@ export default async function AdminWhatsApp({ searchParams }: { searchParams: Pr
   const since = new Date(Date.now() - 30 * 864e5).toISOString();
   let query = sb.from("whatsapp_clicks").select("*").order("created_at", { ascending: false }).limit(300);
   if (q) query = query.ilike("ref", `%${q.replace(/[^A-Z0-9-]/g, "")}%`);
-  const [{ data }, { data: month }] = await Promise.all([query, sb.from("whatsapp_clicks").select("*").gte("created_at", since).limit(5000)]);
+  const [{ data }, { data: month }, owners] = await Promise.all([query, sb.from("whatsapp_clicks").select("*").gte("created_at", since).limit(5000), loadOwners(sb)]);
   const list = (data ?? []) as Click[];
   const last30 = (month ?? []) as Click[];
   const won = last30.filter((c) => c.status === "won");
@@ -63,6 +54,7 @@ export default async function AdminWhatsApp({ searchParams }: { searchParams: Pr
 
   return (
     <div>
+      <OwnerList owners={owners} />
       <h1 className="text-2xl font-extrabold">WhatsApp clicks</h1>
       <p className="mt-2 max-w-3xl text-sm text-muted">
         Every WhatsApp message sent from the website ends with a code like <b>Ref: 4U-7K2PX</b>. Search the code to see which page and
@@ -70,7 +62,7 @@ export default async function AdminWhatsApp({ searchParams }: { searchParams: Pr
       </p>
 
       <form className="mt-6 flex max-w-md gap-2">
-        <input name="q" defaultValue={q} placeholder="Search ref, e.g. 4U-7K2PX" className="flex-1 rounded-xl border border-line bg-white px-4 py-2 uppercase" />
+        <input name="q" defaultValue={q} placeholder="Search ref, e.g. 4U-7K2PX" className="flex-1 rounded-xl border border-line px-4 py-2 uppercase" />
         <button className="rounded-xl bg-navy-950 px-4 py-2 font-bold text-white">Search</button>
       </form>
 
@@ -111,10 +103,10 @@ export default async function AdminWhatsApp({ searchParams }: { searchParams: Pr
       </div>
 
       <div className="mt-8 overflow-x-auto rounded-2xl border border-line bg-navy-900">
-        <table className="w-full min-w-[1000px] text-left text-sm">
+        <table className="w-full min-w-[1080px] text-left text-sm">
           <thead className="bg-surface text-xs uppercase text-muted">
             <tr>
-              {["Date", "Ref", "Page / button", "Channel / campaign", "Status · value AED · notes"].map((h) => (
+              {["Date", "Ref", "Page / button", "Channel / campaign", "Status · value · owner · notes"].map((h) => (
                 <th key={h} className="px-4 py-3">{h}</th>
               ))}
             </tr>
@@ -133,17 +125,7 @@ export default async function AdminWhatsApp({ searchParams }: { searchParams: Pr
                   {c.utm_campaign && <p className="text-muted">{c.utm_campaign}</p>}
                 </td>
                 <td className="px-4 py-3">
-                  <form action={updateWaClick} className="flex flex-wrap items-center gap-2">
-                    <input type="hidden" name="id" value={c.id} />
-                    <select name="status" defaultValue={c.status} className="rounded-lg border border-line px-2 py-1">
-                      {["new", "contacted", "quoted", "won", "lost"].map((s) => (
-                        <option key={s}>{s}</option>
-                      ))}
-                    </select>
-                    <input name="deal_value" type="number" min="0" step="1" defaultValue={c.deal_value ?? ""} placeholder="AED" className="w-28 rounded-lg border border-line px-2 py-1" />
-                    <input name="notes" defaultValue={c.notes ?? ""} placeholder="Notes" className="w-44 rounded-lg border border-line px-2 py-1" />
-                    <button className="rounded-lg bg-navy-950 px-3 py-1 font-bold text-white">Save</button>
-                  </form>
+                  <SalesForm table="whatsapp_clicks" row={c} />
                 </td>
               </tr>
             ))}

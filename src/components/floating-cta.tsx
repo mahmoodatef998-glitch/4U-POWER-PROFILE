@@ -18,6 +18,7 @@ export function FloatingCta() {
       <div className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-2 gap-2 border-t border-white/10 bg-navy-950/95 p-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] backdrop-blur md:hidden">
         <a
           href={telUrl}
+          data-call-location="sticky_mobile"
           onClick={() => trackEvent("call_click", { location: "sticky_mobile" })}
           className="flex h-12 items-center justify-center gap-2 rounded-full bg-white/10 font-bold text-white"
         >
@@ -41,6 +42,7 @@ export function FloatingCta() {
         <a
           href={telUrl}
           aria-label={t("callUs")}
+          data-call-location="sticky_desktop"
           onClick={() => trackEvent("call_click", { location: "sticky_desktop" })}
           className="grid size-14 place-items-center rounded-full bg-navy-950 text-white shadow-xl ring-1 ring-white/10 transition hover:-translate-y-0.5 hover:bg-navy-800"
         >

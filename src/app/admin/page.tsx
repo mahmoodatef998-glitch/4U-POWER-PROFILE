@@ -1,5 +1,8 @@
-import { updateLeadStatus } from "./actions";
 import Link from "next/link";
+import { addLead } from "./actions";
+import { OwnerList, OWNERS_LIST_ID, SalesForm } from "./sales-form";
+import { MANUAL_SOURCE_KEYS, MANUAL_SOURCES, sourceLabel, STATUSES } from "@/lib/sales";
+import { loadOwners } from "@/lib/sales-data";
 import { gaActiveNow, gaConfigured, gaTotals, safe } from "@/lib/google";
 import { getAdminClient } from "@/lib/supabase/server";
 
@@ -19,6 +22,9 @@ type Lead = {
   gclid: string | null;
   status: string;
   deal_value: number | null;
+  owner: string | null;
+  lost_reason: string | null;
+  notes: string | null;
   attachments: string[] | null;
 };
 
@@ -27,10 +33,11 @@ export default async function AdminLeads() {
   if (!sb) return <p className="rounded-xl bg-brand-50 p-4">Supabase is not configured. Set SUPABASE_SERVICE_ROLE_KEY — see DEPLOYMENT.md.</p>;
 
   const since = new Date(Date.now() - 30 * 864e5).toISOString();
-  const [{ data: leads }, { count: calc30 }, { count: calcConv }] = await Promise.all([
+  const [{ data: leads }, { count: calc30 }, { count: calcConv }, owners] = await Promise.all([
     sb.from("leads").select("*").order("created_at", { ascending: false }).limit(200),
     sb.from("calculator_submissions").select("id", { count: "exact", head: true }).gte("created_at", since),
     sb.from("calculator_submissions").select("id", { count: "exact", head: true }).gte("created_at", since).eq("converted_to_lead", true),
+    loadOwners(sb),
   ]);
   // visitor strip from GA4 (only when configured; never blocks the leads table)
   const [visNow, visToday, visWeek] = gaConfigured() ? await Promise.all([safe(gaActiveNow()), safe(gaTotals("today")), safe(gaTotals("6daysAgo"))]) : [null, null, null];
@@ -58,7 +65,12 @@ export default async function AdminLeads() {
           <span className="font-semibold text-brand-700">Connect Google Analytics &amp; Search Console to see visitors and search terms →</span>
         )}
       </Link>
-      <h1 className="text-2xl font-extrabold">Leads</h1>
+      <OwnerList owners={owners} />
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <h1 className="text-2xl font-extrabold">Leads</h1>
+        <Link href="/admin/report" className="rounded-xl bg-brand-500 px-4 py-2 text-sm font-bold text-ink-950">Sales report →</Link>
+      </div>
+      <ManualLeadForm />
       <dl className="mt-6 grid gap-4 sm:grid-cols-3">
         {[
           ["New leads", newCount],
@@ -72,10 +84,10 @@ export default async function AdminLeads() {
         ))}
       </dl>
       <div className="mt-8 overflow-x-auto rounded-2xl border border-line bg-navy-900">
-        <table className="w-full min-w-[900px] text-left text-sm">
+        <table className="w-full min-w-[1080px] text-left text-sm">
           <thead className="bg-surface text-xs uppercase text-muted">
             <tr>
-              {["Date", "Name / phone", "Country", "Need", "Source", "Status"].map((h) => (
+              {["Date", "Name / phone", "Country", "Need", "Source", "Status · value · owner · notes"].map((h) => (
                 <th key={h} className="px-4 py-3">{h}</th>
               ))}
             </tr>
@@ -107,21 +119,12 @@ export default async function AdminLeads() {
                   )}
                 </td>
                 <td className="px-4 py-3 text-muted">
-                  {l.source}
+                  {sourceLabel(l.source)}
                   {l.utm_campaign && <p>utm: {l.utm_campaign}</p>}
                   {l.gclid && <p>Google Ads</p>}
                 </td>
                 <td className="px-4 py-3">
-                  <form action={updateLeadStatus} className="flex flex-wrap gap-2">
-                    <input type="hidden" name="id" value={l.id} />
-                    <select name="status" defaultValue={l.status} className="rounded-lg border border-line px-2 py-1">
-                      {["new", "contacted", "quoted", "won", "lost"].map((s) => (
-                        <option key={s}>{s}</option>
-                      ))}
-                    </select>
-                    <input name="deal_value" type="number" min="0" step="1" defaultValue={l.deal_value ?? ""} placeholder="AED" className="w-24 rounded-lg border border-line px-2 py-1" />
-                    <button className="rounded-lg bg-navy-950 px-3 py-1 font-bold text-white">Save</button>
-                  </form>
+                  <SalesForm table="leads" row={l} />
                 </td>
               </tr>
             ))}
@@ -134,5 +137,36 @@ export default async function AdminLeads() {
         </table>
       </div>
     </div>
+  );
+}
+
+const input = "rounded-lg border border-line px-3 py-2";
+
+/** Log an enquiry that reached sales outside the website buttons, so the report counts every customer. */
+function ManualLeadForm() {
+  return (
+    <details className="mt-4 rounded-2xl border border-line bg-navy-900 p-5 open:pb-6">
+      <summary className="cursor-pointer font-bold">+ Log an enquiry (direct call, WhatsApp without a ref, walk-in, referral)</summary>
+      <form action={addLead} className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <input name="name" required minLength={2} maxLength={120} placeholder="Customer / company" className={input} />
+        <input name="phone" required minLength={6} maxLength={40} placeholder="Phone" dir="ltr" className={input} />
+        <select name="source" defaultValue="phone" aria-label="How they reached us" className={input}>
+          {MANUAL_SOURCE_KEYS.map((k) => (
+            <option key={k} value={k}>{MANUAL_SOURCES[k]}</option>
+          ))}
+        </select>
+        <input name="owner" list={OWNERS_LIST_ID} maxLength={60} placeholder="Sales owner" className={input} />
+        <input name="message" maxLength={2000} placeholder="What do they need? (e.g. 500 kVA + ATS, Dubai)" className={`${input} sm:col-span-2`} />
+        <select name="status" defaultValue="contacted" aria-label="Status" className={input}>
+          {STATUSES.map((s) => (
+            <option key={s}>{s}</option>
+          ))}
+        </select>
+        <div className="flex gap-2">
+          <input name="deal_value" type="number" min="0" step="1" placeholder="AED" className={`${input} w-full`} />
+          <button className="rounded-lg bg-navy-950 px-4 py-2 font-bold text-white">Add</button>
+        </div>
+      </form>
+    </details>
   );
 }

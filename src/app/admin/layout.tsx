@@ -11,11 +11,13 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
     <html lang="en" data-theme="light">
       <body className="min-h-screen bg-surface font-sans text-ink">
         <header className="bg-navy-950 text-white">
-          <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
+          <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-4">
             <span className="font-extrabold">4U Admin</span>
-            <nav className="flex gap-4 text-sm font-semibold">
+            <nav className="flex flex-wrap gap-x-4 gap-y-1 text-sm font-semibold">
+              <Link href="/admin/report" className="text-brand-400 hover:text-brand-300">Sales report</Link>
               <Link href="/admin" className="hover:text-brand-400">Leads</Link>
               <Link href="/admin/whatsapp" className="hover:text-brand-400">WhatsApp</Link>
+              <Link href="/admin/calls" className="hover:text-brand-400">Calls</Link>
               <Link href="/admin/traffic" className="hover:text-brand-400">Visitors</Link>
               <Link href="/admin/news" className="hover:text-brand-400">News</Link>
               <Link href="/en" className="hover:text-brand-400">View site ↗</Link>

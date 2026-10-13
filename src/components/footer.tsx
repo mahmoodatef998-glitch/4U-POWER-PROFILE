@@ -85,7 +85,7 @@ export async function Footer() {
             </p>
             <p className="flex gap-3">
               <Phone className="mt-0.5 size-4 shrink-0 text-brand-400" aria-hidden />
-              <a href={telUrl} dir="ltr" className="hover:text-brand-400">{company.phone}</a>
+              <a href={telUrl} dir="ltr" data-call-location="footer" className="hover:text-brand-400">{company.phone}</a>
             </p>
             <p className="flex gap-3">
               <Mail className="mt-0.5 size-4 shrink-0 text-brand-400" aria-hidden />

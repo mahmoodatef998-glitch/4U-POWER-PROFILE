@@ -36,7 +36,7 @@ export function WhatsAppButton({ message, className, size = "md", variant = "wha
 export function CallButton({ className, size = "md", variant = "outline", label, location }: Common) {
   const t = useTranslations("cta");
   return (
-    <a href={telUrl} onClick={() => trackEvent("call_click", { location })} className={cn(buttonVariants({ variant, size }), className)}>
+    <a href={telUrl} data-call-location={location} onClick={() => trackEvent("call_click", { location })} className={cn(buttonVariants({ variant, size }), className)}>
       <Phone />
       {label ?? t("callUs")}
     </a>

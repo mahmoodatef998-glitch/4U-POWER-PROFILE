@@ -37,7 +37,7 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
         </>
       ),
     },
-    { icon: Phone, label: ar ? "الهاتف / واتساب" : "Phone / WhatsApp", value: <a href={telUrl} dir="ltr" className="font-bold text-ink hover:text-brand-700">{company.phone}</a> },
+    { icon: Phone, label: ar ? "الهاتف / واتساب" : "Phone / WhatsApp", value: <a href={telUrl} dir="ltr" data-call-location="contact_page" className="font-bold text-ink hover:text-brand-700">{company.phone}</a> },
     { icon: Mail, label: ar ? "البريد الإلكتروني" : "Email", value: <a href={`mailto:${company.email}`} className="font-bold text-ink hover:text-brand-700">{company.email}</a> },
     { icon: Clock, label: ar ? "ساعات العمل" : "Working hours", value: ar ? "الاثنين – السبت، 8:00 ص – 6:00 م (بتوقيت الإمارات)" : "Monday – Saturday, 8:00 am – 6:00 pm (GST)" },
   ];
