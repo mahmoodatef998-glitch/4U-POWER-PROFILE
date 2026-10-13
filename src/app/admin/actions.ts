@@ -34,7 +34,9 @@ const SalesUpdate = z.object({
 export async function updateSales(formData: FormData) {
   const { table, id, ...fields } = SalesUpdate.parse(Object.fromEntries(formData));
   // contacted_at / closed_at are stamped by the sales_stamps trigger
-  const { error } = await db().from(table).update(fields).eq("id", id);
+  let { error } = await db().from(table).update(fields).eq("id", id);
+  // PGRST204 = unknown column: the sales_report migration is not applied yet — keep status/value saving working
+  if (error?.code === "PGRST204") ({ error } = await db().from(table).update({ status: fields.status, deal_value: fields.deal_value }).eq("id", id));
   if (error) throw new Error(error.message);
   revalidatePath(PATHS[table]);
   revalidatePath("/admin/report");

@@ -37,7 +37,7 @@ export default async function AdminCalls() {
     sb.from("call_clicks").select("status, deal_value").gte("created_at", since).limit(5000),
     loadOwners(sb),
   ]);
-  if (error) return <p className="rounded-xl bg-red-50 p-4 text-red-700">Could not load call clicks: {error.message}</p>;
+  if (error) return <p className="rounded-xl bg-red-50 p-4 text-red-700">Could not load call clicks: {error.message}. Apply supabase/migrations/20261014000000_sales_report.sql in Supabase if the table is missing.</p>;
   const list = (data ?? []) as Call[];
   const last30 = (month ?? []) as Pick<Call, "status" | "deal_value">[];
   const won = last30.filter((c) => c.status === "won");

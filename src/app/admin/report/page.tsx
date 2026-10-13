@@ -7,6 +7,8 @@ import { getAdminClient } from "@/lib/supabase/server";
 
 type Search = { p?: string; from?: string; to?: string; owner?: string };
 
+const MIGRATION_HINT = "If this mentions a missing table or column, apply supabase/migrations/20261014000000_sales_report.sql in Supabase.";
+
 const fmt = (n: number) => new Intl.NumberFormat("en-AE", { maximumFractionDigits: 0 }).format(n);
 const pct = (v: number | null) => (v == null ? "—" : `${Math.round(v * 100)}%`);
 
@@ -181,7 +183,11 @@ export default async function SalesReport({ searchParams }: { searchParams: Prom
       loadWonClosed(sb, period.start, period.end, owner),
     ]);
   } catch (e) {
-    return <p className="rounded-xl bg-red-50 p-4 text-red-700">Could not load the report: {(e as Error).message}</p>;
+    return (
+      <p className="rounded-xl bg-red-50 p-4 text-red-700">
+        Could not load the report: {(e as Error).message}. {MIGRATION_HINT}
+      </p>
+    );
   }
   const visitors = gaConfigured() ? await safe(gaTotals(period.from, period.to)) : null;
 
