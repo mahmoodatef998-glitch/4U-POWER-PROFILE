@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { after } from "next/server";
 import { z } from "zod";
+import { newsPosts as bundledNews } from "@/content/news";
 import { submitIndexNow } from "@/lib/indexnow";
 import { localeUrl } from "@/lib/seo";
 import { LOST_REASON_KEYS, MANUAL_SOURCE_KEYS, STATUSES, type LostReason, type ManualSource, type SalesTable } from "@/lib/sales";
@@ -90,9 +91,7 @@ export async function createPost(_prev: { error?: string } | null, formData: For
       is_published: true,
     });
   if (error) return { error: error.message };
-  revalidatePath("/[locale]/news", "page");
-  revalidatePath("/[locale]", "page");
-  revalidatePath("/sitemap.xml");
+  revalidateNews(d.slug);
   // tell Bing & co. about the new article straight away (runs after the response is sent)
   after(() =>
     submitIndexNow(
@@ -105,7 +104,35 @@ export async function createPost(_prev: { error?: string } | null, formData: For
 export async function togglePost(formData: FormData) {
   const id = z.string().uuid().parse(formData.get("id"));
   const next = formData.get("next") === "true";
-  await db().from("news_posts").update({ is_published: next }).eq("id", id);
-  revalidatePath("/[locale]/news", "page");
+  const { error } = await db().from("news_posts").update({ is_published: next }).eq("id", id);
+  if (error) throw new Error(error.message);
+  revalidateNews(z.string().optional().parse(formData.get("slug") ?? undefined));
+}
+
+/**
+ * Hide an article that ships with the site's content calendar (src/content/news-*.ts). Database rows win
+ * over bundled ones, so a hidden copy in news_posts takes it off the site; "Show" then uses togglePost.
+ */
+export async function hideBundledPost(formData: FormData) {
+  const slug = z.string().parse(formData.get("slug"));
+  const post = bundledNews.find((p) => p.slug === slug);
+  if (!post) throw new Error(`No calendar article with slug ${slug}`);
+  const { error } = await db()
+    .from("news_posts")
+    .upsert({ ...post, meta_title_en: post.meta_title_en ?? null, meta_title_ar: post.meta_title_ar ?? null, is_published: false }, { onConflict: "slug" });
+  if (error) throw new Error(error.message);
+  revalidateNews(slug);
+}
+
+/**
+ * Refresh the pages that list or show articles, in both languages. The home page is left to its hourly
+ * refresh: it is static-only (dynamicParams = false), and on-demand revalidation of such a route 404s.
+ */
+function revalidateNews(slug?: string) {
+  for (const l of ["en", "ar"]) {
+    revalidatePath(`/${l}/news`);
+    if (slug) revalidatePath(`/${l}/news/${slug}`);
+  }
+  revalidatePath("/sitemap.xml");
   revalidatePath("/admin/news");
 }

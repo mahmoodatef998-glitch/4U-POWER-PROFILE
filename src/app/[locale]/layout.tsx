@@ -40,8 +40,9 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = { themeColor: "#f4f6fb", width: "device-width", initialScale: 1 };
 
-// Only /en and /ar exist; anything else (e.g. /favicon.ico) is a hard 404 instead of rendering with a bogus locale.
-export const dynamicParams = false;
+// Only /en and /ar exist: anything else is a 404 via the hasLocale() check below. No `dynamicParams = false` here —
+// it made every route under [locale] "fallback: false", so on-demand revalidation (admin publish / hide) turned the
+// home and news pages into 404s and articles added in /admin had no page until the next deploy.
 
 const THEME_SCRIPT = `try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t}catch(e){}`;
 

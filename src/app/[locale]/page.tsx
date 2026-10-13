@@ -28,6 +28,9 @@ import { CATEGORIES } from "@/lib/types";
 import { pick, stripMarks, type Locale } from "@/lib/utils";
 
 export const revalidate = 3600;
+// Only /en and /ar: junk single-segment URLs (/wp-login.php, /.env …) skip the middleware and would otherwise
+// render the home page with a bogus locale. Safe here because nothing revalidates the home page on demand.
+export const dynamicParams = false;
 
 /** gradient family per story card: engine, cooling, control, delivery */
 const STORY_LINES = ["line-generator", "line-sync_panel", "line-ats_panel", "line-switchgear"];

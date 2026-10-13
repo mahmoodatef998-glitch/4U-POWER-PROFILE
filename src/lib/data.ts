@@ -1,7 +1,7 @@
 import "server-only";
 
 import { cache } from "react";
-import { getPublicClient } from "./supabase/server";
+import { getAdminClient, getPublicClient } from "./supabase/server";
 import type { NewsPost, Product, Project, Testimonial } from "./types";
 import { products as seedProducts } from "@/content/products";
 import { projects as seedProjects, testimonials as seedTestimonials } from "@/content/projects";
@@ -42,10 +42,22 @@ export const getTestimonials = cache(async (): Promise<Testimonial[]> => {
   return process.env.NEXT_PUBLIC_SHOW_PLACEHOLDER_TESTIMONIALS === "true" ? seedTestimonials : [];
 });
 
+/** Articles hidden in /admin. RLS keeps them from the public client, so they are read with the service role. */
+async function hiddenNewsSlugs(): Promise<string[]> {
+  const sb = getAdminClient();
+  if (!sb) return [];
+  const { data, error } = await sb.from("news_posts").select("slug").eq("is_published", false);
+  if (error) {
+    console.error("[data] hidden news:", error.message);
+    return [];
+  }
+  return data.map((r) => r.slug as string);
+}
+
 export const getNews = cache(async (): Promise<NewsPost[]> => {
-  const rows = await fromSupabase<NewsPost>("news_posts", { column: "published_at", ascending: false });
-  // Database rows win (admin edits / unpublish); bundled articles not yet in the database are still served.
-  const known = new Set((rows ?? []).map((p) => p.slug));
+  const [rows, hidden] = await Promise.all([fromSupabase<NewsPost>("news_posts", { column: "published_at", ascending: false }), hiddenNewsSlugs()]);
+  // Database rows win (admin edits / hide); bundled calendar articles not in the database are still served.
+  const known = new Set([...(rows ?? []).map((p) => p.slug), ...hidden]);
   const list = [...(rows ?? []), ...seedNews.filter((p) => !known.has(p.slug))].sort((a, b) => b.published_at.localeCompare(a.published_at));
   const now = Date.now();
   return list.filter((p) => p.is_published && new Date(p.published_at).getTime() <= now);
