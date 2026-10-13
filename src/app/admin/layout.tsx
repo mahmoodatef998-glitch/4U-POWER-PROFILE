@@ -19,6 +19,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
               <Link href="/admin/whatsapp" className="hover:text-brand-400">WhatsApp</Link>
               <Link href="/admin/calls" className="hover:text-brand-400">Calls</Link>
               <Link href="/admin/traffic" className="hover:text-brand-400">Visitors</Link>
+              <Link href="/admin/seo" className="hover:text-brand-400">SEO</Link>
               <Link href="/admin/news" className="hover:text-brand-400">News</Link>
               <Link href="/en" className="hover:text-brand-400">View site ↗</Link>
             </nav>

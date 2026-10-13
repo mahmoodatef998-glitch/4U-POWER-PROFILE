@@ -9,7 +9,7 @@
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
     "seed:sql": "tsx scripts/generate-seed.ts",
-    "test": "tsx scripts/test-calculator.ts && tsx scripts/test-sales.ts",
+    "test": "tsx scripts/test-calculator.ts && tsx scripts/test-sales.ts && tsx scripts/test-seo.ts",
     "check:seo": "tsx scripts/seo-lengths.ts",
     "audit:seo": "node scripts/seo-audit.mjs"
   },

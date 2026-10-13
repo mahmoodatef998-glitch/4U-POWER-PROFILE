@@ -1,0 +1,41 @@
+# Weekly: pull real Google searches from Search Console into data/seo-opportunities.json,
+# which the weekly article routine reads to write about what people actually search.
+name: SEO snapshot
+
+on:
+  schedule:
+    - cron: "15 4 * * 2" # Tuesday 08:15 UAE, the day before the Wednesday article run
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Pull Search Console data
+        env:
+          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+          GSC_SITE: ${{ vars.GSC_SITE }}
+        run: |
+          if [ -z "$GOOGLE_SERVICE_ACCOUNT_JSON" ]; then
+            echo "::warning::Add the GOOGLE_SERVICE_ACCOUNT_JSON repository secret (Settings → Secrets and variables → Actions)."
+            exit 0
+          fi
+          npx tsx scripts/seo-snapshot.ts
+      - name: Commit the snapshot
+        run: |
+          [ -f data/seo-opportunities.json ] || exit 0
+          git config user.name "4U SEO snapshot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/seo-opportunities.json
+          git diff --cached --quiet && exit 0
+          git commit -m "SEO snapshot: real Google searches (last 28 days)"
+          git push

@@ -324,7 +324,7 @@ const CSV_COLUMNS: [string, (e: Enquiry) => string | number | null][] = [
   ["Closed (Dubai)", (e) => (e.closed_at ? new Date(Date.parse(e.closed_at) + TZ).toISOString().slice(0, 16).replace("T", " ") : null)],
 ];
 
-const cell = (v: string | number | null) => {
+export const csvCell = (v: string | number | null) => {
   if (v == null) return "";
   const s = String(v);
   // quote everything that could break a row; neutralise spreadsheet formulas (phone numbers like +971… are fine)
@@ -336,5 +336,5 @@ const cell = (v: string | number | null) => {
 export function toCsv(list: Enquiry[]) {
   const rows = [CSV_COLUMNS.map(([h]) => h), ...list.map((e) => CSV_COLUMNS.map(([, f]) => f(e)))];
   // BOM so Excel opens Arabic text as UTF-8
-  return "﻿" + rows.map((r) => r.map(cell).join(",")).join("\r\n");
+  return "﻿" + rows.map((r) => r.map(csvCell).join(",")).join("\r\n");
 }

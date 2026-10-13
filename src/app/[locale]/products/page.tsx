@@ -1,6 +1,7 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Suspense } from "react";
 import { CtaBanner } from "@/components/cta-banner";
+import { PopularSearches } from "@/components/popular-searches";
 import { JsonLd } from "@/components/json-ld";
 import { PageHero } from "@/components/page-hero";
 import { ProductCard } from "@/components/product-card";
@@ -68,6 +69,7 @@ export default async function ProductsPage({ params }: { params: Promise<{ local
           </Suspense>
         </div>
       </section>
+      <PopularSearches locale={locale} />
       <CtaBanner title={pick(home.cta.title, locale)} body={pick(home.cta.body, locale)} location="products_cta" />
     </>
   );

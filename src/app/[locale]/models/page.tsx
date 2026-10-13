@@ -1,4 +1,5 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { PopularSearches } from "@/components/popular-searches";
 import { CallButton, WhatsAppButton } from "@/components/cta-buttons";
 import { ModelTable } from "@/components/model-table";
 import { PageHero } from "@/components/page-hero";
@@ -82,6 +83,7 @@ export default async function ModelsPage({ params }: Props) {
           </div>
         </section>
       ))}
+      <PopularSearches locale={locale} />
     </>
   );
 }

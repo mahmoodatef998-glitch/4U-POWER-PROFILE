@@ -33,5 +33,6 @@
       "path": "/api/indexnow?scope=recent",
       "schedule": "40 6 * * *"
     }
-  ]
+  ],
+  "ignoreCommand": "git diff --quiet HEAD^ HEAD -- . ':(exclude)data'"
 }

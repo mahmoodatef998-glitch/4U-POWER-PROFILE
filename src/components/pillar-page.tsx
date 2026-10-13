@@ -5,6 +5,7 @@ import { sizingModels } from "@/lib/genset-models";
 import { CtaBanner } from "@/components/cta-banner";
 import { CallButton, WhatsAppButton } from "@/components/cta-buttons";
 import { FaqBlock } from "@/components/faq-block";
+import { PopularSearches } from "@/components/popular-searches";
 import { Reveal } from "@/components/motion";
 import { NewsCard } from "@/components/news-card";
 import { PageHero } from "@/components/page-hero";
@@ -184,6 +185,7 @@ export async function PillarPage({
         </section>
       )}
 
+      <PopularSearches locale={locale} />
       <CtaBanner title={L(pillar.cta.title)} body={L(pillar.cta.body)} message={waMessage} location={`pillar_banner_${path}`} />
     </>
   );
