@@ -23,7 +23,14 @@ function adminGuard(req: NextRequest) {
 
 export default function middleware(req: NextRequest) {
   if (req.nextUrl.pathname.startsWith("/admin")) return adminGuard(req);
-  return intl(req);
+  const res = intl(req);
+  // next-intl adds the missing locale with a temporary (307) redirect, so Google kept ranking addresses like
+  // /generators/sizes instead of /en/generators/sizes. Deep URLs get a permanent redirect so the ranking moves
+  // to the real page; "/" stays temporary because it picks the language per visitor.
+  if (res.status === 307 && req.nextUrl.pathname !== "/" && res.headers.get("location")) {
+    return new NextResponse(null, { status: 308, headers: res.headers });
+  }
+  return res;
 }
 
 export const config = {
