@@ -120,10 +120,10 @@ type GscRow = { keys?: string[]; clicks: number; impressions: number; ctr: numbe
 
 const isoDay = (offset: number) => new Date(Date.now() - offset * 864e5).toISOString().slice(0, 10);
 
-/** Search Console performance for the last 28 days (data lags ~2 days). No dimension = totals. */
-export async function gscQuery(dimension?: "query" | "page", limit = 25) {
+/** Search Console performance for the last `days` (default 28; data lags ~2 days). No dimension = totals. */
+export async function gscQuery(dimension?: "query" | "page", limit = 25, days = 28) {
   const r = await googlePost<{ rows?: GscRow[] }>(`https://www.googleapis.com/webmasters/v3/sites/${encodeURIComponent(gscSite())}/searchAnalytics/query`, {
-    startDate: isoDay(29),
+    startDate: isoDay(days + 1),
     endDate: isoDay(1),
     ...(dimension ? { dimensions: [dimension], rowLimit: limit } : {}),
   });

@@ -1,7 +1,7 @@
 import { hasLocale } from "next-intl";
 import { notFound, permanentRedirect } from "next/navigation";
 import { routing } from "@/i18n/routing";
-import { legacyRedirect } from "@/lib/legacy-redirects";
+import { legacyLocale, legacyRedirect } from "@/lib/legacy-redirects";
 
 type Props = { params: Promise<{ locale: string; rest: string[] }> };
 
@@ -10,7 +10,8 @@ type Props = { params: Promise<{ locale: string; rest: string[] }> };
 export default async function CatchAll({ params }: Props) {
   const { locale, rest } = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
-  const target = legacyRedirect(`/${rest.join("/")}`);
-  if (target) permanentRedirect(`/${locale}${target}`);
+  const path = `/${rest.join("/")}`;
+  const target = legacyRedirect(path);
+  if (target) permanentRedirect(`/${legacyLocale(path, locale)}${target}`);
   notFound();
 }

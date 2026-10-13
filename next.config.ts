@@ -1,5 +1,6 @@
 import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
+import { LEGACY_EXACT } from "./src/lib/legacy-exact";
 
 const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 
@@ -19,21 +20,9 @@ const nextConfig: NextConfig = {
     formats: ["image/avif", "image/webp"],
     remotePatterns: [{ protocol: "https", hostname: "*.supabase.co", pathname: "/storage/v1/object/public/**" }],
   },
-  // URLs from the previous website on this domain that Google still crawls → closest new page.
+  // URLs from the previous website on this domain that Google still crawls → closest new page (see src/lib/legacy-redirects.ts).
   async redirects() {
-    const old: [string, string][] = [
-      ["/team", "/en/about"],
-      ["/about-us", "/en/about"],
-      ["/our_services", "/en/services"],
-      ["/our-services", "/en/services"],
-      ["/safety-policy", "/en/about"],
-      ["/quality-policy", "/en/about"],
-      ["/quality-policy-2", "/en/about"],
-      ["/contact-us", "/en/contact"],
-      ["/project/:slug*", "/en/projects"],
-      ["/our_projects", "/en/projects"],
-    ];
-    return old.map(([source, destination]) => ({ source, destination, permanent: true }));
+    return LEGACY_EXACT.map(([source, destination]) => ({ source, destination, permanent: true }));
   },
   async headers() {
     return [

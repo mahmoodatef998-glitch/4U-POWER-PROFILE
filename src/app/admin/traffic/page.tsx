@@ -1,4 +1,6 @@
+import sitemap from "@/app/sitemap";
 import { gaActiveNow, gaConfigured, gaDaily, gaTop, gaTotals, googleConfigured, gscQuery, gscSite, safe } from "@/lib/google";
+import { checkUrl, type UrlCheck } from "@/lib/legacy-redirects";
 
 const fmt = (n: number, d = 0) => new Intl.NumberFormat("en-AE", { maximumFractionDigits: d }).format(n);
 const pct = (n: number) => `${fmt(n * 100, 1)}%`;
@@ -70,7 +72,7 @@ export default async function AdminTraffic() {
   }
 
   const ga = gaConfigured();
-  const [now, today, week, month, daily, pages, channels, countries, gscTotals, queries, gscPages] = await Promise.all([
+  const [now, today, week, month, daily, pages, channels, countries, gscTotals, queries, gscPages, gscAll, siteMap] = await Promise.all([
     ga ? safe(gaActiveNow()) : null,
     ga ? safe(gaTotals("today")) : null,
     ga ? safe(gaTotals("6daysAgo")) : null,
@@ -82,7 +84,11 @@ export default async function AdminTraffic() {
     safe(gscQuery()),
     safe(gscQuery("query", 30)),
     safe(gscQuery("page", 10)),
+    // every address Google showed in the last ~16 months, to catch old URLs of the previous website
+    safe(gscQuery("page", 1000, 480)),
+    sitemap(),
   ]);
+  const addresses = checkAddresses(gscAll.data ?? [], siteMap.map((e) => e.url));
   const max = Math.max(1, ...(daily?.data ?? []).map((d) => d.users));
   const gsc = gscTotals.data?.[0];
 
@@ -178,6 +184,8 @@ export default async function AdminTraffic() {
       <Panel title="Pages shown most in Google">
         <List rows={(gscPages.data ?? []).map((r) => [r.key.replace(/^https:\/\/www\.4ugenerators\.com/, ""), `${fmt(r.impressions)} shown · ${fmt(r.clicks)} clicks`])} />
       </Panel>
+
+      <OldAddresses rows={addresses} error={gscAll.error} />
     </div>
   );
 }
@@ -194,4 +202,77 @@ function List({ rows }: { rows: [string, string][] }) {
       ))}
     </ul>
   );
+}
+
+/** Route folders of the new site: an /en|/ar address under one of these is a new-site page even if not in the sitemap (datasheets…). */
+const NEW_SITE = /^\/(en|ar)(\/(about|ats-panels|calculator|configurator|contact|generators|industries|locations|markets|models|news|privacy|products|projects|services|spare-parts|switchgear|terms)(\/.*)?)?$/;
+
+type Address = UrlCheck & { impressions: number; clicks: number };
+
+function checkAddresses(rows: { key: string; impressions: number; clicks: number }[], sitemapUrls: string[]): Address[] {
+  const live = new Set(sitemapUrls.map((u) => new URL(u).pathname.replace(/\/+$/, "") || "/"));
+  const byPath = new Map<string, Address>();
+  for (const r of rows) {
+    const c = checkUrl(r.key, live);
+    const a: Address = NEW_SITE.test(c.path) && c.status !== "live" && !/\/(en|ar)\/[^/]+$/.test(c.path) ? { ...c, status: "live", impressions: 0, clicks: 0 } : { ...c, impressions: 0, clicks: 0 };
+    const prev = byPath.get(a.path) ?? a;
+    prev.impressions += r.impressions;
+    prev.clicks += r.clicks;
+    byPath.set(a.path, prev);
+  }
+  return [...byPath.values()];
+}
+
+const RANK: Record<UrlCheck["status"], number> = { "404": 0, redirect: 1, live: 2 };
+
+/** Addresses Google has that are not pages of the new site, and where each one goes today. */
+function OldAddresses({ rows, error }: { rows: Address[]; error: string | null }) {
+  const old = rows.filter((r) => r.status !== "live").sort((a, b) => RANK[a.status] - RANK[b.status] || b.impressions - a.impressions);
+  const broken = old.filter((r) => r.status === "404").length;
+  return (
+    <Panel
+      title="Old addresses Google still has"
+      note="Every address shown in Google in the last 16 months that is not a page of the new site, and what happens to it today. Redirects send visitors (and Google) to the closest page; anything still 404 needs a rule — send the list to Claude."
+    >
+      <Problem error={error} />
+      <p className="text-sm">
+        <b>{rows.length}</b> addresses in Google · <b>{rows.length - old.length}</b> pages of the new site · <b className="text-emerald-700">{old.length - broken}</b> redirected ·{" "}
+        <b className={broken ? "text-red-700" : "text-emerald-700"}>{broken}</b> still 404
+      </p>
+      {old.length > 0 && (
+        <div className="mt-4 overflow-x-auto">
+          <table className="w-full min-w-[640px] text-sm">
+            <thead className="text-xs uppercase text-muted">
+              <tr>
+                <th className="py-2 text-start">Address in Google</th>
+                <th className="py-2 text-end">Shown</th>
+                <th className="py-2 text-end">Clicks</th>
+                <th className="py-2 ps-6 text-start">Now goes to</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-line">
+              {old.map((r) => (
+                <tr key={r.path}>
+                  <td className="max-w-xs truncate py-2" title={r.path}>{decodeURIComponentSafe(r.path)}</td>
+                  <td className="py-2 text-end tabular-nums">{fmt(r.impressions)}</td>
+                  <td className="py-2 text-end tabular-nums">{fmt(r.clicks)}</td>
+                  <td className="py-2 ps-6">
+                    {r.status === "404" ? <span className="font-bold text-red-700">404 — needs a rule</span> : <span className="text-emerald-800">→ {r.target}</span>}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </Panel>
+  );
+}
+
+function decodeURIComponentSafe(s: string) {
+  try {
+    return decodeURIComponent(s);
+  } catch {
+    return s;
+  }
 }
