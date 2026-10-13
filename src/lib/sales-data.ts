@@ -20,7 +20,17 @@ type Base = {
   utm_campaign: string | null;
   gclid: string | null;
 };
-type LeadRow = Base & { name: string; phone: string; source: string; source_page: string | null };
+type LeadRow = Base & {
+  name: string;
+  phone: string;
+  email: string | null;
+  country: string | null;
+  message: string | null;
+  product_slug: string | null;
+  calculated_kva: number | string | null;
+  source: string;
+  source_page: string | null;
+};
 type ClickRow = Base & { page: string | null; referrer: string | null; ref?: string | null };
 
 const MANUAL_CHANNEL: Record<string, Channel> = { phone: "call", whatsapp: "whatsapp", walk_in: "offline", referral: "offline", other: "offline" };
@@ -48,6 +58,11 @@ const fromLead = (r: LeadRow): Enquiry => ({
   ref: null,
   name: r.name,
   phone: r.phone,
+  email: r.email,
+  country: r.country,
+  message: r.message,
+  product: r.product_slug,
+  kva: r.calculated_kva == null ? null : Number(r.calculated_kva),
 });
 
 const fromClick = (table: "whatsapp_clicks" | "call_clicks") => (r: ClickRow): Enquiry => ({
@@ -60,6 +75,11 @@ const fromClick = (table: "whatsapp_clicks" | "call_clicks") => (r: ClickRow): E
   ref: r.ref ?? null,
   name: null,
   phone: null,
+  email: null,
+  country: null,
+  message: null,
+  product: null,
+  kva: null,
 });
 
 function check<T>(res: { data: T[] | null; error: { message: string } | null }, table: string): T[] {
@@ -71,7 +91,7 @@ function check<T>(res: { data: T[] | null; error: { message: string } | null }, 
 export async function loadEnquiries(sb: SupabaseClient, start: Date, end: Date): Promise<Enquiry[]> {
   const [from, to] = [start.toISOString(), end.toISOString()];
   const [leads, wa, calls] = await Promise.all([
-    sb.from("leads").select(`${SALES_COLS}, name, phone, source, source_page`).gte("created_at", from).lt("created_at", to).order("created_at", { ascending: false }).limit(MAX_ROWS),
+    sb.from("leads").select(`${SALES_COLS}, name, phone, email, country, message, product_slug, calculated_kva, source, source_page`).gte("created_at", from).lt("created_at", to).order("created_at", { ascending: false }).limit(MAX_ROWS),
     sb.from("whatsapp_clicks").select(`${SALES_COLS}, ref, page, referrer`).gte("created_at", from).lt("created_at", to).order("created_at", { ascending: false }).limit(MAX_ROWS),
     sb.from("call_clicks").select(`${SALES_COLS}, page, referrer`).gte("created_at", from).lt("created_at", to).order("created_at", { ascending: false }).limit(MAX_ROWS),
   ]);

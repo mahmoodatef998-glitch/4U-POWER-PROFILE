@@ -50,7 +50,8 @@ let n = 0;
 const e = (o: Partial<Enquiry>): Enquiry => ({
   id: String(++n), table: "leads", channel: "form", source: "quote_form", created_at: "2026-10-10T08:00:00Z", status: "new",
   deal_value: null, owner: null, lost_reason: null, contacted_at: null, closed_at: null, traffic: "direct / organic",
-  campaign: null, page: null, ref: null, name: "A", phone: "+971500000000", notes: null, ...o,
+  campaign: null, page: null, ref: null, name: "A", phone: "+971500000000", email: null, country: null, message: null,
+  product: null, kva: null, notes: null, ...o,
 });
 const list: Enquiry[] = [
   e({ channel: "whatsapp", source: "whatsapp_click", table: "whatsapp_clicks", status: "won", deal_value: 120000, owner: "Ahmed", traffic: "Google Ads" }),
@@ -97,10 +98,11 @@ assert.equal(r.buckets.reduce((s, b) => s + b.counts.whatsapp + b.counts.call + 
 assert.equal(buildReport([], periodRange("custom", "2026-01-01", "2026-06-30", now)).buckets.length, 26);
 
 // ---------------------------------------------------------------- CSV
-const csv = toCsv([e({ name: '=HYPERLINK("x")', notes: 'said "call back", tomorrow', phone: "+971 50 123 4567" })]);
+const csv = toCsv([e({ name: '=HYPERLINK("x")', notes: 'said "call back", tomorrow', phone: "+971 50 123 4567", email: "a@b.ae", message: "500 kVA\nfor Al Quoz" })]);
 assert.ok(csv.startsWith("﻿Date (Dubai),Channel"));
 assert.ok(csv.includes(`"'=HYPERLINK(""x"")"`), "formulas are neutralised and quotes escaped");
 assert.ok(csv.includes('"said ""call back"", tomorrow"'));
-assert.ok(csv.includes(",+971 50 123 4567,"), "phone numbers stay as typed");
+assert.ok(csv.includes(",+971 50 123 4567,a@b.ae,"), "phone numbers stay as typed, email follows");
+assert.ok(csv.includes('"500 kVA\nfor Al Quoz"'), "multi-line messages stay in one cell");
 
 console.log("sales report tests passed");

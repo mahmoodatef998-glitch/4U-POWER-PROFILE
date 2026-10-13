@@ -40,6 +40,9 @@ export const FORM_SOURCES: Record<string, string> = {
   parts: "Spare-parts form",
 };
 
+/** Every `leads.source`, for filters. */
+export const LEAD_SOURCES: Record<string, string> = { ...FORM_SOURCES, ...MANUAL_SOURCES };
+
 export type Channel = "whatsapp" | "call" | "form" | "offline";
 export const CHANNELS: Record<Channel, string> = {
   whatsapp: "WhatsApp",
@@ -69,8 +72,14 @@ export type Enquiry = {
   campaign: string | null;
   page: string | null;
   ref: string | null;
+  /** contact details and need — form / logged leads only */
   name: string | null;
   phone: string | null;
+  email: string | null;
+  country: string | null;
+  message: string | null;
+  product: string | null;
+  kva: number | null;
   notes: string | null;
 };
 
@@ -298,6 +307,11 @@ const CSV_COLUMNS: [string, (e: Enquiry) => string | number | null][] = [
   ["Ref", (e) => e.ref],
   ["Name", (e) => e.name],
   ["Phone", (e) => e.phone],
+  ["Email", (e) => e.email],
+  ["Country", (e) => e.country],
+  ["Product", (e) => e.product],
+  ["kVA", (e) => e.kva],
+  ["Message / need", (e) => e.message],
   ["Page", (e) => e.page],
   ["Traffic", (e) => e.traffic],
   ["Campaign", (e) => e.campaign],
