@@ -3,7 +3,8 @@ import { PopularSearches } from "@/components/popular-searches";
 import { CallButton, WhatsAppButton } from "@/components/cta-buttons";
 import { ModelTable } from "@/components/model-table";
 import { PageHero } from "@/components/page-hero";
-import { BRANDS, brandList, brandModels, brandName, gensetModels } from "@/lib/genset-models";
+import { Link } from "@/i18n/navigation";
+import { BRANDS, brandHubPath, brandList, brandModels, brandName, gensetModels } from "@/lib/genset-models";
 import { buildMetadata } from "@/lib/seo";
 import type { Locale } from "@/lib/utils";
 
@@ -70,7 +71,10 @@ export default async function ModelsPage({ params }: Props) {
             </h2>
             <p className="mt-2 text-muted">
               {ar ? `من ${r.min} إلى ${r.max} ك.ف.أ احتياطي.` : `${r.min} to ${r.max.toLocaleString("en")} kVA standby.`}
-              {r.brand !== "Perkins" && (ar ? " الحرف (A/B/C) بعد الكود يعني محركاً بديلاً لنفس القدرة." : " A letter suffix (A/B/C) marks an alternative engine at the same rating.")}
+              {r.brand !== "Perkins" && (ar ? " الحرف (A/B/C) بعد الكود يعني محركاً بديلاً لنفس القدرة." : " A letter suffix (A/B/C) marks an alternative engine at the same rating.")}{" "}
+              <Link href={brandHubPath(r.brand)} className="font-semibold text-brand-700 underline">
+                {ar ? `كل ما يخص مولدات ${brandName(r.brand, locale)}` : `${r.brand} diesel generators: sizes, fuel use & FAQ`}
+              </Link>
             </p>
             <div className="mt-6">
               <ModelTable models={r.list} locale={locale} />

@@ -7,9 +7,9 @@ import type { NewsPost } from "@/lib/types";
 export const newsPart3: NewsPost[] = [
   {
     slug: "generator-price-uae-cost-factors",
-    title_en: "Generator Price in the UAE: What Really Decides the Cost",
+    title_en: "Generator Prices in the UAE: What Really Decides the Cost",
     title_ar: "سعر المولد الكهربائي في الإمارات: ما الذي يحدد التكلفة فعلاً؟",
-    meta_title_en: "Generator Price in UAE: 9 Factors That Decide Cost | 4U Power",
+    meta_title_en: "Generator Prices in UAE: 9 Factors That Decide Cost | 4U",
     meta_title_ar: "سعر المولد في الإمارات: 9 عوامل تحدد التكلفة | فور يو باور",
     excerpt_en:
       "Two quotes for the same kVA can differ widely. The nine factors that really set a generator's price in the UAE, and how to compare quotations fairly.",

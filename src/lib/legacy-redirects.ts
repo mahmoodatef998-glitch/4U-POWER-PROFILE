@@ -8,10 +8,10 @@ export { LEGACY_EXACT };
  * the first match wins. English words use word boundaries; Arabic ones match anywhere.
  */
 const RULES: [RegExp, string][] = [
-  [/perkins|بيركنز|بركنز/, "/models#perkins"],
-  [/cummins|كمنز|كامنز|كومنز/, "/models#cummins"],
-  [/kubota|كوبوتا/, "/models#kubota"],
-  [/baudouin|بودوين/, "/models#baudouin"],
+  [/perkins|بيركنز|بركنز/, "/perkins-diesel-generators"],
+  [/cummins|كمنز|كامنز|كومنز/, "/cummins-diesel-generators"],
+  [/kubota|كوبوتا/, "/kubota-diesel-generators"],
+  [/baudouin|بودوين|بودوان/, "/baudouin-diesel-generators"],
   [/volvo|فولفو/, "/products/volvo-penta-generator-80-700kva"],
   [/lister|ليستر/, "/products/lister-petter-generator-7-60kva"],
   [/\bats\b|transfer switch|change ?over|تحويل/, "/ats-panels"],

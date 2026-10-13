@@ -16,9 +16,10 @@ import { SectionHeading } from "@/components/section-heading";
 import { categoryHref, categoryLabels, engineBrandLabels, fuelLabels } from "@/content/taxonomy";
 import { products as seedProducts } from "@/content/products";
 import { getProduct, getProducts } from "@/lib/data";
-import { modelsForProduct } from "@/lib/genset-models";
+import { brandHubPath, modelsForProduct } from "@/lib/genset-models";
 import { buildMetadata, localeUrl } from "@/lib/seo";
 import { SITE_URL } from "@/lib/site";
+import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 import type { Locale } from "@/lib/utils";
 
@@ -198,6 +199,11 @@ export default async function ProductPage({ params }: Props) {
             <div className="mt-8">
               <ModelTable models={models} locale={locale} />
             </div>
+            <p className="mt-4 text-sm">
+              <Link href={brandHubPath(models[0]!.brand)} className="font-semibold text-brand-700 underline">
+                {ar ? `كل موديلات وأحجام ${engineBrandLabels[models[0]!.brand]?.ar ?? models[0]!.brand}` : `Every ${models[0]!.brand} model and size`}
+              </Link>
+            </p>
           </div>
         </section>
       )}

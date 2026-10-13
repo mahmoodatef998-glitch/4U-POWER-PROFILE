@@ -110,8 +110,10 @@ console.log("sales report tests passed");
 // ---------------------------------------------------------------- old URLs from the previous website
 import { checkUrl, legacyLocale, legacyRedirect } from "../src/lib/legacy-redirects";
 for (const [from, to] of [
-  ["/perkins-diesel-generators", "/models#perkins"],
-  ["/cummins-generator", "/models#cummins"],
+  ["/perkins-diesel-generators/old-page", "/perkins-diesel-generators"],
+  ["/cummins-generator", "/cummins-diesel-generators"],
+  ["/kubota-silent", "/kubota-diesel-generators"],
+  ["/baudouin", "/baudouin-diesel-generators"],
   ["/500-kva-generator", "/generators/500-kva"],
   ["/products/500kva-silent", "/generators/500-kva"],
   ["/automatic-transfer-switch", "/ats-panels"],
@@ -129,7 +131,7 @@ assert.equal(legacyRedirect("/xyz"), null);
 assert.equal(legacyRedirect("/patsy"), null, "'ats' must be a whole word");
 assert.equal(legacyRedirect("/333-kva"), null, "only sizes we have a page for");
 // Arabic addresses → Arabic site
-assert.equal(legacyRedirect("/" + encodeURIComponent("مولدات-بيركنز")), "/models#perkins");
+assert.equal(legacyRedirect("/" + encodeURIComponent("مولدات-بيركنز")), "/perkins-diesel-generators");
 assert.equal(legacyRedirect("/" + encodeURIComponent("مولد-500-ك.ف.أ")), "/generators/500-kva");
 assert.equal(legacyRedirect("/" + encodeURIComponent("صيانة-المولدات")), "/services");
 assert.equal(legacyLocale("/" + encodeURIComponent("مولدات"), "en"), "ar");
@@ -137,12 +139,12 @@ assert.equal(legacyLocale("/perkins", "en"), "en");
 assert.equal(legacyRedirect("/category/uncategorized"), "/news");
 assert.equal(legacyRedirect("/%E0%A4%A"), null, "malformed escapes don't throw");
 // what /admin/traffic reports for addresses Google has
-const live = new Set(["/en", "/en/about", "/en/models"]);
+const live = new Set(["/en", "/en/about", "/en/models", "/en/perkins-diesel-generators", "/ar/perkins-diesel-generators"]);
 assert.deepEqual(checkUrl("https://www.4ugenerators.com/en/about", live), { path: "/en/about", status: "live" });
 assert.deepEqual(checkUrl("https://www.4ugenerators.com/safety-policy/", live), { path: "/safety-policy", status: "redirect", target: "/en/about" });
 assert.deepEqual(checkUrl("https://www.4ugenerators.com/project/socotra", live), { path: "/project/socotra", status: "redirect", target: "/en/projects" });
-assert.deepEqual(checkUrl("https://4ugenerators.com/perkins-diesel-generators/", live), { path: "/perkins-diesel-generators", status: "redirect", target: "/en/models#perkins" });
-assert.deepEqual(checkUrl("https://www.4ugenerators.com/ar/perkins-diesel-generators", live), { path: "/ar/perkins-diesel-generators", status: "redirect", target: "/ar/models#perkins" });
+assert.deepEqual(checkUrl("https://4ugenerators.com/perkins-diesel-generators/", live), { path: "/perkins-diesel-generators", status: "redirect", target: "/en/perkins-diesel-generators" });
+assert.deepEqual(checkUrl("https://www.4ugenerators.com/ar/perkins-diesel-generators", live), { path: "/ar/perkins-diesel-generators", status: "live" });
 assert.deepEqual(checkUrl("https://www.4ugenerators.com/sitemap_index.xml", live), { path: "/sitemap_index.xml", status: "redirect", target: "/sitemap.xml" });
 assert.deepEqual(checkUrl("https://www.4ugenerators.com/xyz-abc", live), { path: "/xyz-abc", status: "404" });
 console.log("legacy redirect tests passed");

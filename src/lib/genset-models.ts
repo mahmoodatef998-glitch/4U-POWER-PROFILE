@@ -74,6 +74,8 @@ export const brandList = (locale: Locale) =>
   locale === "ar" ? BRANDS.map((b) => GENSET_BRANDS[b].ar).join(" و") : `${BRANDS.slice(0, -1).join(", ")} & ${BRANDS[BRANDS.length - 1]}`;
 export const modelImage = (m: GensetModel) => generatorImageForKva(m.standbyKva, m.brand) ?? GENSET_BRANDS[m.brand].image;
 export const modelPath = (m: GensetModel) => `/models/${m.slug}`;
+/** Brand landing page, at the address the old site ranked with ("/perkins-diesel-generators"). */
+export const brandHubPath = (brand: GensetBrand) => `/${brand.toLowerCase()}-diesel-generators`;
 
 /** Every model reduced to what the 3D configurator needs (sent to the browser). */
 export const configModels = (): ConfigModel[] =>

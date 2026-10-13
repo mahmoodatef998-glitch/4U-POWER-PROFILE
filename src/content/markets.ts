@@ -89,7 +89,7 @@ export const marketPages: MarketPage[] = [
     tier: "primary",
     seo: {
       title: {
-        en: "Generator & ATS Panel Supplier in Saudi Arabia | 4U Power",
+        en: "Diesel Generator Supplier in Saudi Arabia | 4U Power",
         ar: "مولدات ديزل ولوحات ATS في السعودية | فور يو باور",
       },
       description: {
@@ -98,7 +98,7 @@ export const marketPages: MarketPage[] = [
       },
     },
     h1: {
-      en: "Diesel Generator Supplier for Saudi Arabia — Riyadh, Jeddah & Dammam",
+      en: "Diesel Generator Supplier in Saudi Arabia — Riyadh, Jeddah & Dammam",
       ar: "مورد مولدات ديزل في المملكة العربية السعودية – الرياض وجدة والدمام",
     },
     intro: {
