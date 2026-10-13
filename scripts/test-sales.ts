@@ -106,3 +106,26 @@ assert.ok(csv.includes(",+971 50 123 4567,a@b.ae,"), "phone numbers stay as type
 assert.ok(csv.includes('"500 kVA\nfor Al Quoz"'), "multi-line messages stay in one cell");
 
 console.log("sales report tests passed");
+
+// ---------------------------------------------------------------- old URLs from the previous website
+import { legacyRedirect } from "../src/lib/legacy-redirects";
+for (const [from, to] of [
+  ["/perkins-diesel-generators", "/models#perkins"],
+  ["/cummins-generator", "/models#cummins"],
+  ["/500-kva-generator", "/generators/500-kva"],
+  ["/products/500kva-silent", "/generators/500-kva"],
+  ["/automatic-transfer-switch", "/ats-panels"],
+  ["/ats-panel", "/ats-panels"],
+  ["/synchronizing-panels", "/products/generator-synchronizing-panel"],
+  ["/mdb-panels", "/switchgear"],
+  ["/spare-parts-uae", "/spare-parts"],
+  ["/generator-maintenance", "/services"],
+  ["/diesel-generators", "/generators"],
+  ["/our_projects_old", "/projects"],
+  ["/blog/some-post", "/news"],
+] as const) assert.equal(legacyRedirect(from), to, from);
+assert.equal(legacyRedirect("/wp-admin/setup"), null, "junk stays a 404");
+assert.equal(legacyRedirect("/xyz"), null);
+assert.equal(legacyRedirect("/patsy"), null, "'ats' must be a whole word");
+assert.equal(legacyRedirect("/333-kva"), null, "only sizes we have a page for");
+console.log("legacy redirect tests passed");

@@ -1,6 +1,7 @@
 import { ShieldCheck } from "lucide-react";
 import Image from "next/image";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
+import { legacyRedirect } from "@/lib/legacy-redirects";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { CallButton, WhatsAppButton } from "@/components/cta-buttons";
 import { DatasheetGate } from "@/components/datasheet-gate";
@@ -51,7 +52,12 @@ export default async function ProductPage({ params }: Props) {
   const { locale, slug } = await params;
   setRequestLocale(locale);
   const p = await getProduct(slug);
-  if (!p) notFound();
+  if (!p) {
+    // old product addresses from the previous website → closest page instead of a 404
+    const target = legacyRedirect(`/products/${slug}`);
+    if (target && target !== "/products") permanentRedirect(`/${locale}${target}`);
+    notFound();
+  }
   const t = await getTranslations();
   const all = await getProducts();
   const ar = locale === "ar";
