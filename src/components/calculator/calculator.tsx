@@ -325,6 +325,8 @@ export function Calculator({ products, models, variant = "full" }: { products: P
   const [submissionId, setSubmissionId] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
   const lastLogged = useRef("");
+  /** the widget's default load, shown before the visitor touches anything — not a calculation */
+  const widgetDefault = useRef<string | null>(null);
   const resultRef = useRef<HTMLDivElement>(null);
 
   // total-load mode → one mixed line + optional largest motor + optional non-linear block
@@ -389,6 +391,8 @@ export function Calculator({ products, models, variant = "full" }: { products: P
     if (!showResult || !valid) return;
     const key = JSON.stringify(input);
     if (key === lastLogged.current) return;
+    // the widget renders a result for its default load on every page view; only count it once the visitor changes something
+    if (widget && (widgetDefault.current ??= key) === key) return;
     const timer = setTimeout(async () => {
       lastLogged.current = key;
       trackEvent("calculator_complete", { kva: min.standard ?? Math.round(min.standbyKva), mode, variant, model: best?.model.code });
