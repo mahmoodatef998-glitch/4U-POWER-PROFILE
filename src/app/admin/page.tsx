@@ -176,6 +176,7 @@ export default async function AdminLeads({ searchParams }: { searchParams: Promi
                   <p className="text-muted">
                     {[l.country, l.locale === "ar" ? "Arabic" : l.locale === "en" ? "English" : null].filter(Boolean).join(" · ")}
                   </p>
+                  <Link href={`/admin/quotes/new?lead=${l.id}`} className="mt-1 inline-block text-xs font-bold text-brand-700 hover:underline">Make quotation →</Link>
                 </td>
                 <td className="max-w-xs px-4 py-3">
                   {l.calculated_kva && <p className="font-bold">{l.calculated_kva} kVA</p>}

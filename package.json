@@ -9,7 +9,7 @@
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
     "seed:sql": "tsx scripts/generate-seed.ts",
-    "test": "tsx scripts/test-calculator.ts && tsx scripts/test-sales.ts && tsx scripts/test-seo.ts",
+    "test": "tsx scripts/test-calculator.ts && tsx scripts/test-sales.ts && tsx scripts/test-seo.ts && tsx scripts/test-quote.ts",
     "check:seo": "tsx scripts/seo-lengths.ts",
     "audit:seo": "node scripts/seo-audit.mjs"
   },
@@ -29,6 +29,7 @@
     "marked": "^18.0.14",
     "next": "15.5",
     "next-intl": "^4.14.7",
+    "pdf-lib": "^1.17.1",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
     "server-only": "^0.0.1",

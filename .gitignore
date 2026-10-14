@@ -10,3 +10,6 @@ next-env.d.ts
 .DS_Store
 lighthouse-tmp
 __pycache__/
+
+# quotation letterhead / terms PDFs live in private Supabase Storage (bucket quotation-assets); local copies for testing only
+assets/quotation/

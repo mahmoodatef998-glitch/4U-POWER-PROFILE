@@ -16,6 +16,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
             <nav className="flex flex-wrap gap-x-4 gap-y-1 text-sm font-semibold">
               <Link href="/admin/report" className="text-brand-400 hover:text-brand-300">Sales report</Link>
               <Link href="/admin" className="hover:text-brand-400">Leads</Link>
+              <Link href="/admin/quotes" className="hover:text-brand-400">Quotations</Link>
               <Link href="/admin/whatsapp" className="hover:text-brand-400">WhatsApp</Link>
               <Link href="/admin/calls" className="hover:text-brand-400">Calls</Link>
               <Link href="/admin/traffic" className="hover:text-brand-400">Visitors</Link>

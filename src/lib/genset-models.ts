@@ -143,6 +143,8 @@ const dimText = (d: GensetDim | null, locale: Locale) =>
 
 export type SpecSection = { title: string; rows: { k: string; v: string }[] };
 
+export const aspirationText = (m: GensetModel, locale: Locale) => ASPIRATION[m.aspiration][locale === "ar" ? 1 : 0];
+
 /** Every datasheet section, bilingual; rows with no data are dropped rather than shown empty. */
 export function modelSpecSections(m: GensetModel, locale: Locale): SpecSection[] {
   const kva = (n: number) => `${fmt(n, locale)} ${L(locale, "kVA", "ك.ف.أ")}`;
