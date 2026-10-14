@@ -159,7 +159,7 @@ export function QuoteEditor({ initial, initialSearch = "" }: { initial: EditorIn
               </label>
               <label className={`${label} mt-3`}>
                 Description
-                <textarea value={it.description} onChange={(e) => update(i, { description: e.target.value })} rows={it.code ? 11 : 3} maxLength={4000} className={`${input} font-normal`} />
+                <textarea value={it.description} onChange={(e) => update(i, { description: e.target.value })} rows={it.code ? 7 : 3} maxLength={4000} className={`${input} font-normal`} />
               </label>
               <div className="mt-3 grid gap-3 sm:grid-cols-4">
                 <label className={label}>

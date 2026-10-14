@@ -22,15 +22,25 @@ assert.equal(searchModels("zzz").length, 0);
 const p550 = getModel("4u-p550")!;
 assert.deepEqual(enclosureOptions(p550).map((o) => o.value), ["enclosed", "open"]);
 const canopy = generatorItem(p550, "enclosed");
-assert.match(canopy.title, /^4U-P550 — Perkins Diesel Generator Set 550 kVA, Silent Canopy$/);
-for (const s of ["550 kVA / 440 kW standby", "500 kVA / 400 kW prime", "Perkins 2506A-E15TAG2", "4U · Leroy-Somer | Stamford", "Deep Sea DSE6110 MKII", "1,020 L base fuel tank", "83 dB(A)", "81 L/h at 75%", "5,170 × 1,590 × 2,600 mm", "5,000 kg"])
+assert.equal(canopy.title, "4U-P550 — Perkins Diesel Generator Set 550 kVA, Closed Type");
+for (const s of [
+  "heavy-duty industrial grade Perkins diesel generator set, ready to run",
+  "550 kVA Standby / 500 kVA Prime | 50 Hz | 1500 RPM | 3-Phase | 0.8 Power Factor",
+  "original Perkins 2506A-E15TAG2 engine (6-cylinder in-line), water-cooled",
+  "brushless alternator",
+  "Deep Sea Electronics (DSE) digital control module with full monitoring and protection",
+  "weather-protective industrial canopy (Closed Type)",
+  "Factory assembled, tested and supplied as a complete ready-to-run industrial package",
+])
   assert.ok(canopy.description.includes(s), s);
-assert.ok(!/ISO|BS ?\d|IEC/.test(canopy.description), "no standards claimed");
+// only the points on the reference quotation: no sizes, weights, fuel or standards
+assert.ok(!/\bISO\b|\bBS ?\d|\bIEC\b|\d mm\b|\bkg\b|L\/h|\bfuel\b|dB\(A\)/i.test(canopy.description), "nothing beyond the quotation points");
+assert.equal(canopy.description.split("\n").length, 5);
 const open = generatorItem(p550, "open");
-assert.ok(open.description.includes("820 L base fuel tank") && !open.description.includes("dB(A)"), "open set: its own tank, no canopy noise");
+assert.ok(open.title.endsWith("Open Type") && open.description.includes("Open type set") && !open.description.includes("canopy"));
 const p2500 = getModel("4u-p2500")!;
 assert.match(enclosureOptions(p2500)[0]!.label, /^Container/);
-assert.ok(generatorItem(p2500, "enclosed").description.includes("Weight: approx."), "container: weight without dimensions");
+assert.ok(generatorItem(p2500, "enclosed").description.includes("(Containerised)"));
 assert.deepEqual(unprintable(canopy.title + canopy.description), [], "generated text is printable");
 
 // Arabic and emoji are refused at save time; render-time cleanup never throws

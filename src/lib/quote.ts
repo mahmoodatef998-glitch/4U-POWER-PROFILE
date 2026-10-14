@@ -1,4 +1,4 @@
-import { aspirationText, gensetModels, type GensetModel } from "./genset-models";
+import { gensetModels, type GensetModel } from "./genset-models";
 
 /**
  * Quotations made in /admin/quotes. Pure helpers shared by the editor (client) and the PDF route (server):
@@ -72,52 +72,41 @@ export function totals(items: Pick<QuoteItem, "qty" | "unit_price">[], vatRate =
 
 export type Enclosure = "open" | "enclosed";
 
-/** The builds a model is offered in, from its datasheet: open set, and silent canopy or container. */
+/** The builds a model is offered in, from its datasheet: closed (silent canopy) or container, and open. */
 export function enclosureOptions(m: GensetModel): { value: Enclosure; label: string }[] {
   const out: { value: Enclosure; label: string }[] = [];
-  if (m.enclosed) out.push({ value: "enclosed", label: m.enclosed.container ? `Container (${m.enclosed.container})` : "Silent canopy" });
+  if (m.enclosed) out.push({ value: "enclosed", label: m.enclosed.container ? `Container (${m.enclosed.container})` : "Closed type (canopy)" });
   if (m.open) out.push({ value: "open", label: "Open type" });
   return out;
 }
 
 const n0 = (v: number) => v.toLocaleString("en-US", { maximumFractionDigits: 1 });
 
-/** Quotation line for a generator: a short title and the standard description, concise but complete. */
+/**
+ * Quotation line for a generator. The description covers what a buyer checks on a quotation and nothing more:
+ * build type, ratings, frequency and speed, the engine, alternator and controller, phase and power factor, and how
+ * it is supplied. Dimensions, weights and fuel stay on the datasheet.
+ */
 export function generatorItem(m: GensetModel, enclosure: Enclosure): QuoteItem {
-  const dim = enclosure === "enclosed" ? m.enclosed : m.open;
   const container = enclosure === "enclosed" ? m.enclosed?.container : undefined;
-  const build = enclosure === "open" ? "Open Type" : container ? "Containerised" : "Silent Canopy";
-  const ambient = m.ambientC === undefined ? 50 : m.ambientC;
-  const aspiration = aspirationText(m, "en");
-  const breaker =
-    m.breaker === "schneider-acb" ? "Schneider ACB main breaker" : m.breaker === "ls" ? "3-pole LS Electric main breaker" : "3-pole LS MCCB main breaker";
-  const alternatorFrames = [m.alternator.leroySomer && `Leroy-Somer ${m.alternator.leroySomer}`, m.alternator.stamford && `Stamford ${m.alternator.stamford}`]
-    .filter(Boolean)
-    .join(" or ");
-  const tank = dim?.tankL;
-
-  const lines = [
-    `Brand new heavy-duty industrial diesel generator set, ${build.toUpperCase()}, ready to run: ${n0(m.standbyKva)} kVA / ${n0(m.standbyKw)} kW standby, ${n0(m.primeKva)} kVA / ${n0(m.primeKw)} kW prime | 400/230 V, 3-phase | 50 Hz | 1500 rpm | 0.8 pf.`,
-    `Engine: ${m.brand} ${m.engine}, ${m.cylinders}-cylinder ${m.layout === "V" ? "V" : "in-line"}, ${n0(m.displacementL)} L, ${aspiration.charAt(0).toLowerCase()}${aspiration.slice(1)}, ${m.governing} governing, water cooled${ambient ? ` with radiator for ${ambient} °C ambient` : ""}.`,
-    `Alternator: 4U · Leroy-Somer | Stamford, brushless, self-excited, Class H insulation, IP23${alternatorFrames ? ` (${alternatorFrames})` : ""}.`,
-    `Control: Deep Sea ${m.controller} auto-start control module with full engine and alternator monitoring and protection; ${breaker}.`,
+  const build = enclosure === "open" ? "Open Type" : container ? "Containerised" : "Closed Type";
+  const housing =
     enclosure === "open"
-      ? `Build: open skid-mounted set${tank ? ` with ${n0(tank)} L base fuel tank` : ""}.`
+      ? "Open type set, mounted on a steel base frame."
       : container
-        ? `Build: ${container}${tank ? ` with ${n0(tank)} L fuel tank` : ""}${m.noiseDb ? `; ${m.noiseDb} dB(A) ± 3 @ 7 m` : ""}.`
-        : `Build: sound-attenuated, weatherproof silent canopy${tank ? ` with ${n0(tank)} L base fuel tank` : ""}${m.noiseDb ? `; ${m.noiseDb} dB(A) ± 3 @ 7 m` : ""}.`,
-    m.fuelLph ? `Fuel consumption: ${n0(m.fuelLph.p75)} L/h at 75% and ${n0(m.fuelLph.p100)} L/h at 100% prime load.` : null,
-    dim?.l && dim.w && dim.h
-      ? `Dimensions (L × W × H): ${n0(dim.l)} × ${n0(dim.w)} × ${n0(dim.h)} mm${dim.kg ? `; weight approx. ${n0(dim.kg)} kg` : ""}.`
-      : dim?.kg
-        ? `Weight: approx. ${n0(dim.kg)} kg.`
-        : null,
-    "Supplied as a complete ready-to-run package.",
+        ? `Housed in a sound-attenuated, weather-protective ${container} (Containerised).`
+        : "Packaged inside a sound-attenuated, weather-protective industrial canopy (Closed Type).";
+  const lines = [
+    `Brand new, heavy-duty industrial grade ${m.brand} diesel generator set, ready to run.`,
+    `${n0(m.standbyKva)} kVA Standby / ${n0(m.primeKva)} kVA Prime | 50 Hz | 1500 RPM | 3-Phase | 0.8 Power Factor.`,
+    `Powered by an original ${m.brand} ${m.engine} engine (${m.cylinders}-cylinder ${m.layout === "V" ? "V" : "in-line"}), water-cooled, directly coupled to a brushless alternator and controlled by a Deep Sea Electronics (DSE) digital control module with full monitoring and protection.`,
+    housing,
+    "Factory assembled, tested and supplied as a complete ready-to-run industrial package.",
   ];
   return {
     code: m.code,
     title: `${m.code} — ${m.brand} Diesel Generator Set ${n0(m.standbyKva)} kVA, ${build}`,
-    description: lines.filter(Boolean).join("\n"),
+    description: lines.join("\n"),
     qty: 1,
     unit: "Units",
     unit_price: 0,

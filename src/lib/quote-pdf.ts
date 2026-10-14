@@ -1,30 +1,32 @@
 import "server-only";
-import { PDFDocument, StandardFonts, rgb, type PDFFont, type PDFPage } from "pdf-lib";
+import { PDFDocument, StandardFonts, rgb, type PDFFont, type PDFPage, type RGB } from "pdf-lib";
 import { COMPANY, SPEC_NOTE, money, printable, quoteNumber, ukDate, type Quote } from "./quote";
 import type { QuoteAssets } from "./quote-assets";
 
 /**
  * Quotation PDF on the 4U letterhead: page 1 (and more if the items run long) is drawn on the letterhead,
- * the last page is the Terms & Conditions sheet exactly as supplied. Layout follows the usual GCC quotation:
- * customer / company blocks, item table, totals.
+ * the last page is the Terms & Conditions sheet exactly as supplied.
+ * Layout: title with quotation number / date / validity, "Prepared for" and "Prepared by" cards, a ruled item
+ * table, a totals panel, then notes. Colours follow the letterhead: navy text, gold accents, soft grey panels.
  */
 
 const NAVY = rgb(0x1b / 255, 0x2a / 255, 0x41 / 255);
-const INK = rgb(0x22 / 255, 0x22 / 255, 0x22 / 255);
-const MUTED = rgb(0.42, 0.45, 0.5);
+const INK = rgb(0x1f / 255, 0x29 / 255, 0x37 / 255);
+const BODY = rgb(0x4b / 255, 0x55 / 255, 0x63 / 255);
+const MUTED = rgb(0x8a / 255, 0x93 / 255, 0xa0 / 255);
 const GOLD = rgb(0.949, 0.761, 0);
-const RULE = rgb(0.75, 0.75, 0.75);
-const SHADE = rgb(0.95, 0.95, 0.95);
-const SHADE_DARK = rgb(0.9, 0.9, 0.9);
+const GOLD_DARK = rgb(0.72, 0.56, 0);
+const HAIR = rgb(0.9, 0.91, 0.93);
+const PANEL = rgb(0.965, 0.969, 0.976);
 const WHITE = rgb(1, 1, 1);
 
 // Content box inside the letterhead (A4 points, origin bottom-left): clear of the header rule and the brand strip.
 const X0 = 55;
 const X1 = 540.5;
-const TOP = 842.25 - 98;
-const BOTTOM = 76;
+const TOP = 842.25 - 104;
+const BOTTOM = 80;
 
-type Fonts = { regular: PDFFont; bold: PDFFont };
+type Fonts = { regular: PDFFont; bold: PDFFont; italic: PDFFont };
 
 function wrap(text: string, font: PDFFont, size: number, width: number): string[] {
   const out: string[] = [];
@@ -52,13 +54,23 @@ function wrap(text: string, font: PDFFont, size: number, width: number): string[
   return out;
 }
 
+/** Rounded rectangle as an SVG path; (x, yTop) is the top-left corner in page coordinates. */
+function roundRect(page: PDFPage, x: number, yTop: number, w: number, h: number, r: number, color: RGB) {
+  const p = `M ${r} 0 H ${w - r} Q ${w} 0 ${w} ${r} V ${h - r} Q ${w} ${h} ${w - r} ${h} H ${r} Q 0 ${h} 0 ${h - r} V ${r} Q 0 0 ${r} 0 Z`;
+  page.drawSvgPath(p, { x, y: yTop, color, borderWidth: 0 });
+}
+
 export async function buildQuotePdf(q: Quote, assets: QuoteAssets): Promise<Uint8Array> {
   const doc = await PDFDocument.create();
   doc.setTitle(`Quotation ${quoteNumber(q.number)} - ${printable(q.customer.name)}`);
   doc.setAuthor(COMPANY.name);
   doc.setCreator("4U Power Generation admin");
   const [letterhead] = await doc.embedPdf(assets.letterhead, [0]);
-  const fonts: Fonts = { regular: await doc.embedFont(StandardFonts.Helvetica), bold: await doc.embedFont(StandardFonts.HelveticaBold) };
+  const fonts: Fonts = {
+    regular: await doc.embedFont(StandardFonts.Helvetica),
+    bold: await doc.embedFont(StandardFonts.HelveticaBold),
+    italic: await doc.embedFont(StandardFonts.HelveticaOblique),
+  };
   const { width: W, height: H } = letterhead!;
 
   const pages: PDFPage[] = [];
@@ -71,212 +83,226 @@ export async function buildQuotePdf(q: Quote, assets: QuoteAssets): Promise<Uint
 
   let page = newPage();
   let y = TOP;
-  const text = (s: string, x: number, yy: number, size: number, font = fonts.regular, color = INK) => page.drawText(printable(s), { x, y: yy, size, font, color });
-  const textRight = (s: string, xr: number, yy: number, size: number, font = fonts.regular, color = INK) =>
-    text(s, xr - font.widthOfTextAtSize(printable(s), size), yy, size, font, color);
-
-  /* ---------------------------------------------------------- customer / company blocks */
-  const gap = 14;
-  const colW = (X1 - X0 - gap) / 2;
-  const labelW = 74;
-  const fs = 8.2;
-  const lead = 10.5;
-  const block = (x: number, title: string, rows: [string, string][]) => {
-    let yy = y;
-    page.drawRectangle({ x, y: yy - 15, width: colW, height: 15, color: NAVY });
-    text(title, x + (colW - fonts.bold.widthOfTextAtSize(printable(title), 8.6)) / 2, yy - 10.8, 8.6, fonts.bold, WHITE);
-    yy -= 15;
-    rows.forEach(([k, v], i) => {
-      const lines = wrap(v || "", fonts.regular, fs, colW - labelW - 8);
-      const h = Math.max(1, lines.length) * lead + 4;
-      if (i % 2 === 0) page.drawRectangle({ x, y: yy - h, width: colW, height: h, color: SHADE });
-      text(k, x + 5, yy - 10, fs, fonts.bold, NAVY);
-      lines.forEach((l, j) => text(l, x + labelW, yy - 10 - j * lead, fs));
-      yy -= h;
-    });
-    return yy;
+  const text = (s: string, x: number, yy: number, size: number, font = fonts.regular, color: RGB = INK) => page.drawText(printable(s), { x, y: yy, size, font, color });
+  const width = (s: string, size: number, font = fonts.regular) => font.widthOfTextAtSize(printable(s), size);
+  const textRight = (s: string, xr: number, yy: number, size: number, font = fonts.regular, color: RGB = INK) => text(s, xr - width(s, size, font), yy, size, font, color);
+  /** Small uppercase label with letter spacing. */
+  const caps = (s: string, x: number, yy: number, size = 6.8, color: RGB = MUTED, font = fonts.bold, align: "left" | "right" = "left") => {
+    const chars = [...printable(s.toUpperCase())];
+    const tracking = 0.9;
+    const total = chars.reduce((t, c) => t + font.widthOfTextAtSize(c, size) + tracking, -tracking);
+    let cx = align === "right" ? x - total : x;
+    for (const c of chars) {
+      page.drawText(c, { x: cx, y: yy, size, font, color });
+      cx += font.widthOfTextAtSize(c, size) + tracking;
+    }
   };
-  const c = q.customer;
-  const customerRows = (
-    [
-      ["Customer:", c.name],
-      ["Address:", c.address],
-      ["TRN:", c.trn],
-      ["Project:", c.project],
-      ["Attention:", c.attention],
-      ["Contact:", c.contact],
-      ["Email:", c.email],
-      ["Customer ref:", c.ref],
-    ] as [string, string][]
-  ).filter(([, v], i) => i === 0 || v?.trim());
-  const companyRows: [string, string][] = [
-    ["Ref:", quoteNumber(q.number)],
-    ["Date:", ukDate(q.quote_date)],
-    ["TRN:", COMPANY.trn],
-    ["Sales Person:", q.sales.person],
-    ["Contact:", q.sales.contact],
-    ["Email:", q.sales.email],
-    ...(q.validity?.trim() ? ([["Validity:", q.validity]] as [string, string][]) : []),
+  const hair = (x0: number, x1: number, yy: number, color: RGB = HAIR, thickness = 0.7) => page.drawLine({ start: { x: x0, y: yy }, end: { x: x1, y: yy }, thickness, color });
+
+  /* ---------------------------------------------------------- title + reference */
+  text("Quotation", X0, y - 24, 26, fonts.bold, NAVY);
+  page.drawRectangle({ x: X0 + 1, y: y - 34, width: 34, height: 3, color: GOLD });
+  const meta: [string, string][] = [
+    ["Quotation no.", quoteNumber(q.number)],
+    ["Date", ukDate(q.quote_date)],
+    ...(q.validity?.trim() ? ([["Valid for", q.validity.trim()]] as [string, string][]) : []),
   ];
-  const yLeft = block(X0, "CUSTOMER DETAILS", customerRows);
-  const yRight = block(X0 + colW + gap, COMPANY.name, companyRows.filter(([, v]) => v?.trim()));
-  y = Math.min(yLeft, yRight) - 26;
+  // reference strip on the right: label above value, columns divided by hairlines
+  const metaColW = 82;
+  meta.forEach(([k, v], i) => {
+    const xr = X1 - (meta.length - 1 - i) * metaColW;
+    caps(k, xr, y - 9, 6.5, MUTED, fonts.bold, "right");
+    textRight(v, xr, y - 24, 10.5, fonts.bold, i === 0 ? NAVY : INK);
+    if (i > 0) page.drawLine({ start: { x: xr - metaColW + 4, y: y - 2 }, end: { x: xr - metaColW + 4, y: y - 28 }, thickness: 0.7, color: HAIR });
+  });
+  y -= 56;
 
-  /* ---------------------------------------------------------- title */
-  text("QUOTATION", X0, y + 4, 8, fonts.bold, MUTED);
-  text(quoteNumber(q.number), X0, y - 18, 21, fonts.regular, NAVY);
-  page.drawRectangle({ x: X0, y: y - 25, width: 38, height: 2, color: GOLD });
-  y -= 36;
+  /* ---------------------------------------------------------- prepared for / prepared by */
+  const gap = 14;
+  const cardW = (X1 - X0 - gap) / 2;
+  const pad = 12;
+  const labelW = 62;
+  const fs = 8.4;
+  const lead = 11;
+  const c = q.customer;
+  const cards: { title: string; name: string; rows: [string, string][] }[] = [
+    {
+      title: "Prepared for",
+      name: c.name,
+      rows: (
+        [
+          ["Attention", c.attention],
+          ["Address", c.address],
+          ["Project", c.project],
+          ["Contact", c.contact],
+          ["Email", c.email],
+          ["TRN", c.trn],
+          ["Customer ref", c.ref],
+        ] as [string, string][]
+      ).filter(([, v]) => v?.trim()),
+    },
+    {
+      title: "Prepared by",
+      name: COMPANY.name,
+      rows: (
+        [
+          ["Sales person", q.sales.person],
+          ["Contact", q.sales.contact],
+          ["Email", q.sales.email],
+          ["TRN", COMPANY.trn],
+        ] as [string, string][]
+      ).filter(([, v]) => v?.trim()),
+    },
+  ];
+  const laid = cards.map((card) => {
+    const nameLines = wrap(card.name, fonts.bold, 10.5, cardW - 2 * pad);
+    const rows = card.rows.map(([k, v]) => ({ k, lines: wrap(v, fonts.regular, fs, cardW - 2 * pad - labelW) }));
+    const h = pad + 10 + nameLines.length * 13 + 6 + rows.reduce((t, r) => t + r.lines.length * lead + 3, 0) + pad - 2;
+    return { ...card, nameLines, rows, h };
+  });
+  const cardH = Math.max(...laid.map((l) => l.h));
+  laid.forEach((card, i) => {
+    const x = X0 + i * (cardW + gap);
+    roundRect(page, x, y, cardW, cardH, 7, PANEL);
+    page.drawRectangle({ x, y: y - cardH + 10, width: 2.4, height: cardH - 20, color: i === 0 ? GOLD : NAVY });
+    let yy = y - pad - 6;
+    caps(card.title, x + pad, yy, 6.8, i === 0 ? GOLD_DARK : MUTED);
+    yy -= 15;
+    card.nameLines.forEach((l) => {
+      text(l, x + pad, yy, 10.5, fonts.bold, NAVY);
+      yy -= 13;
+    });
+    yy -= 4;
+    card.rows.forEach((r) => {
+      text(r.k, x + pad, yy, 7.6, fonts.regular, MUTED);
+      r.lines.forEach((l, j) => text(l, x + pad + labelW, yy - j * lead, fs, fonts.regular, INK));
+      yy -= r.lines.length * lead + 3;
+    });
+  });
+  y -= cardH + 26;
 
-  /* ---------------------------------------------------------- item table */
+  /* ---------------------------------------------------------- items */
   const cols = [
-    { key: "desc", label: ["DESCRIPTION"], w: 245 },
-    { key: "qty", label: ["QUANTITY"], w: 52 },
-    { key: "unit", label: ["UNIT", "PRICE"], w: 70 },
-    { key: "tax", label: ["TAXES"], w: 38 },
-    { key: "total", label: ["TOTAL PRICE"], w: X1 - X0 - 245 - 52 - 70 - 38 },
+    { label: "#", w: 24, right: false },
+    { label: "Description", w: 229, right: false },
+    { label: "Qty", w: 46, right: true },
+    { label: "Unit price", w: 76, right: true },
+    { label: "VAT", w: 32, right: true },
+    { label: "Amount (AED)", w: X1 - X0 - 24 - 229 - 46 - 76 - 32, right: true },
   ];
   const colX = cols.map((_, i) => X0 + cols.slice(0, i).reduce((s, cc) => s + cc.w, 0));
-  const headerH = 28;
-  const pad = 5;
-  const descSize = 8.4;
-  const descLead = 11.2;
+  const cellPad = 6;
+  const descW = cols[1]!.w - cellPad;
+  const titleSize = 9;
+  const descSize = 8.2;
+  const descLead = 11.4;
 
-  const drawHeader = () => {
-    page.drawRectangle({ x: X0, y: y - headerH, width: X1 - X0, height: headerH, color: NAVY });
+  const header = () => {
     cols.forEach((col, i) => {
-      col.label.forEach((l, j) => {
-        const yy = y - headerH + 7 + (col.label.length - 1 - j) * 10;
-        if (i === 0) text(l, colX[i]! + pad, yy, 8.4, fonts.bold, WHITE);
-        else textRight(l, colX[i]! + col.w - pad, yy, 8.4, fonts.bold, WHITE);
-      });
+      if (col.right) caps(col.label, colX[i]! + col.w, y - 10, 6.6, NAVY, fonts.bold, "right");
+      else caps(col.label, colX[i]!, y - 10, 6.6, NAVY);
     });
-    y -= headerH;
+    y -= 16;
+    hair(X0, X1, y, NAVY, 1.2);
   };
-  // borders for a run of rows on the current page, from yTop down to yBottom
-  const drawFrame = (yTop: number, yBottom: number) => {
-    page.drawRectangle({ x: colX[4]!, y: yBottom, width: cols[4]!.w, height: yTop - yBottom, color: SHADE });
-    page.drawRectangle({ x: X0, y: yBottom, width: X1 - X0, height: yTop - yBottom, borderColor: RULE, borderWidth: 0.6 });
-    for (let i = 1; i < cols.length; i++) page.drawLine({ start: { x: colX[i]!, y: yTop }, end: { x: colX[i]!, y: yBottom }, thickness: 0.6, color: RULE });
-  };
-  // the frame goes under the text, so each page's rows are collected first and drawn after their frame
-  type Pending = () => void;
-  let pending: Pending[] = [];
-  let frameTop = 0;
-  const flush = (yBottom: number) => {
-    drawFrame(frameTop, yBottom);
-    pending.forEach((f) => f());
-    pending = [];
-  };
-  const startTable = () => {
-    drawHeader();
-    frameTop = y;
-  };
-  const nextPage = () => {
-    flush(y - pad);
+  const continueOnNewPage = () => {
     page = newPage();
     y = TOP;
-    startTable();
+    caps(`${quoteNumber(q.number)}  ·  continued`, X0, y - 8, 6.6);
+    y -= 20;
+    header();
   };
 
-  startTable();
+  header();
   q.items.forEach((item, idx) => {
-    const lines: { s: string; bold: boolean }[] = [
-      ...wrap(item.title, fonts.bold, descSize, cols[0]!.w - 2 * pad).map((s) => ({ s, bold: true })),
-      ...(item.description.trim() ? wrap(item.description, fonts.regular, descSize, cols[0]!.w - 2 * pad).map((s) => ({ s, bold: false })) : []),
+    const lines = [
+      ...wrap(item.title, fonts.bold, titleSize, descW).map((s) => ({ s, kind: "title" as const })),
+      ...(item.description.trim() ? wrap(item.description, fonts.regular, descSize, descW).map((s) => ({ s, kind: "body" as const })) : []),
     ];
+    // start an item on a fresh page rather than split it, unless it is longer than a page anyway
+    const itemH = 19 + lines.reduce((t, l) => t + (l.kind === "title" ? 12.5 : descLead), 0);
+    if (y - itemH < BOTTOM && itemH < TOP - BOTTOM - 60) continueOnNewPage();
+    y -= 10;
     let first = true;
-    let i = 0;
-    if (idx > 0) {
-      const yy = y;
-      const p = page;
-      pending.push(() => p.drawLine({ start: { x: X0, y: yy }, end: { x: X1, y: yy }, thickness: 0.6, color: RULE }));
-    }
-    y -= pad + 2;
-    while (i < lines.length) {
-      if (y - descLead < BOTTOM) {
-        nextPage();
-        y -= pad + 2;
-      }
-      const yy = y - 8;
+    for (let i = 0; i < lines.length; i++) {
       const ln = lines[i]!;
-      const p = page;
-      pending.push(() => p.drawText(ln.s, { x: X0 + pad, y: yy, size: descSize, font: ln.bold ? fonts.bold : fonts.regular, color: INK }));
+      const step = ln.kind === "title" ? 12.5 : descLead;
+      if (y - step < BOTTOM) {
+        continueOnNewPage();
+        y -= 10;
+      }
+      const base = y - (ln.kind === "title" ? 9 : 8.2);
+      if (ln.kind === "title") text(ln.s, colX[1]!, base, titleSize, fonts.bold, NAVY);
+      else text(ln.s, colX[1]!, base, descSize, fonts.regular, BODY);
       if (first) {
         const amount = Math.round(item.qty * item.unit_price * 100) / 100;
-        const cells = [
-          `${item.qty.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${item.unit}`,
-          money(item.unit_price),
-          `VAT ${q.vat_rate}%`,
-          `AED ${money(amount)}`,
-        ];
-        cells.forEach((cell, k) => {
-          const col = k + 1;
-          const fit = wrap(cell, fonts.regular, descSize, cols[col]!.w - 2 * pad);
-          fit.forEach((f, j) =>
-            pending.push(() => p.drawText(f, { x: colX[col]! + cols[col]!.w - pad - fonts.regular.widthOfTextAtSize(f, descSize), y: yy - j * descLead, size: descSize, font: fonts.regular, color: INK })),
-          );
-        });
+        text(String(idx + 1).padStart(2, "0"), colX[0]!, base, 9, fonts.bold, GOLD_DARK);
+        const qty = Number.isInteger(item.qty) ? String(item.qty) : item.qty.toFixed(2);
+        textRight(qty, colX[2]! + cols[2]!.w, base, 9, fonts.bold, INK);
+        textRight(item.unit || "", colX[2]! + cols[2]!.w, base - 10, 7, fonts.regular, MUTED);
+        textRight(money(item.unit_price), colX[3]! + cols[3]!.w, base, 9, fonts.regular, INK);
+        textRight(`${q.vat_rate}%`, colX[4]! + cols[4]!.w, base, 9, fonts.regular, INK);
+        textRight(money(amount), X1, base, 9, fonts.bold, NAVY);
         first = false;
       }
-      y -= descLead;
-      i++;
+      y -= step;
+      // keep the unit label under the quantity inside the row
+      if (i === 0 && lines.length === 1) y -= 4;
     }
-    y -= pad;
+    y -= 9;
+    hair(X0, X1, y);
   });
-  y -= 6;
-  flush(y);
-  y -= 16;
+  y -= 18;
 
-  /* ---------------------------------------------------------- totals */
-  const totalsH = 3 * 18;
-  if (y - totalsH < BOTTOM) {
+  /* ---------------------------------------------------------- totals (right) + notes (left) */
+  const tw = 214;
+  const tx = X1 - tw;
+  const notesW = tx - X0 - 22;
+  const noteLines = q.notes?.trim() ? wrap(q.notes, fonts.regular, 8.2, notesW - 12) : [];
+  const totalsH = 2 * 17 + 8 + 32;
+  const notesH = noteLines.length ? 18 + noteLines.length * 11 : 0;
+  if (y - Math.max(totalsH, notesH) < BOTTOM) {
     page = newPage();
     y = TOP;
   }
-  const tw = 220;
-  const tx = X1 - tw;
-  const tRows: [string, string, "plain" | "shade" | "total"][] = [
-    ["Untaxed Amount", `AED ${money(q.subtotal)}`, "plain"],
-    [`VAT ${q.vat_rate}%`, `AED ${money(q.vat)}`, "shade"],
-    ["Total", `AED ${money(q.total)}`, "total"],
-  ];
-  tRows.forEach(([k, v, kind]) => {
-    const h = 18;
-    if (kind === "total") page.drawRectangle({ x: tx, y: y - h, width: tw, height: h, color: NAVY });
-    else page.drawRectangle({ x: tx, y: y - h, width: tw, height: h, borderColor: RULE, borderWidth: 0.6, color: kind === "shade" ? SHADE_DARK : WHITE });
-    const color = kind === "total" ? WHITE : INK;
-    text(k, tx + 7, y - 12.5, 9, fonts.bold, kind === "total" ? WHITE : NAVY);
-    textRight(v, X1 - 7, y - 12.5, 9, kind === "total" ? fonts.bold : fonts.regular, color);
-    y -= h;
+  const yTotals = y;
+  [
+    ["Subtotal", money(q.subtotal)],
+    [`VAT ${q.vat_rate}%`, money(q.vat)],
+  ].forEach(([k, v]) => {
+    text(k!, tx + 2, y - 11, 8.6, fonts.regular, BODY);
+    textRight(`AED ${v}`, X1, y - 11, 8.8, fonts.regular, INK);
+    y -= 17;
   });
-  page.drawRectangle({ x: tx, y: y - 2, width: tw, height: 2, color: GOLD });
-  y -= 22;
+  y -= 8;
+  roundRect(page, tx, y, tw, 32, 6, NAVY);
+  page.drawRectangle({ x: tx, y: y - 32 + 8, width: 3, height: 16, color: GOLD });
+  caps("Total (AED)", tx + 14, y - 19.5, 7.2, WHITE);
+  textRight(money(q.total), X1 - 12, y - 21, 13, fonts.bold, WHITE);
+  caps(`incl. ${q.vat_rate}% VAT`, X1 - 12, y - 41, 6.2, MUTED, fonts.bold, "right");
+  y -= 48;
 
-  /* ---------------------------------------------------------- notes */
-  const noteBlocks = [
-    ...(q.notes?.trim() ? [{ title: "Notes", body: q.notes, size: 8.4, bold: false }] : []),
-    { title: "", body: SPEC_NOTE, size: 7.4, bold: true },
-  ];
-  for (const nb of noteBlocks) {
-    const lines = wrap(nb.body, nb.bold ? fonts.bold : fonts.regular, nb.size, X1 - X0 - 12);
-    const h = lines.length * (nb.size + 3) + (nb.title ? 14 : 0) + 10;
-    if (y - h < BOTTOM) {
-      page = newPage();
-      y = TOP;
-    }
-    if (nb.bold) page.drawRectangle({ x: X0, y: y - h, width: X1 - X0, height: h, color: SHADE });
-    let yy = y - 11;
-    if (nb.title) {
-      text(nb.title, X0 + 6, yy, 9, fonts.bold, NAVY);
-      yy -= 14;
-    }
-    lines.forEach((l) => {
-      text(l, X0 + 6, yy, nb.size, nb.bold ? fonts.bold : fonts.regular, INK);
-      yy -= nb.size + 3;
+  if (noteLines.length) {
+    let yy = yTotals;
+    caps("Notes", X0, yy - 9, 6.8, GOLD_DARK);
+    yy -= 22;
+    noteLines.forEach((l) => {
+      text(l, X0, yy, 8.2, fonts.regular, INK);
+      yy -= 11;
     });
-    y -= h + 10;
+    y = Math.min(y, yy);
   }
+  y -= 12;
+
+  /* ---------------------------------------------------------- specification note */
+  const specLines = wrap(SPEC_NOTE, fonts.italic, 7.4, X1 - X0 - 14);
+  const specH = specLines.length * 10 + 4;
+  if (y - specH < BOTTOM) {
+    page = newPage();
+    y = TOP;
+  }
+  page.drawRectangle({ x: X0, y: y - specH, width: 2, height: specH, color: GOLD });
+  specLines.forEach((l, i) => text(l, X0 + 10, y - 8 - i * 10, 7.4, fonts.italic, BODY));
 
   /* ---------------------------------------------------------- terms sheet + page numbers */
   const terms = await PDFDocument.load(assets.terms);
