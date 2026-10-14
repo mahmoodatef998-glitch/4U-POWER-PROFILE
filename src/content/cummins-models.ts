@@ -59,10 +59,11 @@ export const cumminsModels: GensetModelData[] = [
   {
     slug: "4u-c80",
     code: "4U-C80",
-    standbyKva: 80,
-    standbyKw: 64,
-    primeKva: 72,
-    primeKw: 57,
+    // corrected by 4U (Oct 2026): 94 kVA standby / 80 kVA prime; the source sheet listed 80 / 72
+    standbyKva: 94,
+    standbyKw: 75.2,
+    primeKva: 80,
+    primeKw: 64,
     engine: "4BTAA3.9-G11",
     cylinders: 4,
     layout: "inline",
