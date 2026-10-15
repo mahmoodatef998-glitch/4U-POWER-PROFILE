@@ -1,7 +1,7 @@
 "use client";
 
 import * as Dialog from "@radix-ui/react-dialog";
-import { Menu, Phone, X, Globe } from "lucide-react";
+import { Globe, Lock, Menu, Phone, X } from "lucide-react";
 import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
@@ -171,7 +171,15 @@ export function Header() {
                   </ul>
                 </nav>
                 <div className="mt-4 grid gap-2 border-t border-white/10 pt-4">
-                  <LanguageSwitch className="justify-center" />
+                  <div className="flex items-center justify-center gap-6">
+                    <LanguageSwitch className="justify-center" />
+                    {/* temporary: quick way into the dashboard (still behind the admin login); a full page load on purpose */}
+                    {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+                    <a href="/admin" rel="nofollow" className="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-semibold text-white/60 hover:bg-white/5 hover:text-white">
+                      <Lock className="size-4" aria-hidden />
+                      Admin
+                    </a>
+                  </div>
                   <WhatsAppButton location="mobile_menu" size="lg" />
                 </div>
               </Dialog.Content>
