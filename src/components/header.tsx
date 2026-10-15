@@ -7,6 +7,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { Link, usePathname } from "@/i18n/navigation";
 import { trackEvent } from "@/lib/analytics";
+import { InstallMenuButton } from "./install-app";
 import { company, telUrl } from "@/lib/site";
 import { cn } from "@/lib/utils";
 import { WhatsAppButton } from "./cta-buttons";
@@ -180,6 +181,7 @@ export function Header() {
                       Admin
                     </a>
                   </div>
+                  <InstallMenuButton onDone={() => setOpen(false)} />
                   <WhatsAppButton location="mobile_menu" size="lg" />
                 </div>
               </Dialog.Content>

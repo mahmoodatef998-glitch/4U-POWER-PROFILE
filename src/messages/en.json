@@ -197,5 +197,13 @@
     "note": "Specifications are typical and confirmed per order. Final ratings depend on site conditions.",
     "docTitle": "Product datasheet",
     "issued": "Issued"
+  },
+  "app": {
+    "title": "Get the 4U app",
+    "body": "Models, datasheets and quick quotes on your home screen. Free, opens like an app, no store download.",
+    "install": "Install",
+    "later": "Not now",
+    "ios": "Tap <share></share> Share, then “Add to Home Screen”.",
+    "menu": "Install the app"
   }
 }

@@ -13,7 +13,9 @@ export type ConversionEvent =
   | "rfq_submit"
   | "datasheet_download"
   | "configurator_quote_click"
-  | "configurator_snapshot";
+  | "configurator_snapshot"
+  | "app_install_click"
+  | "app_installed";
 
 type Params = Record<string, string | number | boolean | undefined>;
 

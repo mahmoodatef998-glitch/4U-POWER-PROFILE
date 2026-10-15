@@ -6,6 +6,7 @@ import { setRequestLocale } from "next-intl/server";
 import type { ReactNode } from "react";
 import { Analytics, GtmNoScript } from "@/components/analytics";
 import { FloatingCta } from "@/components/floating-cta";
+import { InstallBanner } from "@/components/install-app";
 import { Footer } from "@/components/footer";
 import { SpotlightTracker } from "@/components/fx";
 import { Header } from "@/components/header";
@@ -80,6 +81,7 @@ export default async function LocaleLayout({ children, params }: { children: Rea
           </main>
           <Footer />
           <FloatingCta />
+          <InstallBanner />
           <UtmCapture />
           <ContactTracker />
           <SpotlightTracker />
