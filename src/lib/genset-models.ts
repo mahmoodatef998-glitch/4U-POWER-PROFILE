@@ -1,5 +1,5 @@
 import { cumminsModels } from "@/content/cummins-models";
-import type { GensetBrand, GensetDim, GensetModel, GensetModelData } from "@/content/genset-types";
+import type { Aspiration, GensetBrand, GensetDim, GensetModel, GensetModelData } from "@/content/genset-types";
 import { perkinsModels } from "@/content/perkins-models";
 import { baudouinModels } from "@/content/baudouin-models";
 import { kubotaModels } from "@/content/kubota-models";
@@ -44,7 +44,14 @@ export const GENSET_BRANDS: Record<GensetBrand, { ar: string; small: string; lar
 export const BRANDS = Object.keys(GENSET_BRANDS) as GensetBrand[];
 
 const tag = (brand: GensetBrand) => (m: GensetModelData): GensetModel => ({ ...m, brand });
-export const gensetModels: GensetModel[] = [...perkinsModels.map(tag("Perkins")), ...cumminsModels.map(tag("Cummins")), ...kubotaModels.map(tag("Kubota")), ...baudouinModels.map(tag("Baudouin"))];
+const byRating = (a: GensetModel, b: GensetModel) => a.standbyKva - b.standbyKva || a.primeKva - b.primeKva || a.code.localeCompare(b.code);
+// each brand smallest to largest (lookups such as nearestModels rely on it), whatever the order in the data files
+export const gensetModels: GensetModel[] = [
+  ...perkinsModels.map(tag("Perkins")).sort(byRating),
+  ...cumminsModels.map(tag("Cummins")).sort(byRating),
+  ...kubotaModels.map(tag("Kubota")).sort(byRating),
+  ...baudouinModels.map(tag("Baudouin")).sort(byRating),
+];
 export const brandModels = (brand: GensetBrand) => gensetModels.filter((m) => m.brand === brand);
 
 export const getModel = (slug: string) => gensetModels.find((m) => m.slug === slug) ?? null;
@@ -91,8 +98,8 @@ export const configModels = (): ConfigModel[] =>
       engine: m.engine,
       standbyKva: m.standbyKva,
       primeKva: m.primeKva,
-      alternator: [m.alternator.leroySomer, m.alternator.stamford].filter(Boolean).join(" | "),
-      controller: m.controller,
+      alternator: [m.alternator.leroySomer, m.alternator.stamford].filter(Boolean).join(" | ") || "Leroy-Somer | Stamford",
+      controller: m.controller ?? "control module",
       open: dim(m.open),
       canopy: containerNote ? null : dim(enc),
       containerNote,
@@ -120,7 +127,7 @@ export const sizingModels = (): SizingModel[] =>
 const fmt = (n: number, locale: Locale) => new Intl.NumberFormat(locale === "ar" ? "ar-AE" : "en-AE", { maximumFractionDigits: 1 }).format(n);
 const L = (locale: Locale, en: string, ar: string) => (locale === "ar" ? ar : en);
 
-const ASPIRATION: Record<GensetModel["aspiration"], [string, string]> = {
+const ASPIRATION: Record<Aspiration, [string, string]> = {
   na: ["Naturally aspirated", "تنفس طبيعي"],
   turbo: ["Turbocharged", "تيربو"],
   "turbo-ac": ["Turbocharged & aftercooled", "تيربو مع تبريد لاحق (Aftercooled)"],
@@ -156,6 +163,7 @@ export function modelSpecSections(m: GensetModel, locale: Locale): SpecSection[]
       rows: [
         ...row("Standby (ESP)", "احتياطي (Standby)", `${kva(m.standbyKva)} / ${kw(m.standbyKw)}`),
         ...row("Prime (PRP)", "أساسي (Prime)", `${kva(m.primeKva)} / ${kw(m.primeKw)}`),
+        ...row("Prime at 60 Hz (1800 rpm)", "أساسي عند 60 هرتز (1800 لفة/دقيقة)", m.prime60Kva ? `${kva(m.prime60Kva)} / ${kw(Math.round(m.prime60Kva * 8) / 10)}` : null),
         ...row("Voltage / frequency", "الجهد / التردد", L(locale, "400/230 V · 3-phase · 50 Hz · 1500 rpm", "400/230 فولت · 3 فاز · 50 هرتز · 1500 لفة/دقيقة")),
         ...row("Power factor", "معامل القدرة", "0.8"),
         ...row("Other voltages", "جهود أخرى", "380/220 · 415/240 · 440/254 · 480/277 V"),
@@ -165,11 +173,11 @@ export function modelSpecSections(m: GensetModel, locale: Locale): SpecSection[]
       title: L(locale, "Engine", "المحرك"),
       rows: [
         ...row("Make / model", "الماركة / الموديل", `${m.brand} ${m.engine}`),
-        ...row("Cylinders", "عدد الأسطوانات", `${m.cylinders} ${m.layout === "V" ? L(locale, "in 60° V", "على شكل V") : L(locale, "in-line", "على خط واحد")}`),
-        ...row("Displacement", "السعة", `${new Intl.NumberFormat(locale === "ar" ? "ar-AE" : "en-AE", { maximumFractionDigits: 3 }).format(m.displacementL)} ${L(locale, "L", "لتر")}`),
-        ...row("Bore × stroke", "القطر × الشوط", `${m.boreStrokeMm} mm`),
-        ...row("Aspiration", "التنفس", ASPIRATION[m.aspiration][locale === "ar" ? 1 : 0]),
-        ...row("Governing", "منظم السرعة", m.governing === "electronic" ? L(locale, "Electronic", "إلكتروني") : L(locale, "Mechanical", "ميكانيكي")),
+        ...row("Cylinders", "عدد الأسطوانات", m.cylinders ? `${m.cylinders} ${m.layout === "V" ? L(locale, "in 60° V", "على شكل V") : m.layout ? L(locale, "in-line", "على خط واحد") : ""}`.trim() : null),
+        ...row("Displacement", "السعة", m.displacementL ? `${new Intl.NumberFormat(locale === "ar" ? "ar-AE" : "en-AE", { maximumFractionDigits: 3 }).format(m.displacementL)} ${L(locale, "L", "لتر")}` : null),
+        ...row("Bore × stroke", "القطر × الشوط", m.boreStrokeMm ? `${m.boreStrokeMm} mm` : null),
+        ...row("Aspiration", "التنفس", m.aspiration ? ASPIRATION[m.aspiration][locale === "ar" ? 1 : 0] : null),
+        ...row("Governing", "منظم السرعة", m.governing === "electronic" ? L(locale, "Electronic", "إلكتروني") : m.governing === "mechanical" ? L(locale, "Mechanical", "ميكانيكي") : null),
         ...row("Cooling", "التبريد", ambient ? L(locale, `Water cooled, radiator for ${fmt(ambient, "en")} °C ambient`, `تبريد مائي، رادياتير لحرارة محيطة ${fmt(ambient, locale)}°م`) : L(locale, "Water cooled", "تبريد مائي")),
         ...row("Coolant capacity", "سعة سائل التبريد", m.coolantL ? `${fmt(m.coolantL, locale)} ${L(locale, "L", "لتر")}` : null),
         ...row("Lube oil capacity", "سعة الزيت", m.oilL ? `${fmt(m.oilL, locale)} ${L(locale, "L", "لتر")}` : null),
@@ -204,15 +212,15 @@ export function modelSpecSections(m: GensetModel, locale: Locale): SpecSection[]
         ...row("Open set weight", "وزن المفتوح", m.open?.kg ? `${fmt(m.open.kg, locale)} ${L(locale, "kg", "كجم")}` : null),
         ...row(m.enclosed?.container ? "Container" : "Silent canopy (L × W × H)", m.enclosed?.container ? "الحاوية" : "بالكابينة (طول × عرض × ارتفاع)", dimText(m.enclosed, locale)),
         ...row(m.enclosed?.container ? "Containerised weight" : "Canopy weight", m.enclosed?.container ? "الوزن داخل الحاوية" : "وزن الكابينة", m.enclosed?.kg ? `${fmt(m.enclosed.kg, locale)} ${L(locale, "kg", "كجم")}` : null),
-        ...row("Base fuel tank", "خزان الوقود القاعدي", m.enclosed?.tankL || m.open?.tankL ? `${fmt((m.enclosed?.tankL ?? m.open?.tankL) as number, locale)} ${L(locale, "L", "لتر")}` : L(locale, "External day tank (sized to site)", "خزان خارجي حسب الموقع")),
+        ...row("Base fuel tank", "خزان الوقود القاعدي", m.enclosed?.tankL || m.open?.tankL ? `${fmt((m.enclosed?.tankL ?? m.open?.tankL) as number, locale)} ${L(locale, "L", "لتر")}` : !m.controller ? L(locale, "On request", "عند الطلب") : L(locale, "External day tank (sized to site)", "خزان خارجي حسب الموقع")),
         ...row("Noise @ 7 m", "مستوى الصوت على 7 م", m.noiseDb ? `${fmt(m.noiseDb, locale)} dB(A) ± 3` : null),
       ],
     },
     {
       title: L(locale, "Control & protection", "التحكم والحماية"),
       rows: [
-        ...row("Controller", "وحدة التحكم", `Deep Sea ${m.controller}${L(locale, " — auto start / AMF", " — تشغيل تلقائي / AMF")}`),
-        ...row("Main breaker", "القاطع الرئيسي", m.breaker === "schneider-acb"
+        ...row("Controller", "وحدة التحكم", m.controller ? `Deep Sea ${m.controller}${L(locale, " — auto start / AMF", " — تشغيل تلقائي / AMF")}` : L(locale, "Deep Sea (model on request)", "Deep Sea (الموديل عند الطلب)")),
+        ...row("Main breaker", "القاطع الرئيسي", !m.controller ? L(locale, "On request", "عند الطلب") : m.breaker === "schneider-acb"
             ? L(locale, "Schneider ACB", "قاطع هوائي شنايدر (ACB)")
             : m.breaker === "ls"
               ? L(locale, "3-pole LS Electric", "قاطع LS Electric ثلاثي الأقطاب")

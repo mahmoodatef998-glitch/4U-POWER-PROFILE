@@ -34,7 +34,7 @@ function facts(brand: GensetBrand) {
     max: Math.max(...standby),
     pmin: Math.min(...prime),
     pmax: Math.max(...prime),
-    controllers: [...new Set(list.map((m) => m.controller))],
+    controllers: [...new Set(list.map((m) => m.controller).filter((c): c is string => !!c))],
     container: list.some((m) => m.enclosed?.container),
   };
 }

@@ -77,7 +77,8 @@ export function enclosureOptions(m: GensetModel): { value: Enclosure; label: str
   const out: { value: Enclosure; label: string }[] = [];
   if (m.enclosed) out.push({ value: "enclosed", label: m.enclosed.container ? `Container (${m.enclosed.container})` : "Closed type (canopy)" });
   if (m.open) out.push({ value: "open", label: "Open type" });
-  return out;
+  // models listed by rating only: both builds are offered, without datasheet figures
+  return out.length ? out : [{ value: "enclosed", label: "Closed type (canopy)" }, { value: "open", label: "Open type" }];
 }
 
 const n0 = (v: number) => v.toLocaleString("en-US", { maximumFractionDigits: 1 });
@@ -99,7 +100,7 @@ export function generatorItem(m: GensetModel, enclosure: Enclosure): QuoteItem {
   const lines = [
     `Brand new, heavy-duty industrial grade ${m.brand} diesel generator set, ready to run.`,
     `${n0(m.standbyKva)} kVA Standby / ${n0(m.primeKva)} kVA Prime | 50 Hz | 1500 RPM | 3-Phase | 0.8 Power Factor.`,
-    `Powered by an original ${m.brand} ${m.engine} engine (${m.cylinders}-cylinder ${m.layout === "V" ? "V" : "in-line"}), water-cooled, directly coupled to a brushless alternator and controlled by a Deep Sea Electronics (DSE) digital control module with full monitoring and protection.`,
+    `Powered by an original ${m.brand} ${m.engine} engine${m.cylinders ? ` (${m.cylinders}-cylinder${m.layout ? ` ${m.layout === "V" ? "V" : "in-line"}` : ""})` : ""}, water-cooled, directly coupled to a brushless alternator and controlled by a Deep Sea Electronics (DSE) digital control module with full monitoring and protection.`,
     housing,
     "Factory assembled, tested and supplied as a complete ready-to-run industrial package.",
   ];

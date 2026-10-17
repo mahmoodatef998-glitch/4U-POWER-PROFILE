@@ -29,7 +29,7 @@ export function describePage(path: string | null): PageInfo {
     if (m)
       return {
         title: `${m.code} — ${m.standbyKva} kVA ${m.brand}`,
-        detail: `Standby ${m.standbyKva} kVA / Prime ${m.primeKva} kVA · ${m.brand} ${m.engine} · ${m.alternator.leroySomer}${m.fuelLph ? ` · ${m.fuelLph.p100} L/h @100%` : ""}`,
+        detail: `Standby ${m.standbyKva} kVA / Prime ${m.primeKva} kVA · ${m.brand} ${m.engine}${m.alternator.leroySomer ? ` · ${m.alternator.leroySomer}` : ""}${m.fuelLph ? ` · ${m.fuelLph.p100} L/h @100%` : ""}`,
         href,
         datasheet: `/${locale}/models/${m.slug}/datasheet`,
       };

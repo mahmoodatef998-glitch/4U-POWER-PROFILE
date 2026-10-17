@@ -25,15 +25,18 @@ export type GensetModelData = {
   standbyKw: number;
   primeKva: number;
   primeKw: number;
+  /** prime kVA at 60 Hz / 1800 rpm, where the CKD list gives it */
+  prime60Kva?: number;
   engine: string;
-  cylinders: number;
-  layout: "inline" | "V";
-  displacementL: number;
-  boreStrokeMm: string;
-  aspiration: Aspiration;
-  governing: "mechanical" | "electronic";
-  alternator: { leroySomer: string; stamford: string | null };
-  controller: string;
+  // base-engine, alternator and controller data: null on models added from the rating list only ("on request")
+  cylinders: number | null;
+  layout: "inline" | "V" | null;
+  displacementL: number | null;
+  boreStrokeMm: string | null;
+  aspiration: Aspiration | null;
+  governing: "mechanical" | "electronic" | null;
+  alternator: { leroySomer: string | null; stamford: string | null };
+  controller: string | null;
   /** litres / hour at 50 %, 75 %, 100 % prime load and at standby rating */
   fuelLph: { p50: number | null; p75: number; p100: number; standby: number | null } | null;
   coolantL: number | null;
