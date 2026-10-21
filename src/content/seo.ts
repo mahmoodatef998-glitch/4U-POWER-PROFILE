@@ -113,8 +113,8 @@ export const pageSeo = {
       ar: "اتصل بنا | فور يو باور جينيريشن – سيف زون الشارقة | واتساب",
     },
     description: {
-      en: "Call or WhatsApp +971 52 336 7694 for generator, ATS and switchgear prices. Visit Warehouse A2-020, SAIF Zone, Sharjah, UAE. Same-day replies.",
-      ar: "اتصل أو راسلنا واتساب على ‎+971 52 336 7694 لأسعار المولدات ولوحات ATS والكهرباء. زورونا في مستودع A2-020، سيف زون، الشارقة. رد في نفس اليوم.",
+      en: "Call or WhatsApp +971 50 229 6962 for generator, ATS and switchgear prices. Visit Warehouse A2-020, SAIF Zone, Sharjah, UAE. Same-day replies.",
+      ar: "اتصل أو راسلنا واتساب على ‎+971 50 229 6962 لأسعار المولدات ولوحات ATS والكهرباء. زورونا في مستودع A2-020، سيف زون، الشارقة. رد في نفس اليوم.",
     },
   },
   privacy: {

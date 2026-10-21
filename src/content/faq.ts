@@ -55,8 +55,8 @@ export const homeFaq: Faq[] = [
   {
     q: { en: "How do I get a price?", ar: "كيف أحصل على السعر؟" },
     a: {
-      en: "Send us your required kVA (or your load list) on WhatsApp at +971 52 336 7694, or use the quote form. We usually reply the same working day with options and a written quotation.",
-      ar: "أرسل لنا القدرة المطلوبة (أو قائمة الأحمال) على الواتساب ‎+971 52 336 7694 أو استخدم نموذج طلب السعر. نرد عادةً في نفس يوم العمل بالخيارات وعرض سعر مكتوب.",
+      en: "Send us your required kVA (or your load list) on WhatsApp at +971 50 229 6962, or use the quote form. We usually reply the same working day with options and a written quotation.",
+      ar: "أرسل لنا القدرة المطلوبة (أو قائمة الأحمال) على الواتساب ‎+971 50 229 6962 أو استخدم نموذج طلب السعر. نرد عادةً في نفس يوم العمل بالخيارات وعرض سعر مكتوب.",
     },
   },
 ];

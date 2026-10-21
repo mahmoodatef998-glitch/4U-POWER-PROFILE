@@ -90,7 +90,7 @@ Create the profile with the **exact** details below. The website schema uses the
 
 - **Name:** 4U Power Generation
 - **Address:** 600 M² Warehouse A2-020, SAIF Zone, P.O. Box 513810, Sharjah, United Arab Emirates
-- **Phone:** +971 52 336 7694
+- **Phone:** +971 50 229 6962
 - **Website:** https://www.4ugenerators.com/en
 - **Category:** Generator shop (secondary: Electrical equipment supplier)
 

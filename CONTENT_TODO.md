@@ -39,7 +39,7 @@ No stock photo hosts were reachable from the build environment. All images are t
 | Item | Where | Why |
 |---|---|---|
 | Exact map pin for Warehouse A2-020 (`geo.lat/lng`) | `src/lib/site.ts` | Currently approximate SAIF Zone coordinates. Used in schema + map |
-| Email `info@4ugenerators.com` exists | `src/lib/site.ts` | Shown in the footer, contact page and schema |
+| Email `info@4upowers.com` exists | `src/lib/site.ts` | Shown in the footer, contact page and schema |
 | Working hours (currently Mon–Sat 08:00–18:00) | `src/lib/site.ts` (`hours`), `src/app/[locale]/contact/page.tsx` | Schema + contact page |
 | Domain (`4ugenerators.com`) | `NEXT_PUBLIC_SITE_URL` env | Canonicals, sitemap, schema |
 | "Factory function-tested before dispatch" / "test report" | `src/content/products.ts` (ATS specs), `src/content/pages.ts` (ATS pillar, generators "What's included"), `src/content/news-2.ts` (export article), `src/content/seo.ts` (ATS description: "tested in Sharjah") | Confirm you test/issue test reports for every order. If not, soften the wording |

@@ -30,10 +30,10 @@ export const company = {
   },
   // CONTENT_TODO: confirm exact pin of Warehouse A2-020 in Google Maps and update.
   geo: { lat: 25.3263, lng: 55.5186 },
-  phone: "+971 52 336 7694",
-  phoneE164: "+971523367694",
-  whatsapp: "971523367694",
-  email: "info@4ugenerators.com", // CONTENT_TODO: confirm mailbox exists
+  phone: "+971 50 229 6962",
+  phoneE164: "+971502296962",
+  whatsapp: "971502296962",
+  email: "info@4upowers.com",
   hours: "Mo-Sa 08:00-18:00",
   mapQuery: "SAIF Zone Warehouse A2-020, Sharjah, United Arab Emirates",
 } as const;

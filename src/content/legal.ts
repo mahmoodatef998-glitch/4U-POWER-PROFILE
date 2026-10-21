@@ -49,8 +49,8 @@ export const privacy: LegalDoc = {
     {
       title: { en: "6. Your rights", ar: "6. حقوقك" },
       body: {
-        en: "You may request access to, correction of, or deletion of your personal data, or object to marketing contact, by writing to info@4ugenerators.com or messaging +971 52 336 7694.",
-        ar: "يمكنك طلب الاطلاع على بياناتك الشخصية أو تصحيحها أو حذفها، أو الاعتراض على التواصل التسويقي، بالكتابة إلى info@4ugenerators.com أو مراسلة ‎+971 52 336 7694.",
+        en: "You may request access to, correction of, or deletion of your personal data, or object to marketing contact, by writing to info@4upowers.com or messaging +971 50 229 6962.",
+        ar: "يمكنك طلب الاطلاع على بياناتك الشخصية أو تصحيحها أو حذفها، أو الاعتراض على التواصل التسويقي، بالكتابة إلى info@4upowers.com أو مراسلة ‎+971 50 229 6962.",
       },
     },
     {
