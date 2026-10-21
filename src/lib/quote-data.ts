@@ -23,13 +23,13 @@ export async function loadQuote(id: string): Promise<Quote | null> {
   return data ? normalize(data) : null;
 }
 
-/** Sales details of the last quotation, so the form starts with whoever quoted last. */
+/** Sales person and e-mail of the last quotation, so the form starts with whoever quoted last; the contact number is always the company's. */
 export async function lastSales(): Promise<QuoteSales> {
   const sb = getAdminClient();
   if (!sb) return DEFAULT_SALES;
   const { data } = await sb.from("quotations").select("sales").order("created_at", { ascending: false }).limit(1).maybeSingle();
   const s = data?.sales as Partial<QuoteSales> | undefined;
-  return s?.person || s?.email ? { ...DEFAULT_SALES, ...s } : DEFAULT_SALES;
+  return s?.person || s?.email ? { ...DEFAULT_SALES, person: s.person || DEFAULT_SALES.person, email: s.email || DEFAULT_SALES.email } : DEFAULT_SALES;
 }
 
 /** Customer details from a website lead, to start a quotation from the Leads tab. */
