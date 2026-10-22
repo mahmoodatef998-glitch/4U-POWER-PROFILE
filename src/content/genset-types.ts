@@ -25,8 +25,6 @@ export type GensetModelData = {
   standbyKw: number;
   primeKva: number;
   primeKw: number;
-  /** prime kVA at 60 Hz / 1800 rpm, where the CKD list gives it */
-  prime60Kva?: number;
   engine: string;
   // base-engine, alternator and controller data: null on models added from the rating list only ("on request")
   cylinders: number | null;

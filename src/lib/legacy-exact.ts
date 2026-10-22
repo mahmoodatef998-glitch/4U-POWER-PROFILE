@@ -18,6 +18,13 @@ export const LEGACY_EXACT: [string, string][] = [
   ["/shop", "/en/products"],
   ["/feed", "/en/news"],
   ["/blog", "/en/news"],
+  // Cummins models dropped in the 22 Oct 2026 datasheet update → the model that replaces them
+  ...(["en", "ar"] as const).flatMap((l) =>
+    ([["4u-c63", "4u-c60"], ["4u-c1109", "4u-c1110"], ["4u-c810", "4u-c900a"]] as const).flatMap(([from, to]): [string, string][] => [
+      [`/${l}/models/${from}`, `/${l}/models/${to}`],
+      [`/${l}/models/${from}/datasheet`, `/${l}/models/${to}/datasheet`],
+    ]),
+  ),
   // WordPress / Yoast / Rank Math sitemaps that Google may still request
   ["/sitemap_index.xml", "/sitemap.xml"],
   ["/wp-sitemap.xml", "/sitemap.xml"],

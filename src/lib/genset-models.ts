@@ -163,7 +163,6 @@ export function modelSpecSections(m: GensetModel, locale: Locale): SpecSection[]
       rows: [
         ...row("Standby (ESP)", "احتياطي (Standby)", `${kva(m.standbyKva)} / ${kw(m.standbyKw)}`),
         ...row("Prime (PRP)", "أساسي (Prime)", `${kva(m.primeKva)} / ${kw(m.primeKw)}`),
-        ...row("Prime at 60 Hz (1800 rpm)", "أساسي عند 60 هرتز (1800 لفة/دقيقة)", m.prime60Kva ? `${kva(m.prime60Kva)} / ${kw(Math.round(m.prime60Kva * 8) / 10)}` : null),
         ...row("Voltage / frequency", "الجهد / التردد", L(locale, "400/230 V · 3-phase · 50 Hz · 1500 rpm", "400/230 فولت · 3 فاز · 50 هرتز · 1500 لفة/دقيقة")),
         ...row("Power factor", "معامل القدرة", "0.8"),
         ...row("Other voltages", "جهود أخرى", "380/220 · 415/240 · 440/254 · 480/277 V"),
