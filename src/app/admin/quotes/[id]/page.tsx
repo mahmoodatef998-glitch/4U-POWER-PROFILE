@@ -18,9 +18,12 @@ export default async function EditQuotePage({ params, searchParams }: { params: 
           <h1 className="mt-1 text-2xl font-extrabold">{quoteNumber(q.number)} · {q.customer.name}</h1>
           <p className="text-sm text-muted tabular-nums">AED {money(q.total)} incl. VAT</p>
         </div>
-        <div className="flex flex-wrap gap-2">
-          <a href={`/admin/quotes/${q.id}/pdf`} target="_blank" rel="noreferrer" className="rounded-xl bg-navy-950 px-5 py-3 font-extrabold text-white">Open PDF</a>
-          <a href={`/admin/quotes/${q.id}/pdf?download=1`} className="rounded-xl bg-brand-500 px-5 py-3 font-extrabold text-ink-950">Download PDF</a>
+        <div className="grid justify-items-end gap-1">
+          <div className="flex flex-wrap gap-2">
+            <a href={`/admin/quotes/${q.id}/pdf`} target="_blank" rel="noreferrer" className="rounded-xl bg-navy-950 px-5 py-3 font-extrabold text-white">Open PDF</a>
+            <a href={`/admin/quotes/${q.id}/pdf?download=1`} className="rounded-xl bg-brand-500 px-5 py-3 font-extrabold text-ink-950">Download PDF</a>
+          </div>
+          <p className="text-xs text-muted">The saved version. Editing below? Use Preview PDF at the bottom, then Save.</p>
         </div>
       </div>
       {saved && <p className="rounded-xl bg-emerald-50 p-4 font-semibold text-emerald-800">Saved. The PDF is ready: open it to check, then download and send it to the customer.</p>}

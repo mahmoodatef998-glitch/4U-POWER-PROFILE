@@ -1,5 +1,5 @@
 import "server-only";
-import { PDFDocument, StandardFonts, rgb, type PDFFont, type PDFPage, type RGB } from "pdf-lib";
+import { PDFDocument, StandardFonts, degrees, rgb, type PDFFont, type PDFPage, type RGB } from "pdf-lib";
 import { COMPANY, SPEC_NOTE, money, printable, quoteNumber, ukDate, type Quote } from "./quote";
 import type { QuoteAssets } from "./quote-assets";
 
@@ -60,9 +60,11 @@ function roundRect(page: PDFPage, x: number, yTop: number, w: number, h: number,
   page.drawSvgPath(p, { x, y: yTop, color, borderWidth: 0 });
 }
 
-export async function buildQuotePdf(q: Quote, assets: QuoteAssets): Promise<Uint8Array> {
+/** `draft`: an unsaved preview, labelled DRAFT and watermarked so it is never mistaken for the quotation sent. */
+export async function buildQuotePdf(q: Quote, assets: QuoteAssets, opts: { draft?: boolean } = {}): Promise<Uint8Array> {
+  const ref = opts.draft ? (q.number ? `${quoteNumber(q.number)} DRAFT` : "DRAFT") : quoteNumber(q.number);
   const doc = await PDFDocument.create();
-  doc.setTitle(`Quotation ${quoteNumber(q.number)} - ${printable(q.customer.name)}`);
+  doc.setTitle(`Quotation ${ref} - ${printable(q.customer.name)}`);
   doc.setAuthor(COMPANY.name);
   doc.setCreator("4U Power Generation admin");
   const [letterhead] = await doc.embedPdf(assets.letterhead, [0]);
@@ -103,7 +105,7 @@ export async function buildQuotePdf(q: Quote, assets: QuoteAssets): Promise<Uint
   text("Quotation", X0, y - 24, 26, fonts.bold, NAVY);
   page.drawRectangle({ x: X0 + 1, y: y - 34, width: 34, height: 3, color: GOLD });
   const meta: [string, string][] = [
-    ["Quotation no.", quoteNumber(q.number)],
+    ["Quotation no.", ref],
     ["Date", ukDate(q.quote_date)],
     ...(q.validity?.trim() ? ([["Valid for", q.validity.trim()]] as [string, string][]) : []),
   ];
@@ -208,7 +210,7 @@ export async function buildQuotePdf(q: Quote, assets: QuoteAssets): Promise<Uint
   const continueOnNewPage = () => {
     page = newPage();
     y = TOP;
-    caps(`${quoteNumber(q.number)}  ·  continued`, X0, y - 8, 6.6);
+    caps(`${ref}  ·  continued`, X0, y - 8, 6.6);
     y -= 20;
     header();
   };
@@ -304,13 +306,20 @@ export async function buildQuotePdf(q: Quote, assets: QuoteAssets): Promise<Uint
   page.drawRectangle({ x: X0, y: y - specH, width: 2, height: specH, color: GOLD });
   specLines.forEach((l, i) => text(l, X0 + 10, y - 8 - i * 10, 7.4, fonts.italic, BODY));
 
+  if (opts.draft)
+    for (const p of pages) {
+      const size = 120;
+      const w = fonts.bold.widthOfTextAtSize("DRAFT", size);
+      p.drawText("DRAFT", { x: W / 2 - (w / 2) * Math.cos(Math.PI / 6), y: H / 2 - (w / 2) * Math.sin(Math.PI / 6), size, font: fonts.bold, color: rgb(0.8, 0.1, 0.1), opacity: 0.08, rotate: degrees(30) });
+    }
+
   /* ---------------------------------------------------------- terms sheet + page numbers */
   const terms = await PDFDocument.load(assets.terms);
   const [termsPage] = await doc.copyPages(terms, [0]);
   doc.addPage(termsPage!);
   pages.push(termsPage!);
   pages.forEach((p, i) => {
-    const label = `${quoteNumber(q.number)}  ·  Page ${i + 1} of ${pages.length}`;
+    const label = `${ref}  ·  Page ${i + 1} of ${pages.length}`;
     p.drawText(label, { x: X1 - fonts.regular.widthOfTextAtSize(label, 7), y: 64, size: 7, font: fonts.regular, color: MUTED });
     if (i === 0) p.drawText("This is a formal document generated electronically.", { x: X0, y: 64, size: 7, font: fonts.regular, color: MUTED });
   });

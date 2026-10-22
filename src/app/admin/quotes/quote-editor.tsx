@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useMemo, useState } from "react";
+import { useActionState, useEffect, useMemo, useState } from "react";
 import { brandModels } from "@/lib/genset-models";
 import {
   EXTRA_ITEMS,
@@ -58,6 +58,18 @@ export function QuoteEditor({ initial, initialSearch = "" }: { initial: EditorIn
   const results = useMemo(() => searchModels(q), [q]);
   const t = totals(items, VAT_RATE);
   const payload = JSON.stringify({ id: initial.id, lead_id: initial.lead_id, quote_date: quoteDate, status, customer, sales, validity, notes, items });
+  // what was last saved (or the empty form): anything else is an unsaved change
+  const [savedPayload] = useState(() =>
+    JSON.stringify({ id: initial.id, lead_id: initial.lead_id, quote_date: initial.quote_date, status: initial.status, customer: initial.customer, sales: initial.sales, validity: initial.validity, notes: initial.notes, items: initial.items }),
+  );
+  const dirty = payload !== savedPayload;
+
+  useEffect(() => {
+    if (!dirty || pending) return;
+    const warn = (e: BeforeUnloadEvent) => e.preventDefault();
+    window.addEventListener("beforeunload", warn);
+    return () => window.removeEventListener("beforeunload", warn);
+  }, [dirty, pending]);
 
   const update = (i: number, patch: Partial<QuoteItem>) => setItems((list) => list.map((it, j) => (j === i ? { ...it, ...patch } : it)));
   const move = (i: number, d: -1 | 1) =>
@@ -252,10 +264,19 @@ export function QuoteEditor({ initial, initialSearch = "" }: { initial: EditorIn
 
       {state?.error && <p role="alert" className="rounded-xl bg-red-50 p-4 text-sm font-semibold text-red-800">{state.error}</p>}
       <div className="sticky bottom-0 -mx-4 flex flex-wrap items-center justify-between gap-3 border-t border-line bg-surface/95 px-4 py-3 backdrop-blur">
-        <p className="font-extrabold tabular-nums">Total AED {money(t.total)} <span className="text-sm font-normal text-muted">incl. {VAT_RATE}% VAT · {items.length} item{items.length === 1 ? "" : "s"}</span></p>
-        <button disabled={pending || !items.length} className="rounded-xl bg-brand-500 px-6 py-3 font-extrabold text-ink-950 disabled:opacity-50">
-          {pending ? "Saving…" : initial.id ? "Save changes" : "Save & create quotation"}
-        </button>
+        <div>
+          <p className="font-extrabold tabular-nums">Total AED {money(t.total)} <span className="text-sm font-normal text-muted">incl. {VAT_RATE}% VAT · {items.length} item{items.length === 1 ? "" : "s"}</span></p>
+          {dirty && initial.id && <p className="text-xs font-bold text-amber-700">Unsaved changes: Preview shows them, Save keeps them.</p>}
+        </div>
+        <div className="flex flex-wrap gap-2">
+          {/* a plain form post to the preview route, in a new tab: the PDF of the form as it is now, nothing saved, no number used */}
+          <button type="submit" formAction="/admin/quotes/preview" formMethod="post" formTarget="_blank" formNoValidate disabled={!items.length} className="rounded-xl border border-line px-5 py-3 font-extrabold disabled:opacity-50">
+            Preview PDF
+          </button>
+          <button disabled={pending || !items.length} className="rounded-xl bg-brand-500 px-6 py-3 font-extrabold text-ink-950 disabled:opacity-50">
+            {pending ? "Saving…" : initial.id ? "Save changes" : "Save & create quotation"}
+          </button>
+        </div>
       </div>
     </form>
   );
