@@ -50,6 +50,7 @@ function normalize(r: Record<string, unknown>): Quote {
     customer: { ...EMPTY_CUSTOMER, ...((r.customer as object) ?? {}) },
     sales: { ...DEFAULT_SALES, ...((r.sales as object) ?? {}) },
     items: Array.isArray(r.items) ? (r.items as Quote["items"]).map((i) => ({ ...i, qty: Number(i.qty), unit_price: Number(i.unit_price) })) : [],
+    delivery: (r.delivery as string | null) ?? null,
     vat_rate: Number(r.vat_rate ?? 5),
     subtotal: Number(r.subtotal ?? 0),
     vat: Number(r.vat ?? 0),

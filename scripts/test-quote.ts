@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { getModel } from "../src/lib/genset-models";
-import { enclosureOptions, generatorItem, money, printable, searchModels, totals, ukDate, unprintable } from "../src/lib/quote";
+import { deliveryText, enclosureOptions, generatorItem, money, printable, searchModels, totals, ukDate, unprintable } from "../src/lib/quote";
 import { parseQuotePayload } from "../src/lib/quote-form";
 
 // totals: VAT 5% on the untaxed amount, rounded to fils
@@ -56,5 +56,13 @@ const form = (extra: object) =>
 assert.equal(parseQuotePayload(form({}), true).data?.vat_rate, 5);
 assert.equal(parseQuotePayload(form({ vat_rate: 0 }), true).data?.vat_rate, 0);
 assert.match(parseQuotePayload(form({ vat_rate: 7 }), true).error ?? "", /VAT/);
+
+// delivery: a period goes into the standard sentence, anything else prints as typed, empty prints nothing
+assert.equal(deliveryText("10 days"), "Delivery within 10 days from receipt of the confirmed LPO and the advance payment, subject to prior booking.");
+assert.match(deliveryText("one week"), /^Delivery within one week from/);
+assert.equal(deliveryText("Ex-stock, subject to prior sale"), "Ex-stock, subject to prior sale");
+assert.equal(deliveryText("  "), "");
+assert.equal(parseQuotePayload(form({ delivery: " 15 days " }), true).data?.delivery, "15 days");
+assert.match(parseQuotePayload(form({ delivery: "١٠ أيام" }), true).error ?? "", /Delivery/);
 
 console.log("quotation tests passed");

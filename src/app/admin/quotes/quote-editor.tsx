@@ -3,9 +3,11 @@
 import { useActionState, useEffect, useMemo, useState } from "react";
 import { brandModels } from "@/lib/genset-models";
 import {
+  DELIVERY_OPTIONS,
   EXTRA_ITEMS,
   STATUSES,
   VAT_RATES,
+  deliveryText,
   enclosureOptions,
   generatorItem,
   money,
@@ -26,6 +28,7 @@ export type EditorInitial = {
   customer: QuoteCustomer;
   sales: QuoteSales;
   validity: string;
+  delivery: string;
   notes: string;
   vat_rate: number;
   items: QuoteItem[];
@@ -50,6 +53,7 @@ export function QuoteEditor({ initial, initialSearch = "" }: { initial: EditorIn
   const [sales, setSales] = useState(initial.sales);
   const [quoteDate, setQuoteDate] = useState(initial.quote_date);
   const [validity, setValidity] = useState(initial.validity);
+  const [delivery, setDelivery] = useState(initial.delivery);
   const [notes, setNotes] = useState(initial.notes);
   const [status, setStatus] = useState(initial.status);
   const [vatRate, setVatRate] = useState(initial.vat_rate);
@@ -59,10 +63,10 @@ export function QuoteEditor({ initial, initialSearch = "" }: { initial: EditorIn
 
   const results = useMemo(() => searchModels(q), [q]);
   const t = totals(items, vatRate);
-  const payload = JSON.stringify({ id: initial.id, lead_id: initial.lead_id, quote_date: quoteDate, status, customer, sales, validity, notes, vat_rate: vatRate, items });
+  const payload = JSON.stringify({ id: initial.id, lead_id: initial.lead_id, quote_date: quoteDate, status, customer, sales, validity, delivery, notes, vat_rate: vatRate, items });
   // what was last saved (or the empty form): anything else is an unsaved change
   const [savedPayload] = useState(() =>
-    JSON.stringify({ id: initial.id, lead_id: initial.lead_id, quote_date: initial.quote_date, status: initial.status, customer: initial.customer, sales: initial.sales, validity: initial.validity, notes: initial.notes, vat_rate: initial.vat_rate, items: initial.items }),
+    JSON.stringify({ id: initial.id, lead_id: initial.lead_id, quote_date: initial.quote_date, status: initial.status, customer: initial.customer, sales: initial.sales, validity: initial.validity, delivery: initial.delivery, notes: initial.notes, vat_rate: initial.vat_rate, items: initial.items }),
   );
   const dirty = payload !== savedPayload;
 
@@ -236,18 +240,38 @@ export function QuoteEditor({ initial, initialSearch = "" }: { initial: EditorIn
             <input value={validity} onChange={(e) => setValidity(e.target.value)} placeholder="30 days" className={`${input} font-normal`} />
           </label>
           <label className={label}>
-            Status
-            <select value={status} onChange={(e) => setStatus(e.target.value as QuoteStatus)} className={`${input} font-normal capitalize`}>
-              {STATUSES.map((s) => (
-                <option key={s} value={s}>{s}</option>
+            Delivery
+            <input list="delivery-options" value={delivery} onChange={(e) => setDelivery(e.target.value)} placeholder="e.g. 10 days" className={`${input} font-normal`} />
+            <datalist id="delivery-options">
+              {DELIVERY_OPTIONS.map((d) => (
+                <option key={d} value={d} />
               ))}
-            </select>
+            </datalist>
           </label>
           <label className={label}>
             VAT
             <select value={vatRate} onChange={(e) => setVatRate(Number(e.target.value))} className={`${input} font-normal`}>
               {VAT_RATES.map((r) => (
                 <option key={r} value={r}>{r ? `${r}% (standard)` : "0% (zero-rated / export)"}</option>
+              ))}
+            </select>
+          </label>
+          <div className="grid gap-2 rounded-lg bg-surface p-3 text-xs sm:col-span-2 lg:col-span-4">
+            <div className="flex flex-wrap items-center gap-1.5">
+              <span className="font-semibold text-muted">Delivery:</span>
+              {DELIVERY_OPTIONS.map((d) => (
+                <button key={d} type="button" onClick={() => setDelivery(d)} className={`rounded-full border px-2.5 py-1 font-semibold ${delivery === d ? "border-brand-500 bg-brand-100" : "border-line"}`}>
+                  {d}
+                </button>
+              ))}
+            </div>
+            <p className="text-muted">{delivery.trim() ? <>Prints on page 1: <span className="font-semibold text-ink">{deliveryText(delivery)}</span></> : "Empty: no delivery term on the quotation."}</p>
+          </div>
+          <label className={label}>
+            Status
+            <select value={status} onChange={(e) => setStatus(e.target.value as QuoteStatus)} className={`${input} font-normal capitalize`}>
+              {STATUSES.map((s) => (
+                <option key={s} value={s}>{s}</option>
               ))}
             </select>
           </label>
@@ -259,7 +283,7 @@ export function QuoteEditor({ initial, initialSearch = "" }: { initial: EditorIn
             Sales contact
             <input value={sales.contact} onChange={(e) => setSales((s) => ({ ...s, contact: e.target.value }))} dir="ltr" className={`${input} font-normal`} />
           </label>
-          <label className={`${label} sm:col-span-2`}>
+          <label className={label}>
             Sales email
             <input value={sales.email} onChange={(e) => setSales((s) => ({ ...s, email: e.target.value }))} dir="ltr" className={`${input} font-normal`} />
           </label>
@@ -268,7 +292,7 @@ export function QuoteEditor({ initial, initialSearch = "" }: { initial: EditorIn
             <textarea value={notes} onChange={(e) => setNotes(e.target.value)} rows={3} maxLength={2000} placeholder="e.g. Prices ex-warehouse SAIF Zone. Offloading by client." className={`${input} font-normal`} />
           </label>
         </div>
-        <p className="mt-3 text-xs text-muted">Payment, warranty, delivery and VAT terms print on page 2 from the 4U Terms &amp; Conditions sheet.</p>
+        <p className="mt-3 text-xs text-muted">Payment, warranty and VAT terms print on page 2 from the 4U Terms &amp; Conditions sheet; delivery prints on page 1 from the field above.</p>
       </section>
 
       {state?.error && <p role="alert" className="rounded-xl bg-red-50 p-4 text-sm font-semibold text-red-800">{state.error}</p>}

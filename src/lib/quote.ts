@@ -17,6 +17,7 @@ export type Quote = {
   sales: QuoteSales;
   items: QuoteItem[];
   validity: string | null;
+  delivery: string | null;
   notes: string | null;
   vat_rate: number;
   subtotal: number;
@@ -34,6 +35,8 @@ export const VAT_RATE = 5;
 /** VAT a quotation can carry: standard 5%, or 0% (zero-rated, e.g. exports). */
 export const VAT_RATES = [5, 0];
 export const DEFAULT_VALIDITY = "30 days";
+/** Quick picks for the delivery period on a quotation. */
+export const DELIVERY_OPTIONS = ["1 week", "10 days", "10-12 working days", "15 days", "3-4 weeks", "Ex-stock, subject to prior sale"];
 export const STATUSES: QuoteStatus[] = ["draft", "sent", "won", "lost"];
 export const EMPTY_CUSTOMER: QuoteCustomer = { name: "", address: "", trn: "", project: "", attention: "", contact: "", email: "", ref: "" };
 /** Printed under the totals on every quotation. */
@@ -50,6 +53,16 @@ export const EXTRA_ITEMS = [
 ];
 
 export const quoteNumber = (n: number) => `QT ${n}`;
+
+/**
+ * The delivery term printed on page 1 (it is not on the Terms & Conditions sheet): a period ("10 days", "one week")
+ * goes into the standard sentence, anything else ("Ex-stock, subject to prior sale") prints as typed.
+ */
+export function deliveryText(period: string | null | undefined): string {
+  const p = period?.trim();
+  if (!p) return "";
+  return /\d|day|week|month/i.test(p) ? `Delivery within ${p} from receipt of the confirmed LPO and the advance payment, subject to prior booking.` : p;
+}
 
 const round2 = (n: number) => Math.round(n * 100) / 100;
 

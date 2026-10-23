@@ -1,6 +1,6 @@
 import "server-only";
 import { PDFDocument, StandardFonts, degrees, rgb, type PDFFont, type PDFPage, type RGB } from "pdf-lib";
-import { COMPANY, SPEC_NOTE, money, printable, quoteNumber, ukDate, type Quote } from "./quote";
+import { COMPANY, SPEC_NOTE, deliveryText, money, printable, quoteNumber, ukDate, type Quote } from "./quote";
 import type { QuoteAssets } from "./quote-assets";
 
 /**
@@ -260,9 +260,17 @@ export async function buildQuotePdf(q: Quote, assets: QuoteAssets, opts: { draft
   const tw = 214;
   const tx = X1 - tw;
   const notesW = tx - X0 - 22;
-  const noteLines = q.notes?.trim() ? wrap(q.notes, fonts.regular, 8.2, notesW - 12) : [];
+  // left of the totals: the delivery term, then the notes, each under a small gold label
+  const leftBlocks = (
+    [
+      ["Delivery", deliveryText(q.delivery)],
+      ["Notes", q.notes?.trim() ?? ""],
+    ] as const
+  )
+    .filter(([, v]) => v)
+    .map(([k, v]) => ({ label: k, lines: wrap(v, fonts.regular, 8.2, notesW - 12) }));
   const totalsH = 2 * 17 + 8 + 32;
-  const notesH = noteLines.length ? 18 + noteLines.length * 11 : 0;
+  const notesH = leftBlocks.reduce((h, b) => h + 24 + b.lines.length * 11, 0);
   if (y - Math.max(totalsH, notesH) < BOTTOM) {
     page = newPage();
     y = TOP;
@@ -284,15 +292,18 @@ export async function buildQuotePdf(q: Quote, assets: QuoteAssets, opts: { draft
   caps(`incl. ${q.vat_rate}% VAT`, X1 - 12, y - 41, 6.2, MUTED, fonts.bold, "right");
   y -= 48;
 
-  if (noteLines.length) {
+  if (leftBlocks.length) {
     let yy = yTotals;
-    caps("Notes", X0, yy - 9, 6.8, GOLD_DARK);
-    yy -= 22;
-    noteLines.forEach((l) => {
-      text(l, X0, yy, 8.2, fonts.regular, INK);
-      yy -= 11;
+    leftBlocks.forEach((b) => {
+      caps(b.label, X0, yy - 9, 6.8, GOLD_DARK);
+      yy -= 22;
+      b.lines.forEach((l) => {
+        text(l, X0, yy, 8.2, fonts.regular, INK);
+        yy -= 11;
+      });
+      yy -= 6;
     });
-    y = Math.min(y, yy);
+    y = Math.min(y, yy + 6);
   }
   y -= 12;
 

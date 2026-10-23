@@ -37,6 +37,7 @@ export default async function EditQuotePage({ params, searchParams }: { params: 
           customer: q.customer,
           sales: q.sales,
           validity: q.validity ?? "",
+          delivery: q.delivery ?? "",
           notes: q.notes ?? "",
           vat_rate: q.vat_rate,
           items: q.items,

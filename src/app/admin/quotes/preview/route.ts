@@ -31,6 +31,7 @@ export async function POST(req: Request) {
     sales: d.sales,
     items: d.items,
     validity: d.validity || null,
+    delivery: d.delivery || null,
     notes: d.notes || null,
     vat_rate: d.vat_rate,
     ...totals(d.items, d.vat_rate),

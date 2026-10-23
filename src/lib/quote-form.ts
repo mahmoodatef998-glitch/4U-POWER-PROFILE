@@ -25,6 +25,7 @@ const payloadSchema = (strict: boolean) =>
     }),
     sales: z.object({ person: str(80), contact: str(80), email: str(160) }),
     validity: str(80),
+    delivery: str(120),
     notes: str(2000),
     vat_rate: z.coerce.number().refine((r) => VAT_RATES.includes(r), "VAT must be 5% or 0%").default(VAT_RATE),
     items: z
@@ -60,6 +61,7 @@ export function parseQuotePayload(json: unknown, strict: boolean): { data: Quote
     ...Object.entries(d.customer).map(([k, v]) => [`Customer ${k}`, v] as [string, string]),
     ...Object.entries(d.sales).map(([k, v]) => [`Sales ${k}`, v] as [string, string]),
     ["Validity", d.validity],
+    ["Delivery", d.delivery],
     ["Notes", d.notes],
     ...d.items.flatMap((it, i) => [[`Item ${i + 1} title`, it.title], [`Item ${i + 1} description`, it.description], [`Item ${i + 1} unit`, it.unit]] as [string, string][]),
   ];

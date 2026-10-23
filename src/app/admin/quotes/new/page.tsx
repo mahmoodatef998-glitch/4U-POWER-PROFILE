@@ -23,6 +23,7 @@ export default async function NewQuotePage({ searchParams }: { searchParams: Pro
           customer: fromLead?.customer ?? EMPTY_CUSTOMER,
           sales,
           validity: DEFAULT_VALIDITY,
+          delivery: "",
           notes: "",
           vat_rate: VAT_RATE,
           items: [],
