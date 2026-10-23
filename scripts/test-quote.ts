@@ -1,9 +1,11 @@
 import assert from "node:assert/strict";
 import { getModel } from "../src/lib/genset-models";
 import { enclosureOptions, generatorItem, money, printable, searchModels, totals, ukDate, unprintable } from "../src/lib/quote";
+import { parseQuotePayload } from "../src/lib/quote-form";
 
 // totals: VAT 5% on the untaxed amount, rounded to fils
 assert.deepEqual(totals([{ qty: 1, unit_price: 21250 }]), { subtotal: 21250, vat: 1062.5, total: 22312.5 });
+assert.deepEqual(totals([{ qty: 1, unit_price: 21250 }], 0), { subtotal: 21250, vat: 0, total: 21250 });
 assert.deepEqual(totals([{ qty: 2, unit_price: 1150000 }, { qty: 1, unit_price: 18500.333 }]), { subtotal: 2318500.33, vat: 115925.02, total: 2434425.35 });
 assert.equal(money(2635237.5), "2,635,237.50");
 assert.equal(money(0), "0.00");
@@ -47,5 +49,12 @@ assert.deepEqual(unprintable(canopy.title + canopy.description), [], "generated 
 assert.deepEqual(unprintable("شركة"), ["ش", "ر", "ك", "ة"]);
 assert.deepEqual(unprintable("Café – “Al Noor” × 2 ±3 °C"), []);
 assert.equal(printable("A\tB→C"), "A B?C");
+
+// VAT per quotation: 5% by default, 0% allowed, nothing else
+const form = (extra: object) =>
+  JSON.stringify({ id: null, lead_id: null, quote_date: "2026-10-23", status: "draft", customer: { name: "A" }, sales: {}, validity: "", notes: "", items: [{ title: "Gen", qty: 1, unit_price: 100 }], ...extra });
+assert.equal(parseQuotePayload(form({}), true).data?.vat_rate, 5);
+assert.equal(parseQuotePayload(form({ vat_rate: 0 }), true).data?.vat_rate, 0);
+assert.match(parseQuotePayload(form({ vat_rate: 7 }), true).error ?? "", /VAT/);
 
 console.log("quotation tests passed");

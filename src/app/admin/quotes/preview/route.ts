@@ -1,4 +1,4 @@
-import { VAT_RATE, totals, type Quote } from "@/lib/quote";
+import { totals, type Quote } from "@/lib/quote";
 import { loadQuoteAssets } from "@/lib/quote-assets";
 import { loadQuote } from "@/lib/quote-data";
 import { parseQuotePayload } from "@/lib/quote-form";
@@ -32,8 +32,8 @@ export async function POST(req: Request) {
     items: d.items,
     validity: d.validity || null,
     notes: d.notes || null,
-    vat_rate: VAT_RATE,
-    ...totals(d.items, VAT_RATE),
+    vat_rate: d.vat_rate,
+    ...totals(d.items, d.vat_rate),
     status: d.status,
     lead_id: d.lead_id,
     created_at: "",

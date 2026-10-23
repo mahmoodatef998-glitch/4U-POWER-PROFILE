@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { STATUSES, unprintable, type QuoteStatus } from "./quote";
+import { STATUSES, VAT_RATE, VAT_RATES, unprintable, type QuoteStatus } from "./quote";
 
 /**
  * The quotation form as the editor sends it (one JSON field), checked the same way for saving and for the
@@ -26,6 +26,7 @@ const payloadSchema = (strict: boolean) =>
     sales: z.object({ person: str(80), contact: str(80), email: str(160) }),
     validity: str(80),
     notes: str(2000),
+    vat_rate: z.coerce.number().refine((r) => VAT_RATES.includes(r), "VAT must be 5% or 0%").default(VAT_RATE),
     items: z
       .array(
         z.object({

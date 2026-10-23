@@ -31,6 +31,8 @@ export const COMPANY = { name: "4U POWER GENERATION (FZC)", trn: "10415600930000
 /** Sales block on new quotations; the contact is always the company number (src/lib/site.ts), editable per quote. */
 export const DEFAULT_SALES: QuoteSales = { person: "SHAMSA", contact: "+971 50 229 6962", email: "sales@4upowers.com" };
 export const VAT_RATE = 5;
+/** VAT a quotation can carry: standard 5%, or 0% (zero-rated, e.g. exports). */
+export const VAT_RATES = [5, 0];
 export const DEFAULT_VALIDITY = "30 days";
 export const STATUSES: QuoteStatus[] = ["draft", "sent", "won", "lost"];
 export const EMPTY_CUSTOMER: QuoteCustomer = { name: "", address: "", trn: "", project: "", attention: "", contact: "", email: "", ref: "" };

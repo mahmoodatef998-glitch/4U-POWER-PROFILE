@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
-import { STATUSES, VAT_RATE, totals, type QuoteStatus } from "@/lib/quote";
+import { STATUSES, totals, type QuoteStatus } from "@/lib/quote";
 import { parseQuotePayload } from "@/lib/quote-form";
 import { MIGRATION_HINT, missingTable } from "@/lib/quote-data";
 import { getAdminClient } from "@/lib/supabase/server";
@@ -25,8 +25,8 @@ export async function saveQuote(_prev: SaveState, formData: FormData): Promise<S
     items: d.items,
     validity: d.validity || null,
     notes: d.notes || null,
-    vat_rate: VAT_RATE,
-    ...totals(d.items, VAT_RATE),
+    vat_rate: d.vat_rate,
+    ...totals(d.items, d.vat_rate),
     lead_id: d.lead_id,
   };
   const { data, error } = d.id

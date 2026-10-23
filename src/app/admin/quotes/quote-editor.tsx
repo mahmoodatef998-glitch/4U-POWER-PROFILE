@@ -5,7 +5,7 @@ import { brandModels } from "@/lib/genset-models";
 import {
   EXTRA_ITEMS,
   STATUSES,
-  VAT_RATE,
+  VAT_RATES,
   enclosureOptions,
   generatorItem,
   money,
@@ -27,6 +27,7 @@ export type EditorInitial = {
   sales: QuoteSales;
   validity: string;
   notes: string;
+  vat_rate: number;
   items: QuoteItem[];
 };
 
@@ -51,16 +52,17 @@ export function QuoteEditor({ initial, initialSearch = "" }: { initial: EditorIn
   const [validity, setValidity] = useState(initial.validity);
   const [notes, setNotes] = useState(initial.notes);
   const [status, setStatus] = useState(initial.status);
+  const [vatRate, setVatRate] = useState(initial.vat_rate);
   const [items, setItems] = useState<QuoteItem[]>(initial.items);
   const [q, setQ] = useState(initialSearch);
   const [state, action, pending] = useActionState<SaveState, FormData>(saveQuote, null);
 
   const results = useMemo(() => searchModels(q), [q]);
-  const t = totals(items, VAT_RATE);
-  const payload = JSON.stringify({ id: initial.id, lead_id: initial.lead_id, quote_date: quoteDate, status, customer, sales, validity, notes, items });
+  const t = totals(items, vatRate);
+  const payload = JSON.stringify({ id: initial.id, lead_id: initial.lead_id, quote_date: quoteDate, status, customer, sales, validity, notes, vat_rate: vatRate, items });
   // what was last saved (or the empty form): anything else is an unsaved change
   const [savedPayload] = useState(() =>
-    JSON.stringify({ id: initial.id, lead_id: initial.lead_id, quote_date: initial.quote_date, status: initial.status, customer: initial.customer, sales: initial.sales, validity: initial.validity, notes: initial.notes, items: initial.items }),
+    JSON.stringify({ id: initial.id, lead_id: initial.lead_id, quote_date: initial.quote_date, status: initial.status, customer: initial.customer, sales: initial.sales, validity: initial.validity, notes: initial.notes, vat_rate: initial.vat_rate, items: initial.items }),
   );
   const dirty = payload !== savedPayload;
 
@@ -196,7 +198,7 @@ export function QuoteEditor({ initial, initialSearch = "" }: { initial: EditorIn
         </ol>
         <dl className="ms-auto mt-5 grid max-w-sm gap-1 text-sm tabular-nums">
           <div className="flex justify-between"><dt className="text-muted">Untaxed amount</dt><dd>AED {money(t.subtotal)}</dd></div>
-          <div className="flex justify-between"><dt className="text-muted">VAT {VAT_RATE}%</dt><dd>AED {money(t.vat)}</dd></div>
+          <div className="flex justify-between"><dt className="text-muted">VAT {vatRate}%</dt><dd>AED {money(t.vat)}</dd></div>
           <div className="flex justify-between border-t border-line pt-1 text-base font-extrabold"><dt>Total</dt><dd>AED {money(t.total)}</dd></div>
         </dl>
       </section>
@@ -241,7 +243,14 @@ export function QuoteEditor({ initial, initialSearch = "" }: { initial: EditorIn
               ))}
             </select>
           </label>
-          <span />
+          <label className={label}>
+            VAT
+            <select value={vatRate} onChange={(e) => setVatRate(Number(e.target.value))} className={`${input} font-normal`}>
+              {VAT_RATES.map((r) => (
+                <option key={r} value={r}>{r ? `${r}% (standard)` : "0% (zero-rated / export)"}</option>
+              ))}
+            </select>
+          </label>
           <label className={label}>
             Sales person
             <input value={sales.person} onChange={(e) => setSales((s) => ({ ...s, person: e.target.value }))} className={`${input} font-normal`} />
@@ -265,7 +274,7 @@ export function QuoteEditor({ initial, initialSearch = "" }: { initial: EditorIn
       {state?.error && <p role="alert" className="rounded-xl bg-red-50 p-4 text-sm font-semibold text-red-800">{state.error}</p>}
       <div className="sticky bottom-0 -mx-4 flex flex-wrap items-center justify-between gap-3 border-t border-line bg-surface/95 px-4 py-3 backdrop-blur">
         <div>
-          <p className="font-extrabold tabular-nums">Total AED {money(t.total)} <span className="text-sm font-normal text-muted">incl. {VAT_RATE}% VAT · {items.length} item{items.length === 1 ? "" : "s"}</span></p>
+          <p className="font-extrabold tabular-nums">Total AED {money(t.total)} <span className="text-sm font-normal text-muted">incl. {vatRate}% VAT · {items.length} item{items.length === 1 ? "" : "s"}</span></p>
           {dirty && initial.id && <p className="text-xs font-bold text-amber-700">Unsaved changes: Preview shows them, Save keeps them.</p>}
         </div>
         <div className="flex flex-wrap gap-2">

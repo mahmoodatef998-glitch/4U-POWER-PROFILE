@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { DEFAULT_VALIDITY, EMPTY_CUSTOMER } from "@/lib/quote";
+import { DEFAULT_VALIDITY, EMPTY_CUSTOMER, VAT_RATE } from "@/lib/quote";
 import { lastSales, leadCustomer } from "@/lib/quote-data";
 import { QuoteEditor } from "../quote-editor";
 
@@ -24,6 +24,7 @@ export default async function NewQuotePage({ searchParams }: { searchParams: Pro
           sales,
           validity: DEFAULT_VALIDITY,
           notes: "",
+          vat_rate: VAT_RATE,
           items: [],
         }}
         initialSearch={fromLead?.kva ? String(fromLead.kva) : ""}
