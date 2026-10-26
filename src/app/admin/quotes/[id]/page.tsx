@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { money, quoteNumber } from "@/lib/quote";
+import { loadPriceBook } from "@/lib/price-book-data";
 import { loadQuote } from "@/lib/quote-data";
 import { deleteQuote } from "../actions";
 import { DeleteButton } from "../delete-button";
@@ -8,7 +9,7 @@ import { QuoteEditor } from "../quote-editor";
 
 export default async function EditQuotePage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ saved?: string }> }) {
   const [{ id }, { saved }] = await Promise.all([params, searchParams]);
-  const q = await loadQuote(id);
+  const [q, prices] = await Promise.all([loadQuote(id), loadPriceBook()]);
   if (!q) notFound();
   return (
     <div className="grid gap-6">
@@ -39,9 +40,12 @@ export default async function EditQuotePage({ params, searchParams }: { params: 
           validity: q.validity ?? "",
           delivery: q.delivery ?? "",
           notes: q.notes ?? "",
+          price_list: q.price_list,
+          discount_pct: q.discount_pct,
           vat_rate: q.vat_rate,
           items: q.items,
         }}
+        prices={prices}
       />
       <form action={deleteQuote} className="justify-self-start">
         <input type="hidden" name="id" value={q.id} />

@@ -269,19 +269,27 @@ export async function buildQuotePdf(q: Quote, assets: QuoteAssets, opts: { draft
   )
     .filter(([, v]) => v)
     .map(([k, v]) => ({ label: k, lines: wrap(v, fonts.regular, 8.2, notesW - 12) }));
-  const totalsH = 2 * 17 + 8 + 32;
+  // a discount comes off the subtotal before VAT: show it and the net (taxable) amount
+  const totalRows: [string, string][] = [
+    ["Subtotal", `AED ${money(q.subtotal)}`],
+    ...(q.discount > 0
+      ? ([
+          [`Discount ${q.discount_pct}%`, `- AED ${money(q.discount)}`],
+          ["Net amount", `AED ${money(q.subtotal - q.discount)}`],
+        ] as [string, string][])
+      : []),
+    [`VAT ${q.vat_rate}%`, `AED ${money(q.vat)}`],
+  ];
+  const totalsH = totalRows.length * 17 + 8 + 32;
   const notesH = leftBlocks.reduce((h, b) => h + 24 + b.lines.length * 11, 0);
   if (y - Math.max(totalsH, notesH) < BOTTOM) {
     page = newPage();
     y = TOP;
   }
   const yTotals = y;
-  [
-    ["Subtotal", money(q.subtotal)],
-    [`VAT ${q.vat_rate}%`, money(q.vat)],
-  ].forEach(([k, v]) => {
-    text(k!, tx + 2, y - 11, 8.6, fonts.regular, BODY);
-    textRight(`AED ${v}`, X1, y - 11, 8.8, fonts.regular, INK);
+  totalRows.forEach(([k, v]) => {
+    text(k, tx + 2, y - 11, 8.6, fonts.regular, BODY);
+    textRight(v, X1, y - 11, 8.8, fonts.regular, INK);
     y -= 17;
   });
   y -= 8;

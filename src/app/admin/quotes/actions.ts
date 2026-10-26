@@ -26,8 +26,10 @@ export async function saveQuote(_prev: SaveState, formData: FormData): Promise<S
     validity: d.validity || null,
     delivery: d.delivery || null,
     notes: d.notes || null,
+    price_list: d.price_list,
+    discount_pct: d.discount_pct,
     vat_rate: d.vat_rate,
-    ...totals(d.items, d.vat_rate),
+    ...totals(d.items, d.vat_rate, d.discount_pct),
     lead_id: d.lead_id,
   };
   const { data, error } = d.id

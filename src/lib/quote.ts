@@ -1,11 +1,13 @@
 import { gensetModels, type GensetModel } from "./genset-models";
+import type { PriceListId } from "./price-book";
 
 /**
  * Quotations made in /admin/quotes. Pure helpers shared by the editor (client) and the PDF route (server):
  * the standard description of a generator from its datasheet, totals with VAT, and text checks for the PDF fonts.
  */
 
-export type QuoteItem = { code: string; title: string; description: string; qty: number; unit: string; unit_price: number };
+/** price_key: the price-list option the unit price came from (alternator|origin); dropped when the price is typed in. */
+export type QuoteItem = { code: string; title: string; description: string; qty: number; unit: string; unit_price: number; price_key?: string };
 export type QuoteCustomer = { name: string; address: string; trn: string; project: string; attention: string; contact: string; email: string; ref: string };
 export type QuoteSales = { person: string; contact: string; email: string };
 export type QuoteStatus = "draft" | "sent" | "won" | "lost";
@@ -19,6 +21,9 @@ export type Quote = {
   validity: string | null;
   delivery: string | null;
   notes: string | null;
+  price_list: PriceListId;
+  discount_pct: number;
+  discount: number;
   vat_rate: number;
   subtotal: number;
   vat: number;
@@ -78,10 +83,12 @@ export const ukDate = (iso: string) => {
   return `${d}/${m}/${y}`;
 };
 
-export function totals(items: Pick<QuoteItem, "qty" | "unit_price">[], vatRate = VAT_RATE) {
+/** Subtotal of the lines, the discount on it, then VAT on what is left (the taxable amount). */
+export function totals(items: Pick<QuoteItem, "qty" | "unit_price">[], vatRate = VAT_RATE, discountPct = 0) {
   const subtotal = round2(items.reduce((s, i) => s + round2(i.qty * i.unit_price), 0));
-  const vat = round2((subtotal * vatRate) / 100);
-  return { subtotal, vat, total: round2(subtotal + vat) };
+  const discount = round2((subtotal * discountPct) / 100);
+  const vat = round2(((subtotal - discount) * vatRate) / 100);
+  return { subtotal, discount, vat, total: round2(subtotal - discount + vat) };
 }
 
 /* ------------------------------------------------------------------ generator description */

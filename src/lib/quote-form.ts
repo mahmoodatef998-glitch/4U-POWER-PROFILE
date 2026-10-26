@@ -27,6 +27,8 @@ const payloadSchema = (strict: boolean) =>
     validity: str(80),
     delivery: str(120),
     notes: str(2000),
+    price_list: z.enum(["uae", "export"]).default("uae"),
+    discount_pct: z.coerce.number().min(0, "Discount can't be negative").max(100, "Discount can't be above 100%").default(0),
     vat_rate: z.coerce.number().refine((r) => VAT_RATES.includes(r), "VAT must be 5% or 0%").default(VAT_RATE),
     items: z
       .array(
@@ -37,6 +39,7 @@ const payloadSchema = (strict: boolean) =>
           qty: z.coerce.number().positive("Quantity must be above 0").max(100000),
           unit: str(20).transform((u) => u || "Units"),
           unit_price: z.coerce.number().min(0, "Price can't be negative").max(1e9),
+          price_key: z.string().max(80).optional(),
         }),
       )
       .min(1, "Add at least one item")

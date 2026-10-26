@@ -1,7 +1,8 @@
 "use client";
 
 import { useActionState, useEffect, useMemo, useState } from "react";
-import { brandModels } from "@/lib/genset-models";
+import { brandModels, type GensetModel } from "@/lib/genset-models";
+import { PRICE_LISTS, defaultOption, optionLabel, type PriceBook, type PriceListId } from "@/lib/price-book";
 import {
   DELIVERY_OPTIONS,
   EXTRA_ITEMS,
@@ -13,6 +14,7 @@ import {
   money,
   searchModels,
   totals,
+  type Enclosure,
   type QuoteCustomer,
   type QuoteItem,
   type QuoteSales,
@@ -30,6 +32,8 @@ export type EditorInitial = {
   validity: string;
   delivery: string;
   notes: string;
+  price_list: PriceListId;
+  discount_pct: number;
   vat_rate: number;
   items: QuoteItem[];
 };
@@ -48,7 +52,7 @@ const CUSTOMER_FIELDS: [keyof QuoteCustomer, string, string?][] = [
   ["ref", "Customer ref"],
 ];
 
-export function QuoteEditor({ initial, initialSearch = "" }: { initial: EditorInitial; initialSearch?: string }) {
+export function QuoteEditor({ initial, initialSearch = "", prices = null }: { initial: EditorInitial; initialSearch?: string; prices?: PriceBook | null }) {
   const [customer, setCustomer] = useState(initial.customer);
   const [sales, setSales] = useState(initial.sales);
   const [quoteDate, setQuoteDate] = useState(initial.quote_date);
@@ -56,17 +60,19 @@ export function QuoteEditor({ initial, initialSearch = "" }: { initial: EditorIn
   const [delivery, setDelivery] = useState(initial.delivery);
   const [notes, setNotes] = useState(initial.notes);
   const [status, setStatus] = useState(initial.status);
+  const [priceList, setPriceList] = useState(initial.price_list);
+  const [discountPct, setDiscountPct] = useState(initial.discount_pct);
   const [vatRate, setVatRate] = useState(initial.vat_rate);
   const [items, setItems] = useState<QuoteItem[]>(initial.items);
   const [q, setQ] = useState(initialSearch);
   const [state, action, pending] = useActionState<SaveState, FormData>(saveQuote, null);
 
   const results = useMemo(() => searchModels(q), [q]);
-  const t = totals(items, vatRate);
-  const payload = JSON.stringify({ id: initial.id, lead_id: initial.lead_id, quote_date: quoteDate, status, customer, sales, validity, delivery, notes, vat_rate: vatRate, items });
+  const t = totals(items, vatRate, discountPct);
+  const payload = JSON.stringify({ id: initial.id, lead_id: initial.lead_id, quote_date: quoteDate, status, customer, sales, validity, delivery, notes, price_list: priceList, discount_pct: discountPct, vat_rate: vatRate, items });
   // what was last saved (or the empty form): anything else is an unsaved change
   const [savedPayload] = useState(() =>
-    JSON.stringify({ id: initial.id, lead_id: initial.lead_id, quote_date: initial.quote_date, status: initial.status, customer: initial.customer, sales: initial.sales, validity: initial.validity, delivery: initial.delivery, notes: initial.notes, vat_rate: initial.vat_rate, items: initial.items }),
+    JSON.stringify({ id: initial.id, lead_id: initial.lead_id, quote_date: initial.quote_date, status: initial.status, customer: initial.customer, sales: initial.sales, validity: initial.validity, delivery: initial.delivery, notes: initial.notes, price_list: initial.price_list, discount_pct: initial.discount_pct, vat_rate: initial.vat_rate, items: initial.items }),
   );
   const dirty = payload !== savedPayload;
 
@@ -76,6 +82,27 @@ export function QuoteEditor({ initial, initialSearch = "" }: { initial: EditorIn
     window.addEventListener("beforeunload", warn);
     return () => window.removeEventListener("beforeunload", warn);
   }, [dirty, pending]);
+
+  const listLabel = PRICE_LISTS.find((l) => l.id === priceList)!.label;
+  const optionsFor = (code: string, list: PriceListId = priceList) => (code ? prices?.models[code]?.[list] : undefined);
+  // a new generator line starts at its list price (Leroy-Somer alternator where the list has it)
+  const addGenerator = (m: GensetModel, enclosure: Enclosure) => {
+    const item = generatorItem(m, enclosure);
+    const opt = defaultOption(optionsFor(m.code));
+    setItems((list) => [...list, opt ? { ...item, unit_price: opt.aed, price_key: opt.key } : item]);
+    setQ("");
+  };
+  // switching list re-prices the lines that came from the list (typed-in prices stay) and sets its usual VAT
+  const switchList = (id: PriceListId) => {
+    setPriceList(id);
+    setVatRate(PRICE_LISTS.find((l) => l.id === id)!.vat);
+    setItems((list) =>
+      list.map((it) => {
+        const opt = it.price_key ? optionsFor(it.code, id)?.find((o) => o.key === it.price_key) : undefined;
+        return opt ? { ...it, unit_price: opt.aed } : it;
+      }),
+    );
+  };
 
   const update = (i: number, patch: Partial<QuoteItem>) => setItems((list) => list.map((it, j) => (j === i ? { ...it, ...patch } : it)));
   const move = (i: number, d: -1 | 1) =>
@@ -93,7 +120,16 @@ export function QuoteEditor({ initial, initialSearch = "" }: { initial: EditorIn
       {/* ------------------------------------------------ add a generator */}
       <section className="rounded-2xl border border-line bg-navy-900 p-5">
         <h2 className="text-lg font-extrabold">1 · Add a generator</h2>
-        <p className="mt-1 text-sm text-muted">Type the model code (4U-P550, p550), the kVA (550) or the engine. The standard description is filled in from the datasheet.</p>
+        <p className="mt-1 text-sm text-muted">Type the model code (4U-P550, p550), the kVA (550) or the engine. The standard description is filled in from the datasheet and the price from the price list.</p>
+        <div className="mt-3 flex flex-wrap items-center gap-2 text-sm">
+          <label htmlFor="price-list" className="font-semibold">Prices from</label>
+          <select id="price-list" value={priceList} onChange={(e) => switchList(e.target.value as PriceListId)} className="rounded-lg border border-line px-3 py-1.5 font-semibold">
+            {PRICE_LISTS.map((l) => (
+              <option key={l.id} value={l.id}>{l.label}{prices ? ` ${prices.edition}` : ""} · VAT {l.vat}%</option>
+            ))}
+          </select>
+          <span className="text-xs text-muted">{prices ? "Switching re-prices the lines taken from the list and sets the VAT." : "No price list loaded yet: type the prices."}</span>
+        </div>
         <input
           value={q}
           onChange={(e) => setQ(e.target.value)}
@@ -105,7 +141,9 @@ export function QuoteEditor({ initial, initialSearch = "" }: { initial: EditorIn
         />
         {q.trim() && (
           <ul className="mt-3 divide-y divide-line rounded-xl border border-line">
-            {results.map((m) => (
+            {results.map((m) => {
+              const listed = defaultOption(optionsFor(m.code));
+              return (
               <li key={m.slug} className="flex flex-wrap items-center justify-between gap-3 px-4 py-3">
                 <div className="min-w-0">
                   <p className="font-bold">
@@ -114,16 +152,14 @@ export function QuoteEditor({ initial, initialSearch = "" }: { initial: EditorIn
                   <p className="text-sm text-muted">
                     {m.standbyKva} kVA standby · {m.primeKva} kVA prime{m.fuelLph ? ` · ${m.fuelLph.p75} L/h @ 75%` : ""}
                   </p>
+                  {prices && <p className={`text-sm font-semibold ${listed ? "" : "text-amber-700"}`}>{listed ? `${listLabel}: AED ${money(listed.aed)} · ${optionLabel(listed)}` : `Not on the ${listLabel}: type the price`}</p>}
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {enclosureOptions(m).map((o) => (
                     <button
                       key={o.value}
                       type="button"
-                      onClick={() => {
-                        setItems((list) => [...list, generatorItem(m, o.value)]);
-                        setQ("");
-                      }}
+                      onClick={() => addGenerator(m, o.value)}
                       className="rounded-lg bg-navy-950 px-3 py-1.5 text-sm font-bold text-white hover:bg-navy-800"
                     >
                       + {o.label}
@@ -131,7 +167,8 @@ export function QuoteEditor({ initial, initialSearch = "" }: { initial: EditorIn
                   ))}
                 </div>
               </li>
-            ))}
+              );
+            })}
             {!results.length && <li className="px-4 py-3 text-sm text-muted">No model matches “{q}”. Models: {(["Perkins", "Cummins", "Kubota", "Baudouin"] as const).map((b) => `${b} ${brandModels(b).length}`).join(" · ")}</li>}
           </ul>
         )}
@@ -161,7 +198,9 @@ export function QuoteEditor({ initial, initialSearch = "" }: { initial: EditorIn
         </div>
         {!items.length && <p className="mt-4 rounded-xl bg-surface p-4 text-sm text-muted">No items yet: search a generator above or add another item.</p>}
         <ol className="mt-4 grid gap-4">
-          {items.map((it, i) => (
+          {items.map((it, i) => {
+            const opts = optionsFor(it.code);
+            return (
             <li key={i} className="rounded-xl border border-line p-4">
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <span className="text-xs font-bold uppercase text-muted">Item {i + 1}{it.code ? ` · ${it.code}` : ""}</span>
@@ -190,18 +229,51 @@ export function QuoteEditor({ initial, initialSearch = "" }: { initial: EditorIn
                 </label>
                 <label className={label}>
                   Unit price (AED, excl. VAT)
-                  <input type="number" min="0" step="0.01" value={it.unit_price || ""} onChange={(e) => update(i, { unit_price: Number(e.target.value) })} placeholder="0.00" required className={`${input} font-bold`} />
+                  <input type="number" min="0" step="0.01" value={it.unit_price || ""} onChange={(e) => update(i, { unit_price: Number(e.target.value), price_key: undefined })} placeholder="0.00" required className={`${input} font-bold`} />
                 </label>
                 <div className={label}>
                   Line total
                   <p className="rounded-lg bg-surface px-3 py-2 font-bold tabular-nums">AED {money(it.qty * it.unit_price)}</p>
                 </div>
               </div>
+              {opts?.length ? (
+                <label className={`${label} mt-3`}>
+                  Price from the {listLabel}
+                  <select
+                    value={it.price_key && opts.some((o) => o.key === it.price_key && o.aed === it.unit_price) ? it.price_key : ""}
+                    onChange={(e) => {
+                      const o = opts.find((x) => x.key === e.target.value);
+                      update(i, o ? { unit_price: o.aed, price_key: o.key } : { price_key: undefined });
+                    }}
+                    className={`${input} font-normal`}
+                  >
+                    <option value="">Own price (typed in above)</option>
+                    {opts.map((o) => (
+                      <option key={o.key} value={o.key}>
+                        {optionLabel(o)} · AED {money(o.aed)}{o.currency === "GBP" ? ` (£${money(o.price)})` : ""}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              ) : it.code && prices ? (
+                <p className="mt-3 text-xs font-semibold text-amber-700">Not on the {listLabel}: type the price.</p>
+              ) : null}
             </li>
-          ))}
+            );
+          })}
         </ol>
         <dl className="ms-auto mt-5 grid max-w-sm gap-1 text-sm tabular-nums">
-          <div className="flex justify-between"><dt className="text-muted">Untaxed amount</dt><dd>AED {money(t.subtotal)}</dd></div>
+          <div className="flex justify-between"><dt className="text-muted">Subtotal</dt><dd>AED {money(t.subtotal)}</dd></div>
+          <div className="flex items-center justify-between gap-3">
+            <dt><label htmlFor="discount" className="text-muted">Discount %</label></dt>
+            <dd><input id="discount" type="number" min="0" max="100" step="0.01" value={discountPct} onChange={(e) => setDiscountPct(Math.min(100, Math.max(0, e.target.valueAsNumber || 0)))} className="w-24 rounded-lg border border-line px-2 py-1 text-end" /></dd>
+          </div>
+          {t.discount > 0 && (
+            <>
+              <div className="flex justify-between"><dt className="text-muted">Discount {discountPct}%</dt><dd>- AED {money(t.discount)}</dd></div>
+              <div className="flex justify-between"><dt className="text-muted">Net amount</dt><dd>AED {money(t.subtotal - t.discount)}</dd></div>
+            </>
+          )}
           <div className="flex justify-between"><dt className="text-muted">VAT {vatRate}%</dt><dd>AED {money(t.vat)}</dd></div>
           <div className="flex justify-between border-t border-line pt-1 text-base font-extrabold"><dt>Total</dt><dd>AED {money(t.total)}</dd></div>
         </dl>

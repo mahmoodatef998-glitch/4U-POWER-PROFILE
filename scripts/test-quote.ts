@@ -2,11 +2,15 @@ import assert from "node:assert/strict";
 import { getModel } from "../src/lib/genset-models";
 import { deliveryText, enclosureOptions, generatorItem, money, printable, searchModels, totals, ukDate, unprintable } from "../src/lib/quote";
 import { parseQuotePayload } from "../src/lib/quote-form";
+import { alternatorName, defaultOption, optionLabel, toAed, type PriceOption } from "../src/lib/price-book";
 
 // totals: VAT 5% on the untaxed amount, rounded to fils
-assert.deepEqual(totals([{ qty: 1, unit_price: 21250 }]), { subtotal: 21250, vat: 1062.5, total: 22312.5 });
-assert.deepEqual(totals([{ qty: 1, unit_price: 21250 }], 0), { subtotal: 21250, vat: 0, total: 21250 });
-assert.deepEqual(totals([{ qty: 2, unit_price: 1150000 }, { qty: 1, unit_price: 18500.333 }]), { subtotal: 2318500.33, vat: 115925.02, total: 2434425.35 });
+assert.deepEqual(totals([{ qty: 1, unit_price: 21250 }]), { subtotal: 21250, discount: 0, vat: 1062.5, total: 22312.5 });
+assert.deepEqual(totals([{ qty: 1, unit_price: 21250 }], 0), { subtotal: 21250, discount: 0, vat: 0, total: 21250 });
+assert.deepEqual(totals([{ qty: 2, unit_price: 1150000 }, { qty: 1, unit_price: 18500.333 }]), { subtotal: 2318500.33, discount: 0, vat: 115925.02, total: 2434425.35 });
+// discount comes off before VAT
+assert.deepEqual(totals([{ qty: 1, unit_price: 100000 }], 5, 10), { subtotal: 100000, discount: 10000, vat: 4500, total: 94500 });
+assert.deepEqual(totals([{ qty: 3, unit_price: 33333.33 }], 0, 2.5), { subtotal: 99999.99, discount: 2500, vat: 0, total: 97499.99 });
 assert.equal(money(2635237.5), "2,635,237.50");
 assert.equal(money(0), "0.00");
 assert.equal(ukDate("2026-09-16"), "16/09/2026");
@@ -64,5 +68,24 @@ assert.equal(deliveryText("Ex-stock, subject to prior sale"), "Ex-stock, subject
 assert.equal(deliveryText("  "), "");
 assert.equal(parseQuotePayload(form({ delivery: " 15 days " }), true).data?.delivery, "15 days");
 assert.match(parseQuotePayload(form({ delivery: "١٠ أيام" }), true).error ?? "", /Delivery/);
+
+// discount and price list on the form
+assert.equal(parseQuotePayload(form({}), true).data?.discount_pct, 0);
+assert.equal(parseQuotePayload(form({}), true).data?.price_list, "uae");
+assert.equal(parseQuotePayload(form({ discount_pct: "7.5", price_list: "export" }), true).data?.discount_pct, 7.5);
+assert.match(parseQuotePayload(form({ discount_pct: 120 }), true).error ?? "", /Discount/);
+assert.equal(parseQuotePayload(form({ items: [{ title: "Gen", qty: 1, unit_price: 5, price_key: "TAL042H|INDIA" }] }), true).data?.items[0]?.price_key, "TAL042H|INDIA");
+
+// price book rules: pounds to whole dirhams, Leroy-Somer first, readable labels
+assert.equal(toAed(10000.4, "GBP", 4.91), 49102);
+assert.equal(toAed(12345, "AED", 4.91), 12345);
+const opt = (alternator: string, origin: string): PriceOption => ({ key: `${alternator}|${origin}`, alternator, origin, currency: "AED", price: 1, aed: 1 });
+assert.equal(defaultOption([opt("KWISE (CHINA)", "INDIA"), opt("KWISE (CHINA)", "CHINA"), opt("LSA50.2M6", "INDIA")])?.alternator, "LSA50.2M6");
+assert.equal(defaultOption([opt("CHINA", "")])?.alternator, "CHINA");
+assert.equal(defaultOption(undefined), undefined);
+assert.equal(optionLabel(opt("TAL044H", "CHINA")), "Leroy-Somer TAL044H · China");
+assert.equal(optionLabel(opt("TAL040D", "JAPAN / EU")), "Leroy-Somer TAL040D · Japan / EU");
+assert.equal(alternatorName("KWISE (CHINA)"), "Kwise alternator (China)");
+assert.equal(optionLabel(opt("TAL", "")), "Leroy-Somer TAL alternator");
 
 console.log("quotation tests passed");

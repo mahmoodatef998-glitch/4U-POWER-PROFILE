@@ -14,15 +14,18 @@ const BADGE: Record<QuoteStatus, string> = {
 export default async function QuotesPage({ searchParams }: { searchParams: Promise<{ assets?: string }> }) {
   const [{ data: quotes, error }, files, { assets: uploadMsg }] = await Promise.all([listQuotes(), assetStatus(), searchParams]);
   const missing = !files.letterhead || !files.terms;
-  const sum = (s: QuoteStatus) => (quotes ?? []).filter((q) => q.status === s).reduce((t, q) => t + q.subtotal, 0);
+  const sum = (s: QuoteStatus) => (quotes ?? []).filter((q) => q.status === s).reduce((t, q) => t + q.subtotal - q.discount, 0);
   return (
     <div className="grid gap-6">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <h1 className="text-2xl font-extrabold">Quotations</h1>
-          <p className="mt-1 text-sm text-muted">Pick a model from the datasheets, add the price, download the PDF on the 4U letterhead. VAT 5% is added automatically.</p>
+          <p className="mt-1 text-sm text-muted">Pick a model from the datasheets: the price comes from the UAE or Export price list, with any discount and VAT on top. Download the PDF on the 4U letterhead.</p>
         </div>
-        <Link href="/admin/quotes/new" className="rounded-xl bg-brand-500 px-5 py-3 font-extrabold text-ink-950">+ New quotation</Link>
+        <div className="flex flex-wrap gap-2">
+          <Link href="/admin/quotes/prices" className="rounded-xl border border-line px-5 py-3 font-extrabold">Price list</Link>
+          <Link href="/admin/quotes/new" className="rounded-xl bg-brand-500 px-5 py-3 font-extrabold text-ink-950">+ New quotation</Link>
+        </div>
       </div>
 
       <details open={missing || !!uploadMsg} className={`rounded-2xl border p-5 ${missing ? "border-red-300 bg-red-50" : "border-line bg-navy-900"}`}>

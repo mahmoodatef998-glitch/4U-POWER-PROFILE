@@ -1,11 +1,12 @@
 import Link from "next/link";
 import { DEFAULT_VALIDITY, EMPTY_CUSTOMER, VAT_RATE } from "@/lib/quote";
 import { lastSales, leadCustomer } from "@/lib/quote-data";
+import { loadPriceBook } from "@/lib/price-book-data";
 import { QuoteEditor } from "../quote-editor";
 
 export default async function NewQuotePage({ searchParams }: { searchParams: Promise<{ lead?: string }> }) {
   const { lead } = await searchParams;
-  const [sales, fromLead] = await Promise.all([lastSales(), lead ? leadCustomer(lead) : null]);
+  const [sales, fromLead, prices] = await Promise.all([lastSales(), lead ? leadCustomer(lead) : null, loadPriceBook()]);
   const today = new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Dubai" });
   return (
     <div className="grid gap-6">
@@ -25,10 +26,13 @@ export default async function NewQuotePage({ searchParams }: { searchParams: Pro
           validity: DEFAULT_VALIDITY,
           delivery: "",
           notes: "",
+          price_list: "uae",
+          discount_pct: 0,
           vat_rate: VAT_RATE,
           items: [],
         }}
         initialSearch={fromLead?.kva ? String(fromLead.kva) : ""}
+        prices={prices}
       />
     </div>
   );
