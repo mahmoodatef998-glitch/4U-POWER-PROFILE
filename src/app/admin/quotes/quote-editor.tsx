@@ -1,19 +1,21 @@
 "use client";
 
 import { useActionState, useEffect, useMemo, useState } from "react";
-import { brandModels, type GensetModel } from "@/lib/genset-models";
+import { brandModels, gensetModels, type GensetModel } from "@/lib/genset-models";
 import { PRICE_LISTS, defaultOption, listRef, optionLabel, type PriceBook, type PriceListId } from "@/lib/price-book";
 import {
   DELIVERY_OPTIONS,
   EXTRA_ITEMS,
   STATUSES,
   VAT_RATES,
+  alternatorPhrase,
   deliveryText,
   enclosureOptions,
   generatorItem,
   money,
   searchModels,
   totals,
+  withAlternator,
   type Enclosure,
   type QuoteCustomer,
   type QuoteItem,
@@ -87,8 +89,8 @@ export function QuoteEditor({ initial, initialSearch = "", prices = null }: { in
   const optionsFor = (code: string, list: PriceListId = priceList) => (code ? prices?.models[code]?.[list] : undefined);
   // a new generator line starts at its list price (Leroy-Somer alternator where the list has it)
   const addGenerator = (m: GensetModel, enclosure: Enclosure) => {
-    const item = generatorItem(m, enclosure);
     const opt = defaultOption(optionsFor(m.code));
+    const item = generatorItem(m, enclosure, opt?.alternator);
     setItems((list) => [...list, opt ? { ...item, unit_price: opt.aed, price_key: opt.key } : item]);
     setQ("");
   };
@@ -243,7 +245,9 @@ export function QuoteEditor({ initial, initialSearch = "", prices = null }: { in
                     value={it.price_key && opts.some((o) => o.key === it.price_key && o.aed === it.unit_price) ? it.price_key : ""}
                     onChange={(e) => {
                       const o = opts.find((x) => x.key === e.target.value);
-                      update(i, o ? { unit_price: o.aed, price_key: o.key } : { price_key: undefined });
+                      const m = gensetModels.find((x) => x.code === it.code);
+                      // the description names the alternator of the chosen option (Leroy-Somer frame or 4U Power)
+                      update(i, o ? { unit_price: o.aed, price_key: o.key, ...(m && { description: withAlternator(it.description, alternatorPhrase(m, o.alternator)) }) } : { price_key: undefined });
                     }}
                     className={`${input} font-normal`}
                   >

@@ -1,5 +1,5 @@
 import { gensetModels, type GensetModel } from "./genset-models";
-import type { PriceListId } from "./price-book";
+import { frameName, isLeroySomer, type PriceListId } from "./price-book";
 
 /**
  * Quotations made in /admin/quotes. Pure helpers shared by the editor (client) and the PDF route (server):
@@ -107,11 +107,26 @@ export function enclosureOptions(m: GensetModel): { value: Enclosure; label: str
 const n0 = (v: number) => v.toLocaleString("en-US", { maximumFractionDigits: 1 });
 
 /**
+ * The alternator as a quotation names it: "a Leroy-Somer TAL-A44-H alternator" for TAL / LSA (the price-list frame
+ * when the line came from the list, else the datasheet's), otherwise "a 4U Power alternator".
+ */
+export function alternatorPhrase(m: GensetModel, listAlternator?: string | null): string {
+  const a = listAlternator ?? m.alternator?.leroySomer ?? null;
+  if (!isLeroySomer(a)) return "a 4U Power alternator";
+  const f = frameName(a!);
+  return `a Leroy-Somer ${f ? `${f} ` : ""}alternator`;
+}
+
+/** Puts `phrase` in place of the alternator in a generator description (also fixes older "a brushless alternator" lines). */
+export const withAlternator = (description: string, phrase: string) =>
+  description.replace(/directly coupled to an? [^\n]*? alternator(?= and controlled)/, `directly coupled to ${phrase}`);
+
+/**
  * Quotation line for a generator. The description covers what a buyer checks on a quotation and nothing more:
  * build type, ratings, frequency and speed, the engine, alternator and controller, phase and power factor, and how
  * it is supplied. Dimensions, weights and fuel stay on the datasheet.
  */
-export function generatorItem(m: GensetModel, enclosure: Enclosure): QuoteItem {
+export function generatorItem(m: GensetModel, enclosure: Enclosure, listAlternator?: string | null): QuoteItem {
   const container = enclosure === "enclosed" ? m.enclosed?.container : undefined;
   const build = enclosure === "open" ? "Open Type" : container ? "Containerised" : "Closed Type";
   const housing =
@@ -123,7 +138,7 @@ export function generatorItem(m: GensetModel, enclosure: Enclosure): QuoteItem {
   const lines = [
     `Brand new, heavy-duty industrial grade ${m.brand} diesel generator set, ready to run.`,
     `${n0(m.standbyKva)} kVA Standby / ${n0(m.primeKva)} kVA Prime | 50 Hz | 1500 RPM | 3-Phase | 0.8 Power Factor.`,
-    `Powered by an original ${m.brand} ${m.engine} engine${m.cylinders ? ` (${m.cylinders}-cylinder${m.layout ? ` ${m.layout === "V" ? "V" : "in-line"}` : ""})` : ""}, water-cooled, directly coupled to a brushless alternator and controlled by a Deep Sea Electronics (DSE) digital control module with full monitoring and protection.`,
+    `Powered by an original ${m.brand} ${m.engine} engine${m.cylinders ? ` (${m.cylinders}-cylinder${m.layout ? ` ${m.layout === "V" ? "V" : "in-line"}` : ""})` : ""}, water-cooled, directly coupled to ${alternatorPhrase(m, listAlternator)} and controlled by a Deep Sea Electronics (DSE) digital control module with full monitoring and protection.`,
     housing,
     "Factory assembled, tested and supplied as a complete ready-to-run industrial package.",
   ];

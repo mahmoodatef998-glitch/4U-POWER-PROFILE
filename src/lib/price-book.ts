@@ -22,19 +22,34 @@ export const toAed = (price: number, currency: "AED" | "GBP", gbpRate: number) =
 
 const titleCase = (s: string) => s.toLowerCase().replace(/\b[a-z]/g, (c) => c.toUpperCase()).replace(/\b(Usa|Uk|Eu)\b/g, (m) => m.toUpperCase());
 
+/** A Leroy-Somer frame in the datasheet style: "TAL044H" → "TAL-A44-H", "TAL0473C" → "TAL-A473-C", "LSA50.2M6" → "LSA50.2 M6". Null when there is no frame (the Perkins list just says "TAL"). */
+export function frameName(a: string): string | null {
+  const s = a.trim().toUpperCase();
+  let m = s.match(/^TAL-?A?0?(\d{2,3})-?([A-Z])(?:\s*\/\s*([A-Z]))?$/);
+  if (m) return `TAL-A${m[1]}-${m[2]}${m[3] ? `/${m[3]}` : ""}`;
+  m = s.match(/^LSA\s?(\d{2}\.\d)\s?([A-Z]\d?)$/);
+  return m ? `LSA${m[1]} ${m[2]}` : null;
+}
+
+/**
+ * Naming rule (owner, 26 Oct 2026): a TAL / LSA alternator is Leroy-Somer; any other alternator on the lists is
+ * a "4U Power alternator" — never described as Chinese, by its supplier's brand, or as a generic "brushless" one.
+ */
+export const isLeroySomer = (a: string | null | undefined) => !!a && /^(TAL|LSA)/i.test(a.trim());
 export function alternatorName(a: string): string {
-  if (/^KWISE/i.test(a)) return "Kwise alternator (China)";
-  if (/^CHINA$/i.test(a)) return "China alternator";
-  if (a === "TAL") return "Leroy-Somer TAL alternator";
-  if (/^(TAL|LSA)/i.test(a)) return `Leroy-Somer ${a}`;
-  if (/^LP/i.test(a)) return `LP ${a} alternator`;
-  return a;
+  if (!isLeroySomer(a)) return "4U Power alternator";
+  const f = frameName(a);
+  return f ? `Leroy-Somer ${f}` : "Leroy-Somer alternator";
 }
 
 /** "List: CP455/500 · QSZ13G5" — the price-list line an option comes from, for the editor (never printed on the quotation). */
 export const listRef = (o: Pick<PriceOption, "listLabel" | "listEngine">) => `List: ${o.listLabel} · ${o.listEngine}`;
 
-export const optionLabel = (o: Pick<PriceOption, "alternator" | "origin">) => [alternatorName(o.alternator), o.origin && titleCase(o.origin)].filter(Boolean).join(" · ");
+/** "Leroy-Somer TAL-A44-H · engine India" — for the editor; the origin on the lists is the engine's (Kubota adds the alternator's after a slash, left out). */
+export const optionLabel = (o: Pick<PriceOption, "alternator" | "origin">) => {
+  const engine = o.origin.split("/")[0]!.trim();
+  return [alternatorName(o.alternator), engine && `engine ${titleCase(engine)}`].filter(Boolean).join(" · ");
+};
 
 /** The option a new line starts with: the Leroy-Somer (TAL / LSA) alternator, as on the 4U datasheets, else the first. */
-export const defaultOption = (opts: PriceOption[] | undefined) => opts?.find((o) => /^(TAL|LSA)/.test(o.alternator)) ?? opts?.[0];
+export const defaultOption = (opts: PriceOption[] | undefined) => opts?.find((o) => isLeroySomer(o.alternator)) ?? opts?.[0];

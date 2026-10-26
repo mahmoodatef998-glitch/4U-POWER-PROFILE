@@ -188,7 +188,7 @@ export function modelSpecSections(m: GensetModel, locale: Locale): SpecSection[]
         ...row("Make", "الماركة", "4U · Leroy-Somer | Stamford"),
         ...row("Leroy-Somer frame", "موديل ليروي سومر", m.alternator.leroySomer),
         ...row("Stamford frame", "موديل ستامفورد", m.alternator.stamford),
-        ...row("Type", "النوع", L(locale, "Brushless, self-excited, 4-pole, single bearing", "بدون فرش، تغذية ذاتية، 4 أقطاب، كرسي تحميل واحد")),
+        ...row("Type", "النوع", L(locale, "Self-excited, 4-pole, single bearing", "تغذية ذاتية، 4 أقطاب، كرسي تحميل واحد")),
         ...row("Insulation / protection", "العزل / الحماية", L(locale, "Class H · IP23", "فئة H · IP23")),
         ...row("Voltage regulation", "تنظيم الجهد", "± 1 %"),
       ],

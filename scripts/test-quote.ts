@@ -1,8 +1,8 @@
 import assert from "node:assert/strict";
 import { getModel } from "../src/lib/genset-models";
-import { deliveryText, enclosureOptions, generatorItem, money, printable, searchModels, totals, ukDate, unprintable } from "../src/lib/quote";
+import { alternatorPhrase, deliveryText, enclosureOptions, generatorItem, withAlternator, money, printable, searchModels, totals, ukDate, unprintable } from "../src/lib/quote";
 import { parseQuotePayload } from "../src/lib/quote-form";
-import { alternatorName, defaultOption, listRef, optionLabel, toAed, type PriceOption } from "../src/lib/price-book";
+import { alternatorName, defaultOption, frameName, listRef, optionLabel, toAed, type PriceOption } from "../src/lib/price-book";
 
 // totals: VAT 5% on the untaxed amount, rounded to fils
 assert.deepEqual(totals([{ qty: 1, unit_price: 21250 }]), { subtotal: 21250, discount: 0, vat: 1062.5, total: 22312.5 });
@@ -33,7 +33,7 @@ for (const s of [
   "heavy-duty industrial grade Perkins diesel generator set, ready to run",
   "550 kVA Standby / 500 kVA Prime | 50 Hz | 1500 RPM | 3-Phase | 0.8 Power Factor",
   "original Perkins 2506A-E15TAG2 engine (6-cylinder in-line), water-cooled",
-  "brushless alternator",
+  "directly coupled to a Leroy-Somer TAL-A47-C alternator and controlled by",
   "Deep Sea Electronics (DSE) digital control module with full monitoring and protection",
   "weather-protective industrial canopy (Closed Type)",
   "Factory assembled, tested and supplied as a complete ready-to-run industrial package",
@@ -84,9 +84,26 @@ assert.equal(listRef(opt("TAL0473C", "CHINA")), "List: CP455/500 · QSZ13G5");
 assert.equal(defaultOption([opt("KWISE (CHINA)", "INDIA"), opt("KWISE (CHINA)", "CHINA"), opt("LSA50.2M6", "INDIA")])?.alternator, "LSA50.2M6");
 assert.equal(defaultOption([opt("CHINA", "")])?.alternator, "CHINA");
 assert.equal(defaultOption(undefined), undefined);
-assert.equal(optionLabel(opt("TAL044H", "CHINA")), "Leroy-Somer TAL044H · China");
-assert.equal(optionLabel(opt("TAL040D", "JAPAN / EU")), "Leroy-Somer TAL040D · Japan / EU");
-assert.equal(alternatorName("KWISE (CHINA)"), "Kwise alternator (China)");
-assert.equal(optionLabel(opt("TAL", "")), "Leroy-Somer TAL alternator");
+assert.equal(optionLabel(opt("TAL044H", "CHINA")), "Leroy-Somer TAL-A44-H · engine China");
+assert.equal(optionLabel(opt("TAL040D", "JAPAN / EU")), "Leroy-Somer TAL-A40-D · engine Japan");
+assert.equal(optionLabel(opt("TAL", "")), "Leroy-Somer alternator");
+
+// naming rule: TAL / LSA is Leroy-Somer, anything else is a 4U Power alternator — never "China"/"Kwise"/"brushless"
+for (const a of ["KWISE (CHINA)", "CHINA", "LP274C"]) assert.equal(alternatorName(a), "4U Power alternator");
+assert.equal(optionLabel(opt("KWISE (CHINA)", "INDIA")), "4U Power alternator · engine India");
+assert.equal(frameName("TAL0473C"), "TAL-A473-C");
+assert.equal(frameName("TAL-A44-H"), "TAL-A44-H");
+assert.equal(frameName("TAL42A"), "TAL-A42-A");
+assert.equal(frameName("TAL040C / D"), "TAL-A40-C/D");
+assert.equal(frameName("LSA50.2M6"), "LSA50.2 M6");
+assert.equal(frameName("TAL"), null);
+assert.equal(alternatorPhrase(p550, "KWISE (CHINA)"), "a 4U Power alternator");
+assert.equal(alternatorPhrase(p550, "TAL"), "a Leroy-Somer alternator");
+assert.equal(alternatorPhrase(p550, "TAL0473C"), "a Leroy-Somer TAL-A473-C alternator");
+assert.equal(alternatorPhrase(p550), "a Leroy-Somer TAL-A47-C alternator");
+const kwise = generatorItem(p550, "open", "KWISE (CHINA)").description;
+assert.ok(kwise.includes("directly coupled to a 4U Power alternator and controlled") && !/china|kwise|brushless/i.test(kwise), kwise);
+assert.ok(withAlternator(kwise, "a Leroy-Somer TAL-A47-C alternator").includes("coupled to a Leroy-Somer TAL-A47-C alternator and controlled"));
+assert.ok(withAlternator("…water-cooled, directly coupled to a brushless alternator and controlled by a Deep Sea…", "a 4U Power alternator").includes("coupled to a 4U Power alternator and controlled"));
 
 console.log("quotation tests passed");

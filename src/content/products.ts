@@ -42,7 +42,7 @@ const coreProducts: Product[] = [
     specs: [
       s("Power range", "نطاق القدرة", "10 – 200 kVA (prime / standby)", "10 – 200 ك.ف.أ (أساسي / احتياطي)"),
       s("Engine", "المحرك", "Perkins 400 / 1100 Series, water-cooled", "بيركنز الفئة 400 / 1100، تبريد بالماء"),
-      s("Alternator", "المولّد (الدينامو)", "Brushless, H-class insulation", "بدون فرش، عزل فئة H"),
+      s("Alternator", "المولّد (الدينامو)", "4U · Leroy-Somer | Stamford, H-class insulation", "4U · ليروي سومر | ستامفورد، عزل فئة H"),
       ...genCommon(),
       s("Fuel tank", "خزان الوقود", "8–12 hour base tank", "خزان قاعدي يكفي 8–12 ساعة"),
     ],
@@ -67,7 +67,7 @@ const coreProducts: Product[] = [
     specs: [
       s("Power range", "نطاق القدرة", "250 – 2500 kVA", "250 – 2500 ك.ف.أ"),
       s("Engine", "المحرك", "Perkins 1300 / 2000 / 4000 Series", "بيركنز الفئات 1300 / 2000 / 4000"),
-      s("Alternator", "المولّد (الدينامو)", "Brushless, PMG excitation option", "بدون فرش، مع خيار إثارة PMG"),
+      s("Alternator", "المولّد (الدينامو)", "4U · Leroy-Somer | Stamford, PMG excitation option", "4U · ليروي سومر | ستامفورد، مع خيار إثارة PMG"),
       ...genCommon(),
       s("Parallel operation", "التشغيل المتوازي", "Sync-ready controller", "وحدة تحكم جاهزة للتزامن"),
     ],
@@ -92,7 +92,7 @@ const coreProducts: Product[] = [
     specs: [
       s("Power range", "نطاق القدرة", "20 – 500 kVA", "20 – 500 ك.ف.أ"),
       s("Engine", "المحرك", "Cummins 4B / 6B / 6C / QSL / QSZ family", "كمنز عائلة 4B / 6B / 6C / QSL / QSZ"),
-      s("Alternator", "المولّد (الدينامو)", "Brushless, AVR ±1%", "بدون فرش، منظم جهد ±1%"),
+      s("Alternator", "المولّد (الدينامو)", "4U · Leroy-Somer | Stamford, AVR ±1%", "4U · ليروي سومر | ستامفورد، منظم جهد ±1%"),
       ...genCommon(),
     ],
     spec_sheet_url: DATASHEET,

@@ -33,3 +33,11 @@ than show a frame that no longer matches; the six C450–C550C changes are the s
 (TAL-A47 → TAL-A473) and keep their Stamford frame. The ratings were already the same on both documents.
 The Perkins list gives no alternator frame ("TAL"), so Perkins datasheets keep theirs.
 
+## Naming alternators (owner's rule, 26 Oct 2026)
+
+- A **TAL** or **LSA** alternator is **Leroy-Somer**, with its frame when known (e.g. "Leroy-Somer TAL-A44-H").
+- **Any other alternator** on the lists (Kwise, "China", LP…) is a **"4U Power alternator"**. Never describe an
+  alternator as Chinese, by its supplier's brand, or as a generic "brushless" alternator — on the site, in
+  quotations, datasheets or articles. (`alternatorName`, `alternatorPhrase` in `src/lib/price-book.ts` /
+  `src/lib/quote.ts` apply this.)
+
