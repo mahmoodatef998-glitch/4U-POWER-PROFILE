@@ -120,15 +120,18 @@ export function popularSearches(rows: SearchRow[], locale: "en" | "ar", max = 10
   return out;
 }
 
-/** Compact snapshot for the weekly article routine (data/seo-opportunities.json). */
+/** Compact snapshot for the weekly article run (Supabase seo_snapshots, or data/seo-opportunities.json). */
 export function snapshot(rows: SearchRow[], site: string, days: number) {
   const all = classify(rows);
+  const slim = ({ query, page, position, impressions, clicks, locale, kind }: Opportunity) => ({ query, page, position, impressions, clicks, locale, kind });
   const pick = (k: OpportunityKind, n: number) =>
     all.filter((o) => o.kind === k).slice(0, n).map(({ query, page, position, impressions, clicks, locale }) => ({ query, page, position, impressions, clicks, locale }));
   return {
     generated_at: new Date().toISOString(),
     site,
     days,
+    /** the most-searched relevant queries, whatever their position */
+    top: [...all].sort((a, b) => b.impressions - a.impressions).slice(0, 40).map(slim),
     gaps: pick("gap", 40),
     quick_wins: pick("quick_win", 40),
     push: pick("push", 40),

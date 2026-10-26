@@ -51,4 +51,7 @@ assert.equal(many.length, 2, "max two searches per page");
 const snap = snapshot(rows, "sc-domain:4ugenerators.com", 28);
 assert.equal(snap.gaps.length, 2);
 assert.equal(snap.quick_wins[0]!.query, "500 kva generator price uae");
+// top: the most-searched relevant queries, whatever their position
+assert.equal(snap.top.length, classify(rows).length);
+assert.ok(snap.top.every((t, i) => i === 0 || snap.top[i - 1]!.impressions >= t.impressions), "most impressions first");
 console.log("seo opportunity tests passed");
