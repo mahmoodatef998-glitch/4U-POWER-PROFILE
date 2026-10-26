@@ -44,7 +44,7 @@ export const kubotaModels: GensetModelData[] = [
     boreStrokeMm: "78 × 78.4",
     aspiration: "na",
     governing: "mechanical",
-    alternator: { leroySomer: "TAL-A40-C", stamford: null },
+    alternator: { leroySomer: "TAL-A40-D", stamford: null },
     controller: "DSE4520 MKII",
     fuelLph: { p50: null, p75: 2.43, p100: 3.23, standby: null },
     coolantL: 6.7,

@@ -21,3 +21,15 @@ editor reads them through `src/lib/price-book-data.ts`; `/admin/quotes/prices` s
    - 4U-K22B (V2003-T-E2-BG, 20 kVA prime) vs list KU-22/27 (that row prices 4U-K25)
 4. Insert the rows with a new `edition`; the editor always uses the latest edition. Open and closed (canopy /
    container) builds take the same list price (owner's decision, 26 Oct 2026).
+
+## Datasheets follow the price list
+
+The price list is what 4U actually buys and sells, so it is the reference (owner's decision, 26 Oct 2026). Where
+the Leroy-Somer alternator frame on a 4U datasheet differed from the frame priced on the 2026 list, the datasheet
+was changed to the list's frame (29 models: 4U-C80, C150A, C150B, C275, C450, C455, C500, C550, C550A, C550B,
+C550C, C700, C715, C900B, C1000, C2250, B20, B44, B50, B72, B250, B250B, B300, B350, B440, B500, B550, B660,
+K13). Where the frame itself changed, the Stamford equivalent was removed until the supplier confirms it, rather
+than show a frame that no longer matches; the six C450–C550C changes are the same frame in the list's notation
+(TAL-A47 → TAL-A473) and keep their Stamford frame. The ratings were already the same on both documents.
+The Perkins list gives no alternator frame ("TAL"), so Perkins datasheets keep theirs.
+
