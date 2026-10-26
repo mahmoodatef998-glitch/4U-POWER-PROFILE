@@ -10,8 +10,8 @@ export const PRICE_LISTS: { id: PriceListId; label: string; vat: number }[] = [
   { id: "export", label: "Export price list", vat: 0 },
 ];
 
-/** One way a model is priced on a list: alternator and origin, the list price and that price in AED. */
-export type PriceOption = { key: string; alternator: string; origin: string; currency: "AED" | "GBP"; price: number; aed: number };
+/** One way a model is priced on a list: alternator and origin, the list price and that price in AED, and the list's own model code and engine (to check against the datasheet). */
+export type PriceOption = { key: string; alternator: string; origin: string; currency: "AED" | "GBP"; price: number; aed: number; listLabel: string; listEngine: string };
 /** Options per 4U model code and list, in price-list order. */
 export type PriceBook = { edition: string; gbpRate: number; models: Record<string, Partial<Record<PriceListId, PriceOption[]>>> };
 
@@ -30,6 +30,9 @@ export function alternatorName(a: string): string {
   if (/^LP/i.test(a)) return `LP ${a} alternator`;
   return a;
 }
+
+/** "List: CP455/500 · QSZ13G5" — the price-list line an option comes from, for the editor (never printed on the quotation). */
+export const listRef = (o: Pick<PriceOption, "listLabel" | "listEngine">) => `List: ${o.listLabel} · ${o.listEngine}`;
 
 export const optionLabel = (o: Pick<PriceOption, "alternator" | "origin">) => [alternatorName(o.alternator), o.origin && titleCase(o.origin)].filter(Boolean).join(" · ");
 

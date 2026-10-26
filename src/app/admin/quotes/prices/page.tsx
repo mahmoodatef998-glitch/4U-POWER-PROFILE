@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { brandModels } from "@/lib/genset-models";
-import { PRICE_LISTS, defaultOption, optionLabel } from "@/lib/price-book";
+import { PRICE_LISTS, defaultOption, listRef, optionLabel } from "@/lib/price-book";
 import { loadPriceBook, priceRows } from "@/lib/price-book-data";
 import { money } from "@/lib/quote";
 import { setGbpRate } from "./actions";
@@ -75,7 +75,7 @@ export default async function PricesPage({ searchParams }: { searchParams: Promi
                               );
                             })}
                             <td className="px-4 py-2 text-xs text-muted">
-                              {first ? optionLabel(first) : "Type the price on the quotation"}
+                              {first ? `${optionLabel(first)} · ${listRef(first)}` : "Type the price on the quotation"}
                               {uae.length > 1 && <span className="block">+ {uae.filter((o) => o !== first).map((o) => `${optionLabel(o)} ${money(o.aed)}`).join(" · ")}</span>}
                             </td>
                           </tr>

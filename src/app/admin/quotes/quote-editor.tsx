@@ -2,7 +2,7 @@
 
 import { useActionState, useEffect, useMemo, useState } from "react";
 import { brandModels, type GensetModel } from "@/lib/genset-models";
-import { PRICE_LISTS, defaultOption, optionLabel, type PriceBook, type PriceListId } from "@/lib/price-book";
+import { PRICE_LISTS, defaultOption, listRef, optionLabel, type PriceBook, type PriceListId } from "@/lib/price-book";
 import {
   DELIVERY_OPTIONS,
   EXTRA_ITEMS,
@@ -152,7 +152,7 @@ export function QuoteEditor({ initial, initialSearch = "", prices = null }: { in
                   <p className="text-sm text-muted">
                     {m.standbyKva} kVA standby · {m.primeKva} kVA prime{m.fuelLph ? ` · ${m.fuelLph.p75} L/h @ 75%` : ""}
                   </p>
-                  {prices && <p className={`text-sm font-semibold ${listed ? "" : "text-amber-700"}`}>{listed ? `${listLabel}: AED ${money(listed.aed)} · ${optionLabel(listed)}` : `Not on the ${listLabel}: type the price`}</p>}
+                  {prices && <p className={`text-sm font-semibold ${listed ? "" : "text-amber-700"}`}>{listed ? `${listLabel}: AED ${money(listed.aed)} · ${optionLabel(listed)} · ${listRef(listed)}` : `Not on the ${listLabel}: type the price`}</p>}
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {enclosureOptions(m).map((o) => (
@@ -250,10 +250,14 @@ export function QuoteEditor({ initial, initialSearch = "", prices = null }: { in
                     <option value="">Own price (typed in above)</option>
                     {opts.map((o) => (
                       <option key={o.key} value={o.key}>
-                        {optionLabel(o)} · AED {money(o.aed)}{o.currency === "GBP" ? ` (£${money(o.price)})` : ""}
+                        {optionLabel(o)} · AED {money(o.aed)}{o.currency === "GBP" ? ` (£${money(o.price)})` : ""} · {listRef(o)}
                       </option>
                     ))}
                   </select>
+                  {(() => {
+                    const cur = opts.find((o) => o.key === it.price_key && o.aed === it.unit_price);
+                    return cur ? <span className="text-xs font-normal text-muted">{listRef(cur)}, check it matches {it.code}. Shown here only, never on the PDF.</span> : null;
+                  })()}
                 </label>
               ) : it.code && prices ? (
                 <p className="mt-3 text-xs font-semibold text-amber-700">Not on the {listLabel}: type the price.</p>

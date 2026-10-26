@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { getModel } from "../src/lib/genset-models";
 import { deliveryText, enclosureOptions, generatorItem, money, printable, searchModels, totals, ukDate, unprintable } from "../src/lib/quote";
 import { parseQuotePayload } from "../src/lib/quote-form";
-import { alternatorName, defaultOption, optionLabel, toAed, type PriceOption } from "../src/lib/price-book";
+import { alternatorName, defaultOption, listRef, optionLabel, toAed, type PriceOption } from "../src/lib/price-book";
 
 // totals: VAT 5% on the untaxed amount, rounded to fils
 assert.deepEqual(totals([{ qty: 1, unit_price: 21250 }]), { subtotal: 21250, discount: 0, vat: 1062.5, total: 22312.5 });
@@ -79,7 +79,8 @@ assert.equal(parseQuotePayload(form({ items: [{ title: "Gen", qty: 1, unit_price
 // price book rules: pounds to whole dirhams, Leroy-Somer first, readable labels
 assert.equal(toAed(10000.4, "GBP", 4.91), 49102);
 assert.equal(toAed(12345, "AED", 4.91), 12345);
-const opt = (alternator: string, origin: string): PriceOption => ({ key: `${alternator}|${origin}`, alternator, origin, currency: "AED", price: 1, aed: 1 });
+const opt = (alternator: string, origin: string): PriceOption => ({ key: `${alternator}|${origin}`, alternator, origin, currency: "AED", price: 1, aed: 1, listLabel: "CP455/500", listEngine: "QSZ13G5" });
+assert.equal(listRef(opt("TAL0473C", "CHINA")), "List: CP455/500 · QSZ13G5");
 assert.equal(defaultOption([opt("KWISE (CHINA)", "INDIA"), opt("KWISE (CHINA)", "CHINA"), opt("LSA50.2M6", "INDIA")])?.alternator, "LSA50.2M6");
 assert.equal(defaultOption([opt("CHINA", "")])?.alternator, "CHINA");
 assert.equal(defaultOption(undefined), undefined);

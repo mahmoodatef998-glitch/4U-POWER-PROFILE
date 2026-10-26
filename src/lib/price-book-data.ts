@@ -44,7 +44,16 @@ export async function loadPriceBook(): Promise<PriceBook | null> {
   for (const r of rows) {
     for (const code of r.model_codes) {
       const lists = (models[code] ??= {});
-      (lists[r.list] ??= []).push({ key: optionKey(r.alternator, r.origin), alternator: r.alternator, origin: r.origin, currency: r.currency, price: r.price, aed: toAed(r.price, r.currency, rate) });
+      (lists[r.list] ??= []).push({
+        key: optionKey(r.alternator, r.origin),
+        alternator: r.alternator,
+        origin: r.origin,
+        currency: r.currency,
+        price: r.price,
+        aed: toAed(r.price, r.currency, rate),
+        listLabel: r.label,
+        listEngine: r.engine,
+      });
     }
   }
   return { edition: rows[0]!.edition, gbpRate: rate, models };
