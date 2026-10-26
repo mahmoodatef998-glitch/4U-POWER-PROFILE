@@ -2,6 +2,8 @@ import assert from "node:assert/strict";
 import { getModel } from "../src/lib/genset-models";
 import { alternatorPhrase, deliveryText, enclosureOptions, generatorItem, withAlternator, money, printable, searchModels, totals, ukDate, unprintable } from "../src/lib/quote";
 import { parseQuotePayload } from "../src/lib/quote-form";
+import { describeFilters, filterQuery, filterQuotes, itemsSummary, parseFilters, salesPeople, salesSummary } from "../src/lib/quote-report";
+import type { Quote } from "../src/lib/quote";
 import { alternatorName, defaultOption, frameName, listRef, optionLabel, toAed, type PriceOption } from "../src/lib/price-book";
 
 // totals: VAT 5% on the untaxed amount, rounded to fils
@@ -105,5 +107,27 @@ const kwise = generatorItem(p550, "open", "KWISE (CHINA)").description;
 assert.ok(kwise.includes("directly coupled to a 4U Power alternator and controlled") && !/china|kwise|brushless/i.test(kwise), kwise);
 assert.ok(withAlternator(kwise, "a Leroy-Somer TAL-A47-C alternator").includes("coupled to a Leroy-Somer TAL-A47-C alternator and controlled"));
 assert.ok(withAlternator("…water-cooled, directly coupled to a brushless alternator and controlled by a Deep Sea…", "a 4U Power alternator").includes("coupled to a 4U Power alternator and controlled"));
+
+// filters and the per-salesperson report
+const mk = (number: number, person: string, status: Quote["status"], total: number, date: string, name: string): Quote => ({
+  id: String(number), number, quote_date: date, status, total, subtotal: total, discount: 0, discount_pct: 0, vat: 0, vat_rate: 0,
+  customer: { name, address: "", trn: "", project: "", attention: "", contact: "+971 50 000 0000", email: "", ref: "" },
+  sales: { person, contact: "", email: "" }, items: [{ code: "4U-P550", title: "Gen", description: "", qty: 2, unit: "Units", unit_price: total / 2 }],
+  validity: null, delivery: null, notes: null, price_list: "uae", lead_id: null, created_at: "",
+});
+const qs = [mk(1001, "SHAMSA", "won", 100000, "2026-10-01", "Al Noor LLC"), mk(1002, "Shamsa ", "lost", 50000, "2026-10-10", "Gulf Steel"), mk(1003, "Mahmoud", "sent", 20000, "2026-10-20", "Al Noor Farms"), mk(1004, "Mahmoud", "won", 30000, "2026-11-02", "Delta")];
+assert.deepEqual(salesPeople(qs), ["Mahmoud", "SHAMSA"]);
+const f0 = parseFilters({ q: " al noor ", sales: "shamsa", status: "bogus", min: "1,000", max: "", from: "2026-10-01", to: "x" });
+assert.deepEqual(f0, { q: "al noor", sales: "shamsa", status: "", min: 1000, max: null, from: "2026-10-01", to: "" });
+assert.deepEqual(filterQuotes(qs, f0).map((q) => q.number), [1001]);
+assert.deepEqual(filterQuotes(qs, parseFilters({ q: "qt 1003" })).map((q) => q.number), [1003]);
+assert.deepEqual(filterQuotes(qs, parseFilters({ min: "25000", max: "60000" })).map((q) => q.number), [1002, 1004]);
+assert.deepEqual(filterQuotes(qs, parseFilters({ to: "2026-10-31", status: "won" })).map((q) => q.number), [1001]);
+const rep = salesSummary(qs);
+assert.deepEqual(rep.map((r) => [r.person, r.quotes, r.won, r.lost, r.winRate, r.wonValue]), [["Mahmoud", 2, 1, 0, 1, 30000], ["SHAMSA", 2, 1, 1, 0.5, 100000]]);
+assert.equal(filterQuery(f0), "q=al+noor&sales=shamsa&min=1000&from=2026-10-01");
+assert.equal(filterQuery(f0, { sales: "Mahmoud" }), "q=al+noor&sales=Mahmoud&min=1000&from=2026-10-01");
+assert.equal(describeFilters(parseFilters({})), "All quotations");
+assert.equal(itemsSummary(qs[0]!), "2 × Gen");
 
 console.log("quotation tests passed");

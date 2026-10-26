@@ -11,7 +11,7 @@ type Result<T> = { data: T; error?: undefined } | { data?: undefined; error: str
 export async function listQuotes(): Promise<Result<Quote[]>> {
   const sb = getAdminClient();
   if (!sb) return { error: "Supabase is not configured (SUPABASE_SERVICE_ROLE_KEY)." };
-  const { data, error } = await sb.from("quotations").select("*").order("number", { ascending: false }).limit(500);
+  const { data, error } = await sb.from("quotations").select("*").order("number", { ascending: false }).limit(5000);
   if (error) return { error: missingTable(error.code) ? MIGRATION_HINT : error.message };
   return { data: (data ?? []).map(normalize) };
 }
