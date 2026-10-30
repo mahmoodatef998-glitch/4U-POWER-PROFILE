@@ -29,11 +29,19 @@ assert.equal(searchModels("zzz").length, 0);
 assert.equal(searchModels("152").length, 0);
 const near = nearestAbove("152 kVA")!;
 assert.equal(near.kva, 152);
+assert.equal(near.within, true);
 assert.ok(near.models.length > 0);
 const gap = (m: { standbyKva: number; primeKva: number }) => Math.min(...[m.standbyKva, m.primeKva].map((r) => r - 152).filter((g) => g > 0 && g <= 10));
 assert.ok(near.models.every((m) => gap(m) <= 10));
 assert.deepEqual(near.models.map(gap), [...near.models.map(gap)].sort((x, y) => x - y));
 assert.ok(nearestAbove("cummins 152")!.models.every((m) => m.brand === "Cummins"));
+// nothing within +10 kVA: the nearest larger model of each brand, however far (1600 → Cummins 4U-C1781, 1619 kVA prime)
+const far = nearestAbove("1600")!;
+assert.equal(far.within, false);
+assert.ok(far.models.some((m) => m.code === "4U-C1781"));
+assert.equal(new Set(far.models.map((m) => m.brand)).size, far.models.length);
+assert.ok(far.models.every((m) => m.standbyKva > 1600 || m.primeKva > 1600));
+assert.ok(searchModels("cummins 1500").length === 0 && nearestAbove("cummins 1500")!.models[0]!.code === "4U-C1675");
 assert.equal(nearestAbove("3000")!.models.length, 0);
 assert.equal(nearestAbove("perkins"), null);
 

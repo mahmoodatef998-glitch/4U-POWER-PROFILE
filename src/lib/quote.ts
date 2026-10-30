@@ -187,25 +187,26 @@ export const NEAREST_KVA_STEP = 10;
 
 /**
  * For a rating with no exact model ("152", "152 kva", "perkins 152"): the models just above it, standby or prime
- * up to +10 kVA, closest first. Other words narrow it to a brand or engine. Null when the query has no rating.
+ * up to +10 kVA, closest first. When none is that close (large sets are 100+ kVA apart), the nearest model above
+ * it from each brand, however far (owner's decision, 30 Oct 2026); `within` tells which. Other words narrow it to
+ * a brand or engine. Null when the query has no rating.
  */
-export function nearestAbove(q: string, models: GensetModel[] = gensetModels, max = 8): { kva: number; models: GensetModel[] } | null {
+export function nearestAbove(q: string, models: GensetModel[] = gensetModels, max = 8): { kva: number; within: boolean; models: GensetModel[] } | null {
   const tokens = q.trim().toLowerCase().split(/\s+/).filter((t) => t && t !== "kva");
   const num = tokens.map((t) => /^(\d+(?:\.\d+)?)(?:kva)?$/.exec(t)).find(Boolean);
   const kva = num ? Number(num[1]) : 0;
   if (!(kva > 0)) return null;
   const words = tokens.filter((t) => t !== num![0]);
-  const gap = (m: GensetModel) => Math.min(...[m.standbyKva, m.primeKva].map((r) => r - kva).filter((g) => g > 0 && g <= NEAREST_KVA_STEP), Infinity);
-  return {
-    kva,
-    models: models
-      .filter((m) => words.every((w) => `${m.code} ${m.brand} ${m.engine}`.toLowerCase().includes(w)))
-      .map((m) => ({ m, g: gap(m) }))
-      .filter((x) => x.g !== Infinity)
-      .sort((a, b) => a.g - b.g || a.m.standbyKva - b.m.standbyKva || a.m.code.localeCompare(b.m.code))
-      .slice(0, max)
-      .map((x) => x.m),
-  };
+  // how far above `kva` the model's closer rating (standby or prime) is
+  const above = models
+    .filter((m) => words.every((w) => `${m.code} ${m.brand} ${m.engine}`.toLowerCase().includes(w)))
+    .map((m) => ({ m, g: Math.min(...[m.standbyKva, m.primeKva].map((r) => r - kva).filter((g) => g > 0), Infinity) }))
+    .filter((x) => x.g !== Infinity)
+    .sort((a, b) => a.g - b.g || a.m.standbyKva - b.m.standbyKva || a.m.code.localeCompare(b.m.code));
+  const close = above.filter((x) => x.g <= NEAREST_KVA_STEP);
+  const within = close.length > 0;
+  const picked = within ? close : above.filter((x, i) => above.findIndex((y) => y.m.brand === x.m.brand) === i);
+  return { kva, within, models: picked.slice(0, max).map((x) => x.m) };
 }
 
 /* ------------------------------------------------------------------ PDF text */

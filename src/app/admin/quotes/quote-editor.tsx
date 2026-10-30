@@ -72,7 +72,7 @@ export function QuoteEditor({ initial, initialSearch = "", prices = null }: { in
   const [state, action, pending] = useActionState<SaveState, FormData>(saveQuote, null);
 
   const exact = useMemo(() => searchModels(q), [q]);
-  // no model at exactly the kVA asked for: offer the nearest ones above it (up to +10 kVA)
+  // no model at exactly the kVA asked for: offer the nearest ones above it (up to +10 kVA, else the nearest per brand)
   const nearest = useMemo(() => (exact.length ? null : nearestAbove(q)), [q, exact]);
   const results = exact.length ? exact : (nearest?.models ?? []);
   const t = totals(items, vatRate, discountPct);
@@ -150,7 +150,9 @@ export function QuoteEditor({ initial, initialSearch = "", prices = null }: { in
           <ul className="mt-3 divide-y divide-line rounded-xl border border-line">
             {nearest && results.length > 0 && (
               <li className="bg-amber-50 px-4 py-2 text-sm font-semibold text-amber-800">
-                No {nearest.kva} kVA model: nearest above, up to {nearest.kva + NEAREST_KVA_STEP} kVA
+                {nearest.within
+                  ? `No ${nearest.kva} kVA model: nearest above, up to ${nearest.kva + NEAREST_KVA_STEP} kVA`
+                  : `No ${nearest.kva} kVA model within +${NEAREST_KVA_STEP} kVA: nearest larger model of each brand`}
               </li>
             )}
             {results.map((m) => {
@@ -181,7 +183,7 @@ export function QuoteEditor({ initial, initialSearch = "", prices = null }: { in
               </li>
               );
             })}
-            {!results.length && <li className="px-4 py-3 text-sm text-muted">No model matches “{q}”{nearest ? ` (nor up to ${nearest.kva + NEAREST_KVA_STEP} kVA)` : ""}. Models: {(["Perkins", "Cummins", "Kubota", "Baudouin", "Lister Petter"] as const).map((b) => `${b} ${brandModels(b).length}`).join(" · ")}</li>}
+            {!results.length && <li className="px-4 py-3 text-sm text-muted">No model matches “{q}”{nearest ? ` (none larger than ${nearest.kva} kVA)` : ""}. Models: {(["Perkins", "Cummins", "Kubota", "Baudouin", "Lister Petter"] as const).map((b) => `${b} ${brandModels(b).length}`).join(" · ")}</li>}
           </ul>
         )}
       </section>
