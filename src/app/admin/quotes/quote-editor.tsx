@@ -71,7 +71,15 @@ export function QuoteEditor({ initial, initialSearch = "", prices = null }: { in
   const [q, setQ] = useState(initialSearch);
   const [state, action, pending] = useActionState<SaveState, FormData>(saveQuote, null);
 
-  const exact = useMemo(() => searchModels(q), [q]);
+  // what the price lists call each model ("CP1400", "KU-14 / 18", "KTA50G8"), so a search by list code finds it;
+  // labels that are only a rating ("100 KVA") are left to the kVA search
+  const listAliases = useMemo(() => {
+    const out: Record<string, string[]> = {};
+    for (const [code, lists] of Object.entries(prices?.models ?? {}))
+      out[code] = [...new Set(Object.values(lists).flatMap((opts) => (opts ?? []).flatMap((o) => [o.listLabel, o.listEngine])))].filter((w) => !/^\d+(\.\d+)?\s*kva$/i.test(w));
+    return out;
+  }, [prices]);
+  const exact = useMemo(() => searchModels(q, gensetModels, 8, listAliases), [q, listAliases]);
   // no model at exactly the kVA asked for: offer the nearest ones above it (up to +10 kVA, else the nearest per brand)
   const nearest = useMemo(() => (exact.length ? null : nearestAbove(q)), [q, exact]);
   const results = exact.length ? exact : (nearest?.models ?? []);
@@ -157,6 +165,7 @@ export function QuoteEditor({ initial, initialSearch = "", prices = null }: { in
             )}
             {results.map((m) => {
               const listed = defaultOption(optionsFor(m.code));
+              const others = (optionsFor(m.code) ?? []).filter((o) => o !== listed);
               return (
               <li key={m.slug} className="flex flex-wrap items-center justify-between gap-3 px-4 py-3">
                 <div className="min-w-0">
@@ -167,6 +176,7 @@ export function QuoteEditor({ initial, initialSearch = "", prices = null }: { in
                     {m.standbyKva} kVA standby · {m.primeKva} kVA prime{m.fuelLph ? ` · ${m.fuelLph.p75} L/h @ 75%` : ""}
                   </p>
                   {prices && <p className={`text-sm font-semibold ${listed ? "" : "text-amber-700"}`}>{listed ? `${listLabel}: AED ${money(listed.aed)} · ${optionLabel(listed)} · ${listRef(listed)}` : `Not on the ${listLabel}: type the price`}</p>}
+                  {others.length > 0 && <p className="text-xs text-muted">Also on the list (choose it on the line after adding): {others.map((o) => `${optionLabel(o)} · AED ${money(o.aed)}`).join(" | ")}</p>}
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {enclosureOptions(m).map((o) => (

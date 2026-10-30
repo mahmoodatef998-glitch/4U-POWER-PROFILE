@@ -25,6 +25,12 @@ assert.ok(searchModels("550").every((m) => m.standbyKva === 550 || m.primeKva ==
 assert.ok(searchModels("cummins 200").every((m) => m.brand === "Cummins"));
 assert.equal(searchModels("").length, 0);
 assert.equal(searchModels("zzz").length, 0);
+// engine without punctuation, and the price-list code through aliases
+assert.equal(searchModels("KTA50G8")[0]!.code, "4U-C1675");
+assert.equal(searchModels("cummins kta50g9")[0]!.code, "4U-C1781");
+assert.equal(searchModels("CP1400").length, 0);
+assert.deepEqual(searchModels("CP1400", undefined, 8, { "4U-C1675": ["CP1400", "KTA50G8"] }).map((m) => m.code), ["4U-C1675"]);
+assert.equal(searchModels("cp1275/1400", undefined, 8, { "4U-C1426": ["CP1275/1400"] })[0]!.code, "4U-C1426");
 // no exact rating: the nearest models above it, up to +10 kVA (standby or prime), closest first
 assert.equal(searchModels("152").length, 0);
 const near = nearestAbove("152 kVA")!;

@@ -156,8 +156,12 @@ export function generatorItem(m: GensetModel, enclosure: Enclosure, listAlternat
 
 const squash = (s: string) => s.toLowerCase().replace(/[^a-z0-9.]/g, "");
 
-/** Models matching what the user typed: code ("4U-P550", "p550", "4up550"), kVA ("550") or engine/brand words. */
-export function searchModels(q: string, models: GensetModel[] = gensetModels, max = 8): GensetModel[] {
+/**
+ * Models matching what the user typed: code ("4U-P550", "p550", "4up550"), kVA ("550"), engine/brand words with or
+ * without punctuation ("KTA50G8" finds KTA50-G8) or, through `aliases` (model code → words such as the price-list
+ * code "CP1400" and its engine spelling), what the price list calls it.
+ */
+export function searchModels(q: string, models: GensetModel[] = gensetModels, max = 8, aliases: Record<string, string[]> = {}): GensetModel[] {
   const query = q.trim().toLowerCase();
   if (!query) return [];
   const sq = squash(query);
@@ -165,13 +169,15 @@ export function searchModels(q: string, models: GensetModel[] = gensetModels, ma
   const words = query.split(/\s+/).filter(Boolean);
   const score = (m: GensetModel) => {
     const code = squash(m.code);
-    if (code === sq || code === `4u${sq}`) return 0;
+    const alias = (aliases[m.code] ?? []).map(squash);
+    if (code === sq || code === `4u${sq}` || alias.includes(sq)) return 0;
     if (code.startsWith(sq) || code.startsWith(`4u${sq}`)) return 1;
     if (Number.isFinite(kva) && kva > 0 && (m.standbyKva === kva || m.primeKva === kva)) return 2;
     // a bare number is a rating: only exact kVA (above) counts, not digits inside engine codes
     if (/^\d+(\.\d+)?$/.test(query)) return -1;
-    const hay = `${m.code} ${m.brand} ${m.engine} ${m.standbyKva} ${m.primeKva}`.toLowerCase();
-    if (words.every((w) => hay.includes(w))) return 3;
+    const hay = `${m.code} ${m.brand} ${m.engine} ${m.standbyKva} ${m.primeKva} ${(aliases[m.code] ?? []).join(" ")}`.toLowerCase();
+    const flat = squash(hay);
+    if (words.every((w) => hay.includes(w) || (squash(w).length > 2 && flat.includes(squash(w))))) return 3;
     return -1;
   };
   return models
