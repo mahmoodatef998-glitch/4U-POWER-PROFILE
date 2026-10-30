@@ -182,6 +182,32 @@ export function searchModels(q: string, models: GensetModel[] = gensetModels, ma
     .map((x) => x.m);
 }
 
+/** How far above a requested rating the search still offers a model when none matches it exactly. */
+export const NEAREST_KVA_STEP = 10;
+
+/**
+ * For a rating with no exact model ("152", "152 kva", "perkins 152"): the models just above it, standby or prime
+ * up to +10 kVA, closest first. Other words narrow it to a brand or engine. Null when the query has no rating.
+ */
+export function nearestAbove(q: string, models: GensetModel[] = gensetModels, max = 8): { kva: number; models: GensetModel[] } | null {
+  const tokens = q.trim().toLowerCase().split(/\s+/).filter((t) => t && t !== "kva");
+  const num = tokens.map((t) => /^(\d+(?:\.\d+)?)(?:kva)?$/.exec(t)).find(Boolean);
+  const kva = num ? Number(num[1]) : 0;
+  if (!(kva > 0)) return null;
+  const words = tokens.filter((t) => t !== num![0]);
+  const gap = (m: GensetModel) => Math.min(...[m.standbyKva, m.primeKva].map((r) => r - kva).filter((g) => g > 0 && g <= NEAREST_KVA_STEP), Infinity);
+  return {
+    kva,
+    models: models
+      .filter((m) => words.every((w) => `${m.code} ${m.brand} ${m.engine}`.toLowerCase().includes(w)))
+      .map((m) => ({ m, g: gap(m) }))
+      .filter((x) => x.g !== Infinity)
+      .sort((a, b) => a.g - b.g || a.m.standbyKva - b.m.standbyKva || a.m.code.localeCompare(b.m.code))
+      .slice(0, max)
+      .map((x) => x.m),
+  };
+}
+
 /* ------------------------------------------------------------------ PDF text */
 
 /** Characters outside WinAnsi (the encoding of the standard PDF fonts), other than line breaks. */

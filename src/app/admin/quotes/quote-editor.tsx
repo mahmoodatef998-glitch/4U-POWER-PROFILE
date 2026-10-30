@@ -13,6 +13,8 @@ import {
   enclosureOptions,
   generatorItem,
   money,
+  NEAREST_KVA_STEP,
+  nearestAbove,
   searchModels,
   totals,
   withAlternator,
@@ -69,7 +71,10 @@ export function QuoteEditor({ initial, initialSearch = "", prices = null }: { in
   const [q, setQ] = useState(initialSearch);
   const [state, action, pending] = useActionState<SaveState, FormData>(saveQuote, null);
 
-  const results = useMemo(() => searchModels(q), [q]);
+  const exact = useMemo(() => searchModels(q), [q]);
+  // no model at exactly the kVA asked for: offer the nearest ones above it (up to +10 kVA)
+  const nearest = useMemo(() => (exact.length ? null : nearestAbove(q)), [q, exact]);
+  const results = exact.length ? exact : (nearest?.models ?? []);
   const t = totals(items, vatRate, discountPct);
   const payload = JSON.stringify({ id: initial.id, lead_id: initial.lead_id, quote_date: quoteDate, status, customer, sales, validity, delivery, notes, price_list: priceList, discount_pct: discountPct, vat_rate: vatRate, items });
   // what was last saved (or the empty form): anything else is an unsaved change
@@ -143,6 +148,11 @@ export function QuoteEditor({ initial, initialSearch = "", prices = null }: { in
         />
         {q.trim() && (
           <ul className="mt-3 divide-y divide-line rounded-xl border border-line">
+            {nearest && results.length > 0 && (
+              <li className="bg-amber-50 px-4 py-2 text-sm font-semibold text-amber-800">
+                No {nearest.kva} kVA model: nearest above, up to {nearest.kva + NEAREST_KVA_STEP} kVA
+              </li>
+            )}
             {results.map((m) => {
               const listed = defaultOption(optionsFor(m.code));
               return (
@@ -171,7 +181,7 @@ export function QuoteEditor({ initial, initialSearch = "", prices = null }: { in
               </li>
               );
             })}
-            {!results.length && <li className="px-4 py-3 text-sm text-muted">No model matches “{q}”. Models: {(["Perkins", "Cummins", "Kubota", "Baudouin", "Lister Petter"] as const).map((b) => `${b} ${brandModels(b).length}`).join(" · ")}</li>}
+            {!results.length && <li className="px-4 py-3 text-sm text-muted">No model matches “{q}”{nearest ? ` (nor up to ${nearest.kva + NEAREST_KVA_STEP} kVA)` : ""}. Models: {(["Perkins", "Cummins", "Kubota", "Baudouin", "Lister Petter"] as const).map((b) => `${b} ${brandModels(b).length}`).join(" · ")}</li>}
           </ul>
         )}
       </section>

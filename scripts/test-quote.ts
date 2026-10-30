@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { getModel } from "../src/lib/genset-models";
-import { alternatorPhrase, deliveryText, enclosureOptions, generatorItem, withAlternator, money, printable, searchModels, totals, ukDate, unprintable } from "../src/lib/quote";
+import { alternatorPhrase, deliveryText, enclosureOptions, generatorItem, withAlternator, money, nearestAbove, printable, searchModels, totals, ukDate, unprintable } from "../src/lib/quote";
 import { parseQuotePayload } from "../src/lib/quote-form";
 import { describeFilters, filterQuery, filterQuotes, itemsSummary, parseFilters, salesPeople, salesSummary } from "../src/lib/quote-report";
 import type { Quote } from "../src/lib/quote";
@@ -25,6 +25,17 @@ assert.ok(searchModels("550").every((m) => m.standbyKva === 550 || m.primeKva ==
 assert.ok(searchModels("cummins 200").every((m) => m.brand === "Cummins"));
 assert.equal(searchModels("").length, 0);
 assert.equal(searchModels("zzz").length, 0);
+// no exact rating: the nearest models above it, up to +10 kVA (standby or prime), closest first
+assert.equal(searchModels("152").length, 0);
+const near = nearestAbove("152 kVA")!;
+assert.equal(near.kva, 152);
+assert.ok(near.models.length > 0);
+const gap = (m: { standbyKva: number; primeKva: number }) => Math.min(...[m.standbyKva, m.primeKva].map((r) => r - 152).filter((g) => g > 0 && g <= 10));
+assert.ok(near.models.every((m) => gap(m) <= 10));
+assert.deepEqual(near.models.map(gap), [...near.models.map(gap)].sort((x, y) => x - y));
+assert.ok(nearestAbove("cummins 152")!.models.every((m) => m.brand === "Cummins"));
+assert.equal(nearestAbove("3000")!.models.length, 0);
+assert.equal(nearestAbove("perkins"), null);
 
 // description comes from the datasheet and prints with the standard PDF fonts
 const p550 = getModel("4u-p550")!;
