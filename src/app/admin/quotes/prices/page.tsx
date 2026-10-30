@@ -5,7 +5,7 @@ import { loadPriceBook, priceRows } from "@/lib/price-book-data";
 import { money } from "@/lib/quote";
 import { setGbpRate } from "./actions";
 
-const BRANDS = ["Perkins", "Cummins", "Kubota", "Baudouin"] as const;
+const BRANDS = ["Perkins", "Cummins", "Kubota", "Baudouin", "Lister Petter"] as const;
 
 /** Which 4U model gets which list price, to check the price lists against the datasheets. */
 export default async function PricesPage({ searchParams }: { searchParams: Promise<{ msg?: string }> }) {

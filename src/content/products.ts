@@ -173,6 +173,29 @@ const coreProducts: Product[] = [
   },
   {
     category: "generator",
+    slug: "lister-petter-diesel-generator-80-1100kva",
+    name_en: "Lister Petter Diesel Generator 80–1100 kVA",
+    name_ar: "مولد ديزل ليستر بيتر 80–1100 كيلو فولت أمبير",
+    kva_min: 80,
+    kva_max: 1100,
+    engine_brand: "Lister Petter",
+    fuel_type: "diesel",
+    description_en:
+      "Lister Petter Venus (LP4 / LP6) and Mars Max (LP625) powered sets for commercial buildings, industry and sites: turbocharged, charge-cooled engines with electronic governing, rated for continuous running in ambients up to 52 °C.",
+    description_ar:
+      "مولدات بمحركات ليستر بيتر فئة Venus (LP4 / LP6) وMars Max (LP625) للمباني التجارية والمصانع والمواقع: محركات تيربو مع تبريد هواء الشحن ومنظم سرعة إلكتروني، مصممة للتشغيل المستمر في حرارة محيطة حتى 52°م.",
+    specs: [
+      s("Power range", "نطاق القدرة", "80 – 1100 kVA", "80 – 1100 ك.ف.أ"),
+      s("Engine", "المحرك", "Lister Petter Venus LP4 / LP6 and Mars Max LP625 series", "ليستر بيتر فئة Venus LP4 / LP6 وMars Max LP625"),
+      ...genCommon(),
+    ],
+    spec_sheet_url: DATASHEET,
+    images: ["/images/products/lister-petter-diesel-generator-4u.webp", "/images/products/generator-container-2000kva-4u.webp"],
+    sort_order: 56,
+    is_published: true,
+  },
+  {
+    category: "generator",
     slug: "volvo-penta-generator-80-700kva",
     name_en: "Volvo Penta Generator 80–700 kVA",
     name_ar: "مولد فولفو بنتا 80–700 كيلو فولت أمبير",

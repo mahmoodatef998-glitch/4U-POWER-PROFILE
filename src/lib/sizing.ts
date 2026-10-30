@@ -57,7 +57,7 @@ export const HARMONICS: Record<Harmonics, { label: L10n; factor: number }> = {
 export const DIP_LIMITS = [10, 15, 20, 30] as const;
 
 /** 24-hour average load factor allowed on the prime rating, per the brand datasheets. */
-export const PRIME_LOAD_FACTOR: Record<GensetBrand, number> = { Perkins: 0.8, Cummins: 0.8, Kubota: 0.8, Baudouin: 0.7 };
+export const PRIME_LOAD_FACTOR: Record<GensetBrand, number> = { Perkins: 0.8, Cummins: 0.8, Kubota: 0.8, Baudouin: 0.7, "Lister Petter": 0.8 };
 
 const LR_KVA_PER_HP = 6.29; // NEC 430.7(B) code G, upper bound
 const KW_PER_HP = 0.746;

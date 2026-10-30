@@ -171,7 +171,7 @@ export function QuoteEditor({ initial, initialSearch = "", prices = null }: { in
               </li>
               );
             })}
-            {!results.length && <li className="px-4 py-3 text-sm text-muted">No model matches “{q}”. Models: {(["Perkins", "Cummins", "Kubota", "Baudouin"] as const).map((b) => `${b} ${brandModels(b).length}`).join(" · ")}</li>}
+            {!results.length && <li className="px-4 py-3 text-sm text-muted">No model matches “{q}”. Models: {(["Perkins", "Cummins", "Kubota", "Baudouin", "Lister Petter"] as const).map((b) => `${b} ${brandModels(b).length}`).join(" · ")}</li>}
           </ul>
         )}
       </section>

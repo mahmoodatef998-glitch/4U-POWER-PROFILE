@@ -12,7 +12,7 @@ import { COLOURS, SILENCERS, type Config, type Enclosure } from "@/lib/configura
 const DARK = "#24272c";
 const STEEL = "#3a3f47";
 const RUBBER = "#141518";
-const ENGINE: Record<GensetBrand, string> = { Perkins: "#22509a", Cummins: "#d9ccaa", Kubota: "#7b8591", Baudouin: "#2c66a5" };
+const ENGINE: Record<GensetBrand, string> = { Perkins: "#22509a", Cummins: "#d9ccaa", Kubota: "#7b8591", Baudouin: "#2c66a5", "Lister Petter": "#3d6b4f" };
 const LIGHT_PAINTS = new Set(["white", "grey", "beige", "yellow"]);
 
 type V3 = [number, number, number];

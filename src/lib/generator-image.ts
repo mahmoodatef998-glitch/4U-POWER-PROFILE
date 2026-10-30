@@ -15,6 +15,8 @@ const MEDIUM: Record<string, string> = {
   Cummins: `${P}/cummins-diesel-generator-250-1000kva-4u.webp`,
   "Volvo Penta": `${P}/volvo-penta-diesel-generator-250-1000kva-4u.webp`,
   Baudouin: `${P}/baudouin-diesel-generator-250-1000kva-4u.webp`,
+  // no 250–1000 kVA Lister photo yet: its own set photo rather than the Perkins one (which reads "PERKINS")
+  "Lister Petter": `${P}/lister-petter-diesel-generator-4u.webp`,
 };
 
 export function generatorImageForKva(kva: number, brand?: string | null): string | null {

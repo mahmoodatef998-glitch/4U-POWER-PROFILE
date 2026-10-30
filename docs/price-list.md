@@ -19,6 +19,10 @@ editor reads them through `src/lib/price-book-data.ts`; `/admin/quotes/prices` s
    - 4U-B200 (6M11G4D0/S, 180 kVA prime) vs list BP150/180
    - 4U-K16 (D1703-E2-BG, 15 kVA prime) vs list KU-14/18
    - 4U-K22B (V2003-T-E2-BG, 20 kVA prime) vs list KU-22/27 (that row prices 4U-K25)
+   Lister Petter (models from the Lister engine datasheets, `src/content/lister-models.ts`): the list's
+   `TR219G1 (Air Cooling)` style names match on the engine code. Not linked: the list's SA315G1 (12 kVA) and
+   LP613EG3 (500 kVA) have no datasheet; `LP625SG3` / `LP625G5` are linked to 4U-L695 (LP625EG3) / 4U-L820
+   (LP625EG5) as the same rating — confirm the spelling with the supplier.
 4. Insert the rows with a new `edition`; the editor always uses the latest edition. Open and closed (canopy /
    container) builds take the same list price (owner's decision, 26 Oct 2026).
 

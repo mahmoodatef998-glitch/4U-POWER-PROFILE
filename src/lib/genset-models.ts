@@ -3,6 +3,7 @@ import type { Aspiration, GensetBrand, GensetDim, GensetModel, GensetModelData }
 import { perkinsModels } from "@/content/perkins-models";
 import { baudouinModels } from "@/content/baudouin-models";
 import { kubotaModels } from "@/content/kubota-models";
+import { listerModels } from "@/content/lister-models";
 import { generatorImageForKva } from "./generator-image";
 import type { ConfigModel } from "./configurator";
 import type { SizingModel } from "./sizing";
@@ -40,6 +41,13 @@ export const GENSET_BRANDS: Record<GensetBrand, { ar: string; small: string; lar
     isSmall: () => true,
     image: "/images/products/baudouin-diesel-generator-4u.webp",
   },
+  "Lister Petter": {
+    ar: "ليستر بيتر",
+    small: "lister-petter-generator-7-60kva",
+    large: "lister-petter-diesel-generator-80-1100kva",
+    isSmall: (m) => m.standbyKva <= 72,
+    image: "/images/products/lister-petter-diesel-generator-4u.webp",
+  },
 };
 export const BRANDS = Object.keys(GENSET_BRANDS) as GensetBrand[];
 
@@ -51,6 +59,7 @@ export const gensetModels: GensetModel[] = [
   ...cumminsModels.map(tag("Cummins")).sort(byRating),
   ...kubotaModels.map(tag("Kubota")).sort(byRating),
   ...baudouinModels.map(tag("Baudouin")).sort(byRating),
+  ...listerModels.map(tag("Lister Petter")).sort(byRating),
 ];
 export const brandModels = (brand: GensetBrand) => gensetModels.filter((m) => m.brand === brand);
 
@@ -82,7 +91,7 @@ export const brandList = (locale: Locale) =>
 export const modelImage = (m: GensetModel) => generatorImageForKva(m.standbyKva, m.brand) ?? GENSET_BRANDS[m.brand].image;
 export const modelPath = (m: GensetModel) => `/models/${m.slug}`;
 /** Brand landing page, at the address the old site ranked with ("/perkins-diesel-generators"). */
-export const brandHubPath = (brand: GensetBrand) => `/${brand.toLowerCase()}-diesel-generators`;
+export const brandHubPath = (brand: GensetBrand) => `/${brand.toLowerCase().replace(/\s+/g, "-")}-diesel-generators`;
 
 /** Every model reduced to what the 3D configurator needs (sent to the browser). */
 export const configModels = (): ConfigModel[] =>
@@ -177,7 +186,7 @@ export function modelSpecSections(m: GensetModel, locale: Locale): SpecSection[]
         ...row("Bore × stroke", "القطر × الشوط", m.boreStrokeMm ? `${m.boreStrokeMm} mm` : null),
         ...row("Aspiration", "التنفس", m.aspiration ? ASPIRATION[m.aspiration][locale === "ar" ? 1 : 0] : null),
         ...row("Governing", "منظم السرعة", m.governing === "electronic" ? L(locale, "Electronic", "إلكتروني") : m.governing === "mechanical" ? L(locale, "Mechanical", "ميكانيكي") : null),
-        ...row("Cooling", "التبريد", ambient ? L(locale, `Water cooled, radiator for ${fmt(ambient, "en")} °C ambient`, `تبريد مائي، رادياتير لحرارة محيطة ${fmt(ambient, locale)}°م`) : L(locale, "Water cooled", "تبريد مائي")),
+        ...row("Cooling", "التبريد", m.cooling === "air" ? L(locale, "Air cooled", "تبريد هوائي") : ambient ? L(locale, `Water cooled, radiator for ${fmt(ambient, "en")} °C ambient`, `تبريد مائي، رادياتير لحرارة محيطة ${fmt(ambient, locale)}°م`) : L(locale, "Water cooled", "تبريد مائي")),
         ...row("Coolant capacity", "سعة سائل التبريد", m.coolantL ? `${fmt(m.coolantL, locale)} ${L(locale, "L", "لتر")}` : null),
         ...row("Lube oil capacity", "سعة الزيت", m.oilL ? `${fmt(m.oilL, locale)} ${L(locale, "L", "لتر")}` : null),
       ],

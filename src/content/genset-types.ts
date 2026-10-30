@@ -1,4 +1,4 @@
-export type GensetBrand = "Perkins" | "Cummins" | "Kubota" | "Baudouin";
+export type GensetBrand = "Perkins" | "Cummins" | "Kubota" | "Baudouin" | "Lister Petter";
 
 export type Aspiration =
   | "na"
@@ -47,6 +47,8 @@ export type GensetModelData = {
   breaker?: "ls-mccb" | "ls" | "schneider-acb";
   /** radiator design ambient, °C; 50 unless stated */
   ambientC?: number | null;
+  /** water (radiator) unless stated */
+  cooling?: "air";
 };
 
 export type GensetModel = GensetModelData & { brand: GensetBrand };

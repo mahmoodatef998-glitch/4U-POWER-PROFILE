@@ -96,8 +96,12 @@ function hubFaq(brand: GensetBrand, f: ReturnType<typeof facts>): Faq[] {
     {
       q: { en: `Which alternator and controller come with a ${brand} set?`, ar: `ما الدينامو ولوحة التحكم في مولد ${arName}؟` },
       a: {
-        en: `Alternator: 4U · Leroy-Somer | Stamford. Controller: Deep Sea ${ctrl}, depending on the model. The exact frame and controller for each rating are on its datasheet.`,
-        ar: `الدينامو: 4U · Leroy-Somer | Stamford. لوحة التحكم: Deep Sea ${ctrl} حسب الموديل. موديل الدينامو ولوحة التحكم لكل قدرة موجودان في الداتا شيت الخاصة بها.`,
+        en: ctrl
+          ? `Alternator: 4U · Leroy-Somer | Stamford. Controller: Deep Sea ${ctrl}, depending on the model. The exact frame and controller for each rating are on its datasheet.`
+          : "Alternator: 4U · Leroy-Somer | Stamford. Controller: Deep Sea auto-start (AMF), model confirmed with the quotation. The alternator frame for each rating is on its datasheet.",
+        ar: ctrl
+          ? `الدينامو: 4U · Leroy-Somer | Stamford. لوحة التحكم: Deep Sea ${ctrl} حسب الموديل. موديل الدينامو ولوحة التحكم لكل قدرة موجودان في الداتا شيت الخاصة بها.`
+          : "الدينامو: 4U · Leroy-Somer | Stamford. لوحة التحكم: Deep Sea تشغيل تلقائي (AMF)، ويتحدد الموديل مع عرض السعر. موديل الدينامو لكل قدرة موجود في الداتا شيت الخاصة بها.",
       },
     },
     {
@@ -141,7 +145,7 @@ export async function BrandHub({ brand, locale }: { brand: GensetBrand; locale: 
   const kit = [
     { k: ar ? "المحرك" : "Engine", v: `${brand} ${f.list[0]!.engine} … ${f.list[f.list.length - 1]!.engine}` },
     { k: ar ? "الدينامو" : "Alternator", v: "4U · Leroy-Somer | Stamford" },
-    { k: ar ? "لوحة التحكم" : "Controller", v: `Deep Sea ${f.controllers.join(" / ")}` },
+    { k: ar ? "لوحة التحكم" : "Controller", v: f.controllers.length ? `Deep Sea ${f.controllers.join(" / ")}` : ar ? "Deep Sea (الموديل عند الطلب)" : "Deep Sea (model on request)" },
     { k: ar ? "الهيكل" : "Enclosure", v: ar ? `مفتوح أو كابينة كاتمة للصوت${f.container ? " أو حاوية" : ""}` : `Open skid or silent canopy${f.container ? ", or container" : ""}` },
     { k: ar ? "التردد" : "Frequency", v: ar ? "50 هرتز · 1500 لفة/دقيقة" : "50 Hz · 1500 rpm" },
     { k: ar ? "الضمان" : "Warranty", v: ar ? "12 شهراً / 1,000 ساعة تشغيل" : "12 months / 1,000 running hours" },

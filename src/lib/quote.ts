@@ -138,7 +138,7 @@ export function generatorItem(m: GensetModel, enclosure: Enclosure, listAlternat
   const lines = [
     `Brand new, heavy-duty industrial grade ${m.brand} diesel generator set, ready to run.`,
     `${n0(m.standbyKva)} kVA Standby / ${n0(m.primeKva)} kVA Prime | 50 Hz | 1500 RPM | 3-Phase | 0.8 Power Factor.`,
-    `Powered by an original ${m.brand} ${m.engine} engine${m.cylinders ? ` (${m.cylinders}-cylinder${m.layout ? ` ${m.layout === "V" ? "V" : "in-line"}` : ""})` : ""}, water-cooled, directly coupled to ${alternatorPhrase(m, listAlternator)} and controlled by a Deep Sea Electronics (DSE) digital control module with full monitoring and protection.`,
+    `Powered by an original ${m.brand} ${m.engine} engine${m.cylinders ? ` (${m.cylinders}-cylinder${m.layout ? ` ${m.layout === "V" ? "V" : "in-line"}` : ""})` : ""}, ${m.cooling === "air" ? "air-cooled" : "water-cooled"}, directly coupled to ${alternatorPhrase(m, listAlternator)} and controlled by a Deep Sea Electronics (DSE) digital control module with full monitoring and protection.`,
     housing,
     "Factory assembled, tested and supplied as a complete ready-to-run industrial package.",
   ];
