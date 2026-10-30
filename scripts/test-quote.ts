@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { getModel } from "../src/lib/genset-models";
-import { alternatorPhrase, deliveryText, enclosureOptions, generatorItem, withAlternator, money, nearestAbove, printable, searchModels, totals, ukDate, unprintable } from "../src/lib/quote";
+import { alternatorPhrase, deliveryText, enclosureOptions, generatorItem, withAlternator, money, printable, ratingSearch, searchModels, totals, ukDate, unprintable } from "../src/lib/quote";
 import { parseQuotePayload } from "../src/lib/quote-form";
 import { describeFilters, filterQuery, filterQuotes, itemsSummary, parseFilters, salesPeople, salesSummary } from "../src/lib/quote-report";
 import type { Quote } from "../src/lib/quote";
@@ -31,25 +31,28 @@ assert.equal(searchModels("cummins kta50g9")[0]!.code, "4U-C1781");
 assert.equal(searchModels("CP1400").length, 0);
 assert.deepEqual(searchModels("CP1400", undefined, 8, { "4U-C1675": ["CP1400", "KTA50G8"] }).map((m) => m.code), ["4U-C1675"]);
 assert.equal(searchModels("cp1275/1400", undefined, 8, { "4U-C1426": ["CP1275/1400"] })[0]!.code, "4U-C1426");
-// no exact rating: the nearest models above it, up to +10 kVA (standby or prime), closest first
-assert.equal(searchModels("152").length, 0);
-const near = nearestAbove("152 kVA")!;
-assert.equal(near.kva, 152);
-assert.equal(near.within, true);
-assert.ok(near.models.length > 0);
-const gap = (m: { standbyKva: number; primeKva: number }) => Math.min(...[m.standbyKva, m.primeKva].map((r) => r - 152).filter((g) => g > 0 && g <= 10));
-assert.ok(near.models.every((m) => gap(m) <= 10));
-assert.deepEqual(near.models.map(gap), [...near.models.map(gap)].sort((x, y) => x - y));
-assert.ok(nearestAbove("cummins 152")!.models.every((m) => m.brand === "Cummins"));
-// nothing within +10 kVA: the nearest larger model of each brand, however far (1600 → Cummins 4U-C1781, 1619 kVA prime)
-const far = nearestAbove("1600")!;
-assert.equal(far.within, false);
-assert.ok(far.models.some((m) => m.code === "4U-C1781"));
-assert.equal(new Set(far.models.map((m) => m.brand)).size, far.models.length);
-assert.ok(far.models.every((m) => m.standbyKva > 1600 || m.primeKva > 1600));
-assert.ok(searchModels("cummins 1500").length === 0 && nearestAbove("cummins 1500")!.models[0]!.code === "4U-C1675");
-assert.equal(nearestAbove("3000")!.models.length, 0);
-assert.equal(nearestAbove("perkins"), null);
+// a rating search: everything at or up to +10 kVA above, plus each brand's nearest larger model however far
+const brands = (r: ReturnType<typeof ratingSearch>) => new Set(r!.hits.map((h) => h.m.brand));
+const r152 = ratingSearch("152 kVA")!;
+assert.equal(r152.kva, 152);
+assert.equal(r152.exact, false);
+assert.deepEqual(r152.hits.map((h) => h.gap), [...r152.hits.map((h) => h.gap)].sort((x, y) => x - y));
+assert.ok(r152.hits.every((h) => h.gap > 0 && Math.min(...[h.m.standbyKva, h.m.primeKva].filter((k) => k >= 152)) - 152 === h.gap));
+assert.ok(["Perkins", "Cummins", "Baudouin", "Lister Petter"].every((b) => brands(r152).has(b as never)));
+// 1500: Perkins is 5 kVA above (1505 prime), Cummins 40 above (4U-C1675, 1540 standby) — both shown
+const r1500 = ratingSearch("1500")!;
+assert.ok(r1500.hits.some((h) => h.m.code === "4U-P1656" && h.gap === 5));
+assert.ok(r1500.hits.some((h) => h.m.code === "4U-C1675" && h.gap === 40));
+assert.ok(ratingSearch("1600")!.hits.some((h) => h.m.code === "4U-C1781" && h.gap === 19));
+// exact matches come first with gap 0
+const r150 = ratingSearch("150")!;
+assert.equal(r150.exact, true);
+assert.ok(r150.hits.filter((h) => h.gap === 0).every((h) => h.m.standbyKva === 150 || h.m.primeKva === 150));
+assert.equal(r150.hits[0]!.gap, 0);
+assert.ok(ratingSearch("cummins 1500")!.hits.every((h) => h.m.brand === "Cummins"));
+assert.equal(ratingSearch("3000")!.hits.length, 0);
+assert.equal(ratingSearch("perkins"), null);
+assert.equal(ratingSearch("4U-P550"), null);
 
 // description comes from the datasheet and prints with the standard PDF fonts
 const p550 = getModel("4u-p550")!;
@@ -111,13 +114,17 @@ assert.equal(listRef(opt("TAL0473C", "CHINA")), "List: CP455/500 · QSZ13G5");
 assert.equal(defaultOption([opt("KWISE (CHINA)", "INDIA"), opt("KWISE (CHINA)", "CHINA"), opt("LSA50.2M6", "INDIA")])?.alternator, "LSA50.2M6");
 assert.equal(defaultOption([opt("CHINA", "")])?.alternator, "CHINA");
 assert.equal(defaultOption(undefined), undefined);
-assert.equal(optionLabel(opt("TAL044H", "CHINA")), "Leroy-Somer TAL-A44-H · engine China");
-assert.equal(optionLabel(opt("TAL040D", "JAPAN / EU")), "Leroy-Somer TAL-A40-D · engine Japan");
+// the editor's label says where engine and alternator come from (sales team only; the PDF names just the alternator)
+assert.equal(optionLabel(opt("TAL044H", "CHINA")), "Engine China · Leroy-Somer TAL-A44-H");
+assert.equal(optionLabel(opt("TAL040D", "JAPAN / EU")), "Engine Japan · Leroy-Somer TAL-A40-D (EU)");
+assert.equal(optionLabel(opt("CHINA", "JAPAN / CHINA")), "Engine Japan · 4U Power alternator (China)");
 assert.equal(optionLabel(opt("TAL", "")), "Leroy-Somer alternator");
+assert.equal(optionLabel(opt("CHINA", "")), "4U Power alternator (China)");
+assert.equal(optionLabel(opt("LP274C", "")), "4U Power alternator (LP274C)");
 
 // naming rule: TAL / LSA is Leroy-Somer, anything else is a 4U Power alternator — never "China"/"Kwise"/"brushless"
 for (const a of ["KWISE (CHINA)", "CHINA", "LP274C"]) assert.equal(alternatorName(a), "4U Power alternator");
-assert.equal(optionLabel(opt("KWISE (CHINA)", "INDIA")), "4U Power alternator · engine India");
+assert.equal(optionLabel(opt("KWISE (CHINA)", "INDIA")), "Engine India · 4U Power alternator (China)");
 assert.equal(frameName("TAL0473C"), "TAL-A473-C");
 assert.equal(frameName("TAL-A44-H"), "TAL-A44-H");
 assert.equal(frameName("TAL42A"), "TAL-A42-A");

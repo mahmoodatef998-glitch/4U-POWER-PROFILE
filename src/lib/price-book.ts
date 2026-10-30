@@ -45,10 +45,27 @@ export function alternatorName(a: string): string {
 /** "List: CP455/500 · QSZ13G5" — the price-list line an option comes from, for the editor (never printed on the quotation). */
 export const listRef = (o: Pick<PriceOption, "listLabel" | "listEngine">) => `List: ${o.listLabel} · ${o.listEngine}`;
 
-/** "Leroy-Somer TAL-A44-H · engine India" — for the editor; the origin on the lists is the engine's (Kubota adds the alternator's after a slash, left out). */
+/**
+ * Where the list says the alternator comes from: Kubota's origin column adds it after a slash ("JAPAN / EU"),
+ * the others name it in the alternator column ("KWISE (CHINA)", "CHINA"). Null when the list does not say.
+ */
+export function alternatorOrigin(o: Pick<PriceOption, "alternator" | "origin">): string | null {
+  const after = o.origin.split("/")[1]?.trim();
+  if (after) return titleCase(after);
+  const inBrackets = o.alternator.match(/\(([^)]+)\)/)?.[1]?.trim();
+  if (inBrackets) return titleCase(inBrackets);
+  return /^china$/i.test(o.alternator.trim()) ? "China" : null;
+}
+
+/**
+ * "Engine India · 4U Power alternator (China)", "Engine China · Leroy-Somer TAL-A44-H" — for the sales team in the
+ * editor, so a price can be chosen by where engine and alternator come from. Never printed on the quotation, which
+ * only names the alternator (`alternatorName`). An alternator with no stated origin shows its list code instead.
+ */
 export const optionLabel = (o: Pick<PriceOption, "alternator" | "origin">) => {
   const engine = o.origin.split("/")[0]!.trim();
-  return [alternatorName(o.alternator), engine && `engine ${titleCase(engine)}`].filter(Boolean).join(" · ");
+  const from = alternatorOrigin(o) ?? (isLeroySomer(o.alternator) || !o.alternator.trim() ? null : o.alternator.trim());
+  return [engine && `Engine ${titleCase(engine)}`, `${alternatorName(o.alternator)}${from ? ` (${from})` : ""}`].filter(Boolean).join(" · ");
 };
 
 /** The option a new line starts with: the Leroy-Somer (TAL / LSA) alternator, as on the 4U datasheets, else the first. */

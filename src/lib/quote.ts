@@ -188,31 +188,37 @@ export function searchModels(q: string, models: GensetModel[] = gensetModels, ma
     .map((x) => x.m);
 }
 
-/** How far above a requested rating the search still offers a model when none matches it exactly. */
+/** Models up to this many kVA above the rating searched for are all shown, as well as each brand's nearest. */
 export const NEAREST_KVA_STEP = 10;
 
+export type RatingHit = { m: GensetModel; gap: number };
+
 /**
- * For a rating with no exact model ("152", "152 kva", "perkins 152"): the models just above it, standby or prime
- * up to +10 kVA, closest first. When none is that close (large sets are 100+ kVA apart), the nearest model above
- * it from each brand, however far (owner's decision, 30 Oct 2026); `within` tells which. Other words narrow it to
- * a brand or engine. Null when the query has no rating.
+ * A search by rating ("152", "152 kva", "cummins 1500"; other words narrow it to a brand or engine), the way the
+ * sales team quotes (owner, 30 Oct 2026): every model at the rating or up to +10 kVA above it, and from each brand
+ * its nearest larger model however far above, so every brand is always on offer. `gap` is how far above the asked
+ * rating the model's closer rating (standby or prime) is; 0 is an exact match. Closest first. Null when the query
+ * is not a rating.
  */
-export function nearestAbove(q: string, models: GensetModel[] = gensetModels, max = 8): { kva: number; within: boolean; models: GensetModel[] } | null {
+export function ratingSearch(q: string, models: GensetModel[] = gensetModels, max = 12): { kva: number; exact: boolean; hits: RatingHit[] } | null {
   const tokens = q.trim().toLowerCase().split(/\s+/).filter((t) => t && t !== "kva");
   const num = tokens.map((t) => /^(\d+(?:\.\d+)?)(?:kva)?$/.exec(t)).find(Boolean);
   const kva = num ? Number(num[1]) : 0;
   if (!(kva > 0)) return null;
   const words = tokens.filter((t) => t !== num![0]);
-  // how far above `kva` the model's closer rating (standby or prime) is
-  const above = models
+  const all = models
     .filter((m) => words.every((w) => `${m.code} ${m.brand} ${m.engine}`.toLowerCase().includes(w)))
-    .map((m) => ({ m, g: Math.min(...[m.standbyKva, m.primeKva].map((r) => r - kva).filter((g) => g > 0), Infinity) }))
-    .filter((x) => x.g !== Infinity)
-    .sort((a, b) => a.g - b.g || a.m.standbyKva - b.m.standbyKva || a.m.code.localeCompare(b.m.code));
-  const close = above.filter((x) => x.g <= NEAREST_KVA_STEP);
-  const within = close.length > 0;
-  const picked = within ? close : above.filter((x, i) => above.findIndex((y) => y.m.brand === x.m.brand) === i);
-  return { kva, within, models: picked.slice(0, max).map((x) => x.m) };
+    .map((m) => ({ m, gap: Math.round(Math.min(...[m.standbyKva, m.primeKva].map((r) => r - kva).filter((g) => g >= 0), Infinity) * 10) / 10 }))
+    .filter((h) => h.gap !== Infinity);
+  const nearest = new Map<string, number>();
+  for (const h of all) nearest.set(h.m.brand, Math.min(nearest.get(h.m.brand) ?? Infinity, h.gap));
+  const isNearest = (h: RatingHit) => h.gap === nearest.get(h.m.brand);
+  const byGap = (a: RatingHit, b: RatingHit) => a.gap - b.gap || a.m.standbyKva - b.m.standbyKva || a.m.code.localeCompare(b.m.code);
+  // each brand's nearest always stays; the other close ones fill the rest, closest first
+  const must = all.filter(isNearest);
+  const rest = all.filter((h) => !isNearest(h) && h.gap <= NEAREST_KVA_STEP).sort(byGap);
+  const hits = [...must, ...rest.slice(0, Math.max(0, max - must.length))].sort(byGap);
+  return { kva, exact: hits.some((h) => h.gap === 0), hits };
 }
 
 /* ------------------------------------------------------------------ PDF text */

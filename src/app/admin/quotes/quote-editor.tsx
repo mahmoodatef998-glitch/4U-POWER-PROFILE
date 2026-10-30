@@ -13,8 +13,7 @@ import {
   enclosureOptions,
   generatorItem,
   money,
-  NEAREST_KVA_STEP,
-  nearestAbove,
+  ratingSearch,
   searchModels,
   totals,
   withAlternator,
@@ -79,10 +78,12 @@ export function QuoteEditor({ initial, initialSearch = "", prices = null }: { in
       out[code] = [...new Set(Object.values(lists).flatMap((opts) => (opts ?? []).flatMap((o) => [o.listLabel, o.listEngine])))].filter((w) => !/^\d+(\.\d+)?\s*kva$/i.test(w));
     return out;
   }, [prices]);
-  const exact = useMemo(() => searchModels(q, gensetModels, 8, listAliases), [q, listAliases]);
-  // no model at exactly the kVA asked for: offer the nearest ones above it (up to +10 kVA, else the nearest per brand)
-  const nearest = useMemo(() => (exact.length ? null : nearestAbove(q)), [q, exact]);
-  const results = exact.length ? exact : (nearest?.models ?? []);
+  // a rating ("150", "cummins 1500") lists the closest models at or above it from every brand; anything else
+  // (a code, an engine, a list code) is a text search
+  const rating = useMemo(() => ratingSearch(q), [q]);
+  const results = useMemo(() => rating?.hits ?? searchModels(q, gensetModels, 8, listAliases).map((m) => ({ m, gap: 0 })), [q, rating, listAliases]);
+  // the price option each search result will be added with (default: the Leroy-Somer one, as on the datasheets)
+  const [picked, setPicked] = useState<Record<string, string>>({});
   const t = totals(items, vatRate, discountPct);
   const payload = JSON.stringify({ id: initial.id, lead_id: initial.lead_id, quote_date: quoteDate, status, customer, sales, validity, delivery, notes, price_list: priceList, discount_pct: discountPct, vat_rate: vatRate, items });
   // what was last saved (or the empty form): anything else is an unsaved change
@@ -101,8 +102,9 @@ export function QuoteEditor({ initial, initialSearch = "", prices = null }: { in
   const listLabel = PRICE_LISTS.find((l) => l.id === priceList)!.label;
   const optionsFor = (code: string, list: PriceListId = priceList) => (code ? prices?.models[code]?.[list] : undefined);
   // a new generator line starts at its list price (Leroy-Somer alternator where the list has it)
-  const addGenerator = (m: GensetModel, enclosure: Enclosure) => {
-    const opt = defaultOption(optionsFor(m.code));
+  const addGenerator = (m: GensetModel, enclosure: Enclosure, key?: string) => {
+    const opts = optionsFor(m.code);
+    const opt = opts?.find((o) => o.key === key) ?? defaultOption(opts);
     const item = generatorItem(m, enclosure, opt?.alternator);
     setItems((list) => [...list, opt ? { ...item, unit_price: opt.aed, price_key: opt.key } : item]);
     setQ("");
@@ -156,34 +158,50 @@ export function QuoteEditor({ initial, initialSearch = "", prices = null }: { in
         />
         {q.trim() && (
           <ul className="mt-3 divide-y divide-line rounded-xl border border-line">
-            {nearest && results.length > 0 && (
-              <li className="bg-amber-50 px-4 py-2 text-sm font-semibold text-amber-800">
-                {nearest.within
-                  ? `No ${nearest.kva} kVA model: nearest above, up to ${nearest.kva + NEAREST_KVA_STEP} kVA`
-                  : `No ${nearest.kva} kVA model within +${NEAREST_KVA_STEP} kVA: nearest larger model of each brand`}
+            {rating && results.length > 0 && (
+              <li className={`px-4 py-2 text-sm font-semibold ${rating.exact ? "bg-surface text-muted" : "bg-amber-50 text-amber-800"}`}>
+                {rating.exact ? `${rating.kva} kVA` : `No ${rating.kva} kVA model`}: closest at or above it, every brand. Engine and alternator origin as on the {listLabel} (not printed on the quotation).
               </li>
             )}
-            {results.map((m) => {
-              const listed = defaultOption(optionsFor(m.code));
-              const others = (optionsFor(m.code) ?? []).filter((o) => o !== listed);
+            {results.map(({ m, gap }) => {
+              // cheapest first, so the choice is made on origin and price
+              const opts = [...(optionsFor(m.code) ?? [])].sort((a, b) => a.aed - b.aed);
+              const chosen = opts.find((o) => o.key === picked[m.code]) ?? defaultOption(optionsFor(m.code));
               return (
               <li key={m.slug} className="flex flex-wrap items-center justify-between gap-3 px-4 py-3">
                 <div className="min-w-0">
                   <p className="font-bold">
                     {m.code} <span className="font-normal text-muted">· {m.brand} {m.engine}</span>
+                    {gap > 0 && <span className="ms-2 rounded-full bg-amber-100 px-2 py-0.5 text-xs font-bold text-amber-800">+{gap} kVA</span>}
                   </p>
                   <p className="text-sm text-muted">
                     {m.standbyKva} kVA standby · {m.primeKva} kVA prime{m.fuelLph ? ` · ${m.fuelLph.p75} L/h @ 75%` : ""}
                   </p>
-                  {prices && <p className={`text-sm font-semibold ${listed ? "" : "text-amber-700"}`}>{listed ? `${listLabel}: AED ${money(listed.aed)} · ${optionLabel(listed)} · ${listRef(listed)}` : `Not on the ${listLabel}: type the price`}</p>}
-                  {others.length > 0 && <p className="text-xs text-muted">Also on the list (choose it on the line after adding): {others.map((o) => `${optionLabel(o)} · AED ${money(o.aed)}`).join(" | ")}</p>}
+                  {prices && !opts.length && <p className="text-sm font-semibold text-amber-700">Not on the {listLabel}: type the price</p>}
+                  {opts.length > 0 && (
+                    <div className="mt-2 flex flex-wrap gap-1.5" role="radiogroup" aria-label={`${m.code} price options`}>
+                      {opts.map((o) => (
+                        <button
+                          key={o.key}
+                          type="button"
+                          role="radio"
+                          aria-checked={o === chosen}
+                          onClick={() => setPicked((p) => ({ ...p, [m.code]: o.key }))}
+                          title={listRef(o)}
+                          className={`rounded-lg border px-2.5 py-1 text-start text-xs ${o === chosen ? "border-brand-600 bg-brand-50 font-bold text-ink" : "border-line text-muted hover:border-ink"}`}
+                        >
+                          {optionLabel(o)} · AED {money(o.aed)}
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {enclosureOptions(m).map((o) => (
                     <button
                       key={o.value}
                       type="button"
-                      onClick={() => addGenerator(m, o.value)}
+                      onClick={() => addGenerator(m, o.value, chosen?.key)}
                       className="rounded-lg bg-navy-950 px-3 py-1.5 text-sm font-bold text-white hover:bg-navy-800"
                     >
                       + {o.label}
@@ -193,7 +211,7 @@ export function QuoteEditor({ initial, initialSearch = "", prices = null }: { in
               </li>
               );
             })}
-            {!results.length && <li className="px-4 py-3 text-sm text-muted">No model matches “{q}”{nearest ? ` (none larger than ${nearest.kva} kVA)` : ""}. Models: {(["Perkins", "Cummins", "Kubota", "Baudouin", "Lister Petter"] as const).map((b) => `${b} ${brandModels(b).length}`).join(" · ")}</li>}
+            {!results.length && <li className="px-4 py-3 text-sm text-muted">No model matches “{q}”{rating ? ` (none at or above ${rating.kva} kVA)` : ""}. Models: {(["Perkins", "Cummins", "Kubota", "Baudouin", "Lister Petter"] as const).map((b) => `${b} ${brandModels(b).length}`).join(" · ")}</li>}
           </ul>
         )}
       </section>
