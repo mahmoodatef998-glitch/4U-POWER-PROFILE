@@ -11,21 +11,29 @@ import {
   EXTRA_ITEMS,
   STATUSES,
   VAT_RATES,
+  VOLTS_60,
   alternatorPhrase,
+  amps,
+  check60,
   deliveryText,
   enclosureOptions,
   country,
+  defaultHz,
+  defaultVolts60,
   generatorItem,
   inCurrency,
   listPrice,
   money,
   ratingSearch,
   searchModels,
+  sixtyHz,
   totals,
   withAlternator,
+  type At60,
   type CountryId,
   type Currency,
   type Enclosure,
+  type Hz,
   type QuoteCustomer,
   type QuoteItem,
   type QuoteSales,
@@ -104,6 +112,11 @@ export function QuoteEditor({ initial, initialSearch = "", prices = null, fx = n
   const results = useMemo(() => rating?.hits ?? searchModels(q, gensetModels, 8, listAliases).map((m) => ({ m, gap: 0 })), [q, rating, listAliases]);
   // the price option each search result will be added with (default: the Leroy-Somer one, as on the datasheets)
   const [picked, setPicked] = useState<Record<string, string>>({});
+  // frequency and 60 Hz voltage of the lines added next (a Saudi customer starts at 60 Hz), and 60 Hz ratings typed
+  // in for sets with no 60 Hz datasheet on file
+  const [hz, setHz] = useState<Hz>(() => defaultHz(initial.country));
+  const [volts, setVolts] = useState(() => defaultVolts60(initial.country));
+  const [typed60, setTyped60] = useState<Record<string, { prime: string; standby: string }>>({});
   const t = totals(items, vatRate, discountPct);
   // the same totals in the quotation's currency, as the PDF prints them
   const tc = inCurrency({ items, vat_rate: vatRate, discount_pct: discountPct, currency, fx_rate: fxRate });
@@ -130,10 +143,23 @@ export function QuoteEditor({ initial, initialSearch = "", prices = null, fx = n
   const listLabel = PRICE_LISTS.find((l) => l.id === priceList)!.label;
   const optionsFor = (code: string, list: PriceListId = priceList) => (code ? prices?.models[code]?.[list] : undefined);
   // a new generator line starts at its list price (Leroy-Somer alternator where the list has it)
+  // a set at 60 Hz: its datasheet ratings, or the typed-in ones; `problem` blocks adding when there is no `at`
+  const at60For = (m: GensetModel): { at?: At60; problem?: string } => {
+    const s = sixtyHz(m);
+    if (s.kind === "fifty-only") return { problem: s.reason };
+    if (s.kind === "datasheet") return { at: { prime: s.rating.prime, standby: s.rating.standby, volts, ratedVolts: s.rating.volts } };
+    const t = typed60[m.code];
+    const prime = Number(t?.prime) || 0;
+    const standby = t?.standby ? Number(t.standby) : null;
+    const problem = check60(m, prime, standby) ?? undefined;
+    return { at: prime > 0 && !(standby != null && standby < prime) ? { prime, standby, volts } : undefined, problem };
+  };
   const addGenerator = (m: GensetModel, enclosure: Enclosure, key?: string) => {
     const opts = optionsFor(m.code);
     const opt = opts?.find((o) => o.key === key) ?? defaultOption(opts);
-    const item = generatorItem(m, enclosure, opt?.alternator);
+    const at60 = hz === 60 ? at60For(m).at : undefined;
+    if (hz === 60 && !at60) return;
+    const item = generatorItem(m, enclosure, opt?.alternator, at60);
     setItems((list) => [...list, opt ? { ...item, unit_price: listPrice(opt.aed, countryId), price_key: opt.key } : item]);
     setQ("");
   };
@@ -144,6 +170,8 @@ export function QuoteEditor({ initial, initialSearch = "", prices = null, fx = n
     const c = country(id);
     setCountryId(id);
     setVatRate(c.vat);
+    setHz(defaultHz(id));
+    setVolts(defaultVolts60(id));
     setItems((list) =>
       list.map((it) => {
         const opt = it.price_key ? optionsFor(it.code, c.list)?.find((o) => o.key === it.price_key) : undefined;
@@ -182,6 +210,38 @@ export function QuoteEditor({ initial, initialSearch = "", prices = null, fx = n
             {prices?.gbpSource ? ` Perkins (GBP) at 1 GBP = ${prices.gbpRate} AED, ${FX_SOURCE[prices.gbpSource]}${prices.gbpAt ? ` ${fxTime(prices.gbpAt)}` : ""}.` : ""}
           </span>
         </div>
+        <div className="mt-3 flex flex-wrap items-center gap-2 text-sm">
+          <span className="font-semibold">Frequency</span>
+          <span role="radiogroup" aria-label="Frequency" className="inline-flex overflow-hidden rounded-lg border border-line">
+            {([50, 60] as const).map((f) => (
+              <button
+                key={f}
+                type="button"
+                role="radio"
+                aria-checked={hz === f}
+                onClick={() => setHz(f)}
+                className={`px-3 py-1.5 font-semibold ${hz === f ? "bg-navy-950 text-white" : "text-muted hover:text-ink"}`}
+              >
+                {f} Hz · {f === 50 ? 1500 : 1800} rpm
+              </button>
+            ))}
+          </span>
+          {hz === 60 && (
+            <>
+              <label htmlFor="volts" className="ms-2 font-semibold">Voltage</label>
+              <select id="volts" value={volts} onChange={(e) => setVolts(e.target.value)} className="rounded-lg border border-line px-3 py-1.5 font-semibold">
+                {VOLTS_60.map((v) => (
+                  <option key={v} value={v}>{v} V</option>
+                ))}
+              </select>
+            </>
+          )}
+          <span className="text-xs text-muted">
+            {hz === 60
+              ? "For the lines you add next. Same price as 50 Hz. 60 Hz ratings from the datasheets that give them; for other sets type the supplier's 60 Hz figures."
+              : "For the lines you add next: 50 Hz, 1500 rpm, 400/230 V."}
+          </span>
+        </div>
         <input
           value={q}
           onChange={(e) => setQ(e.target.value)}
@@ -202,6 +262,8 @@ export function QuoteEditor({ initial, initialSearch = "", prices = null, fx = n
               // cheapest first, so the choice is made on origin and price
               const opts = [...(optionsFor(m.code) ?? [])].sort((a, b) => a.aed - b.aed);
               const chosen = opts.find((o) => o.key === picked[m.code]) ?? defaultOption(optionsFor(m.code));
+              const s60 = hz === 60 ? sixtyHz(m) : null;
+              const a60 = hz === 60 ? at60For(m) : null;
               return (
               <li key={m.slug} className="flex flex-wrap items-center justify-between gap-3 px-4 py-3">
                 <div className="min-w-0">
@@ -210,8 +272,37 @@ export function QuoteEditor({ initial, initialSearch = "", prices = null, fx = n
                     {gap > 0 && <span className="ms-2 rounded-full bg-amber-100 px-2 py-0.5 text-xs font-bold text-amber-800">+{gap} kVA</span>}
                   </p>
                   <p className="text-sm text-muted">
-                    {m.standbyKva} kVA standby · {m.primeKva} kVA prime{m.fuelLph ? ` · ${m.fuelLph.p75} L/h @ 75%` : ""}
+                    {hz === 60 && "50 Hz: "}{m.primeKva} kVA prime · {m.standbyKva} kVA standby{hz === 50 && m.fuelLph ? ` · ${m.fuelLph.p75} L/h @ 75%` : ""}
                   </p>
+                  {s60?.kind === "datasheet" && (
+                    <p className="text-sm font-semibold text-ink">
+                      60 Hz: {s60.rating.prime} kVA prime · {s60.rating.standby} kVA standby{s60.rating.volts ? ` (rated at ${s60.rating.volts} V)` : ""} · {amps(s60.rating.prime, volts)} A at {volts} V
+                      <span className="font-normal text-muted"> · {s60.rating.source === "baudouin" ? "Baudouin 60 Hz datasheet" : "Lister Petter 1800 rpm sheet"}</span>
+                      {s60.rating.volts && s60.rating.volts !== volts && <span className="block text-xs font-normal text-amber-700">Rated at {s60.rating.volts} V: the quotation notes that {volts} V output is confirmed with the order.</span>}
+                    </p>
+                  )}
+                  {s60?.kind === "fifty-only" && <p className="text-sm font-semibold text-red-700">{s60.reason}</p>}
+                  {s60?.kind === "manual" && (
+                    <div className="mt-1 flex flex-wrap items-end gap-2 text-xs">
+                      <span className="w-full font-semibold text-amber-700">No 60 Hz datasheet on file: type the supplier&apos;s 60 Hz figures.</span>
+                      {(["prime", "standby"] as const).map((k) => (
+                        <label key={k} className="grid gap-0.5 font-semibold text-muted">
+                          60 Hz {k} kVA
+                          <input
+                            type="number"
+                            min="0"
+                            step="any"
+                            value={typed60[m.code]?.[k] ?? ""}
+                            onChange={(e) => setTyped60((t) => ({ ...t, [m.code]: { prime: t[m.code]?.prime ?? "", standby: t[m.code]?.standby ?? "", [k]: e.target.value } }))}
+                            placeholder={k === "standby" ? "optional" : ""}
+                            className="w-24 rounded-lg border border-line px-2 py-1 text-sm font-semibold text-ink"
+                          />
+                        </label>
+                      ))}
+                      {a60?.at && <span className="pb-1.5 font-semibold text-ink">{amps(a60.at.prime, volts)} A at {volts} V</span>}
+                      {a60?.problem && <span className="w-full text-amber-700">{a60.problem}</span>}
+                    </div>
+                  )}
                   {prices && !opts.length && <p className="text-sm font-semibold text-amber-700">Not on the {listLabel}: type the price</p>}
                   {opts.length > 0 && (
                     <div className="mt-2 flex flex-wrap gap-1.5" role="radiogroup" aria-label={`${m.code} price options`}>
@@ -236,8 +327,9 @@ export function QuoteEditor({ initial, initialSearch = "", prices = null, fx = n
                     <button
                       key={o.value}
                       type="button"
+                      disabled={hz === 60 && !a60?.at}
                       onClick={() => addGenerator(m, o.value, chosen?.key)}
-                      className="rounded-lg bg-navy-950 px-3 py-1.5 text-sm font-bold text-white hover:bg-navy-800"
+                      className="rounded-lg bg-navy-950 px-3 py-1.5 text-sm font-bold text-white hover:bg-navy-800 disabled:cursor-not-allowed disabled:opacity-40"
                     >
                       + {o.label}
                     </button>

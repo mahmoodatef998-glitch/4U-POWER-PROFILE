@@ -1,3 +1,4 @@
+import { RATINGS_60HZ, type Rating60 } from "@/content/genset-60hz";
 import { gensetModels, type GensetModel } from "./genset-models";
 import { frameName, isLeroySomer, type PriceListId } from "./price-book";
 
@@ -162,12 +163,51 @@ export function alternatorPhrase(m: GensetModel, listAlternator?: string | null)
 export const withAlternator = (description: string, phrase: string) =>
   description.replace(/directly coupled to an? [^\n]*? alternator(?= and controlled)/, `directly coupled to ${phrase}`);
 
+/* ------------------------------------------------------------------ 50 / 60 Hz */
+
+export type Hz = 50 | 60;
+/** Standard three-phase voltages at 60 Hz (line / phase). */
+export const VOLTS_60 = ["480/277", "440/254", "416/240", "400/230", "380/220", "220/127", "208/120"] as const;
+/** The usual 60 Hz voltage for the customer's country (Saudi tenders mostly ask for 380/220 V). */
+export const defaultVolts60 = (id: CountryId) => (id === "SA" ? "380/220" : "480/277");
+/** The frequency a new line starts at: Saudi Arabia's grid is 60 Hz, the others here are 50 Hz. */
+export const defaultHz = (id: CountryId): Hz => (id === "SA" ? 60 : 50);
+
+/** Rated current of a three-phase set, I = S / (√3 · V line), to the ampere. */
+export const amps = (kva: number, volts: string) => Math.round((kva * 1000) / (Math.sqrt(3) * Number(volts.split("/")[0])));
+
+/** What is known about a set at 60 Hz / 1800 rpm: datasheet ratings, a 50 Hz-only build, or nothing on file. */
+export type SixtyHz = { kind: "datasheet"; rating: Rating60 } | { kind: "fifty-only"; reason: string } | { kind: "manual" };
+
+export function sixtyHz(m: GensetModel): SixtyHz {
+  const r = RATINGS_60HZ[m.engine];
+  if (r) return { kind: "datasheet", rating: r };
+  if (m.brand === "Baudouin" && m.engine.endsWith("/5")) return { kind: "fifty-only", reason: "50 Hz engine build (…/5), not offered at 60 Hz" };
+  return { kind: "manual" };
+}
+
+/**
+ * A typed-in 60 Hz rating that is out of line with the 50 Hz one, or null when it looks right. On the datasheets
+ * the 60 Hz prime is 1.00–1.26 × the 50 Hz prime and standby is at or above prime.
+ */
+export function check60(m: GensetModel, prime: number, standby: number | null): string | null {
+  if (!(prime > 0)) return "Type the 60 Hz prime kVA from the supplier's 60 Hz data.";
+  if (standby != null && standby < prime) return "Standby can't be below prime.";
+  const r = prime / m.primeKva;
+  if (r < 0.95 || r > 1.3) return `Check it: ${n0(prime)} kVA is ${n0(r * 100)} % of the 50 Hz prime (${n0(m.primeKva)} kVA); at 60 Hz sets usually give the same to about 25 % more.`;
+  return null;
+}
+
+/** A generator line at 60 Hz: prime / standby kVA, the voltage it is quoted at and the voltage its ratings are given at. */
+export type At60 = { prime: number; standby: number | null; volts: string; ratedVolts?: string | null };
+
 /**
  * Quotation line for a generator. The description covers what a buyer checks on a quotation and nothing more:
  * build type, ratings, frequency and speed, the engine, alternator and controller, phase and power factor, and how
- * it is supplied. Dimensions, weights and fuel stay on the datasheet.
+ * it is supplied. Dimensions, weights and fuel stay on the datasheet. At 60 Hz (same set, same price) it gives the
+ * 60 Hz ratings, 1800 rpm, the voltage and the rated current at that voltage.
  */
-export function generatorItem(m: GensetModel, enclosure: Enclosure, listAlternator?: string | null): QuoteItem {
+export function generatorItem(m: GensetModel, enclosure: Enclosure, listAlternator?: string | null, at60?: At60): QuoteItem {
   const container = enclosure === "enclosed" ? m.enclosed?.container : undefined;
   const build = enclosure === "open" ? "Open Type" : container ? "Containerised" : "Closed Type";
   const housing =
@@ -178,14 +218,24 @@ export function generatorItem(m: GensetModel, enclosure: Enclosure, listAlternat
         : "Packaged inside a sound-attenuated, weather-protective industrial canopy (Closed Type).";
   const lines = [
     `Brand new, heavy-duty industrial grade ${m.brand} diesel generator set, ready to run.`,
-    `${n0(m.primeKva)} kVA Prime / ${n0(m.standbyKva)} kVA Standby | 50 Hz | 1500 RPM | 3-Phase | 0.8 Power Factor.`,
+    ...(at60
+      ? [
+          `${n0(at60.prime)} kVA Prime${at60.standby ? ` / ${n0(at60.standby)} kVA Standby` : ""} | 60 Hz | 1800 RPM | 3-Phase | 0.8 Power Factor | ${at60.volts} V.`,
+          `Rated current at ${at60.volts} V: ${amps(at60.prime, at60.volts)} A prime${at60.standby ? ` / ${amps(at60.standby, at60.volts)} A standby` : ""}.`,
+          ...(at60.ratedVolts && at60.ratedVolts !== at60.volts
+            ? [`60 Hz ratings as per datasheet at ${at60.ratedVolts} V; the output at ${at60.volts} V is confirmed with the order (alternator voltage derating may apply).`]
+            : []),
+        ]
+      : [`${n0(m.primeKva)} kVA Prime / ${n0(m.standbyKva)} kVA Standby | 50 Hz | 1500 RPM | 3-Phase | 0.8 Power Factor.`]),
     `Powered by an original ${m.brand} ${m.engine} engine${m.cylinders ? ` (${m.cylinders}-cylinder${m.layout ? ` ${m.layout === "V" ? "V" : "in-line"}` : ""})` : ""}, ${m.cooling === "air" ? "air-cooled" : "water-cooled"}, directly coupled to ${alternatorPhrase(m, listAlternator)} and controlled by a Deep Sea Electronics (DSE) digital control module with full monitoring and protection.`,
     housing,
     "Factory assembled, tested and supplied as a complete ready-to-run industrial package.",
   ];
   return {
     code: m.code,
-    title: `${m.code} — ${m.brand} Diesel Generator Set ${n0(m.primeKva)} kVA Prime / ${n0(m.standbyKva)} kVA Standby, ${build}`,
+    title: at60
+      ? `${m.code} — ${m.brand} Diesel Generator Set ${n0(at60.prime)} kVA Prime${at60.standby ? ` / ${n0(at60.standby)} kVA Standby` : ""}, 60 Hz, ${build}`
+      : `${m.code} — ${m.brand} Diesel Generator Set ${n0(m.primeKva)} kVA Prime / ${n0(m.standbyKva)} kVA Standby, ${build}`,
     description: lines.join("\n"),
     qty: 1,
     unit: "Units",

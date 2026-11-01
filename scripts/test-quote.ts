@@ -2,7 +2,8 @@ import assert from "node:assert/strict";
 import { gensetModels, getModel } from "../src/lib/genset-models";
 import { LEGACY_EXACT } from "../src/lib/legacy-exact";
 import { MODEL_RENAMES, currentModelSlug } from "../src/lib/model-renames";
-import { alternatorPhrase, countryOf, deliveryText, enclosureOptions, generatorItem, inCurrency, listPrice, withAlternator, money, printable, ratingSearch, searchModels, totals, ukDate, unprintable } from "../src/lib/quote";
+import { RATINGS_60HZ } from "../src/content/genset-60hz";
+import { alternatorPhrase, amps, check60, countryOf, defaultHz, defaultVolts60, sixtyHz, deliveryText, enclosureOptions, generatorItem, inCurrency, listPrice, withAlternator, money, printable, ratingSearch, searchModels, totals, ukDate, unprintable } from "../src/lib/quote";
 import { parseQuotePayload } from "../src/lib/quote-form";
 import { describeFilters, filterQuery, filterQuotes, itemsSummary, parseFilters, salesPeople, salesSummary } from "../src/lib/quote-report";
 import type { Quote } from "../src/lib/quote";
@@ -195,5 +196,46 @@ assert.equal(filterQuery(f0), "q=al+noor&sales=shamsa&min=1000&from=2026-10-01")
 assert.equal(filterQuery(f0, { sales: "Mahmoud" }), "q=al+noor&sales=Mahmoud&min=1000&from=2026-10-01");
 assert.equal(describeFilters(parseFilters({})), "All quotations");
 assert.equal(itemsSummary(qs[0]!), "2 × Gen");
+
+// 60 Hz: datasheet ratings where published, same set and price, 1800 rpm, rated current at the quoted voltage
+const b100 = getModel("4u-b100")!;
+const s60 = sixtyHz(b100);
+assert.equal(s60.kind, "datasheet");
+assert.equal(amps(113, "480/277"), 136, "matches the Baudouin sheet's 136 A");
+assert.equal(amps(125, "480/277"), 150);
+assert.equal(amps(113, "380/220"), 172);
+for (const [engine, r] of Object.entries(RATINGS_60HZ)) {
+  assert.ok(Math.abs(r.primeKw - 0.8 * r.prime) <= 1.01 && Math.abs(r.standbyKw - 0.8 * r.standby) <= 1.01, `${engine} kW = 0.8 × kVA`);
+  assert.ok(r.standby >= r.prime, `${engine} standby ≥ prime`);
+  assert.ok(gensetModels.some((m) => m.engine === engine), `${engine} is a model on the site`);
+}
+const b100at60 = generatorItem(b100, "enclosed", null, { prime: 113, standby: 125, volts: "480/277", ratedVolts: "480/277" });
+assert.equal(b100at60.title, "4U-B100 — Baudouin Diesel Generator Set 113 kVA Prime / 125 kVA Standby, 60 Hz, Closed Type");
+assert.equal(b100at60.code, "4U-B100");
+assert.ok(b100at60.description.includes("113 kVA Prime / 125 kVA Standby | 60 Hz | 1800 RPM | 3-Phase | 0.8 Power Factor | 480/277 V."));
+assert.ok(b100at60.description.includes("Rated current at 480/277 V: 136 A prime / 150 A standby."));
+assert.ok(!b100at60.description.includes("derating"), "quoted at the rated voltage: no note");
+const ksa = generatorItem(b100, "enclosed", null, { prime: 113, standby: 125, volts: "380/220", ratedVolts: "480/277" });
+assert.ok(ksa.description.includes("Rated current at 380/220 V: 172 A prime / 190 A standby."));
+assert.ok(ksa.description.includes("60 Hz ratings as per datasheet at 480/277 V; the output at 380/220 V is confirmed with the order"));
+assert.ok(!ksa.description.includes("50 Hz"), "no 50 Hz line on a 60 Hz quotation");
+// sets that keep their 50 Hz rating at 60 Hz (no fixed factor)
+assert.equal(RATINGS_60HZ["6M21G8D0/S"]!.prime, 500);
+assert.equal(sixtyHz(getModel("4u-b45")!).kind, "fifty-only", "Baudouin …/5 is a 50 Hz build");
+assert.equal(sixtyHz(getModel("4u-p500")!).kind, "manual");
+assert.equal(sixtyHz(getModel("4u-l12-5")!).kind, "datasheet");
+// typed-in figures: prime needed, standby ≥ prime, and a ratio far from 50 Hz is flagged
+const p500 = getModel("4u-p500")!;
+assert.match(check60(p500, 0, null)!, /Type the 60 Hz prime/);
+assert.equal(check60(p500, 560, 616), null);
+assert.match(check60(p500, 560, 500)!, /Standby can't be below prime/);
+assert.match(check60(p500, 800, null)!, /Check it/);
+const p500at60 = generatorItem(p500, "open", null, { prime: 560, standby: null, volts: "480/277" });
+assert.equal(p500at60.title, "4U-P500 — Perkins Diesel Generator Set 560 kVA Prime, 60 Hz, Open Type");
+assert.ok(p500at60.description.includes("Rated current at 480/277 V: 674 A prime."));
+assert.equal(defaultHz("SA"), 60);
+assert.equal(defaultHz("AE"), 50);
+assert.equal(defaultVolts60("SA"), "380/220");
+assert.equal(defaultVolts60("XX"), "480/277");
 
 console.log("quotation tests passed");
