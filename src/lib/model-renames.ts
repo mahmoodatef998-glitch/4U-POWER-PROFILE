@@ -25,7 +25,7 @@ export const MODEL_RENAMES: [string, string][] = [
   ["4u-k16", "4u-k14"], ["4u-k22", "4u-k20"], ["4u-k22b", "4u-k22-5"],
   ["4u-k25", "4u-k22-5"], ["4u-k32", "4u-k30"], ["4u-k40", "4u-k36"], ["4u-b20", "4u-b18"], ["4u-b25", "4u-b23"],
   ["4u-b35", "4u-b32"], ["4u-b44", "4u-b40"], ["4u-b55", "4u-b50"], ["4u-b72", "4u-b65"], ["4u-b88", "4u-b80"],
-  ["4u-b110", "4u-b100"], ["4u-b165", "4u-b150"], ["4u-b250b", "4u-b230"], ["4u-b300", "4u-b275"],
+  ["4u-b110", "4u-b100"], ["4u-b165", "4u-b130"], ["4u-b250b", "4u-b230"], ["4u-b300", "4u-b275"],
   ["4u-b350", "4u-b320"], ["4u-b440", "4u-b400"], ["4u-b550", "4u-b500"], ["4u-b660", "4u-b600"],
   ["4u-b715", "4u-b650"], ["4u-b715b", "4u-b650b"], ["4u-b825", "4u-b750"], ["4u-b1000", "4u-b900"],
   ["4u-l11", "4u-l10"], ["4u-l14", "4u-l12-5"], ["4u-l18", "4u-l16"], ["4u-l23", "4u-l21"], ["4u-l28", "4u-l25"],
@@ -39,7 +39,7 @@ export const MODEL_RENAMES: [string, string][] = [
   ["4u-c1109", "4u-c1000"],
   // ratings corrected on 1 Nov 2026 against Baudouin's rating tables and Kubota's engine data (docs/price-list.md);
   // 4U-K20B was the V2003-T-E2-BG of 4U-K22.5 at a derated 20 / 22 kVA
-  ["4u-b66", "4u-b65"], ["4u-b180", "4u-b150b"], ["4u-k15", "4u-k14"], ["4u-k20b", "4u-k22-5"],
+  ["4u-b66", "4u-b65"], ["4u-b180", "4u-b150"], ["4u-b150b", "4u-b150"], ["4u-k15", "4u-k14"], ["4u-k20b", "4u-k22-5"],
 ];
 
 const BY_OLD = new Map(MODEL_RENAMES);

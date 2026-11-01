@@ -17,25 +17,27 @@ editor reads them through `src/lib/price-book-data.ts`; `/admin/quotes/prices` s
    Cummins = 50 Hz standby (CP60/68 is 4BTA3.9-G2 at 60 / 68 kVA); Kubota = probably 60 Hz prime, unconfirmed. So
    the labels are not used as 60 Hz data (`src/content/genset-60hz.ts` takes datasheets only). Small rounding gaps
    (≤ 4 %) are the same genset. **Do not link** where the gap is real; the price is typed per quotation until the
-   supplier confirms. Still unlinked:
-   - 4U-B150 (6M11G2D0/S, 150 kVA prime) vs list BP130/150. Baudouin's 6M11 table rates this engine 150 / 165 kVA
-     at 1500 rpm (138 / 152 kWm gross), so 4U keeps 150. The list's 130 at 50 Hz with 150 at 60 Hz fits a smaller
-     alternator (an alternator gives ≈ 15 % more at 60 Hz): ask the supplier which frame their BP130 has.
+   supplier confirms. None left: the four gaps of 26 Oct 2026 were rating errors on the 4U sheets (below).
 
-   Ratings corrected on 1 Nov 2026 (owner's go-ahead), each checked against Baudouin's published rating tables or
-   Kubota's engine data and against the engine's power (kWe ÷ gross kWm is 0.80–0.90 across the Baudouin range;
-   a small alternator is 0.85–0.87 efficient). Old URLs redirect (`src/lib/model-renames.ts`):
-   - 4U-B180 → **4U-B150B** (6M11G4D0/S): 50 Hz 150 / 165 kVA (Baudouin datasheet: 138 / 152 kWm at 1500 rpm). The
-     4U sheet's 180 / 200 was its 1800 rpm rating (Baudouin: 181 / 200 kVA). Same alternator frame as 4U-B150.
-     Now matches BP150/180 and is linked to it.
+   Ratings corrected on 1 Nov 2026 (owner's go-ahead) from the manufacturers' published data: Baudouin's rating
+   tables (baudouin.com engine pages and the Nov 2025 rating cards) and engine datasheets, Kubota's engine pages and
+   BG catalogue (engine.kubota.com: "-BG" engines are the 1800 rpm builds, "-BG2" the 1500 rpm ones). Each is also
+   checked against the engine's power (kWe ÷ gross kWm is 0.80–0.90 across Baudouin). Old URLs redirect
+   (`src/lib/model-renames.ts`):
+   - 4U-B150 → **4U-B130** (6M11G2D0/S): 130 / 143 kVA. Baudouin lists this engine only at 60 Hz (150 / 165 kVA from
+     138 / 152 kWm); its datasheet gives 120 / 132 kWm at 1500 rpm, which at the 0.87 of the 6M11G4D0/S is
+     104 / 115 kWe. The 4U sheet carried the 60 Hz rating as 50 Hz. Matches BP130/150 and is linked to it.
+   - 4U-B180 → **4U-B150** (6M11G4D0/S): 150 / 165 kVA (Baudouin table, 50 Hz); 181 / 200 is its 60 Hz rating.
+     Matches BP150/180 and is linked to it. Fuel at 1500 rpm from its datasheet.
+   - Both 6M11: 6.75 L, 105 × 130 mm (the sheets said 6.5 L, 105 × 124).
    - 4U-B200 (6M16G2D0/S): standby 250 → **220 kVA** / 176 kWe (Baudouin 6M16 table: 200 / 220 at 1500 rpm,
      225 / 250 at 1800 rpm). 250 kVA = 200 kWe would need 0.93 of the 216 kWm gross.
    - 4U-B66 → **4U-B65** (4M10G2D0/S): 50 Hz prime 65 kVA / 52 kWe (Baudouin 4M10 table: 65 / 72); the list says
      BP65. 60 Hz standby 83 → **85 kVA** / 68 kWe (Baudouin: 75 / 85 at 1800 rpm).
-   - 4U-B18 at 60 Hz (4M06G2D0/S): prime 20 → **23 kVA** / 18 kWe, as the list (BP18/23) and the 60 Hz sets built
-     on this engine (23 / 25 kVA); 20 / 25 was off the sheet's own ratio (1.25) and engine power (0.70).
-   - 4U-K15 → **4U-K14** (D1703-E2-BG): prime 14 kVA. The engine gives 15.1 kWm standby at 1500 rpm, so 16 kVA
-     standby (12.8 kWe, 0.85) stands but 15 kVA prime (12 kWe) would need 0.92 from a 12 kW alternator. Matches
+   - 4U-B18 at 60 Hz (4M06G2D0/S): prime 20 → **23 kVA** / 18 kWe (Baudouin 4M06 table: 23 / 25 kVA at 1800 rpm;
+     the list says BP18/23).
+   - 4U-K15 → **4U-K14** (D1703): prime 14 kVA. Kubota: 12.8 kW continuous / 15.0 kW standby at 1500 rpm (BG2), so
+     16 kVA standby (12.8 kWe, 0.85) stands but 15 kVA prime (12 kWe) would need 0.94 from a 12 kW alternator. Matches
      KU-14/18 and is linked to it. Fuel "on request": its sheet repeated 4U-K12.5's figures.
    - 4U-K20B removed (redirects to 4U-K22.5): the same V2003-T-E2-BG at a derated 20 / 22 kVA. The engine's
      20.4 kWm continuous / 22.5 kWm at 1500 rpm gives 22.5 / 25 kVA (0.88 / 0.89), as 4U-K22.5 and KU-22/27.
@@ -43,8 +45,13 @@ editor reads them through `src/lib/price-book-data.ts`; `/admin/quotes/prices` s
    Checked and left as they are: 4M10G4D0/S, 4M10G6D0/S, 6M16G4D0/S, 6M16G6D0/S, 6M21G2D0/S, 6M21G8D0/S,
    6M33G1D0/S, 6M33G6D0/S match Baudouin's tables at both speeds. 4U-L66 (SA441G2) 66 / 72 kVA fits its
    59 / 66.4 kWm engine (0.90 / 0.87); the list's "68 KVA" is rounding. TR661G1 stays out: its 1500 rpm standby,
-   118 kVA / 95 kWe from 96 kWm, is impossible (prime 95 kVA must be 76 kWe, not 86). The "net" engine figures
-   on the 4U sheets of 6M11G2D0/S and 6M11G4D0/S (fan losses of 24–31 kW) are wrong: use gross.
+   118 kVA / 95 kWe from 96 kWm, is impossible (prime 95 kVA must be 76 kWe, not 86). Baudouin 6M33G1D0/S
+   650 / 715 kVA and 12M26G1000/5 900 / 1000 kVA at 50 Hz are on the Nov 2025 card. Kubota at 1500 rpm (BG2):
+   every 4U rating is within the engine's power; 4U-K30 (30 kVA from 26.3 kW continuous) is at the edge but within
+   ±5 %, 4U-K12.5 is conservative. The 4U Kubota sheets name the "-BG" (1800 rpm) engine; at 50 Hz it is the BG2
+   build of the same engine.
+   Not published openly: Lister Petter ratings (dual 50 / 60 Hz engines, sheets on request), Cummins and Perkins
+   (their sites refuse automated access): 60 Hz figures for these come from the supplier's sheets.
    Lister Petter (models from the Lister engine datasheets, `src/content/lister-models.ts`): the list's
    `TR219G1 (Air Cooling)` style names match on the engine code. Not linked: the list's SA315G1 (12 kVA) and
    LP613EG3 (500 kVA) have no datasheet; `LP625SG3` / `LP625G5` are linked to 4U-L638 (LP625EG3) / 4U-L750

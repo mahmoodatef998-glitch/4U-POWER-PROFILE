@@ -38,8 +38,8 @@ assert.equal(currentModelSlug("4u-c1675"), "4u-c1400");
 assert.equal(currentModelSlug("4u-p150"), "4u-p150", "now the 150 kVA prime set, a live page");
 // ratings corrected against Baudouin's rating tables and Kubota's engine data (docs/price-list.md)
 const rated = (slug: string) => { const m = getModel(slug)!; return [m.engine, m.primeKva, m.standbyKva]; };
-assert.deepEqual(rated("4u-b150b"), ["6M11G4D0/S", 150, 165], "1500 rpm rating, not the 1800 rpm 181 / 200");
-assert.deepEqual(rated("4u-b150"), ["6M11G2D0/S", 150, 165]);
+assert.deepEqual(rated("4u-b150"), ["6M11G4D0/S", 150, 165], "1500 rpm rating, not the 1800 rpm 181 / 200");
+assert.deepEqual(rated("4u-b130"), ["6M11G2D0/S", 130, 143], "1500 rpm: 120 kWm gross; 150 / 165 is its 60 Hz rating");
 assert.deepEqual(rated("4u-b200"), ["6M16G2D0/S", 200, 220]);
 assert.deepEqual(rated("4u-b65"), ["4M10G2D0/S", 65, 72]);
 assert.deepEqual(rated("4u-k14"), ["D1703-E2-BG", 14, 16]);
@@ -47,7 +47,8 @@ assert.equal(getModel("4u-k20b"), null, "derated duplicate of 4U-K22.5");
 assert.equal(currentModelSlug("4u-k22b"), "4u-k22-5");
 assert.equal(currentModelSlug("4u-k20b"), "4u-k22-5");
 assert.equal(currentModelSlug("4u-b72"), "4u-b65");
-assert.equal(currentModelSlug("4u-b180"), "4u-b150b");
+assert.equal(currentModelSlug("4u-b180"), "4u-b150");
+assert.equal(currentModelSlug("4u-b165"), "4u-b130");
 for (const m of gensetModels) assert.ok(m.standbyKva >= m.primeKva && m.standbyKva <= m.primeKva * 1.2, `${m.code} standby / prime ${m.standbyKva}/${m.primeKva}`);
 assert.ok(LEGACY_EXACT.some(([a, b]) => a === "/:locale(en|ar)/models/4u-p165/datasheet" && b === "/:locale/models/4u-p150/datasheet"));
 

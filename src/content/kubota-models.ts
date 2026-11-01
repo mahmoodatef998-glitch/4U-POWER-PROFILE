@@ -79,8 +79,8 @@ export const kubotaModels: GensetModelData[] = [
     enclosed: { l: 2152, w: 1004, h: 1342, tankL: 169, kg: 730 },
   },
   {
-    // D1703-E2BG gives 15.1 kWm standby at 1500 rpm: 16 kVA standby fits (0.85), 15 kVA prime would need 0.92 from a
-    // 12 kW alternator. Prime 14 kVA as the 2026 list (KU-14/18); fuel left "on request" until a sheet at 14 kVA.
+    // Kubota D1703 at 1500 rpm (BG2 build): 12.8 kW continuous / 15.0 kW standby. 16 kVA standby fits (0.85); 15 kVA
+    // prime would need 0.94 from a 12 kW alternator. Prime 14 kVA as the 2026 list (KU-14/18); fuel "on request".
     slug: "4u-k14",
     code: "4U-K14",
     standbyKva: 16,
