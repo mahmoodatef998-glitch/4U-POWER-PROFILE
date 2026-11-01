@@ -80,11 +80,12 @@ export const kubotaModels: GensetModelData[] = [
   },
   {
     // Kubota D1703 at 1500 rpm (BG2 build): 12.8 kW continuous / 15.0 kW standby. 16 kVA standby fits (0.85); 15 kVA
-    // prime would need 0.94 from a 12 kW alternator. Prime 14 kVA as the 2026 list (KU-14/18); fuel "on request".
+    // prime would need 0.94 from a 12 kW alternator. 14 / 15.4 kVA as Kubota's own D1703 set (SQ-3140) and the list
+    // (KU-14/18); fuel "on request".
     slug: "4u-k14",
     code: "4U-K14",
-    standbyKva: 16,
-    standbyKw: 12.8,
+    standbyKva: 15.4,
+    standbyKw: 12.3,
     primeKva: 14,
     primeKw: 11.2,
     engine: "D1703-E2-BG",
@@ -150,10 +151,11 @@ export const kubotaModels: GensetModelData[] = [
     enclosed: { l: 2152, w: 1004, h: 1342, tankL: 169, kg: 840 },
   },
   {
+    // Kubota's own V3300 set (SQ-3300, generator.kubota.com): 30 / 33 kVA at 50 Hz
     slug: "4u-k30",
     code: "4U-K30",
-    standbyKva: 32,
-    standbyKw: 25.6,
+    standbyKva: 33,
+    standbyKw: 26.4,
     primeKva: 30,
     primeKw: 24,
     engine: "V3300-E2-BG2",

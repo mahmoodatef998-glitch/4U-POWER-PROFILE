@@ -42,7 +42,8 @@ assert.deepEqual(rated("4u-b150"), ["6M11G4D0/S", 150, 165], "1500 rpm rating, n
 assert.deepEqual(rated("4u-b130"), ["6M11G2D0/S", 130, 143], "1500 rpm: 120 kWm gross; 150 / 165 is its 60 Hz rating");
 assert.deepEqual(rated("4u-b200"), ["6M16G2D0/S", 200, 220]);
 assert.deepEqual(rated("4u-b65"), ["4M10G2D0/S", 65, 72]);
-assert.deepEqual(rated("4u-k14"), ["D1703-E2-BG", 14, 16]);
+assert.deepEqual(rated("4u-k14"), ["D1703-E2-BG", 14, 15.4], "Kubota SQ-3140");
+assert.deepEqual(rated("4u-k30"), ["V3300-E2-BG2", 30, 33], "Kubota SQ-3300");
 assert.equal(getModel("4u-k20b"), null, "derated duplicate of 4U-K22.5");
 // Cummins: Cummins' G-Drive ratings card, held to the Leroy-Somer alternator's rating where that is lower
 assert.deepEqual(rated("4u-c300"), ["6LTAA9.5-G1", 300, 330], "TAL-A46-F: 300 / 330 kVA");

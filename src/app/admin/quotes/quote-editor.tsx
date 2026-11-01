@@ -66,6 +66,7 @@ const SOURCE_60 = {
   lister: "Lister Petter 1800 rpm sheet",
   perkins: "Perkins power selector, 1800 rpm",
   cummins: "Cummins G-Drive ratings card, 60 Hz",
+  kubota: "Kubota SQ generator, 60 Hz",
 } as const;
 
 /** Today's rates (AED per unit) from src/lib/fx.ts, for a currency picked in the editor. */

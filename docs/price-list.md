@@ -53,7 +53,9 @@ editor reads them through `src/lib/price-book-data.ts`; `/admin/quotes/prices` s
    60 Hz data (`src/content/genset-60hz.ts`): Baudouin datasheets checked against Baudouin's 60 Hz table, Lister
    Petter TR sheets, Perkins' Gen Set Power Selector Chart and Cummins' G-Drive ratings card (2023). Engines those
    documents list at 1500 rpm only are blocked at 60 Hz. Not published openly: Lister Petter SA / LP / Mars ratings
-   (sheets on request) and Kubota genset ratings (Kubota publishes engine kW only): these take the supplier's figures.
+   (sheets on request) and Kubota sets on other engines: these take the supplier's figures. Kubota's own three-phase
+   sets (generator.kubota.com, SQ range) give 50 / 60 Hz ratings for D1703, V2203 and V3300: 4U-K14 14 / 15.4 kVA
+   (60 Hz 17 / 18.7), 4U-K20 20 / 22 (25 / 27.5), 4U-K30 30 / 33 (35 / 38.5); K14 and K30 standby set to these.
 
    Cummins ratings corrected on 1 Nov 2026 (owner's go-ahead) to Cummins' G-Drive ratings card at 50 Hz, held to
    the Leroy-Somer alternator's rating where that is lower (Leroy-Somer TAL-A42/A44/A46/A473 and LSA 50.2 data

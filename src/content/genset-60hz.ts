@@ -7,6 +7,7 @@
  *   4M10G2D0/S standby 85 and 6M11G2D0/S standby 165 kVA corrected.
  * - Lister Petter TR: the engine sheets' "standard generator output" at 1800 rpm (no voltage stated).
  * - Perkins: Perkins' Gen Set Power Selector Chart (unregulated territories), 1800 rpm typical genset output.
+ * - Kubota: Kubota's own three-phase sets on the same engines (generator.kubota.com, SQ-3170 / 3250 / 3350).
  * - Cummins: Cummins' G-Drive diesel ratings card (2023), 1800 rpm typical genset output. Where Cummins builds the
  *   engine for 60 Hz under another code that the supplier's list names with it (X3.3-G1/G2, 6BTA5.9-G5/6), `engine`
  *   is the 60 Hz build the quotation prints.
@@ -22,7 +23,7 @@ export type Rating60 = {
   standbyKw: number;
   /** voltage the datasheet rates the set at ("480/277"), or null when the sheet gives none */
   volts: string | null;
-  source: "baudouin" | "lister" | "perkins" | "cummins";
+  source: "baudouin" | "lister" | "perkins" | "cummins" | "kubota";
   /** the engine build at 1800 rpm when its code differs from the 50 Hz one */
   engine?: string;
 };
@@ -50,6 +51,10 @@ export const RATINGS_60HZ: Record<string, Rating60> = {
   "TR438G1": { prime: 52, primeKw: 42, standby: 58, standbyKw: 46, volts: null, source: "lister" }, // 4U-L45
   "TR441G1": { prime: 70, primeKw: 56, standby: 77, standbyKw: 62, volts: null, source: "lister" }, // 4U-L60B
   "TR661G2": { prime: 147, primeKw: 118, standby: 162, standbyKw: 130, volts: null, source: "lister" }, // 4U-L125B
+  // Kubota's own three-phase sets at 60 Hz (generator.kubota.com)
+  "D1703-E2-BG": { prime: 17, primeKw: 13.6, standby: 18.7, standbyKw: 15, volts: null, source: "kubota" }, // 4U-K14 (SQ-3170)
+  "V2203-E2-BG": { prime: 25, primeKw: 20, standby: 27.5, standbyKw: 22, volts: null, source: "kubota" }, // 4U-K20 (SQ-3250)
+  "V3300-E2-BG2": { prime: 35, primeKw: 28, standby: 38.5, standbyKw: 30.8, volts: null, source: "kubota" }, // 4U-K30 (SQ-3350)
   // Perkins Gen Set Power Selector Chart, 1800 rpm
   "403A-15G2": { prime: 18, primeKw: 14, standby: 20, standbyKw: 16, volts: null, source: "perkins" }, // 4U-P15
   "1103A-33G": { prime: 35, primeKw: 28, standby: 38, standbyKw: 31, volts: null, source: "perkins" }, // 4U-P30
