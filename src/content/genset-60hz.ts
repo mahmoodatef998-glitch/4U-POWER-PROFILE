@@ -31,7 +31,7 @@ export type Rating60 = {
 export const RATINGS_60HZ: Record<string, Rating60> = {
   "4M06G2D0/S": { prime: 23, primeKw: 18, standby: 25, standbyKw: 20, volts: "480/277", source: "baudouin" }, // 4U-B18
   "4M06G4D0/S": { prime: 29, primeKw: 23, standby: 32, standbyKw: 25, volts: "480/277", source: "baudouin" }, // 4U-B23
-  "4M06G6D0/S": { prime: 38, primeKw: 30, standby: 42, standbyKw: 33, volts: "480/277", source: "baudouin" }, // 4U-B32
+  "4M06G6D0/S": { prime: 38, primeKw: 30, standby: 42, standbyKw: 33, volts: "480/277", source: "baudouin" }, // 4U-B30
   "4M06G8D0/S": { prime: 47, primeKw: 37, standby: 51, standbyKw: 41, volts: "480/277", source: "baudouin" }, // 4U-B40
   "4M06G10D0/S": { prime: 63, primeKw: 50, standby: 69, standbyKw: 55, volts: "480/277", source: "baudouin" }, // 4U-B50
   "4M10G2D0/S": { prime: 75, primeKw: 60, standby: 85, standbyKw: 68, volts: "480/277", source: "baudouin" }, // 4U-B65
@@ -42,7 +42,7 @@ export const RATINGS_60HZ: Record<string, Rating60> = {
   "6M16G2D0/S": { prime: 225, primeKw: 180, standby: 250, standbyKw: 200, volts: "480/277", source: "baudouin" }, // 4U-B200
   "6M16G4D0/S": { prime: 250, primeKw: 200, standby: 280, standbyKw: 224, volts: "480/277", source: "baudouin" }, // 4U-B230
   "6M16G6D0/S": { prime: 284, primeKw: 227, standby: 313, standbyKw: 250, volts: "480/277", source: "baudouin" }, // 4U-B250
-  "6M21G2D0/S": { prime: 390, primeKw: 312, standby: 430, standbyKw: 344, volts: "480/277", source: "baudouin" }, // 4U-B375
+  "6M21G2D0/S": { prime: 390, primeKw: 312, standby: 430, standbyKw: 344, volts: "480/277", source: "baudouin" }, // 4U-B365
   "6M21G8D0/S": { prime: 500, primeKw: 400, standby: 575, standbyKw: 460, volts: "480/277", source: "baudouin" }, // 4U-B500
   "6M33G1D0/S": { prime: 650, primeKw: 520, standby: 715, standbyKw: 572, volts: "480/277", source: "baudouin" }, // 4U-B650B
   "6M33G6D0/S": { prime: 750, primeKw: 600, standby: 825, standbyKw: 660, volts: "480/277", source: "baudouin" }, // 4U-B750
@@ -65,35 +65,35 @@ export const RATINGS_60HZ: Record<string, Rating60> = {
   "1106A-70TG1": { prime: 152, primeKw: 122, standby: 169, standbyKw: 135, volts: null, source: "perkins" }, // 4U-P135
   "1106A-70TAG2": { prime: 169, primeKw: 135, standby: 188, standbyKw: 150, volts: null, source: "perkins" }, // 4U-P150
   "1106A-70TAG3": { prime: 197, primeKw: 158, standby: 219, standbyKw: 175, volts: null, source: "perkins" }, // 4U-P180
-  "1506A-E88TAG1": { prime: 250, primeKw: 200, standby: 275, standbyKw: 220, volts: null, source: "perkins" }, // 4U-P207
-  "1506A-E88TAG2": { prime: 250, primeKw: 200, standby: 275, standbyKw: 220, volts: null, source: "perkins" }, // 4U-P231
-  "1506A-E88TAG3": { prime: 290, primeKw: 230, standby: 320, standbyKw: 250, volts: null, source: "perkins" }, // 4U-P257
-  "1506A-E88TAG4": { prime: 315, primeKw: 250, standby: 350, standbyKw: 275, volts: null, source: "perkins" }, // 4U-P282
-  "1506A-E88TAG5": { prime: 350, primeKw: 280, standby: 390, standbyKw: 310, volts: null, source: "perkins" }, // 4U-P308
+  "1506A-E88TAG1": { prime: 250, primeKw: 200, standby: 275, standbyKw: 220, volts: null, source: "perkins" }, // 4U-P200C
+  "1506A-E88TAG2": { prime: 250, primeKw: 200, standby: 275, standbyKw: 220, volts: null, source: "perkins" }, // 4U-P230
+  "1506A-E88TAG3": { prime: 290, primeKw: 230, standby: 320, standbyKw: 250, volts: null, source: "perkins" }, // 4U-P250B
+  "1506A-E88TAG4": { prime: 315, primeKw: 250, standby: 350, standbyKw: 275, volts: null, source: "perkins" }, // 4U-P275
+  "1506A-E88TAG5": { prime: 350, primeKw: 280, standby: 390, standbyKw: 310, volts: null, source: "perkins" }, // 4U-P300
   "2806A-E18TAG1A": { prime: 625, primeKw: 500, standby: 687, standbyKw: 550, volts: null, source: "perkins" }, // 4U-P600
-  "4006-23TAG2A": { prime: 750, primeKw: 600, standby: 825, standbyKw: 660, volts: null, source: "perkins" }, // 4U-P750
+  "4006-23TAG2A": { prime: 750, primeKw: 600, standby: 825, standbyKw: 660, volts: null, source: "perkins" }, // 4U-P746
   "4006-23TAG3A": { prime: 850, primeKw: 680, standby: 944, standbyKw: 755, volts: null, source: "perkins" }, // 4U-P800
   "4008-TAG1": { prime: 884, primeKw: 707, standby: 975, standbyKw: 780, volts: null, source: "perkins" }, // 4U-P900
   "4008-TAG2": { prime: 1000, primeKw: 800, standby: 1100, standbyKw: 875, volts: null, source: "perkins" }, // 4U-P1000
-  "4012-46TWG2A": { prime: 1250, primeKw: 1000, standby: 1375, standbyKw: 1100, volts: null, source: "perkins" }, // 4U-P1253
-  "4012-46TAG2A": { prime: 1500, primeKw: 1200, standby: 1675, standbyKw: 1330, volts: null, source: "perkins" }, // 4U-P1505
+  "4012-46TWG2A": { prime: 1250, primeKw: 1000, standby: 1375, standbyKw: 1100, volts: null, source: "perkins" }, // 4U-P1250
+  "4012-46TAG2A": { prime: 1500, primeKw: 1200, standby: 1675, standbyKw: 1330, volts: null, source: "perkins" }, // 4U-P1500
   "4012-46TAG3A": { prime: 1700, primeKw: 1350, standby: 1880, standbyKw: 1500, volts: null, source: "perkins" }, // 4U-P1710
   // Cummins G-Drive diesel ratings card 2023, 1800 rpm
   "X3.3-G1/G2": { prime: 40, primeKw: 32, standby: 45, standbyKw: 36, volts: null, source: "cummins", engine: "X3.3-G2" }, // 4U-C35
   "4BTAA3.3-G12": { prime: 68, primeKw: 55, standby: 75, standbyKw: 60, volts: null, source: "cummins" }, // 4U-C68
   "6BTA5.9-G5": { prime: 124, primeKw: 100, standby: 137, standbyKw: 110, volts: null, source: "cummins", engine: "6BTA5.9-G6" }, // 4U-C100B
   "6BTAA5.9-G6": { prime: 158, primeKw: 127, standby: 169, standbyKw: 135, volts: null, source: "cummins" }, // 4U-C136
-  "QSB7-G4": { prime: 200, primeKw: 160, standby: 223, standbyKw: 179, volts: null, source: "cummins" }, // 4U-C182
+  "QSB7-G4": { prime: 200, primeKw: 160, standby: 223, standbyKw: 179, volts: null, source: "cummins" }, // 4U-C180B
   "QSB7-G5": { prime: 225, primeKw: 180, standby: 261, standbyKw: 208, volts: null, source: "cummins" }, // 4U-C200B
   "QSL9-G3": { prime: 283, primeKw: 226, standby: 320, standbyKw: 256, volts: null, source: "cummins" }, // 4U-C250B
   "6LTAA9.5-G3": { prime: 295, primeKw: 236, standby: 320, standbyKw: 256, volts: null, source: "cummins" }, // 4U-C271
   "6LTAA9.5-G1": { prime: 312, primeKw: 250, standby: 343, standbyKw: 275, volts: null, source: "cummins" }, // 4U-C300
-  "QSL9-G5": { prime: 344, primeKw: 275, standby: 395, standbyKw: 316, volts: null, source: "cummins" }, // 4U-C300B
-  "QSG12-G3": { prime: 425, primeKw: 340, standby: 462, standbyKw: 370, volts: null, source: "cummins" }, // 4U-C370
-  "QSZ13-G7": { prime: 450, primeKw: 360, standby: 507, standbyKw: 406, volts: null, source: "cummins" }, // 4U-C409
+  "QSL9-G5": { prime: 344, primeKw: 275, standby: 395, standbyKw: 316, volts: null, source: "cummins" }, // 4U-C298
+  "QSG12-G3": { prime: 425, primeKw: 340, standby: 462, standbyKw: 370, volts: null, source: "cummins" }, // 4U-C365
+  "QSZ13-G7": { prime: 450, primeKw: 360, standby: 507, standbyKw: 406, volts: null, source: "cummins" }, // 4U-C407
   "QSG12-G4": { prime: 479, primeKw: 383, standby: 523, standbyKw: 418, volts: null, source: "cummins" }, // 4U-C410
   "QSZ13-G5": { prime: 505, primeKw: 404, standby: 558, standbyKw: 446, volts: null, source: "cummins" }, // 4U-C455
-  "QSX15-G8": { prime: 466, primeKw: 373, standby: 509, standbyKw: 407, volts: null, source: "cummins" }, // 4U-C501
+  "QSX15-G8": { prime: 466, primeKw: 373, standby: 509, standbyKw: 407, volts: null, source: "cummins" }, // 4U-C500D
   "KTA19-G4": { prime: 570, primeKw: 456, standby: 629, standbyKw: 503, volts: null, source: "cummins" }, // 4U-C500C
   "VTA28-G5": { prime: 683, primeKw: 547, standby: 750, standbyKw: 600, volts: null, source: "cummins" }, // 4U-C640
   "QSK19-G4": { prime: 628, primeKw: 502, standby: 708, standbyKw: 567, volts: null, source: "cummins" }, // 4U-C652
@@ -101,7 +101,7 @@ export const RATINGS_60HZ: Record<string, Rating60> = {
   "KTA38-G3": { prime: 1042, primeKw: 833, standby: 1137, standbyKw: 909, volts: null, source: "cummins" }, // 4U-C910
   "KTA38-G14": { prime: 1153, primeKw: 923, standby: 1265, standbyKw: 1012, volts: null, source: "cummins" }, // 4U-C1000
   "QST30-G4": { prime: 1162, primeKw: 929, standby: 1273, standbyKw: 1019, volts: null, source: "cummins" }, // 4U-C1000B
-  "KTA50-G3": { prime: 1404, primeKw: 1123, standby: 1578, standbyKw: 1262, volts: null, source: "cummins" }, // 4U-C1275
+  "KTA50-G3": { prime: 1404, primeKw: 1123, standby: 1578, standbyKw: 1262, volts: null, source: "cummins" }, // 4U-C1250
   "KTA50-G9": { prime: 1608, primeKw: 1286, standby: 1913, standbyKw: 1530, volts: null, source: "cummins" }, // 4U-C1619
   "QSK60-G6": { prime: 2308, primeKw: 1847, standby: 2528, standbyKw: 2023, volts: null, source: "cummins" }, // 4U-C2290
 };

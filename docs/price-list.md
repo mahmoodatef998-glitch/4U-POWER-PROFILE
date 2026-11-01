@@ -60,8 +60,8 @@ editor reads them through `src/lib/price-book-data.ts`; `/admin/quotes/prices` s
    Cummins ratings corrected on 1 Nov 2026 (owner's go-ahead) to Cummins' G-Drive ratings card at 50 Hz, held to
    the Leroy-Somer alternator's rating where that is lower (Leroy-Somer TAL-A42/A44/A46/A473 and LSA 50.2 data
    sheets, 400 V 50 Hz, class H continuous / H 163 K standby): C20 → **C26** 26 / 28; C35 35 / 38; C50 → **C53**
-   53 / 60; C180B → **C182** 182 / 212; C250C → **C271** 271 / 302; C300 300 / 330 (engine 321 / 352, TAL-A46-F
-   300 / 330); C416 → **C410** 410 / 450 (engine 416 / 455, TAL-A473-A 410 / 450); C455B → **C501** 501 / 561;
+   53 / 60; C180B → C182 182 / 212 (then **C180B** 180 / 200, see below); C250C → **C271** 271 / 302; C300 300 / 330 (engine 321 / 352, TAL-A46-F
+   300 / 330); C416 → **C410** 410 / 450 (engine 416 / 455, TAL-A473-A 410 / 450); C455B → C501 501 / 561 (then **C500D** 500 / 550, see below);
    C650 → **C652** 652 / 715; C1400 → **C1416** 1416 / 1650 (engine 1416 / 1675, LSA 50.2 L8 standby 1650).
    Why: in five Cummins rows the 4U "standby" was Cummins' 60 Hz prime (the label's second number, e.g. CP416/479,
    CP500/569), so the 22 Oct 2026 update had stored 60 Hz prime as 50 Hz standby. Still to check with the supplier:
@@ -69,6 +69,27 @@ editor reads them through `src/lib/price-book-data.ts`; `/admin/quotes/prices` s
    ratings equal Cummins' 60 Hz figures; the CKD-only engines (4BTA3.9-G2, 6BT5.9-G1, 6CTA8.3-G1, 6LTAA8.9-G2,
    M15-G8, QSZ13-G3, KTA38-G2...) are not on Cummins' card. The alternators the list calls KWISE (China) have no
    published ratings: a quotation on that option should be checked against the supplier's alternator data.
+   Every set held to its alternator on 1 Nov 2026 (owner's go-ahead, option A: the price list's frames and prices
+   stay as they are; the set's rating is the lower of the engine's published figure and the frame's rating). Frame
+   ratings are in `src/content/alternator-ratings.ts` (Leroy-Somer sheets 6608–6613 and 4098: 400 V 50 Hz and
+   480 V 60 Hz, class H continuous / H 163 K standby); `npm test` fails if any set is rated above its frame. The two
+   Cummins figures above for TAL-A44-L (195 / 215) and TAL-A473-C (555 / 610) had been read from the 60 Hz / 416 V
+   column; at 400 V 50 Hz they are 180 / 200 and 500 / 550. Changed (prime / standby kVA):
+   Perkins P13 13 / 14 (TAL-A40-C), P15 15 / 16.5 (TAL-A40-D), P207 → **P200C** 200 / 220, P231 → **P230**
+   230 / 250, P257 → **P250B** 250 / 275, P282 → **P275** 275 / 300, P308 → **P300** 300 / 330 (Perkins chart, 1506A
+   series), P311 → **P300B** 300 / 330 (TAL-A46-F), P706 → **P660** 660 / 730 (TAL-A47-F = TAL-A473-F), P750 →
+   **P746** 746 / 820, P1253 → **P1250** 1250 / 1375 (LSA 50.2 M6), P1505 → **P1500** 1500 / 1650, P1710 1710 /
+   1875 (Perkins chart); Cummins C100B 100 / 110, C136 136 / 150, C155 → **C150B** 150 / 165, C182 → **C180B**
+   180 / 200, C200B 200 / 220, C250B 250 / 275, C300B → **C298** 298 / 330, C370 → **C365** 365 / 400, C409 →
+   **C407** 407 / 450, C501 → **C500D** 500 / 550, C500C 500 / 550, C810 810 / 900, C910 910 / 1020, C1000B
+   1000 / 1100, C1275 → **C1250** 1250 / 1375; Baudouin B32 → **B30** 30 / 33 (TAL-A42-C), B320 → **B300** 300 / 330
+   (TAL-A46-F), B375 → **B365** 365 / 400 (TAL-A46-H), B680 → **B660** 660 / 730 (TAL-A473-F), B900 → **B820**
+   820 / 910 (TAL-A49-C); Lister L25B 25 / 27.5 (TAL-A40-G), L31 → **L30** 30 / 33 (TAL-A42-C), L206 → **L200**
+   200 / 220 (TAL-A44-M). Quotations at 60 Hz hold the maker's 1800 rpm figure to the frame's 480 V rating the
+   same way (e.g. C100B 120 / 132, B150 180 / 198). Where the price list's own label names a higher kVA than the
+   set now carries (L206 → 200, L31 → 30, BP32 → 30, BP320 → 300, BP380 → 365, BP680 → 660, CP155 → 150,
+   CP300 → 298, CP370 → 365, CP409 → 407, CP1275 → 1250), the label stays as the supplier wrote it; only the site
+   and quotation rating follow the frame.
    Lister Petter (models from the Lister engine datasheets, `src/content/lister-models.ts`): the list's
    `TR219G1 (Air Cooling)` style names match on the engine code. Not linked: the list's SA315G1 (12 kVA) and
    LP613EG3 (500 kVA) have no datasheet; `LP625SG3` / `LP625G5` are linked to 4U-L638 (LP625EG3) / 4U-L750

@@ -1,3 +1,4 @@
+import { frameRating } from "@/content/alternator-ratings";
 import { FIFTY_HZ_ONLY, RATINGS_60HZ, type Rating60 } from "@/content/genset-60hz";
 import { gensetModels, type GensetModel } from "./genset-models";
 import { frameName, isLeroySomer, type PriceListId } from "./price-book";
@@ -179,9 +180,21 @@ export const amps = (kva: number, volts: string) => Math.round((kva * 1000) / (M
 /** What is known about a set at 60 Hz / 1800 rpm: datasheet ratings, a 50 Hz-only build, or nothing on file. */
 export type SixtyHz = { kind: "datasheet"; rating: Rating60 } | { kind: "fifty-only"; reason: string } | { kind: "manual" };
 
+/**
+ * A 60 Hz rating held to the set's Leroy-Somer frame at 480 V (class H continuous for prime, H 163 K for standby):
+ * a set's rating is the lower of the engine's and the alternator's (owner's rule, 1 Nov 2026).
+ */
+function heldToAlternator60(r: Rating60, alternator: string | null): Rating60 {
+  const f = frameRating(alternator)?.hz60;
+  if (!f || (r.prime <= f[0] && r.standby <= f[1])) return r;
+  const prime = Math.min(r.prime, f[0]);
+  const standby = Math.min(r.standby, f[1]);
+  return { ...r, prime, primeKw: Math.round(prime * 8) / 10, standby, standbyKw: Math.round(standby * 8) / 10 };
+}
+
 export function sixtyHz(m: GensetModel): SixtyHz {
   const r = RATINGS_60HZ[m.engine];
-  if (r) return { kind: "datasheet", rating: r };
+  if (r) return { kind: "datasheet", rating: heldToAlternator60(r, m.alternator.leroySomer) };
   if (m.brand === "Baudouin" && m.engine.endsWith("/5")) return { kind: "fifty-only", reason: "50 Hz engine build (…/5), not offered at 60 Hz" };
   const only50 = FIFTY_HZ_ONLY[m.engine];
   if (only50) return { kind: "fifty-only", reason: only50 };

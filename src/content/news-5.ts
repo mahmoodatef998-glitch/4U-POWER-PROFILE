@@ -130,8 +130,7 @@ Several engines sit in this class. From our datasheets (50 Hz, 1500 rpm, 400/230
 | 4U-P1000 | Perkins 4008-TAG2 | 1100 / 1000 | 8 in-line |
 | 4U-C900 | Cummins KTA38-G2 | 1000 / 900 | V12 |
 | [4U-C1000](/en/models/4u-c1000) | Cummins KTA38-G14 | 1100 / 1000 | V12 |
-| 4U-C1000B | Cummins QST30-G4 | 1138 / 1000 | V12 |
-| 4U-B900 | Baudouin 12M26G1000/5 | 1000 / 900 | V12 |
+| 4U-C1000B | Cummins QST30-G4 | 1100 / 1000 | V12 |
 
 If your load needs a full **1000 kVA prime**, look at the sets rated around 1100 kVA standby.
 
@@ -190,8 +189,7 @@ Send us the load schedule, the site location and whether the set is for standby 
 | 4U-P1000 | بيركنز 4008-TAG2 | 1100 / 1000 | 8 على خط واحد |
 | 4U-C900 | كمنز KTA38-G2 | 1000 / 900 | V12 |
 | [4U-C1000](/ar/models/4u-c1000) | كمنز KTA38-G14 | 1100 / 1000 | V12 |
-| 4U-C1000B | كمنز QST30-G4 | 1138 / 1000 | V12 |
-| 4U-B900 | بودوان 12M26G1000/5 | 1000 / 900 | V12 |
+| 4U-C1000B | كمنز QST30-G4 | 1100 / 1000 | V12 |
 
 إذا كان حملك يحتاج **1000 ك.ف.أ Prime** كاملة، فانظر إلى المولدات المقننة حوالي 1100 ك.ف.أ Standby.
 

@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { gensetModels, getModel } from "../src/lib/genset-models";
 import { LEGACY_EXACT } from "../src/lib/legacy-exact";
 import { MODEL_RENAMES, currentModelSlug } from "../src/lib/model-renames";
+import { frameRating } from "../src/content/alternator-ratings";
 import { FIFTY_HZ_ONLY, RATINGS_60HZ } from "../src/content/genset-60hz";
 import { alternatorPhrase, amps, check60, countryOf, defaultHz, defaultVolts60, sixtyHz, deliveryText, enclosureOptions, generatorItem, inCurrency, listPrice, withAlternator, money, printable, ratingSearch, searchModels, totals, ukDate, unprintable } from "../src/lib/quote";
 import { parseQuotePayload } from "../src/lib/quote-form";
@@ -49,8 +50,23 @@ assert.equal(getModel("4u-k20b"), null, "derated duplicate of 4U-K22.5");
 assert.deepEqual(rated("4u-c300"), ["6LTAA9.5-G1", 300, 330], "TAL-A46-F: 300 / 330 kVA");
 assert.deepEqual(rated("4u-c410"), ["QSG12-G4", 410, 450], "TAL-A473-A: 410 / 450 kVA");
 assert.deepEqual(rated("4u-c1416"), ["KTA50-G8", 1416, 1650], "LSA 50.2 L8 standby 1650 kVA");
-assert.deepEqual(rated("4u-c501"), ["QSX15-G8", 501, 561]);
-assert.equal(currentModelSlug("4u-c550c"), "4u-c501", "pre-1 Nov URL, no chain");
+assert.deepEqual(rated("4u-c500d"), ["QSX15-G8", 500, 550], "TAL-A473-C: 500 / 550 kVA at 400 V 50 Hz");
+assert.deepEqual(rated("4u-c180b"), ["QSB7-G4", 180, 200], "TAL-A44-L: 180 / 200 kVA");
+assert.equal(currentModelSlug("4u-c550c"), "4u-c500d", "pre-1 Nov URL, no chain");
+assert.equal(currentModelSlug("4u-c501"), "4u-c500d");
+// every set is held to its Leroy-Somer frame (400 V / 50 Hz, class H continuous / H 163 K standby)
+for (const m of gensetModels) {
+  const f = frameRating(m.alternator.leroySomer)?.hz50;
+  if (f) assert.ok(m.primeKva <= f[0] && m.standbyKva <= f[1], `${m.code} ${m.primeKva}/${m.standbyKva} over ${m.alternator.leroySomer} ${f.join("/")}`);
+}
+assert.deepEqual(frameRating("TAL0473C")?.hz50, [500, 550]);
+assert.deepEqual(frameRating("LSA 50.2 M")?.hz50, [1250, 1375]);
+assert.deepEqual(frameRating("TAL-A47-F")?.hz50, [660, 730], "TAL-A47 is the TAL-A473 frame");
+assert.deepEqual(rated("4u-p200c"), ["1506A-E88TAG1", 200, 220], "Perkins chart 200 / 220, TAL-A44-M 200 / 220");
+assert.deepEqual(rated("4u-b820"), ["12M26G1000/5", 820, 910], "TAL-A49-C 820 / 910 limits the 900 / 1000 engine");
+assert.equal(currentModelSlug("4u-b900"), "4u-b820");
+assert.equal(currentModelSlug("4u-b1000"), "4u-b820", "older URL, no chain");
+assert.equal(currentModelSlug("4u-p275"), "4u-p275", "now the 275 kVA prime 1506A-E88TAG4 set, a live page");
 assert.equal(currentModelSlug("4u-k22b"), "4u-k22-5");
 assert.equal(currentModelSlug("4u-k20b"), "4u-k22-5");
 assert.equal(currentModelSlug("4u-b72"), "4u-b65");
@@ -72,7 +88,7 @@ assert.equal(searchModels("KTA50G8")[0]!.code, "4U-C1416");
 assert.equal(searchModels("cummins kta50g9")[0]!.code, "4U-C1619");
 assert.equal(searchModels("CP1400").length, 0);
 assert.deepEqual(searchModels("CP1400", undefined, 8, { "4U-C1416": ["CP1400", "KTA50G8"] }).map((m) => m.code), ["4U-C1416"]);
-assert.equal(searchModels("cp1275/1400", undefined, 8, { "4U-C1275": ["CP1275/1400"] })[0]!.code, "4U-C1275");
+assert.equal(searchModels("cp1275/1400", undefined, 8, { "4U-C1250": ["CP1275/1400"] })[0]!.code, "4U-C1250");
 // a rating search: everything at or up to +10 kVA above, plus each brand's nearest larger model however far
 const brands = (r: ReturnType<typeof ratingSearch>) => new Set(r!.hits.map((h) => h.m.brand));
 const r152 = ratingSearch("152 kVA")!;
@@ -81,9 +97,9 @@ assert.equal(r152.exact, false);
 assert.deepEqual(r152.hits.map((h) => h.gap), [...r152.hits.map((h) => h.gap)].sort((x, y) => x - y));
 assert.ok(r152.hits.every((h) => h.gap > 0 && Math.min(...[h.m.standbyKva, h.m.primeKva].filter((k) => k >= 152)) - 152 === h.gap));
 assert.ok(["Perkins", "Cummins", "Baudouin", "Lister Petter"].every((b) => brands(r152).has(b as never)));
-// 1500: Perkins is 5 kVA above (1505 prime), Cummins' nearest larger is 4U-C1619 (+119) — both shown
+// 1500: Perkins 4U-P1500 is an exact match, Cummins' nearest larger is 4U-C1619 (+119) — both shown
 const r1500 = ratingSearch("1500")!;
-assert.ok(r1500.hits.some((h) => h.m.code === "4U-P1505" && h.gap === 5));
+assert.ok(r1500.hits.some((h) => h.m.code === "4U-P1500" && h.gap === 0));
 assert.ok(r1500.hits.some((h) => h.m.code === "4U-C1619" && h.gap === 119));
 assert.ok(ratingSearch("1600")!.hits.some((h) => h.m.code === "4U-C1619" && h.gap === 19));
 // exact matches come first with gap 0
@@ -256,6 +272,9 @@ assert.ok(p100at60.kind === "datasheet" && p100at60.rating.prime === 114 && p100
 const c100b = getModel("4u-c100b")!;
 const c100b60 = sixtyHz(c100b);
 assert.ok(c100b60.kind === "datasheet" && c100b60.rating.engine === "6BTA5.9-G6");
+assert.ok(c100b60.kind === "datasheet" && c100b60.rating.prime === 120 && c100b60.rating.standby === 132 && c100b60.rating.primeKw === 96, "Cummins 124 / 137 held to TAL-A44-D at 480 V: 120 / 132");
+const b150at60 = sixtyHz(getModel("4u-b150")!);
+assert.ok(b150at60.kind === "datasheet" && b150at60.rating.prime === 180 && b150at60.rating.standby === 198, "Baudouin 181 / 200 held to TAL-A44-J 180 / 198");
 const c100bLine = generatorItem(c100b, "enclosed", null, { prime: 124, standby: 137, volts: "480/277", engine: "6BTA5.9-G6" });
 assert.ok(c100bLine.description.includes("original Cummins 6BTA5.9-G6 engine") && !c100bLine.description.includes("6BTA5.9-G5"));
 assert.ok(generatorItem(c100b, "open", null, { prime: 124, standby: 137, volts: "380/220", ratedVolts: null }).description.includes("typical generator set output; the alternator for 380/220 V is confirmed with the order"));
