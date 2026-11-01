@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { gensetModels, getModel } from "../src/lib/genset-models";
 import { LEGACY_EXACT } from "../src/lib/legacy-exact";
 import { MODEL_RENAMES, currentModelSlug } from "../src/lib/model-renames";
-import { RATINGS_60HZ } from "../src/content/genset-60hz";
+import { FIFTY_HZ_ONLY, RATINGS_60HZ } from "../src/content/genset-60hz";
 import { alternatorPhrase, amps, check60, countryOf, defaultHz, defaultVolts60, sixtyHz, deliveryText, enclosureOptions, generatorItem, inCurrency, listPrice, withAlternator, money, printable, ratingSearch, searchModels, totals, ukDate, unprintable } from "../src/lib/quote";
 import { parseQuotePayload } from "../src/lib/quote-form";
 import { describeFilters, filterQuery, filterQuotes, itemsSummary, parseFilters, salesPeople, salesSummary } from "../src/lib/quote-report";
@@ -219,7 +219,8 @@ assert.equal(amps(113, "480/277"), 136, "matches the Baudouin sheet's 136 A");
 assert.equal(amps(125, "480/277"), 150);
 assert.equal(amps(113, "380/220"), 172);
 for (const [engine, r] of Object.entries(RATINGS_60HZ)) {
-  assert.ok(Math.abs(r.primeKw - 0.8 * r.prime) <= 1.01 && Math.abs(r.standbyKw - 0.8 * r.standby) <= 1.01, `${engine} kW = 0.8 × kVA`);
+  // kW = 0.8 × kVA; Perkins rounds kVA up, so allow 2.5 %
+  assert.ok(Math.abs(r.primeKw - 0.8 * r.prime) <= Math.max(1.01, 0.02 * r.prime) && Math.abs(r.standbyKw - 0.8 * r.standby) <= Math.max(1.01, 0.02 * r.standby), `${engine} kW = 0.8 × kVA`);
   assert.ok(r.standby >= r.prime, `${engine} standby ≥ prime`);
   assert.ok(gensetModels.some((m) => m.engine === engine), `${engine} is a model on the site`);
 }
@@ -236,7 +237,22 @@ assert.ok(!ksa.description.includes("50 Hz"), "no 50 Hz line on a 60 Hz quotatio
 // sets that keep their 50 Hz rating at 60 Hz (no fixed factor)
 assert.equal(RATINGS_60HZ["6M21G8D0/S"]!.prime, 500);
 assert.equal(sixtyHz(getModel("4u-b45")!).kind, "fifty-only", "Baudouin …/5 is a 50 Hz build");
-assert.equal(sixtyHz(getModel("4u-p500")!).kind, "manual");
+assert.equal(sixtyHz(getModel("4u-p500")!).kind, "fifty-only", "2506A-E15TAG2 is a 1500 rpm engine (Perkins chart)");
+assert.equal(sixtyHz(getModel("4u-p225")!).kind, "manual", "1206A-E70TAG2: no 60 Hz data on file");
+for (const engine of Object.keys(FIFTY_HZ_ONLY)) {
+  assert.ok(gensetModels.some((m) => m.engine === engine), `${engine} is a model on the site`);
+  assert.ok(!RATINGS_60HZ[engine], `${engine} can't be both 50 Hz only and rated at 60 Hz`);
+}
+const p100at60 = sixtyHz(getModel("4u-p100")!);
+assert.ok(p100at60.kind === "datasheet" && p100at60.rating.prime === 114 && p100at60.rating.standby === 127, "Perkins 1104C-44TAG2 at 1800 rpm");
+// the 60 Hz line prints the 60 Hz engine build where Cummins codes it differently
+const c100b = getModel("4u-c100b")!;
+const c100b60 = sixtyHz(c100b);
+assert.ok(c100b60.kind === "datasheet" && c100b60.rating.engine === "6BTA5.9-G6");
+const c100bLine = generatorItem(c100b, "enclosed", null, { prime: 124, standby: 137, volts: "480/277", engine: "6BTA5.9-G6" });
+assert.ok(c100bLine.description.includes("original Cummins 6BTA5.9-G6 engine") && !c100bLine.description.includes("6BTA5.9-G5"));
+assert.ok(generatorItem(c100b, "open", null, { prime: 124, standby: 137, volts: "380/220", ratedVolts: null }).description.includes("typical generator set output; the alternator for 380/220 V is confirmed with the order"));
+assert.ok(!generatorItem(c100b, "open", null, { prime: 124, standby: 137, volts: "380/220" }).description.includes("typical generator set output"), "typed-in figures: no maker note");
 assert.equal(sixtyHz(getModel("4u-l12-5")!).kind, "datasheet");
 // typed-in figures: prime needed, standby ≥ prime, and a ratio far from 50 Hz is flagged
 const p500 = getModel("4u-p500")!;

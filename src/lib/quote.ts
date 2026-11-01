@@ -1,4 +1,4 @@
-import { RATINGS_60HZ, type Rating60 } from "@/content/genset-60hz";
+import { FIFTY_HZ_ONLY, RATINGS_60HZ, type Rating60 } from "@/content/genset-60hz";
 import { gensetModels, type GensetModel } from "./genset-models";
 import { frameName, isLeroySomer, type PriceListId } from "./price-book";
 
@@ -183,6 +183,8 @@ export function sixtyHz(m: GensetModel): SixtyHz {
   const r = RATINGS_60HZ[m.engine];
   if (r) return { kind: "datasheet", rating: r };
   if (m.brand === "Baudouin" && m.engine.endsWith("/5")) return { kind: "fifty-only", reason: "50 Hz engine build (…/5), not offered at 60 Hz" };
+  const only50 = FIFTY_HZ_ONLY[m.engine];
+  if (only50) return { kind: "fifty-only", reason: only50 };
   return { kind: "manual" };
 }
 
@@ -198,8 +200,11 @@ export function check60(m: GensetModel, prime: number, standby: number | null): 
   return null;
 }
 
-/** A generator line at 60 Hz: prime / standby kVA, the voltage it is quoted at and the voltage its ratings are given at. */
-export type At60 = { prime: number; standby: number | null; volts: string; ratedVolts?: string | null };
+/**
+ * A generator line at 60 Hz: prime / standby kVA, the voltage it is quoted at and the voltage its ratings are given at
+ * (null: a maker's rating with no voltage stated; absent: figures typed in from the supplier).
+ */
+export type At60 = { prime: number; standby: number | null; volts: string; ratedVolts?: string | null; engine?: string };
 
 /**
  * Quotation line for a generator. The description covers what a buyer checks on a quotation and nothing more:
@@ -224,10 +229,12 @@ export function generatorItem(m: GensetModel, enclosure: Enclosure, listAlternat
           `Rated current at ${at60.volts} V: ${amps(at60.prime, at60.volts)} A prime${at60.standby ? ` / ${amps(at60.standby, at60.volts)} A standby` : ""}.`,
           ...(at60.ratedVolts && at60.ratedVolts !== at60.volts
             ? [`60 Hz ratings as per datasheet at ${at60.ratedVolts} V; the output at ${at60.volts} V is confirmed with the order (alternator voltage derating may apply).`]
-            : []),
+            : at60.ratedVolts === null
+              ? [`60 Hz ratings are the engine maker's typical generator set output; the alternator for ${at60.volts} V is confirmed with the order.`]
+              : []),
         ]
       : [`${n0(m.primeKva)} kVA Prime / ${n0(m.standbyKva)} kVA Standby | 50 Hz | 1500 RPM | 3-Phase | 0.8 Power Factor.`]),
-    `Powered by an original ${m.brand} ${m.engine} engine${m.cylinders ? ` (${m.cylinders}-cylinder${m.layout ? ` ${m.layout === "V" ? "V" : "in-line"}` : ""})` : ""}, ${m.cooling === "air" ? "air-cooled" : "water-cooled"}, directly coupled to ${alternatorPhrase(m, listAlternator)} and controlled by a Deep Sea Electronics (DSE) digital control module with full monitoring and protection.`,
+    `Powered by an original ${m.brand} ${at60?.engine ?? m.engine} engine${m.cylinders ? ` (${m.cylinders}-cylinder${m.layout ? ` ${m.layout === "V" ? "V" : "in-line"}` : ""})` : ""}, ${m.cooling === "air" ? "air-cooled" : "water-cooled"}, directly coupled to ${alternatorPhrase(m, listAlternator)} and controlled by a Deep Sea Electronics (DSE) digital control module with full monitoring and protection.`,
     housing,
     "Factory assembled, tested and supplied as a complete ready-to-run industrial package.",
   ];

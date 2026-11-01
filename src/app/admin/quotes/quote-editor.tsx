@@ -61,6 +61,13 @@ export type EditorInitial = {
   items: QuoteItem[];
 };
 
+const SOURCE_60 = {
+  baudouin: "Baudouin 60 Hz datasheet",
+  lister: "Lister Petter 1800 rpm sheet",
+  perkins: "Perkins power selector, 1800 rpm",
+  cummins: "Cummins G-Drive ratings card, 60 Hz",
+} as const;
+
 /** Today's rates (AED per unit) from src/lib/fx.ts, for a currency picked in the editor. */
 export type EditorFx = { EUR: number | null; USD: number; SAR: number; source: keyof typeof FX_SOURCE; at: string };
 const fxTime = (iso: string | null) => (iso ? new Date(iso).toLocaleString("en-GB", { timeZone: "Asia/Dubai", dateStyle: "medium", timeStyle: "short" }) : "");
@@ -147,7 +154,7 @@ export function QuoteEditor({ initial, initialSearch = "", prices = null, fx = n
   const at60For = (m: GensetModel): { at?: At60; problem?: string } => {
     const s = sixtyHz(m);
     if (s.kind === "fifty-only") return { problem: s.reason };
-    if (s.kind === "datasheet") return { at: { prime: s.rating.prime, standby: s.rating.standby, volts, ratedVolts: s.rating.volts } };
+    if (s.kind === "datasheet") return { at: { prime: s.rating.prime, standby: s.rating.standby, volts, ratedVolts: s.rating.volts, engine: s.rating.engine } };
     const t = typed60[m.code];
     const prime = Number(t?.prime) || 0;
     const standby = t?.standby ? Number(t.standby) : null;
@@ -277,7 +284,7 @@ export function QuoteEditor({ initial, initialSearch = "", prices = null, fx = n
                   {s60?.kind === "datasheet" && (
                     <p className="text-sm font-semibold text-ink">
                       60 Hz: {s60.rating.prime} kVA prime · {s60.rating.standby} kVA standby{s60.rating.volts ? ` (rated at ${s60.rating.volts} V)` : ""} · {amps(s60.rating.prime, volts)} A at {volts} V
-                      <span className="font-normal text-muted"> · {s60.rating.source === "baudouin" ? "Baudouin 60 Hz datasheet" : "Lister Petter 1800 rpm sheet"}</span>
+                      <span className="font-normal text-muted"> · {SOURCE_60[s60.rating.source]}{s60.rating.engine ? ` · 60 Hz engine build ${s60.rating.engine}` : ""}</span>
                       {s60.rating.volts && s60.rating.volts !== volts && <span className="block text-xs font-normal text-amber-700">Rated at {s60.rating.volts} V: the quotation notes that {volts} V output is confirmed with the order.</span>}
                     </p>
                   )}

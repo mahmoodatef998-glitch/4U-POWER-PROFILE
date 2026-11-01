@@ -50,8 +50,20 @@ editor reads them through `src/lib/price-book-data.ts`; `/admin/quotes/prices` s
    every 4U rating is within the engine's power; 4U-K30 (30 kVA from 26.3 kW continuous) is at the edge but within
    ±5 %, 4U-K12.5 is conservative. The 4U Kubota sheets name the "-BG" (1800 rpm) engine; at 50 Hz it is the BG2
    build of the same engine.
-   Not published openly: Lister Petter ratings (dual 50 / 60 Hz engines, sheets on request), Cummins and Perkins
-   (their sites refuse automated access): 60 Hz figures for these come from the supplier's sheets.
+   60 Hz data (`src/content/genset-60hz.ts`): Baudouin datasheets checked against Baudouin's 60 Hz table, Lister
+   Petter TR sheets, Perkins' Gen Set Power Selector Chart and Cummins' G-Drive ratings card (2023). Engines those
+   documents list at 1500 rpm only are blocked at 60 Hz. Not published openly: Lister Petter SA / LP / Mars ratings
+   (sheets on request) and Kubota genset ratings (Kubota publishes engine kW only): these take the supplier's figures.
+
+   To settle with the supplier (owner's decision; the list stays the reference for 50 Hz until then): the Cummins
+   ratings card differs from several 4U Cummins ratings, and in five cases the 4U "standby" equals Cummins' 60 Hz
+   prime, the second number of the list label (CP370/425 → QSG12-G3 60 Hz prime 425; CP416/479 → QSG12-G4 479;
+   CP500/569 → KTA19-G4 570; CP640/681 → VTA28-G5 683; CP300/344 → QSL9-G5 344), so the 22 Oct 2026 update may have
+   stored 60 Hz prime as 50 Hz standby. Cummins at 50 Hz (prime / standby kVA): QSG12-G3 370 / 409, QSG12-G4 416 / 455,
+   KTA19-G4 503 / 562, VTA28-G5 646 / 700, QSL9-G5 298 / 344, X2.5-G2 26 / 28 (4U: 20 / 23), 6LTAA9.5-G1 321 / 352
+   (4U: 300 / 313), QSX15-G8 501 / 561 (4U: 455 / 500), KTA50-G8 1416 / 1675 (4U: 1400 / 1540). 4U-C68
+   (4BTAA3.3-G12), 4U-C1619 (KTA50-G9) and 4U-C2290 (QSK60-G6) are Cummins 60 Hz builds; their 4U 50 Hz ratings
+   equal Cummins' 60 Hz figures.
    Lister Petter (models from the Lister engine datasheets, `src/content/lister-models.ts`): the list's
    `TR219G1 (Air Cooling)` style names match on the engine code. Not linked: the list's SA315G1 (12 kVA) and
    LP613EG3 (500 kVA) have no datasheet; `LP625SG3` / `LP625G5` are linked to 4U-L638 (LP625EG3) / 4U-L750
