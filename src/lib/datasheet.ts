@@ -45,7 +45,10 @@ export type Datasheet = {
   sixty:
     | { kind: "rated"; prime: number; primeKw: number; standby: number; standbyKw: number; volts: string | null; engine?: string }
     | { kind: "fifty-only" }
+    | { kind: "sixty-only"; fiftyHzModel: string | null }
     | { kind: "on-request" };
+  /** the frequency the ratings above are at (60 only for a 60 Hz-only engine build) */
+  hz: 50 | 60;
   fuel75: number | null;
   noiseDb: number | null;
   builds: Build[];
@@ -136,7 +139,7 @@ export function buildDatasheet(m: GensetModel, locale: Locale): Datasheet {
     ...row(L("Make / model", "الماركة / الموديل"), `${m.brand} ${m.engine}`),
     ...row(L("Cylinders / cycle", "الأسطوانات / الدورة"), cylCycle ? clean(cylCycle) : null),
     ...row(L("Aspiration", "التنفس"), m.aspiration ? ASPIRATION[m.aspiration][0] : pick(engine, /Aspiration/)),
-    ...row(L("Speed", "السرعة"), "1500 rpm"),
+    ...row(L("Speed", "السرعة"), m.ratedHz === 60 ? "1800 rpm (60 Hz build)" : "1500 rpm"),
     ...row(L("Cooling", "التبريد"), m.cooling === "air" ? "Air cooled" : "Water cooled"),
     ...row(L("Governing", "منظم السرعة"), governing ? clean(governing) : null),
     ...row(L("Compression ratio", "نسبة الانضغاط"), (() => {
@@ -304,13 +307,17 @@ export function buildDatasheet(m: GensetModel, locale: Locale): Datasheet {
   // --- 60 Hz -----------------------------------------------------------------------------------------------------
   const s60 = sixtyHz(m);
   const sixty: Datasheet["sixty"] =
-    s60.kind === "datasheet"
+    m.ratedHz === 60
+      ? { kind: "sixty-only", fiftyHzModel: FIFTY_HZ_EQUIVALENT[m.code] ?? null }
+      : s60.kind === "datasheet"
       ? { kind: "rated", prime: s60.rating.prime, primeKw: s60.rating.primeKw, standby: s60.rating.standby, standbyKw: s60.rating.standbyKw, volts: s60.rating.volts, engine: s60.rating.engine }
       : s60.kind === "fifty-only" ? { kind: "fifty-only" } : { kind: "on-request" };
   const sixtyLine =
     sixty.kind === "rated"
       ? L(`60 Hz: ${n1(sixty.prime)} kVA prime / ${n1(sixty.standby)} kVA standby at 1800 rpm${sixty.volts ? `, ${sixty.volts} V` : ""}`, `60 هرتز: ${n1(sixty.prime)} ك.ف.أ أساسي / ${n1(sixty.standby)} ك.ف.أ احتياطي على 1800 لفة${sixty.volts ? `، ${sixty.volts} فولت` : ""}`)
       : sixty.kind === "fifty-only" ? L("50 Hz engine build — not offered at 60 Hz", "نسخة محرك 50 هرتز — غير متاحة على 60 هرتز")
+      : sixty.kind === "sixty-only"
+        ? L(`60 Hz engine build — not rated at 50 Hz${sixty.fiftyHzModel ? `; for 50 Hz see ${sixty.fiftyHzModel}` : ""}`, `نسخة محرك 60 هرتز — بدون قدرة على 50 هرتز${sixty.fiftyHzModel ? `؛ لـ 50 هرتز شوف ${sixty.fiftyHzModel}` : ""}`)
       : L("60 Hz: 1800 rpm, 380–480 V — ratings on request", "60 هرتز: 1800 لفة، 380–480 فولت — القدرات عند الطلب");
 
   const fuel75 = f && fuel.length ? f.p75 : null;
@@ -320,7 +327,9 @@ export function buildDatasheet(m: GensetModel, locale: Locale): Datasheet {
       `The ${m.code} is a ${n1(m.primeKva)} kVA prime / ${n1(m.standbyKva)} kVA standby diesel generating set with a ${m.brand} ${m.engine} engine, a 4U · Leroy-Somer | Stamford alternator${m.controller ? ` and a ${m.controller} controller` : ""}.`,
       `${m.code} مولد ديزل بقدرة ${n1(m.primeKva)} ك.ف.أ أساسي / ${n1(m.standbyKva)} ك.ف.أ احتياطي، بمحرك ${brandAr} ${m.engine} ودينامو 4U · Leroy-Somer | Stamford${m.controller ? ` ووحدة تحكم ${m.controller}` : ""}.`,
     ),
-    L("Outputs at 400/230 V, 3-phase, 50 Hz, 1500 rpm, 0.8 pf", "الخرج 400/230 فولت، 3 فاز، 50 هرتز، 1500 لفة/دقيقة، معامل قدرة 0.8"),
+    m.ratedHz === 60
+      ? L("Outputs at 480/277 V, 3-phase, 60 Hz, 1800 rpm, 0.8 pf", "الخرج 480/277 فولت، 3 فاز، 60 هرتز، 1800 لفة/دقيقة، معامل قدرة 0.8")
+      : L("Outputs at 400/230 V, 3-phase, 50 Hz, 1500 rpm, 0.8 pf", "الخرج 400/230 فولت، 3 فاز، 50 هرتز، 1500 لفة/دقيقة، معامل قدرة 0.8"),
     sixtyLine,
     L("Warranty: 12 months or 1,000 running hours, whichever comes first.", "الضمان: 12 شهراً أو 1000 ساعة تشغيل أيهما أسبق."),
   ];
@@ -329,7 +338,7 @@ export function buildDatasheet(m: GensetModel, locale: Locale): Datasheet {
     { icon: "engine", title: `${m.brand} ${m.engine} diesel engine`, sub: [cyl, m.aspiration ? ASPIRATION[m.aspiration][0].toLowerCase() : null, m.cooling === "air" ? "air cooled" : "water cooled"].filter(Boolean).join(", ") },
     { icon: "alternator", title: `4U · Leroy-Somer | Stamford alternator${ls ? ` · ${ls}` : ""}` },
     ...(m.controller ? [{ icon: "control", title: `Deep Sea ${m.controller} auto start / AMF controller` }] : []),
-    { icon: "bolt", title: "400/230 V · 3-phase · 50 Hz · 1500 rpm · 0.8 pf", sub: sixtyLine },
+    { icon: "bolt", title: m.ratedHz === 60 ? "480/277 V · 3-phase · 60 Hz · 1800 rpm · 0.8 pf" : "400/230 V · 3-phase · 50 Hz · 1500 rpm · 0.8 pf", sub: sixtyLine },
     ...(fuel75 ? [{ icon: "fuel", title: `Fuel use ${n1(fuel75)} L/h at 75 % prime load` }] : []),
     ...(m.noiseDb ? [{ icon: "sound", title: `${container ? "Container" : "Silent canopy"} ${m.noiseDb} dB(A) ± 3 at 7 m` }] : []),
   ];
@@ -356,9 +365,10 @@ export function buildDatasheet(m: GensetModel, locale: Locale): Datasheet {
     engine: m.engine,
     controller: m.controller,
     alternatorMake: "4U · Leroy-Somer | Stamford",
-    prime: { kva: m.primeKva, kw: m.primeKw, amps: amps(m.primeKva, "400/230") },
-    standby: { kva: m.standbyKva, kw: m.standbyKw, amps: amps(m.standbyKva, "400/230") },
+    prime: { kva: m.primeKva, kw: m.primeKw, amps: amps(m.primeKva, m.ratedHz === 60 ? "480/277" : "400/230") },
+    standby: { kva: m.standbyKva, kw: m.standbyKw, amps: amps(m.standbyKva, m.ratedHz === 60 ? "480/277" : "400/230") },
     sixty,
+    hz: m.ratedHz ?? 50,
     fuel75,
     noiseDb: m.noiseDb,
     builds,
@@ -403,5 +413,8 @@ export const OPTIONS: { icon: string; en: string; ar: string; items: string[] }[
   { icon: "battery", en: "Start battery", ar: "بطارية التشغيل", items: ["Nickel-cadmium battery", "Maintenance-free battery", "Battery charger and selector switch", "Charging current meter"] },
   { icon: "tank", en: "Fuel & exhaust", ar: "الوقود والعادم", items: ["Single / double wall external tank (500–5000 L)", "Fuel transfer pump", "Residential, critical or hospital grade silencer"] },
 ];
+
+/** The 50 Hz set to offer instead of a 60 Hz-only engine build (Cummins' 1500 rpm engine of the same family). */
+const FIFTY_HZ_EQUIVALENT: Record<string, string> = { "4U-C68": "4U-C60", "4U-C1608": "4U-C1416", "4U-C2290": "4U-C2047" };
 
 export const VOLTAGES = ["400/230 V", "380/220 V", "415/240 V", "440/254 V", "480/277 V", "416/240 V", "220/127 V", "208/120 V"];

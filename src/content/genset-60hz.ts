@@ -102,7 +102,7 @@ export const RATINGS_60HZ: Record<string, Rating60> = {
   "KTA38-G14": { prime: 1153, primeKw: 923, standby: 1265, standbyKw: 1012, volts: null, source: "cummins" }, // 4U-C1000
   "QST30-G4": { prime: 1162, primeKw: 929, standby: 1273, standbyKw: 1019, volts: null, source: "cummins" }, // 4U-C1000B
   "KTA50-G3": { prime: 1404, primeKw: 1123, standby: 1578, standbyKw: 1262, volts: null, source: "cummins" }, // 4U-C1250
-  "KTA50-G9": { prime: 1608, primeKw: 1286, standby: 1913, standbyKw: 1530, volts: null, source: "cummins" }, // 4U-C1619
+  "KTA50-G9": { prime: 1608, primeKw: 1286, standby: 1913, standbyKw: 1530, volts: null, source: "cummins" }, // 4U-C1608
   "QSK60-G6": { prime: 2308, primeKw: 1847, standby: 2528, standbyKw: 2023, volts: null, source: "cummins" }, // 4U-C2290
 };
 

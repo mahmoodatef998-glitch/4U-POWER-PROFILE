@@ -1,8 +1,9 @@
 import assert from "node:assert/strict";
-import { gensetModels, getModel } from "../src/lib/genset-models";
+import { configModels, gensetModels, getModel, sizingModels } from "../src/lib/genset-models";
 import { LEGACY_EXACT } from "../src/lib/legacy-exact";
 import { MODEL_RENAMES, currentModelSlug } from "../src/lib/model-renames";
 import { frameRating } from "../src/content/alternator-ratings";
+import detailsJson from "../src/content/datasheet-details.json";
 import { buildDatasheet } from "../src/lib/datasheet";
 import { FIFTY_HZ_ONLY, RATINGS_60HZ } from "../src/content/genset-60hz";
 import { alternatorPhrase, amps, check60, countryOf, defaultHz, defaultVolts60, sixtyHz, deliveryText, enclosureOptions, generatorItem, inCurrency, listPrice, withAlternator, money, printable, ratingSearch, searchModels, totals, ukDate, unprintable } from "../src/lib/quote";
@@ -57,7 +58,8 @@ assert.equal(currentModelSlug("4u-c550c"), "4u-c500d", "pre-1 Nov URL, no chain"
 assert.equal(currentModelSlug("4u-c501"), "4u-c500d");
 // every set is held to its Leroy-Somer frame (400 V / 50 Hz, class H continuous / H 163 K standby)
 for (const m of gensetModels) {
-  const f = frameRating(m.alternator.leroySomer)?.hz50;
+  const fr = frameRating(m.alternator.leroySomer);
+  const f = m.ratedHz === 60 ? fr?.hz60 : fr?.hz50;
   if (f) assert.ok(m.primeKva <= f[0] && m.standbyKva <= f[1], `${m.code} ${m.primeKva}/${m.standbyKva} over ${m.alternator.leroySomer} ${f.join("/")}`);
 }
 assert.deepEqual(frameRating("TAL0473C")?.hz50, [500, 550]);
@@ -86,7 +88,7 @@ assert.equal(searchModels("").length, 0);
 assert.equal(searchModels("zzz").length, 0);
 // engine without punctuation, and the price-list code through aliases
 assert.equal(searchModels("KTA50G8")[0]!.code, "4U-C1416");
-assert.equal(searchModels("cummins kta50g9")[0]!.code, "4U-C1619");
+assert.equal(searchModels("cummins kta50g9")[0]!.code, "4U-C1608");
 assert.equal(searchModels("CP1400").length, 0);
 assert.deepEqual(searchModels("CP1400", undefined, 8, { "4U-C1416": ["CP1400", "KTA50G8"] }).map((m) => m.code), ["4U-C1416"]);
 assert.equal(searchModels("cp1275/1400", undefined, 8, { "4U-C1250": ["CP1275/1400"] })[0]!.code, "4U-C1250");
@@ -98,11 +100,11 @@ assert.equal(r152.exact, false);
 assert.deepEqual(r152.hits.map((h) => h.gap), [...r152.hits.map((h) => h.gap)].sort((x, y) => x - y));
 assert.ok(r152.hits.every((h) => h.gap > 0 && Math.min(...[h.m.standbyKva, h.m.primeKva].filter((k) => k >= 152)) - 152 === h.gap));
 assert.ok(["Perkins", "Cummins", "Baudouin", "Lister Petter"].every((b) => brands(r152).has(b as never)));
-// 1500: Perkins 4U-P1500 is an exact match, Cummins' nearest larger is 4U-C1619 (+119) — both shown
+// 1500: Perkins 4U-P1500 is an exact match, Cummins' nearest larger is 4U-C1608 (+108, a 60 Hz build) — both shown
 const r1500 = ratingSearch("1500")!;
 assert.ok(r1500.hits.some((h) => h.m.code === "4U-P1500" && h.gap === 0));
-assert.ok(r1500.hits.some((h) => h.m.code === "4U-C1619" && h.gap === 119));
-assert.ok(ratingSearch("1600")!.hits.some((h) => h.m.code === "4U-C1619" && h.gap === 19));
+assert.ok(r1500.hits.some((h) => h.m.code === "4U-C1608" && h.gap === 108));
+assert.ok(ratingSearch("1600")!.hits.some((h) => h.m.code === "4U-C1608" && h.gap === 8));
 // exact matches come first with gap 0
 const r150 = ratingSearch("150")!;
 assert.equal(r150.exact, true);
@@ -262,7 +264,7 @@ assert.ok(!ksa.description.includes("50 Hz"), "no 50 Hz line on a 60 Hz quotatio
 assert.equal(RATINGS_60HZ["6M21G8D0/S"]!.prime, 500);
 assert.equal(sixtyHz(getModel("4u-b45")!).kind, "fifty-only", "Baudouin …/5 is a 50 Hz build");
 assert.equal(sixtyHz(getModel("4u-p500")!).kind, "fifty-only", "2506A-E15TAG2 is a 1500 rpm engine (Perkins chart)");
-assert.equal(sixtyHz(getModel("4u-p225")!).kind, "manual", "1206A-E70TAG2: no 60 Hz data on file");
+assert.equal(sixtyHz(getModel("4u-p225")!).kind, "manual", "1206A-E70TTAG2: no 60 Hz data on file");
 for (const engine of Object.keys(FIFTY_HZ_ONLY)) {
   assert.ok(gensetModels.some((m) => m.engine === engine), `${engine} is a model on the site`);
   assert.ok(!RATINGS_60HZ[engine], `${engine} can't be both 50 Hz only and rated at 60 Hz`);
@@ -315,4 +317,27 @@ console.log("quotation tests passed");
   assert.ok(k30.sixty.kind === "rated" && k30.sixty.prime === 35);
   // implausible source values stay off the sheet (e.g. a 0.25 m³/s radiator fan on a 136 kVA set)
   assert.ok(buildDatasheet(getModel("4u-c136")!, "en").hidden.some((h) => h.includes("cooling fan air flow")));
+}
+
+// 60 Hz-only engine builds (Cummins rates them at 1800 rpm only): 60 Hz ratings, kept out of 50 Hz sizing
+{
+  const sixtyOnly = gensetModels.filter((m) => m.ratedHz === 60).map((m) => m.code).sort();
+  assert.deepEqual(sixtyOnly, ["4U-C1608", "4U-C2290", "4U-C68"]);
+  assert.deepEqual(rated("4u-c1608"), ["KTA50-G9", 1608, 1913], "Cummins KTA50-G9 at 1800 rpm");
+  assert.equal(currentModelSlug("4u-c1619"), "4u-c1608");
+  assert.ok(!sizingModels().some((m) => sixtyOnly.includes(m.code)) && !configModels().some((m) => sixtyOnly.includes(m.code)));
+  const c68 = sixtyHz(getModel("4u-c68")!);
+  assert.ok(c68.kind === "datasheet" && c68.rating.prime === 68);
+  assert.ok(generatorItem(getModel("4u-c1608")!, "open").description.includes("| 60 Hz | 1800 RPM"), "never quoted at 50 Hz");
+  const ds = buildDatasheet(getModel("4u-c1608")!, "en");
+  assert.equal(ds.hz, 60);
+  assert.equal(ds.prime.amps, 1934, "1608 kVA at 480 V");
+  assert.equal(buildDatasheet(getModel("4u-p225")!, "en").engine, "1206A-E70TTAG2", "Perkins / price-list engine name");
+}
+
+// every datasheet detail entry belongs to a live model (codes move with ratings)
+{
+  const live = new Set(gensetModels.map((m) => m.code));
+  const orphans = Object.keys(detailsJson).filter((c) => !live.has(c));
+  assert.deepEqual(orphans, []);
 }

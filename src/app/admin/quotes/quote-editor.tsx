@@ -167,6 +167,7 @@ export function QuoteEditor({ initial, initialSearch = "", prices = null, fx = n
     const opt = opts?.find((o) => o.key === key) ?? defaultOption(opts);
     const at60 = hz === 60 ? at60For(m).at : undefined;
     if (hz === 60 && !at60) return;
+    if (hz === 50 && m.ratedHz === 60) return;
     const item = generatorItem(m, enclosure, opt?.alternator, at60);
     setItems((list) => [...list, opt ? { ...item, unit_price: listPrice(opt.aed, countryId), price_key: opt.key } : item]);
     setQ("");
@@ -280,7 +281,7 @@ export function QuoteEditor({ initial, initialSearch = "", prices = null, fx = n
                     {gap > 0 && <span className="ms-2 rounded-full bg-amber-100 px-2 py-0.5 text-xs font-bold text-amber-800">+{gap} kVA</span>}
                   </p>
                   <p className="text-sm text-muted">
-                    {hz === 60 && "50 Hz: "}{m.primeKva} kVA prime · {m.standbyKva} kVA standby{hz === 50 && m.fuelLph ? ` · ${m.fuelLph.p75} L/h @ 75%` : ""}
+                    {hz === 60 && !m.ratedHz && "50 Hz: "}{m.ratedHz === 60 && "60 Hz: "}{m.primeKva} kVA prime · {m.standbyKva} kVA standby{hz === 50 && m.fuelLph ? ` · ${m.fuelLph.p75} L/h @ 75%` : ""}
                   </p>
                   {s60?.kind === "datasheet" && (
                     <p className="text-sm font-semibold text-ink">
@@ -290,6 +291,7 @@ export function QuoteEditor({ initial, initialSearch = "", prices = null, fx = n
                     </p>
                   )}
                   {s60?.kind === "fifty-only" && <p className="text-sm font-semibold text-red-700">{s60.reason}</p>}
+                  {hz === 50 && m.ratedHz === 60 && <p className="text-sm font-semibold text-red-700">60 Hz build only (Cummins rates this engine at 1800 rpm) — switch the quotation to 60 Hz.</p>}
                   {s60?.kind === "manual" && (
                     <div className="mt-1 flex flex-wrap items-end gap-2 text-xs">
                       <span className="w-full font-semibold text-amber-700">No 60 Hz datasheet on file: type the supplier&apos;s 60 Hz figures.</span>
@@ -335,7 +337,7 @@ export function QuoteEditor({ initial, initialSearch = "", prices = null, fx = n
                     <button
                       key={o.value}
                       type="button"
-                      disabled={hz === 60 && !a60?.at}
+                      disabled={(hz === 60 && !a60?.at) || (hz === 50 && m.ratedHz === 60)}
                       onClick={() => addGenerator(m, o.value, chosen?.key)}
                       className="rounded-lg bg-navy-950 px-3 py-1.5 text-sm font-bold text-white hover:bg-navy-800 disabled:cursor-not-allowed disabled:opacity-40"
                     >

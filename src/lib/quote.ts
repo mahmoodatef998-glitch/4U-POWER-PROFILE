@@ -193,6 +193,8 @@ function heldToAlternator60(r: Rating60, alternator: string | null): Rating60 {
 }
 
 export function sixtyHz(m: GensetModel): SixtyHz {
+  if (m.ratedHz === 60)
+    return { kind: "datasheet", rating: { prime: m.primeKva, primeKw: m.primeKw, standby: m.standbyKva, standbyKw: m.standbyKw, volts: null, source: "cummins" } };
   const r = RATINGS_60HZ[m.engine];
   if (r) return { kind: "datasheet", rating: heldToAlternator60(r, m.alternator.leroySomer) };
   if (m.brand === "Baudouin" && m.engine.endsWith("/5")) return { kind: "fifty-only", reason: "50 Hz engine build (…/5), not offered at 60 Hz" };
@@ -226,6 +228,8 @@ export type At60 = { prime: number; standby: number | null; volts: string; rated
  * 60 Hz ratings, 1800 rpm, the voltage and the rated current at that voltage.
  */
 export function generatorItem(m: GensetModel, enclosure: Enclosure, listAlternator?: string | null, at60?: At60): QuoteItem {
+  // a 60 Hz-only engine build is always quoted at its 60 Hz rating
+  if (!at60 && m.ratedHz === 60) at60 = { prime: m.primeKva, standby: m.standbyKva, volts: "480/277", ratedVolts: null };
   const container = enclosure === "enclosed" ? m.enclosed?.container : undefined;
   const build = enclosure === "open" ? "Open Type" : container ? "Containerised" : "Closed Type";
   const housing =

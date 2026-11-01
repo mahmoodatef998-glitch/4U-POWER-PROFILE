@@ -364,7 +364,7 @@ export const perkinsModels: GensetModelData[] = [
     standbyKw: 200,
     primeKva: 225,
     primeKw: 180,
-    engine: "1206A-E70TAG2",
+    engine: "1206A-E70TTAG2",
     cylinders: 6,
     layout: "inline",
     displacementL: 7.0,

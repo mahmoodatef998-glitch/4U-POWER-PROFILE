@@ -79,7 +79,7 @@ function nearestOfBrand(kva: number, brand: GensetBrand): GensetModel[] {
 
 /** Nearest models across brands, ordered by rating then brand; a brand whose range stops far from `kva` is left out. */
 export function nearestModels(kva: number, brands: GensetBrand[] = BRANDS): GensetModel[] {
-  const all = brands.flatMap((b) => nearestOfBrand(kva, b));
+  const all = brands.flatMap((b) => nearestOfBrand(kva, b)).filter((m) => !m.ratedHz);
   const close = all.filter((m) => m.standbyKva >= kva / 1.6 && m.standbyKva <= kva * 1.6);
   return (close.length ? close : all).sort((a, b) => a.standbyKva - b.standbyKva || BRANDS.indexOf(a.brand) - BRANDS.indexOf(b.brand));
 }
@@ -95,7 +95,7 @@ export const brandHubPath = (brand: GensetBrand) => `/${brand.toLowerCase().repl
 
 /** Every model reduced to what the 3D configurator needs (sent to the browser). */
 export const configModels = (): ConfigModel[] =>
-  gensetModels.map((m) => {
+  fiftyHzModels().map((m) => {
     const enc = m.enclosed;
     // very long "enclosed" builds on the sheets are containers, not canopies
     const containerNote = enc?.container ?? (enc?.l && enc.l > 7000 ? `${Math.round(enc.l / 1000)} m container` : null);
@@ -118,9 +118,12 @@ export const configModels = (): ConfigModel[] =>
     };
   });
 
+/** Sets rated at 50 Hz: the calculator, configurator and size pages size for the 50 Hz grid. */
+export const fiftyHzModels = () => gensetModels.filter((m) => !m.ratedHz);
+
 /** Every model reduced to what the kVA calculator needs (sent to the browser). */
 export const sizingModels = (): SizingModel[] =>
-  gensetModels.map((m) => ({
+  fiftyHzModels().map((m) => ({
     slug: m.slug,
     code: m.code,
     brand: m.brand,
@@ -177,7 +180,7 @@ export function modelSpecSections(m: GensetModel, locale: Locale): SpecSection[]
       rows: [
         ...row("Standby (ESP)", "احتياطي (Standby)", `${kva(m.standbyKva)} / ${kw(m.standbyKw)}`),
         ...row("Prime (PRP)", "أساسي (Prime)", `${kva(m.primeKva)} / ${kw(m.primeKw)}`),
-        ...row("Voltage / frequency", "الجهد / التردد", L(locale, "400/230 V · 3-phase · 50 Hz · 1500 rpm", "400/230 فولت · 3 فاز · 50 هرتز · 1500 لفة/دقيقة")),
+        ...row("Voltage / frequency", "الجهد / التردد", m.ratedHz === 60 ? L(locale, "480/277 V · 3-phase · 60 Hz · 1800 rpm (60 Hz build only)", "480/277 فولت · 3 فاز · 60 هرتز · 1800 لفة/دقيقة (نسخة 60 هرتز فقط)") : L(locale, "400/230 V · 3-phase · 50 Hz · 1500 rpm", "400/230 فولت · 3 فاز · 50 هرتز · 1500 لفة/دقيقة")),
         ...row("Power factor", "معامل القدرة", "0.8"),
         ...row("Other voltages", "جهود أخرى", "380/220 · 415/240 · 440/254 · 480/277 V"),
       ],

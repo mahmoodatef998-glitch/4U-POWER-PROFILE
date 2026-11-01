@@ -133,6 +133,12 @@ export default async function ModelDatasheetPage({ params }: Props) {
           L("Voltage range 380–480 V; output below 480 V is confirmed with the quotation.", "مدى الجهد 380–480 فولت؛ الخرج تحت 480 فولت يتأكد مع عرض السعر."),
           L("Fuel consumption at 60 Hz on request.", "استهلاك الوقود على 60 هرتز عند الطلب."),
         ]
+      : d.sixty.kind === "sixty-only"
+        ? [
+            L(`Cummins rates this engine build at 1800 rpm (60 Hz) only; the ratings on this sheet are its 60 Hz figures.`, "كامنز بتقنّن نسخة المحرك دي على 1800 لفة (60 هرتز) بس؛ القدرات في الشيت دي على 60 هرتز."),
+            ...(d.sixty.fiftyHzModel ? [L(`For a 50 Hz supply, see ${d.sixty.fiftyHzModel}.`, `لشبكة 50 هرتز شوف ${d.sixty.fiftyHzModel}.`)] : []),
+            L("Voltage range 380–480 V at 60 Hz; output below 480 V is confirmed with the quotation.", "مدى الجهد 380–480 فولت؛ الخرج تحت 480 فولت يتأكد مع عرض السعر."),
+          ]
       : d.sixty.kind === "fifty-only"
         ? [
             L("This engine build runs at 1500 rpm (50 Hz) only.", "نسخة المحرك دي بتشتغل على 1500 لفة (50 هرتز) بس."),
@@ -178,7 +184,7 @@ export default async function ModelDatasheetPage({ params }: Props) {
                 {L(`${d.brandUpper} powered`, `بمحرك ${m.brand}`)}
                 <br />
                 {L("Diesel generating set", "مولد ديزل")}
-                <span className={s.tag}>{d.sixty.kind === "rated" ? "50 / 60 HZ" : "50 HZ"}</span>
+                <span className={s.tag}>{d.hz === 60 ? "60 HZ" : d.sixty.kind === "rated" ? "50 / 60 HZ" : "50 HZ"}</span>
               </div>
               <div className={`${s.code} ${s.ltr}`}>
                 4U-<span className={s.tail}>{codeTail}</span>
@@ -204,7 +210,7 @@ export default async function ModelDatasheetPage({ params }: Props) {
                 {n(d.prime.kva)}
                 <small>kVA</small>
               </div>
-              <div className={`${s.kpiSub} ${s.ltr}`}>{n(d.prime.kw)} kW · 400 V · 50 Hz</div>
+              <div className={`${s.kpiSub} ${s.ltr}`}>{n(d.prime.kw)} kW · {d.hz === 60 ? "480 V · 60 Hz" : "400 V · 50 Hz"}</div>
             </div>
             <div className={`${s.kpi} ${s.kpiNavy}`}>
               <div className={s.kpiHead}>
@@ -309,10 +315,10 @@ export default async function ModelDatasheetPage({ params }: Props) {
               <table className={`${s.table} ${s.head}`}>
                 <thead>
                   <tr>
-                    <th className={s.ltr}>Rating · 400/230 V · 50 Hz · 1500 rpm · 0.8 pf</th>
+                    <th className={s.ltr}>{d.hz === 60 ? "Rating · 480/277 V · 60 Hz · 1800 rpm · 0.8 pf" : "Rating · 400/230 V · 50 Hz · 1500 rpm · 0.8 pf"}</th>
                     <th>kVA</th>
                     <th>kW</th>
-                    <th>{L("Current at 400 V", "التيار على 400 فولت")}</th>
+                    <th>{d.hz === 60 ? L("Current at 480 V", "التيار على 480 فولت") : L("Current at 400 V", "التيار على 400 فولت")}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -356,7 +362,7 @@ export default async function ModelDatasheetPage({ params }: Props) {
                   </tbody>
                 </table>
               )}
-              <p className={s.note}>{L("Other voltages: 380/220 · 415/240 · 440/254 V at 50 Hz. Derating may apply.", "جهود أخرى: 380/220 · 415/240 · 440/254 فولت على 50 هرتز. قد يلزم تخفيض القدرة.")}</p>
+              <p className={s.note}>{d.hz === 60 ? L("Other voltages: 440/254 · 416/240 · 380/220 V at 60 Hz. Derating may apply.", "جهود أخرى: 440/254 · 416/240 · 380/220 فولت على 60 هرتز. قد يلزم تخفيض القدرة.") : L("Other voltages: 380/220 · 415/240 · 440/254 V at 50 Hz. Derating may apply.", "جهود أخرى: 380/220 · 415/240 · 440/254 فولت على 50 هرتز. قد يلزم تخفيض القدرة.")}</p>
               <p className={s.note}>
                 <b>
                   (
@@ -364,6 +370,8 @@ export default async function ModelDatasheetPage({ params }: Props) {
                     ? d.sixty.engine
                       ? L(`60 Hz: engine build ${d.sixty.engine}; ${d.sixty.volts ? "" : "typical genset output, "}voltage confirmed per order.`, `60 هرتز: نسخة المحرك ${d.sixty.engine}؛ الجهد يتأكد مع الطلب.`)
                       : L(`60 Hz: ${d.sixty.volts ? "rated at " + d.sixty.volts + " V" : "typical genset output"}; other voltages confirmed per order.`, "60 هرتز: الجهود الأخرى تتأكد مع الطلب.")
+                    : d.sixty.kind === "sixty-only"
+                      ? L(`60 Hz engine build — Cummins gives no 50 Hz rating${d.sixty.fiftyHzModel ? `; 50 Hz set: ${d.sixty.fiftyHzModel}` : ""}.`, `نسخة محرك 60 هرتز — مفيش قدرة 50 هرتز${d.sixty.fiftyHzModel ? `؛ موديل 50 هرتز: ${d.sixty.fiftyHzModel}` : ""}.`)
                     : d.sixty.kind === "fifty-only"
                       ? L("50 Hz engine build — not offered at 60 Hz.", "نسخة محرك 50 هرتز — غير متاحة على 60 هرتز.")
                       : L("60 Hz / 1800 rpm: kVA, kW and current follow the engine's 60 Hz rating — confirmed per order.", "60 هرتز / 1800 لفة: القدرة والتيار حسب قدرة المحرك على 60 هرتز — تتأكد مع الطلب.")}
@@ -434,7 +442,7 @@ export default async function ModelDatasheetPage({ params }: Props) {
                     <thead>
                       <tr>
                         <th>{L("Load (% of prime)", "الحمل (% من الأساسي)")}</th>
-                        <th>50 Hz · L/h</th>
+                        <th>{d.hz} Hz · L/h</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -466,7 +474,7 @@ export default async function ModelDatasheetPage({ params }: Props) {
                 <p className={s.p}>{L("Fuel consumption figures on request.", "أرقام استهلاك الوقود عند الطلب.")}</p>
               )}
               <p className={s.note}>
-                {L("Class A2 diesel. Engine published data at the engine's own rating; tolerance ± 5 %.", "ديزل فئة A2. بيانات المحرك المنشورة عند قدرته؛ التفاوت ± 5%.")} <b>{L("(60 Hz: consumption changes with the 1800 rpm rating — figures on request.)", "(60 هرتز: الاستهلاك يتغير مع قدرة 1800 لفة — عند الطلب.)")}</b>
+                {L("Class A2 diesel. Engine published data at the engine's own rating; tolerance ± 5 %.", "ديزل فئة A2. بيانات المحرك المنشورة عند قدرته؛ التفاوت ± 5%.")} {d.hz === 60 ? <b>{L("(Figures at 1800 rpm / 60 Hz.)", "(الأرقام على 1800 لفة / 60 هرتز.)")}</b> : <b>{L("(60 Hz: consumption changes with the 1800 rpm rating — figures on request.)", "(60 هرتز: الاستهلاك يتغير مع قدرة 1800 لفة — عند الطلب.)")}</b>}
               </p>
             </div>
             <div className={s.grid2}>

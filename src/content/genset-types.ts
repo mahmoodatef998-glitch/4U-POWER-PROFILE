@@ -49,6 +49,11 @@ export type GensetModelData = {
   ambientC?: number | null;
   /** water (radiator) unless stated */
   cooling?: "air";
+  /**
+   * 60 when the engine maker rates this engine build at 1800 rpm / 60 Hz only (no 50 Hz rating): the kVA / kW
+   * above are then 60 Hz figures at 480/277 V, and the set is left out of 50 Hz sizing and 50 Hz quotations.
+   */
+  ratedHz?: 60;
 };
 
 export type GensetModel = GensetModelData & { brand: GensetBrand };

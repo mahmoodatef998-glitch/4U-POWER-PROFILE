@@ -65,7 +65,8 @@ editor reads them through `src/lib/price-book-data.ts`; `/admin/quotes/prices` s
    C650 → **C652** 652 / 715; C1400 → **C1416** 1416 / 1650 (engine 1416 / 1675, LSA 50.2 L8 standby 1650).
    Why: in five Cummins rows the 4U "standby" was Cummins' 60 Hz prime (the label's second number, e.g. CP416/479,
    CP500/569), so the 22 Oct 2026 update had stored 60 Hz prime as 50 Hz standby. Still to check with the supplier:
-   4U-C68 (4BTAA3.3-G12), 4U-C1619 (KTA50-G9) and 4U-C2290 (QSK60-G6) are Cummins 60 Hz builds whose 4U 50 Hz
+   4U-C68 (4BTAA3.3-G12), 4U-C1619 (KTA50-G9, now 4U-C1608) and 4U-C2290 (QSK60-G6) are Cummins 60 Hz builds (now listed as
+   60 Hz sets, docs/datasheets.md) whose 4U 50 Hz
    ratings equal Cummins' 60 Hz figures; the CKD-only engines (4BTA3.9-G2, 6BT5.9-G1, 6CTA8.3-G1, 6LTAA8.9-G2,
    M15-G8, QSZ13-G3, KTA38-G2...) are not on Cummins' card. The alternators the list calls KWISE (China) have no
    published ratings: a quotation on that option should be checked against the supplier's alternator data.

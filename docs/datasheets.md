@@ -31,7 +31,12 @@ Engineering rules:
 - Cummins list-only sets: Cummins' own G-Drive specification sheets — X2.5-G2 and X3.3-G1 (cummins.com, 10/12),
   4BTAA3.3-G15 / G14 / G12 (mart.cummins.com assets 0064175 / 0064174 / 0064172, 12/20), KTA50-G9 (0070368, 07/21),
   QSK60-G6 (0070614, 04/22). Bore, stroke, oil, coolant, fan, air flow and 50 Hz fuel (C26, C35, C53, C60) filled
-  in the model file. ⚠️ Cummins publishes 4BTAA3.3-G12 (4U-C68), KTA50-G9 (4U-C1619) and QSK60-G6 (4U-C2290) at
-  1800 rpm / 60 Hz only (QSK60-G6 50 Hz column "–"); their 4U 50 Hz ratings are the 60 Hz figures. Owner to decide.
+  in the model file. Cummins rates 4BTAA3.3-G12 (4U-C68), KTA50-G9 (4U-C1608, was C1619) and QSK60-G6 (4U-C2290) at
+  1800 rpm / 60 Hz only; since 1 Nov 2026 these carry `ratedHz: 60` and Cummins' 60 Hz ratings (68 / 75, 1608 / 1913,
+  2290 / 2508 kVA at 480/277 V), print as 60 Hz sets, quote at 60 Hz only and stay out of 50 Hz sizing. Their 50 Hz
+  counterparts are 4U-C60, 4U-C1416 and 4U-C2047.
+- Price-list consistency (1 Nov 2026): every linked row's engine and Leroy-Somer frame match the model file;
+  frames added from the list to C35 (TAL-A42-F), C53 / C60 / C68 (TAL-A42-H) and C1608 (LSA 50.2 L8); P225 engine
+  named as Perkins and the list do, 1206A-E70TTAG2.
 
 `npm test` builds every sheet in both languages and checks ratings and wording.

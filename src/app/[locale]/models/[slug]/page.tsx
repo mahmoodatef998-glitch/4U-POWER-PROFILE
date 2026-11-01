@@ -88,7 +88,7 @@ export default async function ModelPage({ params }: Props) {
           ...(parent ? [{ name: ar ? parent.name_ar : parent.name_en, path: `/products/${parent.slug}` }] : []),
           { name: m.code, path: modelPath(m) },
         ]}
-        eyebrow={ar ? `مولدات ${brand} · 50 هرتز` : `${brand} generating set · 50 Hz`}
+        eyebrow={ar ? `مولدات ${brand} · ${m.ratedHz ?? 50} هرتز` : `${brand} generating set · ${m.ratedHz ?? 50} Hz`}
         title={name}
         intro={intro}
         aside={
