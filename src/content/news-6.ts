@@ -149,7 +149,6 @@ On our datasheets the 250 kVA class comes in two flavours:
 | Model | Engine | Standby / prime (kVA) |
 | --- | --- | --- |
 | [4U-P225](/en/models/4u-p225) | Perkins 1206A-E70TAG2 | 250 / 225 |
-| 4U-B200 | Baudouin 6M16G2D0/S | 250 / 200 |
 | 4U-B230 | Baudouin 6M16G4D0/S | 250 / 230 |
 | [4U-P250](/en/models/4u-p250) | Perkins 1206A-E70TTAG3 | 275 / 250 |
 | 4U-C250 | Cummins 6LTAA8.9-G2 | 270 / 250 |
@@ -206,7 +205,6 @@ Tell us the load, whether the set is for standby or daily duty, and where it wil
 | الموديل | المحرك | Standby / Prime (ك.ف.أ) |
 | --- | --- | --- |
 | [4U-P225](/ar/models/4u-p225) | بيركنز 1206A-E70TAG2 | 250 / 225 |
-| 4U-B200 | بودوان 6M16G2D0/S | 250 / 200 |
 | 4U-B230 | بودوان 6M16G4D0/S | 250 / 230 |
 | [4U-P250](/ar/models/4u-p250) | بيركنز 1206A-E70TTAG3 | 275 / 250 |
 | 4U-C250 | كمنز 6LTAA8.9-G2 | 270 / 250 |

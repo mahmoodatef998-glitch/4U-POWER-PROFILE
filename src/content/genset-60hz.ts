@@ -2,11 +2,12 @@
  * 60 Hz / 1800 rpm ratings, only where a datasheet publishes them (checked: kW = 0.8 × kVA and the rated current
  * matches √3 · V on every row). There is no fixed 50 → 60 Hz factor: the same sheets show sets that gain 13–26 %
  * at 1800 rpm and sets that stay at their 50 Hz rating (4U-B150, B500, B650B, B750), so nothing here is calculated.
- * - Baudouin: the 4U datasheets of the switchable 1500 / 1800 rpm engines (…D0/S), ratings at 480/277 V.
+ * - Baudouin: the 4U datasheets of the switchable 1500 / 1800 rpm engines (…D0/S), ratings at 480/277 V, checked
+ *   against Baudouin's rating tables on 1 Nov 2026 (4M10G2D0/S standby 85 kVA and 4M06G2D0/S prime 23 kVA corrected;
+ *   4M06G2D0/S from the 60 Hz sets built on it, as Baudouin's card did not read cleanly).
  * - Lister Petter TR: the engine sheets' "standard generator output" at 1800 rpm (no voltage stated).
  * Keyed by engine. Every other set has no 60 Hz data on file: the quotation takes the supplier's 60 Hz figures.
  * Baudouin …/5 engines are 50 Hz builds and are not offered at 60 Hz. Price is the same at 50 and 60 Hz.
- * To check with the owner: 4U-B18 prime is 20 kVA on the sheet but 23 in the price-list label (BP18/23).
  */
 export type Rating60 = {
   /** kVA / kWe at 0.8 pf */
@@ -20,16 +21,16 @@ export type Rating60 = {
 };
 
 export const RATINGS_60HZ: Record<string, Rating60> = {
-  "4M06G2D0/S": { prime: 20, primeKw: 16, standby: 25, standbyKw: 20, volts: "480/277", source: "baudouin" }, // 4U-B18
+  "4M06G2D0/S": { prime: 23, primeKw: 18, standby: 25, standbyKw: 20, volts: "480/277", source: "baudouin" }, // 4U-B18
   "4M06G4D0/S": { prime: 29, primeKw: 23, standby: 32, standbyKw: 25, volts: "480/277", source: "baudouin" }, // 4U-B23
   "4M06G6D0/S": { prime: 38, primeKw: 30, standby: 42, standbyKw: 33, volts: "480/277", source: "baudouin" }, // 4U-B32
   "4M06G8D0/S": { prime: 47, primeKw: 37, standby: 51, standbyKw: 41, volts: "480/277", source: "baudouin" }, // 4U-B40
   "4M06G10D0/S": { prime: 63, primeKw: 50, standby: 69, standbyKw: 55, volts: "480/277", source: "baudouin" }, // 4U-B50
-  "4M10G2D0/S": { prime: 75, primeKw: 60, standby: 83, standbyKw: 66, volts: "480/277", source: "baudouin" }, // 4U-B66
+  "4M10G2D0/S": { prime: 75, primeKw: 60, standby: 85, standbyKw: 68, volts: "480/277", source: "baudouin" }, // 4U-B65
   "4M10G4D0/S": { prime: 94, primeKw: 75, standby: 103, standbyKw: 82, volts: "480/277", source: "baudouin" }, // 4U-B80
   "4M10G6D0/S": { prime: 113, primeKw: 90, standby: 125, standbyKw: 100, volts: "480/277", source: "baudouin" }, // 4U-B100
   "6M11G2D0/S": { prime: 150, primeKw: 120, standby: 170, standbyKw: 135, volts: "480/277", source: "baudouin" }, // 4U-B150
-  "6M11G4D0/S": { prime: 181, primeKw: 145, standby: 200, standbyKw: 160, volts: "480/277", source: "baudouin" }, // 4U-B180
+  "6M11G4D0/S": { prime: 181, primeKw: 145, standby: 200, standbyKw: 160, volts: "480/277", source: "baudouin" }, // 4U-B150B
   "6M16G2D0/S": { prime: 225, primeKw: 180, standby: 250, standbyKw: 200, volts: "480/277", source: "baudouin" }, // 4U-B200
   "6M16G4D0/S": { prime: 250, primeKw: 200, standby: 280, standbyKw: 224, volts: "480/277", source: "baudouin" }, // 4U-B230
   "6M16G6D0/S": { prime: 284, primeKw: 227, standby: 313, standbyKw: 250, volts: "480/277", source: "baudouin" }, // 4U-B250
