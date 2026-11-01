@@ -124,10 +124,12 @@ export default async function ModelDatasheetPage({ params }: Props) {
     d.sixty.kind === "rated"
       ? [
           L("Engine speed 1800 rpm instead of 1500 rpm (4-pole alternator).", "سرعة المحرك 1800 لفة بدلاً من 1500 (دينامو 4 أقطاب)."),
-          L(
-            `Ratings are the engine maker's published 1800 rpm figures, held to the ${m.alternator.leroySomer ?? "alternator"} rating at 480 V.`,
-            `القدرات هي أرقام صانع المحرك على 1800 لفة، ومحدودة بقدرة ${m.alternator.leroySomer ?? "الدينامو"} على 480 فولت.`,
-          ),
+          m.alternator.leroySomer
+            ? L(
+                `Ratings are the engine maker's published 1800 rpm figures, held to the ${m.alternator.leroySomer} rating at 480 V.`,
+                `القدرات هي أرقام صانع المحرك على 1800 لفة، ومحدودة بقدرة ${m.alternator.leroySomer} على 480 فولت.`,
+              )
+            : L("Ratings are the engine maker's published 1800 rpm figures; the alternator is sized with the order.", "القدرات هي أرقام صانع المحرك على 1800 لفة؛ الدينامو يتحدد مع الطلب."),
           L("Voltage range 380–480 V; output below 480 V is confirmed with the quotation.", "مدى الجهد 380–480 فولت؛ الخرج تحت 480 فولت يتأكد مع عرض السعر."),
           L("Fuel consumption at 60 Hz on request.", "استهلاك الوقود على 60 هرتز عند الطلب."),
         ]

@@ -23,6 +23,15 @@ Engineering rules:
   48 m³/s (C200, C200B) and 1.41 m³/s (C1000B). Correct the JSON and they print again.
 - Fuel figures are the engine's at its own rating; on sets held to a smaller alternator they slightly overstate.
 - Tank running hours are worked out (tank ÷ fuel at full prime); breaker make only where the sheet names it.
-- Lister and list-only Cummins sets have no source sheet yet, so their pages carry only the model-file data.
+- Lister Petter (39 sets): engine, cooling, lubrication, air and exhaust rows from Lister Petter's own engine
+  datasheets (Starlite SA, Venus LP4 / LP6, Mars Max LP625 and air-cooled TR series, 2024). Held back by the checks:
+  SA315G2 exhaust 1.2 m³/min (L10), SA423G1 combustion air 1.1 m³/min (L16), SA432G2 combustion air 2.5 m³/min (L40),
+  LP625EG9 / EG10 exhaust 150 / 160 m³/min (L900, L1000). No controller, canopy, tank or set dimensions: the
+  sheets are engine-only, so those read "on request".
+- Cummins list-only sets: Cummins' own G-Drive specification sheets — X2.5-G2 and X3.3-G1 (cummins.com, 10/12),
+  4BTAA3.3-G15 / G14 / G12 (mart.cummins.com assets 0064175 / 0064174 / 0064172, 12/20), KTA50-G9 (0070368, 07/21),
+  QSK60-G6 (0070614, 04/22). Bore, stroke, oil, coolant, fan, air flow and 50 Hz fuel (C26, C35, C53, C60) filled
+  in the model file. ⚠️ Cummins publishes 4BTAA3.3-G12 (4U-C68), KTA50-G9 (4U-C1619) and QSK60-G6 (4U-C2290) at
+  1800 rpm / 60 Hz only (QSK60-G6 50 Hz column "–"); their 4U 50 Hz ratings are the 60 Hz figures. Owner to decide.
 
 `npm test` builds every sheet in both languages and checks ratings and wording.
