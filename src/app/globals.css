@@ -13,7 +13,7 @@
   --color-ink-300: #a1a1aa;
   --color-ink-200: #d4d4d8;
 
-  /* Brand gold — the black-and-gold identity (Nov 2026); the main logo stays red as on the datasheets (/brand/logo-full-red.png) */
+  /* Brand gold — the black-and-gold identity (Nov 2026); the main logo keeps its own yellow (/brand/logo-full-dark.png) */
   --color-brand-50: rgb(214 176 92 / 0.08);
   --color-brand-100: #f6ecd2;
   --color-brand-300: #ecd9a3;
