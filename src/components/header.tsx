@@ -22,7 +22,7 @@ const NAV = [
   { href: "/switchgear", key: "switchgear", top: true },
   { href: "/products", key: "products", top: true },
   { href: "/calculator", key: "calculator", top: true },
-  { href: "/configurator", key: "configurator" },
+  { href: "/configurator", key: "configurator", top: true },
   { href: "/industries", key: "industries" },
   { href: "/services", key: "services", top: true },
   { href: "/spare-parts", key: "parts" },
@@ -33,13 +33,13 @@ const NAV = [
   { href: "/contact", key: "contact", top: true },
 ] as const;
 
-/** Site wordmark: the main 4U POWER logo in gold + "Generation FZC". Always sits on charcoal (header, footer, menu). */
+/** Site wordmark: the main 4U POWER logo in red (as on the datasheets) + "Generation FZC". Always sits on charcoal (header, footer, menu). */
 export function Brand({ className }: { className?: string }) {
   const locale = useLocale();
   const ar = locale === "ar";
   return (
     <span className={cn("flex items-center gap-3", className)} dir="ltr">
-      <Image src="/brand/logo-full-gold.png" alt="4U Power" width={751} height={375} className="h-11 w-auto shrink-0 lg:h-[3.25rem]" priority />
+      <Image src="/brand/logo-full-red.png" alt="4U Power" width={751} height={375} className="h-11 w-auto shrink-0 lg:h-[3.25rem]" priority />
       <span className="h-8 w-px bg-white/20" aria-hidden />
       <span className="leading-none" dir={ar ? "rtl" : "ltr"}>
         <span className="block font-[family-name:var(--font-heading)] text-[0.82rem] font-bold uppercase tracking-[0.16em] text-white rtl:font-[family-name:var(--font-arabic-display)] rtl:text-[0.95rem] rtl:tracking-normal">
@@ -192,7 +192,7 @@ export function Header() {
                   href={n.href}
                   aria-current={isActive(n.href) ? "page" : undefined}
                   className={cn(
-                    "relative flex h-11 items-center whitespace-nowrap px-4 text-[0.9rem] font-semibold text-white/80 transition hover:text-brand-300",
+                    "relative flex h-11 items-center whitespace-nowrap px-3 text-[0.88rem] 2xl:px-4 font-semibold text-white/80 transition hover:text-brand-300",
                     isActive(n.href) && "bg-gold text-ink-950 hover:text-ink-950",
                   )}
                 >
