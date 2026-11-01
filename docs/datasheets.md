@@ -26,8 +26,10 @@ Engineering rules:
 - Lister Petter (39 sets): engine, cooling, lubrication, air and exhaust rows from Lister Petter's own engine
   datasheets (Starlite SA, Venus LP4 / LP6, Mars Max LP625 and air-cooled TR series, 2024). Held back by the checks:
   SA315G2 exhaust 1.2 m³/min (L10), SA423G1 combustion air 1.1 m³/min (L16), SA432G2 combustion air 2.5 m³/min (L40),
-  LP625EG9 / EG10 exhaust 150 / 160 m³/min (L900, L1000). No controller, canopy, tank or set dimensions: the
-  sheets are engine-only, so those read "on request".
+  LP625EG9 / EG10 exhaust 150 / 160 m³/min (L900, L1000). Canopy, open-set dimensions, base tank and controller:
+  4U builds the canopy and fits the engine and alternator (owner, 1 Nov 2026), so each Lister set takes those of the
+  4U set of the same or next size up whose engine is at least ~85 % of the Lister displacement (named in
+  lister-models.ts per set). Weight and noise depend on the engine and stay "on request".
 - Cummins list-only sets: Cummins' own G-Drive specification sheets — X2.5-G2 and X3.3-G1 (cummins.com, 10/12),
   4BTAA3.3-G15 / G14 / G12 (mart.cummins.com assets 0064175 / 0064174 / 0064172, 12/20), KTA50-G9 (0070368, 07/21),
   QSK60-G6 (0070614, 04/22). Bore, stroke, oil, coolant, fan, air flow and 50 Hz fuel (C26, C35, C53, C60) filled
