@@ -47,7 +47,8 @@ export async function Footer() {
   ];
 
   return (
-    <footer className="on-dark border-t border-white/10 bg-navy-950 pb-24 text-white/80 md:pb-0">
+    <footer className="stage-dark on-dark relative bg-navy-950 pb-24 text-white/80 md:pb-0">
+      <div aria-hidden className="gold-rule absolute inset-x-0 top-0 h-px" />
       <div className="container-x grid gap-12 py-16 lg:grid-cols-12">
         <div className="lg:col-span-4">
           <Link href="/" className="inline-block">
@@ -60,7 +61,7 @@ export async function Footer() {
 
         {cols.map((c) => (
           <nav key={c.title} aria-label={c.title} className="lg:col-span-2">
-            <p className="text-sm font-bold text-white">{c.title}</p>
+            <p className="text-sm font-bold uppercase tracking-[0.14em] text-brand-400 rtl:tracking-normal">{c.title}</p>
             <ul className="mt-4 space-y-2.5 text-sm">
               {c.links.map((l) => (
                 <li key={l.href}>
@@ -74,7 +75,7 @@ export async function Footer() {
         ))}
 
         <div className="lg:col-span-4">
-          <p className="text-sm font-bold text-white">{t("contactTitle")}</p>
+          <p className="text-sm font-bold uppercase tracking-[0.14em] text-brand-400 rtl:tracking-normal">{t("contactTitle")}</p>
           <address className="mt-4 space-y-3 text-sm not-italic">
             <p className="flex gap-3">
               <MapPin className="mt-0.5 size-4 shrink-0 text-brand-400" aria-hidden />

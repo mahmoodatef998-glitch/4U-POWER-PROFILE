@@ -23,7 +23,8 @@ export function PageHero({
   aside?: ReactNode;
 }) {
   return (
-    <section className="on-dark relative overflow-hidden text-white">
+    <section className="stage-dark on-dark relative overflow-hidden bg-navy-950 text-white">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(50rem_26rem_at_85%_0%,rgb(214_176_92/0.13),transparent_70%)]" aria-hidden />
       {/* hairline arc + faint grid, as on the home hero */}
       <div
         className="pointer-events-none absolute start-1/2 top-24 aspect-square w-[max(110vw,70rem)] -translate-x-1/2 rounded-full border border-white/10 [mask-image:linear-gradient(to_bottom,black_15%,transparent_55%)] rtl:translate-x-1/2"
@@ -35,7 +36,7 @@ export function PageHero({
           <Breadcrumbs locale={locale} items={crumbs} />
           {eyebrow && (
             <p className="mt-8 inline-flex items-center gap-2.5 rounded-full border border-white/10 bg-white/[0.05] px-4 py-1.5 text-xs font-medium text-white/80 backdrop-blur sm:text-sm">
-              <span className="size-2 rounded-full bg-brand-400 shadow-[0_0_12px_rgb(255_214_60/0.8)]" aria-hidden />
+              <span className="size-2 rounded-full bg-brand-400 shadow-[0_0_12px_rgb(214_176_92/0.8)]" aria-hidden />
               {eyebrow}
             </p>
           )}
@@ -45,7 +46,7 @@ export function PageHero({
         </div>
         {aside && <div className="lg:col-span-5">{aside}</div>}
       </div>
-      <div className="relative h-px w-full bg-gradient-to-r from-transparent via-white/15 to-transparent" aria-hidden />
+      <div className="gold-rule relative h-px w-full" aria-hidden />
     </section>
   );
 }

@@ -13,24 +13,26 @@
   --color-ink-300: #a1a1aa;
   --color-ink-200: #d4d4d8;
 
-  /* Brand yellow — sampled from the logo (#FFDF58) */
-  --color-brand-50: rgb(255 214 60 / 0.08);
-  --color-brand-100: #fff4c2;
-  --color-brand-300: #ffeb99;
-  --color-brand-400: #ffdf58;
-  --color-brand-500: #ffd426;
-  --color-brand-600: #e6b800;
-  --color-brand-700: #ffd24a;   /* yellow-family text on the navy theme */
+  /* Brand gold — the black-and-gold identity (Nov 2026); the gold-tinted main logo is /brand/logo-full-gold.png */
+  --color-brand-50: rgb(214 176 92 / 0.08);
+  --color-brand-100: #f6ecd2;
+  --color-brand-300: #ecd9a3;
+  --color-brand-400: #dcb767;
+  --color-brand-500: #c9a14a;
+  --color-brand-600: #a8822f;
+  --color-brand-700: #d9b86a;   /* gold text on the charcoal theme */
+  --color-gold-a: #f0d996;      /* gold gradient: light → deep */
+  --color-gold-b: #b8892e;
 
-  /* Deep navy for immersive dark sections (hybrid with the Upscayl-style glass look) */
-  --color-navy-950: #0a0f1f;
-  --color-navy-900: #10172d;
-  --color-navy-800: #182142;
-  --color-navy-700: #243058;
+  /* Charcoal surfaces (the "navy-*" names are kept so every page restyles from the tokens) */
+  --color-navy-950: #0b0c0f;
+  --color-navy-900: #131418;
+  --color-navy-800: #1b1d22;
+  --color-navy-700: #272a31;
 
-  /* Product-line accent gradients: amber (generators), green (ATS), blue (switchgear), violet (MDB), cyan (sync) */
-  --color-line-gen-a: #ffd426;
-  --color-line-gen-b: #ff8a3d;
+  /* Product-line accent gradients: gold (generators), green (ATS), blue (switchgear), violet (MDB), cyan (sync) */
+  --color-line-gen-a: #f0d996;
+  --color-line-gen-b: #b8892e;
   --color-line-ats-a: #4ade80;
   --color-line-ats-b: #14b8a6;
   --color-line-sw-a: #60a5fa;
@@ -43,20 +45,20 @@
   --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
 
   /* Site-wide night theme: semantic "ink/muted/line/surface" tokens resolve to light-on-navy values */
-  --color-ink: #eef1f8;
-  --color-muted: #9aa3b8;
+  --color-ink: #f1f0ec;
+  --color-muted: #a3a29c;
   --color-line: rgb(255 255 255 / 0.1);
   --color-surface: rgb(255 255 255 / 0.03);
 
   /* neutral greys remapped for dark UI (forms, tracks, prose) */
-  --color-zinc-50: #141b33;
-  --color-zinc-100: #1a2240;
-  --color-zinc-200: #263050;
-  --color-zinc-300: #36405e;
-  --color-zinc-400: #4b5575;
-  --color-zinc-500: #8e97ab;
-  --color-zinc-700: #c9cfdc;
-  --color-zinc-800: #dde2ec;
+  --color-zinc-50: #16171b;
+  --color-zinc-100: #1c1e23;
+  --color-zinc-200: #2a2c33;
+  --color-zinc-300: #3a3d45;
+  --color-zinc-400: #50535c;
+  --color-zinc-500: #93959c;
+  --color-zinc-700: #d0d0cc;
+  --color-zinc-800: #e3e2de;
   /* status colours for dark UI */
   --color-red-50: #2a1320;
   --color-red-700: #ff9a9a;
@@ -68,7 +70,8 @@
   --color-emerald-900: #a6f0cf;
 
   --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-barlow), var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-montserrat), var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-montserrat), var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
   --font-arabic: var(--font-plex-arabic), var(--font-manrope), "Segoe UI", Tahoma, sans-serif;
   --font-arabic-display: var(--font-readex), var(--font-plex-arabic), "Segoe UI", Tahoma, sans-serif;
 
@@ -111,17 +114,17 @@
  */
 :root[data-theme="light"] {
   color-scheme: light;
-  --color-white: #0b1022;
-  --color-navy-950: #f4f6fb;
+  --color-white: #121317;
+  --color-navy-950: #f5f3ee;
   --color-navy-900: #ffffff;
-  --color-navy-800: #eef1f7;
-  --color-navy-700: #e2e7f0;
-  --color-ink: #111827;
-  --color-muted: #566074;
-  --color-line: rgb(15 23 42 / 0.1);
-  --color-surface: rgb(15 23 42 / 0.025);
-  --color-brand-50: #fffbe8;
-  --color-brand-700: #7a5900;
+  --color-navy-800: #eeebe4;
+  --color-navy-700: #e2ded5;
+  --color-ink: #141518;
+  --color-muted: #5f5d57;
+  --color-line: rgb(20 20 24 / 0.1);
+  --color-surface: rgb(20 20 24 / 0.025);
+  --color-brand-50: #fbf6ea;
+  --color-brand-700: #7d5c1c;
   --color-zinc-50: #fafafa;
   --color-zinc-100: #f4f4f5;
   --color-zinc-200: #e4e4e7;
@@ -153,7 +156,7 @@
   /* numbers line up in tables, counters and spec rows */
   :is(table, dl, .tabular-nums) { font-variant-numeric: tabular-nums; }
   /* Condensed industrial display face for the big headings (matches the POWER wordmark) */
-  h1, h2 { font-family: var(--font-sans); font-weight: 700; letter-spacing: -0.035em; line-height: 1.04; }
+  h1, h2 { font-family: var(--font-heading); font-weight: 700; letter-spacing: -0.02em; line-height: 1.08; }
   /* ---- Arabic typography ----
    * Arabic is a connected script: any letter-spacing breaks the joins, so tracking is zeroed everywhere.
    * It also needs more leading (tall ascenders, dots and marks) and reads best a touch larger than Latin. */
@@ -190,7 +193,7 @@
 
   /* Gradient text in the brand amber (or any --grad passed in) */
   .grad-text {
-    background-image: var(--grad, linear-gradient(120deg, var(--color-brand-400), var(--color-line-gen-b)));
+    background-image: var(--grad, linear-gradient(120deg, var(--color-gold-a), var(--color-gold-b)));
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
@@ -206,7 +209,7 @@
     z-index: 1;
     border-radius: inherit;
     padding: 1.5px;
-    background: var(--grad, linear-gradient(135deg, var(--color-brand-400), var(--color-line-gen-b)));
+    background: var(--grad, linear-gradient(135deg, var(--color-gold-a), var(--color-gold-b)));
     -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
@@ -223,7 +226,7 @@
     inset: 0;
     z-index: 2;
     border-radius: inherit;
-    background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), rgb(255 214 60 / 0.1), transparent 45%);
+    background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), rgb(220 183 103 / 0.1), transparent 45%);
     opacity: 0;
     transition: opacity 400ms var(--ease-out-expo);
     pointer-events: none;
@@ -241,12 +244,11 @@
     pointer-events: none;
   }
   .shine:hover::after { transform: translateX(130%); }
-  /* Upscayl-style night sky: blue light on the start side, magenta on the end side, a hint of brand amber */
+  /* Warm night glow: soft gold light from the corners on charcoal */
   .nebula {
     background:
-      radial-gradient(55rem 40rem at 8% 35%, rgb(56 88 214 / 0.26), transparent 70%),
-      radial-gradient(50rem 38rem at 94% 60%, rgb(170 60 150 / 0.2), transparent 70%),
-      radial-gradient(36rem 24rem at 55% 105%, rgb(255 180 40 / 0.07), transparent 70%);
+      radial-gradient(55rem 40rem at 6% 30%, rgb(214 176 92 / 0.08), transparent 70%),
+      radial-gradient(50rem 38rem at 96% 65%, rgb(184 137 46 / 0.07), transparent 70%);
   }
   /* Thin gradient ring (pill buttons, badges) */
   .ring-grad { position: relative; isolation: isolate; }
@@ -256,7 +258,7 @@
     inset: 0;
     border-radius: inherit;
     padding: 1.5px;
-    background: linear-gradient(110deg, var(--color-brand-400), #ff8a3d 40%, #d946ef 75%, #6366f1);
+    background: linear-gradient(110deg, var(--color-gold-a), var(--color-gold-b) 55%, var(--color-gold-a));
     -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
@@ -272,7 +274,7 @@
       radial-gradient(30rem 20rem at 60% 100%, rgb(20 184 166 / 0.12), transparent 70%);
   }
   /* Per product-line gradients */
-  .line-generator { --grad-ink: linear-gradient(120deg, #a15c00, #c2410c); --grad: linear-gradient(120deg, var(--color-line-gen-a), var(--color-line-gen-b)); --glow: rgb(255 170 50 / 0.35); }
+  .line-generator { --grad-ink: linear-gradient(120deg, #8a6420, #5e4310); --grad: linear-gradient(120deg, var(--color-line-gen-a), var(--color-line-gen-b)); --glow: rgb(255 170 50 / 0.35); }
   .line-ats_panel { --grad-ink: linear-gradient(120deg, #15803d, #0f766e); --grad: linear-gradient(120deg, var(--color-line-ats-a), var(--color-line-ats-b)); --glow: rgb(45 212 150 / 0.3); }
   .line-switchgear { --grad-ink: linear-gradient(120deg, #1d4ed8, #4f46e5); --grad: linear-gradient(120deg, var(--color-line-sw-a), var(--color-line-sw-b)); --glow: rgb(110 140 250 / 0.32); }
   .line-mdb { --grad-ink: linear-gradient(120deg, #9333ea, #db2777); --grad: linear-gradient(120deg, var(--color-line-mdb-a), var(--color-line-mdb-b)); --glow: rgb(210 120 230 / 0.3); }
@@ -304,7 +306,7 @@
   & .text-emerald-400 { color: #047857; }
   & :is(.eyebrow, .eyebrow-dark) { color: var(--color-brand-700); }
   /* bright gradients are tuned for navy; on white use the deep variant of each line (or deep amber) */
-  & .grad-text { background-image: var(--grad-ink, linear-gradient(120deg, #a15c00, #c2410c)); }
+  & .grad-text { background-image: var(--grad-ink, linear-gradient(120deg, #9a7226, #5e4310)); }
   & .dots { background-image: radial-gradient(rgb(15 23 42 / 0.06) 1px, transparent 1px); }
   & .grid-bg {
     background-image:
@@ -313,12 +315,11 @@
   }
   & .nebula {
     background:
-      radial-gradient(55rem 40rem at 8% 35%, rgb(99 132 255 / 0.16), transparent 70%),
-      radial-gradient(50rem 38rem at 94% 60%, rgb(217 70 190 / 0.1), transparent 70%),
-      radial-gradient(36rem 24rem at 55% 105%, rgb(255 190 40 / 0.12), transparent 70%);
+      radial-gradient(55rem 40rem at 6% 30%, rgb(214 176 92 / 0.1), transparent 70%),
+      radial-gradient(50rem 38rem at 96% 65%, rgb(184 137 46 / 0.08), transparent 70%);
   }
   & .spotlight::after {
-    background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), rgb(255 190 30 / 0.12), transparent 45%);
+    background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), rgb(200 160 70 / 0.12), transparent 45%);
   }
 }
 
@@ -337,15 +338,35 @@ html[dir="rtl"] :is(h3, h4) { line-height: 1.5; }
   .sheet footer { display: flex !important; }
 }
 
-/* Always-dark stage (e.g. the product deck) regardless of the site theme */
+/* Always-dark stage (header, footer, home hero, product deck) regardless of the site theme */
 .stage-dark {
   --color-white: #fff;
-  --color-navy-950: #0a0f1f;
-  --color-navy-900: #10172d;
-  --color-navy-800: #182142;
-  --color-navy-700: #243058;
+  --color-navy-950: #0b0c0f;
+  --color-navy-900: #131418;
+  --color-navy-800: #1b1d22;
+  --color-navy-700: #272a31;
+  --color-ink: #f1f0ec;
+  --color-muted: #a3a29c;
+  --color-line: rgb(255 255 255 / 0.1);
+  --color-brand-700: #d9b86a;
   color-scheme: dark;
 }
+:root[data-theme="light"] .stage-dark {
+  & :is(.text-brand-400, .text-brand-500, .text-brand-600) { color: var(--color-brand-400); }
+  & .hover\:text-brand-400:hover { color: var(--color-brand-400); }
+  & :is(.eyebrow, .eyebrow-dark) { color: var(--color-brand-400); }
+  & .grad-text { background-image: var(--grad, linear-gradient(120deg, var(--color-gold-a), var(--color-gold-b))); }
+}
+/* Gold fill (primary buttons, active nav) and gold hairline rules */
+.bg-gold { background-image: linear-gradient(180deg, #e6c878, #c39a45 55%, #a87f2e); }
+.gold-rule { background-image: linear-gradient(90deg, transparent, var(--color-brand-500), transparent); }
+.text-gold {
+  background-image: linear-gradient(180deg, var(--color-gold-a), var(--color-gold-b));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+:root[data-theme="light"] .text-gold:not(.stage-dark *) { background-image: linear-gradient(180deg, #a87f2e, #6e4f14); }
 :root[data-theme="light"] .stage-dark .grid-bg {
   background-image:
     linear-gradient(to right, rgb(255 255 255 / 0.05) 1px, transparent 1px),

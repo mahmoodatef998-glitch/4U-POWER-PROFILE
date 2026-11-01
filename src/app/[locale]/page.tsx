@@ -1,12 +1,11 @@
-import { ArrowRight, BadgeCheck, CheckCircle2, FlaskConical, ShieldCheck, Wrench } from "lucide-react";
+import { ArrowRight, BadgeCheck, Building2, CalendarCheck, CheckCircle2, Factory, FlaskConical, Gauge, Globe2, Headset, Layers, ShieldCheck, Sun, ToggleRight, TowerControl, Wrench, Zap } from "lucide-react";
 import Image from "next/image";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Calculator } from "@/components/calculator/calculator";
-import { sizingModels } from "@/lib/genset-models";
+import { gensetModels, sizingModels } from "@/lib/genset-models";
 import { CoverageMap } from "@/components/coverage-map";
 import { CtaBanner } from "@/components/cta-banner";
 import { WhatsAppButton } from "@/components/cta-buttons";
-import { HeroAssembly } from "@/components/hero-assembly";
 import { FaqBlock } from "@/components/faq-block";
 import { Magnetic, Parallax, RotatingWords, SplitText, StackCards, Tilt3D } from "@/components/fx";
 import { Counter, Reveal } from "@/components/motion";
@@ -25,15 +24,63 @@ import { Link } from "@/i18n/navigation";
 import { getNews, getProducts, getTestimonials } from "@/lib/data";
 import { buildMetadata } from "@/lib/seo";
 import { CATEGORIES } from "@/lib/types";
-import { pick, stripMarks, type Locale } from "@/lib/utils";
+import { cn, pick, stripMarks, type Locale } from "@/lib/utils";
+import type { ReactNode } from "react";
 
 export const revalidate = 3600;
 // Only /en and /ar: junk single-segment URLs (/wp-login.php, /.env …) skip the middleware and would otherwise
 // render the home page with a bogus locale. Safe here because nothing revalidates the home page on demand.
 export const dynamicParams = false;
 
+/** Hero feature bar: what every order includes (facts already stated across the site). */
+const FEATURES = [
+  { I: ShieldCheck, en: "12-month / 1,000 h warranty", ar: "ضمان 12 شهراً / 1,000 ساعة" },
+  { I: Layers, en: "Generator, ATS & MDB from one supplier", ar: "المولد ولوحة ATS والتوزيع من مورد واحد" },
+  { I: FlaskConical, en: "Testing & commissioning", ar: "اختبار وتشغيل" },
+  { I: Headset, en: "After-sales & maintenance", ar: "خدمة ما بعد البيع والصيانة" },
+  { I: Globe2, en: "SAIF Zone, Sharjah · UAE, KSA, Iraq", ar: "سيف زون، الشارقة · الإمارات والسعودية والعراق" },
+];
+
+const PRODUCT_CARDS = [
+  {
+    href: "/generators",
+    I: Factory,
+    image: "/images/products/perkins-diesel-generator-250-1000kva-4u.webp",
+    alt: { en: "4U silent canopy diesel generator", ar: "مولد ديزل بكابينة عازلة للصوت من فور يو" },
+    title: { en: "Generators", ar: "المولدات" },
+    body: { en: "Diesel generator sets from 10 to 2500 kVA for prime and standby power.", ar: "مولدات ديزل من 10 إلى 2500 ك.ف.أ للتشغيل الأساسي والاحتياطي." },
+  },
+  {
+    href: "/ats-panels",
+    I: ToggleRight,
+    image: "/images/products/ats-panel-630-4000a-4u.webp",
+    alt: { en: "ATS panel line-up", ar: "لوحات تحويل أوتوماتيكي ATS" },
+    title: { en: "ATS & Switchgear", ar: "لوحات ATS والكهرباء" },
+    body: { en: "ATS panels, switchgear, MDB and synchronising panels from 63 A to 4000 A.", ar: "لوحات ATS ولوحات جهد منخفض وتوزيع وتزامن من 63 إلى 4000 أمبير." },
+  },
+  {
+    href: "/products?category=solar",
+    I: Sun,
+    image: "/images/products/solar-pv-panels-4u.webp",
+    alt: { en: "Solar PV panels", ar: "ألواح طاقة شمسية" },
+    title: { en: "Solar Solutions", ar: "حلول الطاقة الشمسية" },
+    body: { en: "Solar panels, stations, hybrid systems and battery storage.", ar: "ألواح ومحطات شمسية وأنظمة هجينة وتخزين بالبطاريات." },
+  },
+  {
+    href: "/products?category=accessories",
+    I: TowerControl,
+    image: "/images/products/solar-light-tower-real-1-4u.webp",
+    alt: { en: "Solar light tower on a trailer", ar: "برج إنارة شمسي على مقطورة" },
+    title: { en: "Light Towers & Accessories", ar: "أبراج الإنارة والملحقات" },
+    body: { en: "Solar and diesel light towers, fuel tanks, canopies and load banks.", ar: "أبراج إنارة شمسية وديزل وخزانات وقود وكبائن وأحمال اختبار." },
+  },
+];
+
+/** `**marked**` words in gold (the H1 keeps its exact text for search). */
+const gold = (s: string): ReactNode[] => s.split("**").map((part, i) => (i % 2 ? <span key={i} className="text-gold">{part}</span> : part));
+
 /** gradient family per story card: engine, cooling, control, delivery */
-const STORY_LINES = ["line-generator", "line-sync_panel", "line-ats_panel", "line-switchgear"];
+const STORY_LINES = ["line-generator", "line-generator", "line-generator", "line-generator"];
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }) {
   const { locale } = await params;
@@ -47,48 +94,153 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
   const [products, news, testimonials] = await Promise.all([getProducts(), getNews(), getTestimonials()]);
   const calcProducts = products.filter((p) => p.category === "generator" || p.category === "ats_panel");
   const L = <T,>(v: { en: T; ar: T }) => pick(v, locale);
+  const ar = locale === "ar";
+  const facts = [
+    { I: CalendarCheck, value: "2023", label: ar ? "تأسست في المنطقة الحرة بالشارقة" : "Founded in SAIF Zone, Sharjah" },
+    { I: Zap, value: ar ? "10 – 2500 ك.ف.أ" : "10 – 2500 kVA", label: ar ? "نطاق قدرات المولدات" : "Generator range" },
+    { I: Gauge, value: String(gensetModels.length), label: ar ? "موديل مولد بنشرة فنية" : "Generator models with datasheets" },
+    { I: Building2, value: ar ? "الإمارات" : "UAE", label: ar ? "المقر والمستودع في الشارقة" : "Head office & warehouse, Sharjah" },
+  ];
 
   return (
     <>
-      {/* ------------------------------------------------ HERO: full-frame generator assembles on scroll */}
-      <HeroAssembly
-        words={[locale === "ar" ? "طاقة" : "POWER", ...home.story.map((c) => L(c.word))]}
-        strings={{
-          scroll: locale === "ar" ? "مرّر لتجميع المولد" : "Scroll to assemble",
-          label: stripMarks(L(home.hero.h1)),
-          badge: locale === "ar" ? "متوفر في الشارقة · من 10 إلى 2500 ك.ف.أ" : "In stock in Sharjah · 10–2500 kVA",
-        }}
-      />
+      {/* ------------------------------------------------ HERO: night render, gold headline, feature bar (always dark) */}
+      <section className="stage-dark relative isolate overflow-hidden bg-navy-950 text-white" aria-labelledby="hero-title">
+        <picture className="absolute inset-0 -z-10">
+          <source media="(min-width: 768px)" srcSet="/images/hero/hero-night-genset.webp" />
+          {/* decorative backdrop: the headline carries the meaning */}
+          <img
+            src="/images/hero/hero-night-genset-sm.webp"
+            alt=""
+            fetchPriority="high"
+            className="size-full object-cover object-[70%_center] opacity-60 md:object-center md:opacity-100 rtl:-scale-x-100"
+          />
+        </picture>
+        <div aria-hidden className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgb(11_12_15/0.96)_0%,rgb(11_12_15/0.82)_32%,rgb(11_12_15/0.2)_62%,transparent_80%)] rtl:bg-[linear-gradient(270deg,rgb(11_12_15/0.96)_0%,rgb(11_12_15/0.82)_32%,rgb(11_12_15/0.2)_62%,transparent_80%)]" />
+        <div aria-hidden className="absolute inset-x-0 bottom-0 -z-10 h-56 bg-gradient-to-t from-navy-950 to-transparent" />
 
-      {/* Rest of the page sits on the site-wide night-sky canvas (see layout) */}
+        <div className="container-x pb-10 pt-14 sm:pt-20 lg:pb-14 lg:pt-28">
+          <div className="max-w-2xl">
+            <Reveal>
+              <p className="eyebrow">
+                <BadgeCheck className="size-4" aria-hidden />
+                {L(home.hero.eyebrow)}
+              </p>
+            </Reveal>
+            <h1
+              id="hero-title"
+              className="mt-5 font-[family-name:var(--font-heading)] text-[2.15rem] leading-[1.08] font-extrabold uppercase tracking-[-0.01em] text-white sm:text-5xl lg:text-[3.6rem] rtl:font-[family-name:var(--font-arabic-display)] rtl:text-[2.1rem] rtl:normal-case rtl:sm:text-5xl"
+            >
+              {gold(L(home.hero.h1))}
+            </h1>
+            <Reveal delay={0.15}>
+              <p className="mt-6 text-sm font-semibold tracking-wide text-brand-300 sm:text-base">
+                {locale === "ar" ? "مولدات ديزل | لوحات ATS ولوحات كهرباء | حلول الطاقة الشمسية" : "Diesel Generators | ATS & Switchgear | Solar Solutions"}
+              </p>
+              <p className="mt-3 max-w-xl text-base leading-7 text-white/75">{L(home.hero.lead)}</p>
+              <div className="mt-8 flex flex-wrap items-center gap-3">
+                <Link href="/products" className={buttonVariants({ variant: "primary", size: "lg" })}>
+                  {t("cta.browseProducts")}
+                  <ArrowRight className="flip-rtl" aria-hidden />
+                </Link>
+                <WhatsAppButton location="hero" variant="outline" size="lg" label={locale === "ar" ? "سعر اليوم على واتساب" : "Get a price on WhatsApp"} />
+              </div>
+            </Reveal>
+          </div>
+
+          {/* feature bar */}
+          <ul className="mt-14 grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-white/10 bg-white/10 backdrop-blur-md sm:grid-cols-3 lg:mt-20 lg:grid-cols-5">
+            {FEATURES.map(({ I, en, ar }, i) => (
+              <li key={en} className={cn("flex items-center gap-3 bg-navy-950/75 px-4 py-4 sm:px-5", i === 4 && "col-span-2 sm:col-span-1")}>
+                <I className="size-7 shrink-0 text-brand-400" strokeWidth={1.5} aria-hidden />
+                <span className="text-[0.82rem] leading-snug font-medium text-white/85 sm:text-sm">{locale === "ar" ? ar : en}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      {/* ------------------------------------------------ PRODUCTS & SOLUTIONS: four photo cards */}
+      <section className="relative bg-navy-950 py-16 sm:py-20" aria-labelledby="ps-title">
+        <div className="container-x">
+          <div className="flex items-center gap-5">
+            <span aria-hidden className="gold-rule h-px flex-1" />
+            <h2 id="ps-title" className="text-center text-2xl font-extrabold uppercase text-ink sm:text-3xl rtl:normal-case">
+              {locale === "ar" ? "منتجاتنا وحلولنا" : "Our products & solutions"}
+            </h2>
+            <span aria-hidden className="gold-rule h-px flex-1" />
+          </div>
+          <p className="mx-auto mt-3 max-w-2xl text-center text-muted">
+            {locale === "ar"
+              ? "مجموعة متكاملة من حلول توليد الطاقة وتوزيعها لتلبية احتياجات مشروعك."
+              : "A complete range of power generation and distribution equipment to meet your project needs."}
+          </p>
+          <ul className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            {PRODUCT_CARDS.map((c, i) => (
+              <Reveal as="li" key={c.href} delay={i * 0.06} from="scale">
+                <Link
+                  href={c.href}
+                  className="stage-dark group flex h-full flex-col overflow-hidden rounded-xl border border-white/10 bg-navy-900 text-white shadow-[0_24px_50px_-28px_rgb(0_0_0/0.75)] transition-[translate,border-color] duration-500 hover:-translate-y-1 hover:border-brand-500/60"
+                >
+                  <span className="relative block aspect-[4/3] overflow-hidden">
+                    <Image src={c.image} alt={L(c.alt)} fill sizes="(min-width:1024px) 25vw, (min-width:640px) 50vw, 100vw" className="object-cover transition-transform duration-700 group-hover:scale-105" />
+                    <span aria-hidden className="absolute inset-0 bg-gradient-to-t from-navy-900 via-navy-900/10 to-transparent" />
+                  </span>
+                  <span className="relative -mt-6 flex flex-1 items-start gap-3 px-5 pb-5">
+                    <c.I className="mt-0.5 size-7 shrink-0 text-brand-400" strokeWidth={1.5} aria-hidden />
+                    <span className="flex-1">
+                      <span className="block text-lg font-bold">{L(c.title)}</span>
+                      <span className="mt-1.5 block text-sm leading-6 text-white/65">{L(c.body)}</span>
+                    </span>
+                    <span className="mt-auto grid size-8 shrink-0 place-items-center rounded-md border border-brand-500/60 text-brand-300 transition group-hover:bg-brand-500 group-hover:text-ink-950">
+                      <ArrowRight className="flip-rtl size-4" aria-hidden />
+                    </span>
+                  </span>
+                </Link>
+              </Reveal>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      {/* ------------------------------------------------ FACTS BAR (real figures only) */}
+      <section className="stage-dark relative overflow-hidden bg-navy-900 text-white" aria-label={locale === "ar" ? "حقائق عن الشركة" : "Company facts"}>
+        <div aria-hidden className="gold-rule absolute inset-x-0 top-0 h-px" />
+        <div aria-hidden className="gold-rule absolute inset-x-0 bottom-0 h-px opacity-50" />
+        <dl className="container-x grid grid-cols-2 gap-y-6 py-8 lg:grid-cols-4">
+          {facts.map(({ I, value, label }, i) => (
+            <div key={label} className={cn("flex items-center gap-4 px-2 sm:px-6", i > 0 && "lg:border-s lg:border-white/10")}>
+              <I className="size-9 shrink-0 text-brand-400" strokeWidth={1.25} aria-hidden />
+              <div className="flex flex-col-reverse">
+                <dt className="text-xs text-white/65 sm:text-sm">{label}</dt>
+                <dd className="font-[family-name:var(--font-heading)] text-xl font-extrabold text-white sm:text-2xl" dir="ltr">{value}</dd>
+              </div>
+            </div>
+          ))}
+        </dl>
+      </section>
+
+      {/* Rest of the page sits on the site-wide canvas (see layout) */}
       <div className="on-dark relative text-white">
 
-        {/* ---------------------------------------------- INTRO: pinned headline + cards that stack as you scroll */}
-        <section className="relative pb-20 pt-16 sm:pt-24 lg:pb-32" aria-labelledby="hero-title">
+        {/* ---------------------------------------------- STORY: pinned intro + cards that stack as you scroll */}
+        <section className="relative pb-20 pt-16 sm:pt-24 lg:pb-32" aria-labelledby="story-title">
           <div className="container-x relative grid gap-12 lg:grid-cols-12 lg:gap-16">
             <div className="lg:col-span-5">
-              <div className="lg:sticky lg:top-32">
-                <Reveal>
-                  <p className="eyebrow">
-                    <BadgeCheck className="size-4" aria-hidden />
-                    {L(home.hero.eyebrow)}
-                  </p>
-                </Reveal>
+              <div className="lg:sticky lg:top-40">
                 <SplitText
-                  as="h1"
-                  id="hero-title"
-                  text={L(home.hero.h1)}
-                  className="mt-5 text-[2.5rem] text-white sm:text-6xl lg:text-[4.1rem] rtl:text-[2.1rem] rtl:sm:text-5xl rtl:lg:text-[3.3rem]"
+                  as="h2"
+                  id="story-title"
+                  text={locale === "ar" ? "من **المحرك** حتى **التسليم**" : "From the **engine** to **delivery**"}
+                  className="text-[2.3rem] text-white sm:text-5xl lg:text-[3.4rem] rtl:text-[2rem] rtl:sm:text-5xl"
                 />
                 <Reveal delay={0.25}>
-                  <p className="mt-6 max-w-xl text-base leading-7 text-white/60 sm:text-lg">{L(home.hero.lead)}</p>
-                  <div className="mt-8 flex flex-col items-start gap-3">
-                    <div className="flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] p-1.5 ps-5 backdrop-blur">
-                      <span className="text-sm text-white/70 sm:text-base">{locale === "ar" ? "تحتاج عرض سعر اليوم؟" : "Need a price today?"}</span>
-                      <Magnetic>
-                        <WhatsAppButton location="hero" />
-                      </Magnetic>
-                    </div>
+                  <p className="mt-6 max-w-xl text-base leading-7 text-white/60 sm:text-lg">
+                    {locale === "ar"
+                      ? "كل مولد نوفّره محسوب لحرارة الخليج، ومتوافق مع لوحة ATS ولوحات التوزيع، ويصل بنشراته الفنية ومستندات التصدير."
+                      : "Every set we supply is specified for Gulf heat, matched to its ATS and distribution panels, and delivered with its datasheet and export paperwork."}
+                  </p>
+                  <div className="mt-8">
                     <Magnetic>
                       <Link href="/calculator" className={buttonVariants({ variant: "ring", size: "lg" })}>
                         {t("cta.tryCalculator")}

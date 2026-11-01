@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Barlow_Condensed, IBM_Plex_Sans_Arabic, Manrope, Readex_Pro } from "next/font/google";
+import { IBM_Plex_Sans_Arabic, Manrope, Montserrat, Readex_Pro } from "next/font/google";
 import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
@@ -19,7 +19,8 @@ import { SITE_URL } from "@/lib/site";
 import type { Locale } from "@/lib/utils";
 
 const manrope = Manrope({ subsets: ["latin"], variable: "--font-manrope", display: "swap" });
-const barlow = Barlow_Condensed({ subsets: ["latin"], weight: ["800"], variable: "--font-barlow", display: "swap" });
+// Montserrat: the bold geometric face for headings and display figures (black-and-gold identity)
+const montserrat = Montserrat({ subsets: ["latin"], weight: ["600", "700", "800"], variable: "--font-montserrat", display: "swap" });
 // Arabic type: IBM Plex Sans Arabic for reading text, Readex Pro (geometric, pairs with Manrope) for headings.
 // "swap" so first-time visitors always get the real Arabic faces; not preloaded, so English pages never download them.
 const plexArabic = IBM_Plex_Sans_Arabic({
@@ -39,7 +40,7 @@ export const metadata: Metadata = {
   verification: { google: process.env.NEXT_PUBLIC_GSC_VERIFICATION || undefined },
 };
 
-export const viewport: Viewport = { themeColor: "#f4f6fb", width: "device-width", initialScale: 1 };
+export const viewport: Viewport = { themeColor: "#0b0c0f", width: "device-width", initialScale: 1 };
 
 // Only /en and /ar exist: anything else is a 404 via the hasLocale() check below. No `dynamicParams = false` here —
 // it made every route under [locale] "fallback: false", so on-demand revalidation (admin publish / hide) turned the
@@ -63,7 +64,7 @@ export default async function LocaleLayout({ children, params }: { children: Rea
       dir={ar ? "rtl" : "ltr"}
       data-theme="light"
       suppressHydrationWarning
-      className={`${manrope.variable} ${barlow.variable} ${plexArabic.variable} ${readexArabic.variable}`}
+      className={`${manrope.variable} ${montserrat.variable} ${plexArabic.variable} ${readexArabic.variable}`}
     >
       <head>
         {/* apply the saved theme before first paint (no flash) */}
