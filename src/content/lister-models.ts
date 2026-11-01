@@ -6,14 +6,15 @@
  * does not price have none. The sheets are engine-only: controller, canopy, tank, noise and set dimensions are not
  * given, so they read "on request". Left out on purpose: TR661G1 (its 1500 rpm rating repeats the 1800 rpm figures),
  * the LP625EG7 and LP443G5 fuel tables and the LP443G3 sump figure (inconsistent with the rest of their series).
- * Codes follow the standby kVA; "B" marks an alternative engine at the same rating.
+ * Codes and URLs follow the prime kVA (owner's rule, 1 Nov 2026: 100 kVA prime / 110 kVA standby → 4U-x100); a B/C
+ * suffix marks another engine at the same prime rating. Old standby-based URLs redirect (src/lib/model-renames.ts).
  */
 import type { GensetModelData } from "./genset-types";
 
 export const listerModels: GensetModelData[] = [
   {
-    slug: "4u-l11",
-    code: "4U-L11",
+    slug: "4u-l10",
+    code: "4U-L10",
     standbyKva: 11,
     standbyKw: 8.8,
     primeKva: 10,
@@ -37,8 +38,8 @@ export const listerModels: GensetModelData[] = [
     ambientC: 52,
   },
   {
-    slug: "4u-l14",
-    code: "4U-L14",
+    slug: "4u-l12-5",
+    code: "4U-L12.5",
     standbyKva: 13.8,
     standbyKw: 11,
     primeKva: 12.5,
@@ -62,8 +63,8 @@ export const listerModels: GensetModelData[] = [
     ambientC: null,
   },
   {
-    slug: "4u-l18",
-    code: "4U-L18",
+    slug: "4u-l16",
+    code: "4U-L16",
     standbyKva: 18,
     standbyKw: 14,
     primeKva: 16,
@@ -86,8 +87,8 @@ export const listerModels: GensetModelData[] = [
     ambientC: 52,
   },
   {
-    slug: "4u-l23",
-    code: "4U-L23",
+    slug: "4u-l21",
+    code: "4U-L21",
     standbyKva: 23,
     standbyKw: 19,
     primeKva: 21,
@@ -110,8 +111,8 @@ export const listerModels: GensetModelData[] = [
     ambientC: 52,
   },
   {
-    slug: "4u-l28",
-    code: "4U-L28",
+    slug: "4u-l25",
+    code: "4U-L25",
     standbyKva: 28,
     standbyKw: 22,
     primeKva: 25,
@@ -134,8 +135,8 @@ export const listerModels: GensetModelData[] = [
     ambientC: 52,
   },
   {
-    slug: "4u-l28b",
-    code: "4U-L28B",
+    slug: "4u-l25b",
+    code: "4U-L25B",
     standbyKva: 28,
     standbyKw: 22,
     primeKva: 25,
@@ -159,8 +160,8 @@ export const listerModels: GensetModelData[] = [
     ambientC: null,
   },
   {
-    slug: "4u-l34",
-    code: "4U-L34",
+    slug: "4u-l31",
+    code: "4U-L31",
     standbyKva: 34,
     standbyKw: 27,
     primeKva: 31,
@@ -183,8 +184,8 @@ export const listerModels: GensetModelData[] = [
     ambientC: 52,
   },
   {
-    slug: "4u-l44",
-    code: "4U-L44",
+    slug: "4u-l40",
+    code: "4U-L40",
     standbyKva: 44,
     standbyKw: 35,
     primeKva: 40,
@@ -207,8 +208,8 @@ export const listerModels: GensetModelData[] = [
     ambientC: 52,
   },
   {
-    slug: "4u-l50",
-    code: "4U-L50",
+    slug: "4u-l45",
+    code: "4U-L45",
     standbyKva: 50,
     standbyKw: 40,
     primeKva: 45,
@@ -232,8 +233,8 @@ export const listerModels: GensetModelData[] = [
     ambientC: null,
   },
   {
-    slug: "4u-l55",
-    code: "4U-L55",
+    slug: "4u-l50",
+    code: "4U-L50",
     standbyKva: 55,
     standbyKw: 44,
     primeKva: 50,
@@ -256,8 +257,8 @@ export const listerModels: GensetModelData[] = [
     ambientC: 52,
   },
   {
-    slug: "4u-l55b",
-    code: "4U-L55B",
+    slug: "4u-l50b",
+    code: "4U-L50B",
     standbyKva: 55,
     standbyKw: 44,
     primeKva: 50,
@@ -280,8 +281,8 @@ export const listerModels: GensetModelData[] = [
     ambientC: 52,
   },
   {
-    slug: "4u-l66",
-    code: "4U-L66",
+    slug: "4u-l60",
+    code: "4U-L60",
     standbyKva: 66,
     standbyKw: 54,
     primeKva: 60,
@@ -304,8 +305,8 @@ export const listerModels: GensetModelData[] = [
     ambientC: 52,
   },
   {
-    slug: "4u-l66b",
-    code: "4U-L66B",
+    slug: "4u-l60b",
+    code: "4U-L60B",
     standbyKva: 66,
     standbyKw: 53,
     primeKva: 60,
@@ -329,8 +330,8 @@ export const listerModels: GensetModelData[] = [
     ambientC: null,
   },
   {
-    slug: "4u-l69",
-    code: "4U-L69",
+    slug: "4u-l63",
+    code: "4U-L63",
     standbyKva: 69,
     standbyKw: 55,
     primeKva: 63,
@@ -353,8 +354,8 @@ export const listerModels: GensetModelData[] = [
     ambientC: 52,
   },
   {
-    slug: "4u-l72",
-    code: "4U-L72",
+    slug: "4u-l66",
+    code: "4U-L66",
     standbyKva: 72,
     standbyKw: 58,
     primeKva: 66,
@@ -377,8 +378,8 @@ export const listerModels: GensetModelData[] = [
     ambientC: 52,
   },
   {
-    slug: "4u-l90",
-    code: "4U-L90",
+    slug: "4u-l83",
+    code: "4U-L83",
     standbyKva: 90,
     standbyKw: 72,
     primeKva: 83,
@@ -401,8 +402,8 @@ export const listerModels: GensetModelData[] = [
     ambientC: 52,
   },
   {
-    slug: "4u-l110",
-    code: "4U-L110",
+    slug: "4u-l100",
+    code: "4U-L100",
     standbyKva: 110,
     standbyKw: 88,
     primeKva: 100,
@@ -425,8 +426,8 @@ export const listerModels: GensetModelData[] = [
     ambientC: 52,
   },
   {
-    slug: "4u-l125",
-    code: "4U-L125",
+    slug: "4u-l113",
+    code: "4U-L113",
     standbyKva: 125,
     standbyKw: 100,
     primeKva: 113,
@@ -449,8 +450,8 @@ export const listerModels: GensetModelData[] = [
     ambientC: 52,
   },
   {
-    slug: "4u-l138",
-    code: "4U-L138",
+    slug: "4u-l125",
+    code: "4U-L125",
     standbyKva: 138,
     standbyKw: 110,
     primeKva: 125,
@@ -473,8 +474,8 @@ export const listerModels: GensetModelData[] = [
     ambientC: 52,
   },
   {
-    slug: "4u-l138b",
-    code: "4U-L138B",
+    slug: "4u-l125b",
+    code: "4U-L125B",
     standbyKva: 138,
     standbyKw: 110,
     primeKva: 125,
@@ -498,8 +499,8 @@ export const listerModels: GensetModelData[] = [
     ambientC: null,
   },
   {
-    slug: "4u-l150",
-    code: "4U-L150",
+    slug: "4u-l138",
+    code: "4U-L138",
     standbyKva: 150,
     standbyKw: 120,
     primeKva: 138,
@@ -522,8 +523,8 @@ export const listerModels: GensetModelData[] = [
     ambientC: 52,
   },
   {
-    slug: "4u-l165",
-    code: "4U-L165",
+    slug: "4u-l150",
+    code: "4U-L150",
     standbyKva: 165,
     standbyKw: 132,
     primeKva: 150,
@@ -546,8 +547,8 @@ export const listerModels: GensetModelData[] = [
     ambientC: 52,
   },
   {
-    slug: "4u-l206",
-    code: "4U-L206",
+    slug: "4u-l188",
+    code: "4U-L188",
     standbyKva: 206,
     standbyKw: 165,
     primeKva: 188,
@@ -570,8 +571,8 @@ export const listerModels: GensetModelData[] = [
     ambientC: 52,
   },
   {
-    slug: "4u-l227",
-    code: "4U-L227",
+    slug: "4u-l206",
+    code: "4U-L206",
     standbyKva: 227,
     standbyKw: 182,
     primeKva: 206,
@@ -594,8 +595,8 @@ export const listerModels: GensetModelData[] = [
     ambientC: 52,
   },
   {
-    slug: "4u-l248",
-    code: "4U-L248",
+    slug: "4u-l225",
+    code: "4U-L225",
     standbyKva: 248,
     standbyKw: 198,
     primeKva: 225,
@@ -618,8 +619,8 @@ export const listerModels: GensetModelData[] = [
     ambientC: 52,
   },
   {
-    slug: "4u-l275",
-    code: "4U-L275",
+    slug: "4u-l250",
+    code: "4U-L250",
     standbyKva: 275,
     standbyKw: 220,
     primeKva: 250,
@@ -642,8 +643,8 @@ export const listerModels: GensetModelData[] = [
     ambientC: 52,
   },
   {
-    slug: "4u-l300",
-    code: "4U-L300",
+    slug: "4u-l280",
+    code: "4U-L280",
     standbyKva: 300,
     standbyKw: 240,
     primeKva: 280,
@@ -666,8 +667,8 @@ export const listerModels: GensetModelData[] = [
     ambientC: 52,
   },
   {
-    slug: "4u-l358",
-    code: "4U-L358",
+    slug: "4u-l325",
+    code: "4U-L325",
     standbyKva: 358,
     standbyKw: 286,
     primeKva: 325,
@@ -690,8 +691,8 @@ export const listerModels: GensetModelData[] = [
     ambientC: 52,
   },
   {
-    slug: "4u-l385",
-    code: "4U-L385",
+    slug: "4u-l350",
+    code: "4U-L350",
     standbyKva: 385,
     standbyKw: 308,
     primeKva: 350,
@@ -714,8 +715,8 @@ export const listerModels: GensetModelData[] = [
     ambientC: 52,
   },
   {
-    slug: "4u-l413",
-    code: "4U-L413",
+    slug: "4u-l375",
+    code: "4U-L375",
     standbyKva: 413,
     standbyKw: 330,
     primeKva: 375,
@@ -738,8 +739,8 @@ export const listerModels: GensetModelData[] = [
     ambientC: 52,
   },
   {
-    slug: "4u-l440",
-    code: "4U-L440",
+    slug: "4u-l400",
+    code: "4U-L400",
     standbyKva: 440,
     standbyKw: 352,
     primeKva: 400,
@@ -762,8 +763,8 @@ export const listerModels: GensetModelData[] = [
     ambientC: 52,
   },
   {
-    slug: "4u-l545",
-    code: "4U-L545",
+    slug: "4u-l500",
+    code: "4U-L500",
     standbyKva: 545,
     standbyKw: 436,
     primeKva: 500,
@@ -786,8 +787,8 @@ export const listerModels: GensetModelData[] = [
     ambientC: 52,
   },
   {
-    slug: "4u-l630",
-    code: "4U-L630",
+    slug: "4u-l575",
+    code: "4U-L575",
     standbyKva: 630,
     standbyKw: 504,
     primeKva: 575,
@@ -810,8 +811,8 @@ export const listerModels: GensetModelData[] = [
     ambientC: 52,
   },
   {
-    slug: "4u-l695",
-    code: "4U-L695",
+    slug: "4u-l638",
+    code: "4U-L638",
     standbyKva: 695,
     standbyKw: 556,
     primeKva: 638,
@@ -834,8 +835,8 @@ export const listerModels: GensetModelData[] = [
     ambientC: 52,
   },
   {
-    slug: "4u-l765",
-    code: "4U-L765",
+    slug: "4u-l700",
+    code: "4U-L700",
     standbyKva: 765,
     standbyKw: 612,
     primeKva: 700,
@@ -858,8 +859,8 @@ export const listerModels: GensetModelData[] = [
     ambientC: 52,
   },
   {
-    slug: "4u-l820",
-    code: "4U-L820",
+    slug: "4u-l750",
+    code: "4U-L750",
     standbyKva: 820,
     standbyKw: 656,
     primeKva: 750,
@@ -882,8 +883,8 @@ export const listerModels: GensetModelData[] = [
     ambientC: 52,
   },
   {
-    slug: "4u-l900",
-    code: "4U-L900",
+    slug: "4u-l825",
+    code: "4U-L825",
     standbyKva: 900,
     standbyKw: 720,
     primeKva: 825,
@@ -906,8 +907,8 @@ export const listerModels: GensetModelData[] = [
     ambientC: 52,
   },
   {
-    slug: "4u-l985",
-    code: "4U-L985",
+    slug: "4u-l900",
+    code: "4U-L900",
     standbyKva: 985,
     standbyKw: 788,
     primeKva: 900,
@@ -930,8 +931,8 @@ export const listerModels: GensetModelData[] = [
     ambientC: 52,
   },
   {
-    slug: "4u-l1095",
-    code: "4U-L1095",
+    slug: "4u-l1000",
+    code: "4U-L1000",
     standbyKva: 1095,
     standbyKw: 876,
     primeKva: 1000,

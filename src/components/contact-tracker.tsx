@@ -37,7 +37,7 @@ function onWhatsApp(a: HTMLAnchorElement) {
   a.dataset.waBase = base;
   const ref = newWaRef();
   const ar = document.documentElement.lang === "ar";
-  // the page's heading (e.g. "4U-P500 — 500 kVA Perkins diesel generator") so sales see the context in the chat itself
+  // the page's heading (e.g. "4U-P500 — 500 kVA prime / 550 kVA standby Perkins diesel generator") so sales see the context in the chat itself
   const heading = pageHeading();
   try {
     const url = new URL(base);

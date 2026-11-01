@@ -57,7 +57,7 @@ All three are good engines; the right one depends on the rating, the specificati
 
 ## Perkins generators from 4U
 
-Our 4U-P range covers 41 Perkins-powered models from 9.9 to 2500 kVA, each with its own datasheet — for example the [4U-P550](/en/models/4u-p550) on the 2506A-E15TAG2 engine. Sets come open, in a silent canopy or containerised, with Deep Sea controllers, 4U · Leroy-Somer | Stamford alternators and a 12-month / 1,000-hour warranty, supplied from our warehouse in SAIF Zone, Sharjah. Tell us the load and the site on WhatsApp and we will recommend the right model and send a quotation.`,
+Our 4U-P range covers 41 Perkins-powered models from 9.9 to 2500 kVA, each with its own datasheet — for example the [4U-P500](/en/models/4u-p500) on the 2506A-E15TAG2 engine. Sets come open, in a silent canopy or containerised, with Deep Sea controllers, 4U · Leroy-Somer | Stamford alternators and a 12-month / 1,000-hour warranty, supplied from our warehouse in SAIF Zone, Sharjah. Tell us the load and the site on WhatsApp and we will recommend the right model and send a quotation.`,
     body_ar: `بيركنز من أكثر أسماء المحركات التي ستسمعها عند شراء مولد ديزل في الخليج؛ يعرفها الاستشاريون وفرق الصيانة، وقطع غيارها متوفرة بسهولة. لكن عبارة "مولد بيركنز" قد تعني مولداً بقدرة 10 ك.ف.أ لفيلا أو مولداً بقدرة 2500 ك.ف.أ لبرج، لذلك أول خطوة هي معرفة عائلة المحرك التي تتحدث عنها فعلاً.
 
 ## مولدات بيركنز في الإمارات: سلاسل المحركات
@@ -97,7 +97,7 @@ Our 4U-P range covers 41 Perkins-powered models from 9.9 to 2500 kVA, each with 
 
 ## مولدات بيركنز من فور يو
 
-تضم سلسلة 4U-P لدينا 41 موديلاً بمحركات بيركنز من 9.9 إلى 2500 ك.ف.أ، لكل موديل داتاشيت خاص، مثل [4U-P550](/ar/models/4u-p550) بمحرك 2506A-E15TAG2. تتوفر المولدات مفتوحة أو بكانوبي صامت أو داخل كونتينر، مع وحدات تحكم Deep Sea ومولدات تيار 4U · Leroy-Somer | Stamford وضمان 12 شهراً أو 1,000 ساعة، من مستودعنا في المنطقة الحرة بمطار الشارقة (SAIF Zone). أرسل لنا الحمل وطبيعة الموقع على الواتساب وسنرشح الموديل المناسب ونرسل عرض السعر.`,
+تضم سلسلة 4U-P لدينا 41 موديلاً بمحركات بيركنز من 9.9 إلى 2500 ك.ف.أ، لكل موديل داتاشيت خاص، مثل [4U-P500](/ar/models/4u-p500) بمحرك 2506A-E15TAG2. تتوفر المولدات مفتوحة أو بكانوبي صامت أو داخل كونتينر، مع وحدات تحكم Deep Sea ومولدات تيار 4U · Leroy-Somer | Stamford وضمان 12 شهراً أو 1,000 ساعة، من مستودعنا في المنطقة الحرة بمطار الشارقة (SAIF Zone). أرسل لنا الحمل وطبيعة الموقع على الواتساب وسنرشح الموديل المناسب ونرسل عرض السعر.`,
   },
   {
     slug: "1000-kva-generator-specifications",
@@ -126,12 +126,12 @@ Several engines sit in this class. From our datasheets (50 Hz, 1500 rpm, 400/230
 
 | Model | Engine | Standby / prime (kVA) | Cylinders |
 | --- | --- | --- | --- |
-| [4U-P1000](/en/models/4u-p1000) | Perkins 4008-TAG1 | 1000 / 900 | 8 in-line |
-| 4U-P1100 | Perkins 4008-TAG2 | 1100 / 1000 | 8 in-line |
-| 4U-C900B | Cummins KTA38-G2 | 1000 / 900 | V12 |
-| [4U-C1110](/en/models/4u-c1110) | Cummins KTA38-G14 | 1100 / 1000 | V12 |
-| 4U-C1100 | Cummins QST30-G4 | 1138 / 1000 | V12 |
-| 4U-B1000 | Baudouin 12M26G1000/5 | 1000 / 900 | V12 |
+| [4U-P900](/en/models/4u-p900) | Perkins 4008-TAG1 | 1000 / 900 | 8 in-line |
+| 4U-P1000 | Perkins 4008-TAG2 | 1100 / 1000 | 8 in-line |
+| 4U-C900 | Cummins KTA38-G2 | 1000 / 900 | V12 |
+| [4U-C1000](/en/models/4u-c1000) | Cummins KTA38-G14 | 1100 / 1000 | V12 |
+| 4U-C1000B | Cummins QST30-G4 | 1138 / 1000 | V12 |
+| 4U-B900 | Baudouin 12M26G1000/5 | 1000 / 900 | V12 |
 
 If your load needs a full **1000 kVA prime**, look at the sets rated around 1100 kVA standby.
 
@@ -186,12 +186,12 @@ Send us the load schedule, the site location and whether the set is for standby 
 
 | الموديل | المحرك | Standby / Prime (ك.ف.أ) | الأسطوانات |
 | --- | --- | --- | --- |
-| [4U-P1000](/ar/models/4u-p1000) | بيركنز 4008-TAG1 | 1000 / 900 | 8 على خط واحد |
-| 4U-P1100 | بيركنز 4008-TAG2 | 1100 / 1000 | 8 على خط واحد |
-| 4U-C900B | كمنز KTA38-G2 | 1000 / 900 | V12 |
-| [4U-C1110](/ar/models/4u-c1110) | كمنز KTA38-G14 | 1100 / 1000 | V12 |
-| 4U-C1100 | كمنز QST30-G4 | 1138 / 1000 | V12 |
-| 4U-B1000 | بودوان 12M26G1000/5 | 1000 / 900 | V12 |
+| [4U-P900](/ar/models/4u-p900) | بيركنز 4008-TAG1 | 1000 / 900 | 8 على خط واحد |
+| 4U-P1000 | بيركنز 4008-TAG2 | 1100 / 1000 | 8 على خط واحد |
+| 4U-C900 | كمنز KTA38-G2 | 1000 / 900 | V12 |
+| [4U-C1000](/ar/models/4u-c1000) | كمنز KTA38-G14 | 1100 / 1000 | V12 |
+| 4U-C1000B | كمنز QST30-G4 | 1138 / 1000 | V12 |
+| 4U-B900 | بودوان 12M26G1000/5 | 1000 / 900 | V12 |
 
 إذا كان حملك يحتاج **1000 ك.ف.أ Prime** كاملة، فانظر إلى المولدات المقننة حوالي 1100 ك.ف.أ Standby.
 

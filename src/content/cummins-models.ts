@@ -3,20 +3,22 @@
  * Ratings, alternator frames, controller, fuel use, dimensions and weights are per datasheet; base-engine data
  * (cylinders, layout, displacement, bore × stroke, aspiration) is the published Cummins engine data, which corrects
  * several sheets that repeated another engine's figures. Fuel figures that were missing or not internally consistent
- * in the source sheet are left null ("on request"). Letter suffixes (A/B/C) are alternative engines at the same rating.
+ * in the source sheet are left null ("on request").
  *
- * Ratings follow 4U's updated datasheets (22 Oct 2026, named by standby kVA, e.g. "AQT-CU-92 ... 4BTAA3.9G11"):
- * prime / standby per the supplier's CKD list. Site codes and URLs are unchanged, so a code no longer equals the
- * standby rating. Dropped in that update: 4U-C63 (duplicate of 4U-C60), 4U-C1109 (KTA38-G5, not in the supplier
- * list); 4U-C810 (QSK23-G2) is on hold. Models marked "ratings only" come from the CKD list and have no datasheet yet.
+ * Ratings follow 4U's updated datasheets (22 Oct 2026, e.g. the 4BTAA3.9-G11 sheet): prime / standby per the
+ * supplier's CKD list. Dropped in that update: the old 4U-C63 (duplicate of 4BTA3.9-G2), 4U-C1109 (KTA38-G5, not in
+ * the supplier list) and the QSK23-G2 set (on hold). Models marked "ratings only" come from the CKD list and have no
+ * datasheet yet.
+ * Codes and URLs follow the prime kVA (owner's rule, 1 Nov 2026: 100 kVA prime / 110 kVA standby → 4U-x100); a B/C
+ * suffix marks another engine at the same prime rating. Old standby-based URLs redirect (src/lib/model-renames.ts).
  */
 import type { GensetModelData } from "./genset-types";
 
 export const cumminsModels: GensetModelData[] = [
   {
     // added from the CKD rating list: ratings only, the rest of the datasheet "on request"
-    slug: "4u-c22",
-    code: "4U-C22",
+    slug: "4u-c20",
+    code: "4U-C20",
     standbyKva: 23,
     standbyKw: 18.4,
     primeKva: 20,
@@ -40,8 +42,8 @@ export const cumminsModels: GensetModelData[] = [
   },
   {
     // added from the CKD rating list: ratings only, the rest of the datasheet "on request"
-    slug: "4u-c39",
-    code: "4U-C39",
+    slug: "4u-c35",
+    code: "4U-C35",
     standbyKva: 40,
     standbyKw: 32,
     primeKva: 35,
@@ -65,8 +67,8 @@ export const cumminsModels: GensetModelData[] = [
   },
   {
     // added from the CKD rating list: ratings only, the rest of the datasheet "on request"
-    slug: "4u-c55",
-    code: "4U-C55",
+    slug: "4u-c50",
+    code: "4U-C50",
     standbyKva: 55,
     standbyKw: 44,
     primeKva: 50,
@@ -89,8 +91,8 @@ export const cumminsModels: GensetModelData[] = [
     ambientC: null,
   },
   {
-    slug: "4u-c60",
-    code: "4U-C60",
+    slug: "4u-c60b",
+    code: "4U-C60B",
     standbyKva: 68,
     standbyKw: 54,
     primeKva: 60,
@@ -114,8 +116,8 @@ export const cumminsModels: GensetModelData[] = [
   },
   {
     // added from the CKD rating list: ratings only, the rest of the datasheet "on request"
-    slug: "4u-c66",
-    code: "4U-C66",
+    slug: "4u-c60",
+    code: "4U-C60",
     standbyKva: 66,
     standbyKw: 52.8,
     primeKva: 60,
@@ -139,8 +141,8 @@ export const cumminsModels: GensetModelData[] = [
   },
   {
     // added from the CKD rating list: ratings only, the rest of the datasheet "on request"
-    slug: "4u-c75",
-    code: "4U-C75",
+    slug: "4u-c68",
+    code: "4U-C68",
     standbyKva: 75,
     standbyKw: 60,
     primeKva: 68,
@@ -188,8 +190,8 @@ export const cumminsModels: GensetModelData[] = [
     ambientC: 55,
   },
   {
-    slug: "4u-c110a",
-    code: "4U-C110A",
+    slug: "4u-c100b",
+    code: "4U-C100B",
     standbyKva: 114,
     standbyKw: 91,
     primeKva: 100,
@@ -212,8 +214,8 @@ export const cumminsModels: GensetModelData[] = [
     ambientC: 54,
   },
   {
-    slug: "4u-c110b",
-    code: "4U-C110B",
+    slug: "4u-c100",
+    code: "4U-C100",
     standbyKva: 110,
     standbyKw: 88,
     primeKva: 100,
@@ -236,8 +238,8 @@ export const cumminsModels: GensetModelData[] = [
     ambientC: 54,
   },
   {
-    slug: "4u-c150a",
-    code: "4U-C150A",
+    slug: "4u-c136",
+    code: "4U-C136",
     standbyKva: 153,
     standbyKw: 122,
     primeKva: 136,
@@ -259,8 +261,8 @@ export const cumminsModels: GensetModelData[] = [
     enclosed: { l: 3894, w: 1355, h: 2208, tankL: 543, kg: 2310 },
   },
   {
-    slug: "4u-c150b",
-    code: "4U-C150B",
+    slug: "4u-c135",
+    code: "4U-C135",
     standbyKva: 150,
     standbyKw: 120,
     primeKva: 135,
@@ -282,8 +284,8 @@ export const cumminsModels: GensetModelData[] = [
     enclosed: { l: 3894, w: 1355, h: 2208, tankL: 543, kg: 2310 },
   },
   {
-    slug: "4u-c165",
-    code: "4U-C165",
+    slug: "4u-c150",
+    code: "4U-C150",
     standbyKva: 165,
     standbyKw: 132,
     primeKva: 150,
@@ -305,8 +307,8 @@ export const cumminsModels: GensetModelData[] = [
     enclosed: { l: 3894, w: 1355, h: 2207, tankL: 543, kg: 2348 },
   },
   {
-    slug: "4u-c170",
-    code: "4U-C170",
+    slug: "4u-c155",
+    code: "4U-C155",
     standbyKva: 170,
     standbyKw: 136,
     primeKva: 155,
@@ -328,8 +330,8 @@ export const cumminsModels: GensetModelData[] = [
     enclosed: { l: 3894, w: 1355, h: 2207, tankL: 543, kg: 2348 },
   },
   {
-    slug: "4u-c200a",
-    code: "4U-C200A",
+    slug: "4u-c180",
+    code: "4U-C180",
     standbyKva: 200,
     standbyKw: 160,
     primeKva: 180,
@@ -352,8 +354,8 @@ export const cumminsModels: GensetModelData[] = [
     ambientC: 60,
   },
   {
-    slug: "4u-c200b",
-    code: "4U-C200B",
+    slug: "4u-c180b",
+    code: "4U-C180B",
     standbyKva: 200,
     standbyKw: 160,
     primeKva: 180,
@@ -376,8 +378,8 @@ export const cumminsModels: GensetModelData[] = [
     ambientC: 60,
   },
   {
-    slug: "4u-c220a",
-    code: "4U-C220A",
+    slug: "4u-c200b",
+    code: "4U-C200B",
     standbyKva: 225,
     standbyKw: 180,
     primeKva: 200,
@@ -400,8 +402,8 @@ export const cumminsModels: GensetModelData[] = [
     ambientC: 48,
   },
   {
-    slug: "4u-c220b",
-    code: "4U-C220B",
+    slug: "4u-c200",
+    code: "4U-C200",
     standbyKva: 220,
     standbyKw: 176,
     primeKva: 200,
@@ -424,8 +426,8 @@ export const cumminsModels: GensetModelData[] = [
     ambientC: 48,
   },
   {
-    slug: "4u-c275",
-    code: "4U-C275",
+    slug: "4u-c250",
+    code: "4U-C250",
     standbyKva: 270,
     standbyKw: 216,
     primeKva: 250,
@@ -447,8 +449,8 @@ export const cumminsModels: GensetModelData[] = [
     enclosed: { l: 4414, w: 1614, h: 2217, tankL: 843, kg: 3270 },
   },
   {
-    slug: "4u-c283",
-    code: "4U-C283",
+    slug: "4u-c250b",
+    code: "4U-C250B",
     standbyKva: 284,
     standbyKw: 227,
     primeKva: 250,
@@ -471,8 +473,8 @@ export const cumminsModels: GensetModelData[] = [
     ambientC: 55,
   },
   {
-    slug: "4u-c300",
-    code: "4U-C300",
+    slug: "4u-c250c",
+    code: "4U-C250C",
     standbyKva: 284,
     standbyKw: 227,
     primeKva: 250,
@@ -494,8 +496,8 @@ export const cumminsModels: GensetModelData[] = [
     enclosed: { l: 4414, w: 1614, h: 2217, tankL: 843, kg: 3270 },
   },
   {
-    slug: "4u-c345",
-    code: "4U-C345",
+    slug: "4u-c300b",
+    code: "4U-C300B",
     standbyKva: 344,
     standbyKw: 275,
     primeKva: 300,
@@ -517,8 +519,8 @@ export const cumminsModels: GensetModelData[] = [
     enclosed: { l: 5205, w: 1625, h: 2620, tankL: 625, kg: 4000 },
   },
   {
-    slug: "4u-c350",
-    code: "4U-C350",
+    slug: "4u-c300",
+    code: "4U-C300",
     standbyKva: 313,
     standbyKw: 250,
     primeKva: 300,
@@ -540,8 +542,8 @@ export const cumminsModels: GensetModelData[] = [
     enclosed: { l: 5205, w: 1625, h: 2620, tankL: 625, kg: 4000 },
   },
   {
-    slug: "4u-c400",
-    code: "4U-C400",
+    slug: "4u-c370",
+    code: "4U-C370",
     standbyKva: 425,
     standbyKw: 340,
     primeKva: 370,
@@ -564,8 +566,8 @@ export const cumminsModels: GensetModelData[] = [
     ambientC: 55,
   },
   {
-    slug: "4u-c450",
-    code: "4U-C450",
+    slug: "4u-c409",
+    code: "4U-C409",
     standbyKva: 455,
     standbyKw: 364,
     primeKva: 409,
@@ -587,8 +589,8 @@ export const cumminsModels: GensetModelData[] = [
     enclosed: { l: 5204, w: 1624, h: 2618, tankL: 1039, kg: 4581 },
   },
   {
-    slug: "4u-c455",
-    code: "4U-C455",
+    slug: "4u-c416",
+    code: "4U-C416",
     standbyKva: 479,
     standbyKw: 383,
     primeKva: 416,
@@ -611,8 +613,8 @@ export const cumminsModels: GensetModelData[] = [
     ambientC: 55,
   },
   {
-    slug: "4u-c500",
-    code: "4U-C500",
+    slug: "4u-c455",
+    code: "4U-C455",
     standbyKva: 500,
     standbyKw: 400,
     primeKva: 455,
@@ -634,8 +636,8 @@ export const cumminsModels: GensetModelData[] = [
     enclosed: { l: 5170, w: 1590, h: 2600, tankL: 1020, kg: 5435 },
   },
   {
-    slug: "4u-c550",
-    code: "4U-C550",
+    slug: "4u-c500b",
+    code: "4U-C500B",
     standbyKva: 550,
     standbyKw: 440,
     primeKva: 500,
@@ -657,8 +659,8 @@ export const cumminsModels: GensetModelData[] = [
     enclosed: { l: 5205, w: 1625, h: 2620, tankL: 1039, kg: 4950 },
   },
   {
-    slug: "4u-c550a",
-    code: "4U-C550A",
+    slug: "4u-c500c",
+    code: "4U-C500C",
     standbyKva: 569,
     standbyKw: 455,
     primeKva: 500,
@@ -680,8 +682,8 @@ export const cumminsModels: GensetModelData[] = [
     enclosed: { l: 5205, w: 1824, h: 2817, tankL: 1230, kg: 5393 },
   },
   {
-    slug: "4u-c550b",
-    code: "4U-C550B",
+    slug: "4u-c500",
+    code: "4U-C500",
     standbyKva: 512,
     standbyKw: 410,
     primeKva: 500,
@@ -703,8 +705,8 @@ export const cumminsModels: GensetModelData[] = [
     enclosed: { l: 5205, w: 1824, h: 2817, tankL: 1230, kg: 5393 },
   },
   {
-    slug: "4u-c550c",
-    code: "4U-C550C",
+    slug: "4u-c455b",
+    code: "4U-C455B",
     standbyKva: 500,
     standbyKw: 400,
     primeKva: 455,
@@ -726,8 +728,8 @@ export const cumminsModels: GensetModelData[] = [
     enclosed: { l: 5205, w: 1824, h: 2817, tankL: 1230, kg: 5393 },
   },
   {
-    slug: "4u-c700",
-    code: "4U-C700",
+    slug: "4u-c640",
+    code: "4U-C640",
     standbyKva: 681,
     standbyKw: 545,
     primeKva: 640,
@@ -749,8 +751,8 @@ export const cumminsModels: GensetModelData[] = [
     enclosed: { l: 5873, w: 2224, h: 2817.8, tankL: 1835, kg: 8815 },
   },
   {
-    slug: "4u-c715",
-    code: "4U-C715",
+    slug: "4u-c650",
+    code: "4U-C650",
     standbyKva: 681,
     standbyKw: 545,
     primeKva: 650,
@@ -773,8 +775,8 @@ export const cumminsModels: GensetModelData[] = [
     ambientC: null,
   },
   {
-    slug: "4u-c825",
-    code: "4U-C825",
+    slug: "4u-c750",
+    code: "4U-C750",
     standbyKva: 825,
     standbyKw: 660,
     primeKva: 750,
@@ -798,8 +800,8 @@ export const cumminsModels: GensetModelData[] = [
     ambientC: 50.9,
   },
   {
-    slug: "4u-c900a",
-    code: "4U-C900A",
+    slug: "4u-c810",
+    code: "4U-C810",
     standbyKva: 909,
     standbyKw: 727,
     primeKva: 810,
@@ -823,8 +825,8 @@ export const cumminsModels: GensetModelData[] = [
     ambientC: 50.9,
   },
   {
-    slug: "4u-c900b",
-    code: "4U-C900B",
+    slug: "4u-c900",
+    code: "4U-C900",
     standbyKva: 1000,
     standbyKw: 800,
     primeKva: 900,
@@ -848,8 +850,8 @@ export const cumminsModels: GensetModelData[] = [
     ambientC: 56,
   },
   {
-    slug: "4u-c1000",
-    code: "4U-C1000",
+    slug: "4u-c910",
+    code: "4U-C910",
     standbyKva: 1025,
     standbyKw: 820,
     primeKva: 910,
@@ -872,8 +874,8 @@ export const cumminsModels: GensetModelData[] = [
     breaker: "schneider-acb",
   },
   {
-    slug: "4u-c1100",
-    code: "4U-C1100",
+    slug: "4u-c1000b",
+    code: "4U-C1000B",
     standbyKva: 1138,
     standbyKw: 910,
     primeKva: 1000,
@@ -896,8 +898,8 @@ export const cumminsModels: GensetModelData[] = [
     breaker: "schneider-acb",
   },
   {
-    slug: "4u-c1110",
-    code: "4U-C1110",
+    slug: "4u-c1000",
+    code: "4U-C1000",
     standbyKva: 1100,
     standbyKw: 880,
     primeKva: 1000,
@@ -920,8 +922,8 @@ export const cumminsModels: GensetModelData[] = [
     breaker: "schneider-acb",
   },
   {
-    slug: "4u-c1426",
-    code: "4U-C1426",
+    slug: "4u-c1275",
+    code: "4U-C1275",
     standbyKva: 1400,
     standbyKw: 1120,
     primeKva: 1275,
@@ -945,8 +947,8 @@ export const cumminsModels: GensetModelData[] = [
     ambientC: 55.6,
   },
   {
-    slug: "4u-c1675",
-    code: "4U-C1675",
+    slug: "4u-c1400",
+    code: "4U-C1400",
     standbyKva: 1540,
     standbyKw: 1232,
     primeKva: 1400,
@@ -971,8 +973,8 @@ export const cumminsModels: GensetModelData[] = [
   },
   {
     // added from the CKD rating list: ratings only, the rest of the datasheet "on request"
-    slug: "4u-c1781",
-    code: "4U-C1781",
+    slug: "4u-c1619",
+    code: "4U-C1619",
     standbyKva: 1781,
     standbyKw: 1424.8,
     primeKva: 1619,
@@ -995,8 +997,8 @@ export const cumminsModels: GensetModelData[] = [
     ambientC: null,
   },
   {
-    slug: "4u-c2250",
-    code: "4U-C2250",
+    slug: "4u-c2047",
+    code: "4U-C2047",
     standbyKva: 2250,
     standbyKw: 1800,
     primeKva: 2047,
@@ -1020,8 +1022,8 @@ export const cumminsModels: GensetModelData[] = [
   },
   {
     // added from the CKD rating list: ratings only, the rest of the datasheet "on request"
-    slug: "4u-c2519",
-    code: "4U-C2519",
+    slug: "4u-c2290",
+    code: "4U-C2290",
     standbyKva: 2519,
     standbyKw: 2015.2,
     primeKva: 2290,

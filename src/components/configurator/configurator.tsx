@@ -30,6 +30,7 @@ import {
   type Enclosure,
   type Silencer,
 } from "@/lib/configurator";
+import { currentModelSlug } from "@/lib/model-renames";
 import { whatsappUrl } from "@/lib/site";
 import { cn, type Locale } from "@/lib/utils";
 import { WhatsAppIcon } from "../icons";
@@ -175,7 +176,7 @@ export function Configurator({ models }: { models: ConfigModel[] }) {
   const c = COPY[locale];
   const ar = locale === "ar";
   const bySlug = useMemo(() => new Map(models.map((m) => [m.slug, m])), [models]);
-  const fallback = models.find((m) => m.slug === "4u-p250") ?? models[0]!;
+  const fallback = models.find((m) => m.slug === "4u-p225") ?? models[0]!;
   const [config, setConfig] = useState<Config>(() => defaultConfig(fallback));
   const [ready, setReady] = useState(false);
   const [webgl, setWebgl] = useState(true);
@@ -191,7 +192,7 @@ export function Configurator({ models }: { models: ConfigModel[] }) {
   useEffect(() => {
     setWebgl(hasWebgl());
     const q = new URLSearchParams(window.location.search);
-    const m = bySlug.get(q.get("model") ?? "") ?? fallback;
+    const m = bySlug.get(currentModelSlug(q.get("model") ?? "")) ?? fallback;
     setConfig(normalise(fromQuery(q, defaultConfig(m)), m));
     setReady(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps

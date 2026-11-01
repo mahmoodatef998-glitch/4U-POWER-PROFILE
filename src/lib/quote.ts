@@ -178,14 +178,14 @@ export function generatorItem(m: GensetModel, enclosure: Enclosure, listAlternat
         : "Packaged inside a sound-attenuated, weather-protective industrial canopy (Closed Type).";
   const lines = [
     `Brand new, heavy-duty industrial grade ${m.brand} diesel generator set, ready to run.`,
-    `${n0(m.standbyKva)} kVA Standby / ${n0(m.primeKva)} kVA Prime | 50 Hz | 1500 RPM | 3-Phase | 0.8 Power Factor.`,
+    `${n0(m.primeKva)} kVA Prime / ${n0(m.standbyKva)} kVA Standby | 50 Hz | 1500 RPM | 3-Phase | 0.8 Power Factor.`,
     `Powered by an original ${m.brand} ${m.engine} engine${m.cylinders ? ` (${m.cylinders}-cylinder${m.layout ? ` ${m.layout === "V" ? "V" : "in-line"}` : ""})` : ""}, ${m.cooling === "air" ? "air-cooled" : "water-cooled"}, directly coupled to ${alternatorPhrase(m, listAlternator)} and controlled by a Deep Sea Electronics (DSE) digital control module with full monitoring and protection.`,
     housing,
     "Factory assembled, tested and supplied as a complete ready-to-run industrial package.",
   ];
   return {
     code: m.code,
-    title: `${m.code} — ${m.brand} Diesel Generator Set ${n0(m.standbyKva)} kVA, ${build}`,
+    title: `${m.code} — ${m.brand} Diesel Generator Set ${n0(m.primeKva)} kVA Prime / ${n0(m.standbyKva)} kVA Standby, ${build}`,
     description: lines.join("\n"),
     qty: 1,
     unit: "Units",
@@ -198,7 +198,7 @@ export function generatorItem(m: GensetModel, enclosure: Enclosure, listAlternat
 const squash = (s: string) => s.toLowerCase().replace(/[^a-z0-9.]/g, "");
 
 /**
- * Models matching what the user typed: code ("4U-P550", "p550", "4up550"), kVA ("550"), engine/brand words with or
+ * Models matching what the user typed: code ("4U-P500", "p500", "4up500"), kVA ("550"), engine/brand words with or
  * without punctuation ("KTA50G8" finds KTA50-G8) or, through `aliases` (model code → words such as the price-list
  * code "CP1400" and its engine spelling), what the price list calls it.
  */

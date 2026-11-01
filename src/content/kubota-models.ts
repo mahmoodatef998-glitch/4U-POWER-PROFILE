@@ -2,14 +2,16 @@
  * 4U Kubota generating sets (50 Hz, 1500 rpm, 400/230 V, 3-phase, 0.8 pf) — from the group's technical datasheets.
  * Ratings, alternator frame, controller, fuel use, dimensions and weights are per datasheet; base-engine data
  * (cylinders, displacement, bore × stroke) is the published Kubota engine data. The sheets give no usable 50 %-load
- * or standby fuel figure, so those are left null. "B" marks an alternative engine at the same rating.
+ * or standby fuel figure, so those are left null.
+ * Codes and URLs follow the prime kVA (owner's rule, 1 Nov 2026: 100 kVA prime / 110 kVA standby → 4U-x100); a B/C
+ * suffix marks another engine at the same prime rating. Old standby-based URLs redirect (src/lib/model-renames.ts).
  */
 import type { GensetModelData } from "./genset-types";
 
 export const kubotaModels: GensetModelData[] = [
   {
-    slug: "4u-k10",
-    code: "4U-K10",
+    slug: "4u-k9",
+    code: "4U-K9",
     standbyKva: 10,
     standbyKw: 8,
     primeKva: 9,
@@ -31,8 +33,8 @@ export const kubotaModels: GensetModelData[] = [
     enclosed: { l: 2152, w: 1004, h: 1342, tankL: 169, kg: 730 },
   },
   {
-    slug: "4u-k13",
-    code: "4U-K13",
+    slug: "4u-k12",
+    code: "4U-K12",
     standbyKva: 13,
     standbyKw: 10.4,
     primeKva: 12,
@@ -54,8 +56,8 @@ export const kubotaModels: GensetModelData[] = [
     enclosed: { l: 2152, w: 1004, h: 1342, tankL: 169, kg: 730 },
   },
   {
-    slug: "4u-k14",
-    code: "4U-K14",
+    slug: "4u-k12-5",
+    code: "4U-K12.5",
     standbyKva: 14,
     standbyKw: 11.2,
     primeKva: 12.5,
@@ -77,8 +79,8 @@ export const kubotaModels: GensetModelData[] = [
     enclosed: { l: 2152, w: 1004, h: 1342, tankL: 169, kg: 730 },
   },
   {
-    slug: "4u-k16",
-    code: "4U-K16",
+    slug: "4u-k15",
+    code: "4U-K15",
     standbyKva: 16,
     standbyKw: 12.8,
     primeKva: 15,
@@ -100,8 +102,8 @@ export const kubotaModels: GensetModelData[] = [
     enclosed: { l: 2152, w: 1004, h: 1342, tankL: 169, kg: 765 },
   },
   {
-    slug: "4u-k22",
-    code: "4U-K22",
+    slug: "4u-k20",
+    code: "4U-K20",
     standbyKva: 22,
     standbyKw: 17.6,
     primeKva: 20,
@@ -123,8 +125,8 @@ export const kubotaModels: GensetModelData[] = [
     enclosed: { l: 2152, w: 1004, h: 1342, tankL: 169, kg: 840 },
   },
   {
-    slug: "4u-k22b",
-    code: "4U-K22B",
+    slug: "4u-k20b",
+    code: "4U-K20B",
     standbyKva: 22,
     standbyKw: 17.6,
     primeKva: 20,
@@ -146,8 +148,8 @@ export const kubotaModels: GensetModelData[] = [
     enclosed: { l: 2152, w: 1004, h: 1342, tankL: 169, kg: 840 },
   },
   {
-    slug: "4u-k25",
-    code: "4U-K25",
+    slug: "4u-k22-5",
+    code: "4U-K22.5",
     standbyKva: 25,
     standbyKw: 20,
     primeKva: 22.5,
@@ -169,8 +171,8 @@ export const kubotaModels: GensetModelData[] = [
     enclosed: { l: 2152, w: 1004, h: 1342, tankL: 169, kg: 840 },
   },
   {
-    slug: "4u-k32",
-    code: "4U-K32",
+    slug: "4u-k30",
+    code: "4U-K30",
     standbyKva: 32,
     standbyKw: 25.6,
     primeKva: 30,
@@ -192,8 +194,8 @@ export const kubotaModels: GensetModelData[] = [
     enclosed: { l: 2307, w: 1044, h: 1415, tankL: 198, kg: 1070 },
   },
   {
-    slug: "4u-k40",
-    code: "4U-K40",
+    slug: "4u-k36",
+    code: "4U-K36",
     standbyKva: 40,
     standbyKw: 32,
     primeKva: 36,

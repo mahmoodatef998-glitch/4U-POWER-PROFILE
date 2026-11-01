@@ -18,7 +18,7 @@ export type PageInfo = {
 const KSA = new Set(["riyadh", "jeddah", "dammam"]);
 const IRAQ = new Set(["baghdad", "erbil", "basra"]);
 
-/** Turns a logged page path (e.g. "/ar/models/4u-p500") into what a salesperson needs to answer the chat. */
+/** Turns a logged page path (e.g. "/ar/models/4u-p455") into what a salesperson needs to answer the chat. */
 export function describePage(path: string | null): PageInfo {
   if (!path) return { title: "Unknown page" };
   const [, locale = "en", section, slug] = path.split("/");

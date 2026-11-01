@@ -15,13 +15,13 @@ editor reads them through `src/lib/price-book-data.ts`; `/admin/quotes/prices` s
 3. Then compare the list's rating (first number = prime kVA at 50 Hz, second = 60 Hz) with the datasheet's prime
    rating. Small rounding gaps (≤ 4 %) are the same genset. **Do not link** where the gap is real — decided by
    the owner on 26 Oct 2026, prices for these are typed per quotation until the supplier confirms:
-   - 4U-B165 (6M11G2D0/S, 150 kVA prime) vs list BP130/150
-   - 4U-B200 (6M11G4D0/S, 180 kVA prime) vs list BP150/180
-   - 4U-K16 (D1703-E2-BG, 15 kVA prime) vs list KU-14/18
-   - 4U-K22B (V2003-T-E2-BG, 20 kVA prime) vs list KU-22/27 (that row prices 4U-K25)
+   - 4U-B150 (6M11G2D0/S, 150 kVA prime) vs list BP130/150
+   - 4U-B180 (6M11G4D0/S, 180 kVA prime) vs list BP150/180
+   - 4U-K15 (D1703-E2-BG, 15 kVA prime) vs list KU-14/18
+   - 4U-K20B (V2003-T-E2-BG, 20 kVA prime) vs list KU-22/27 (that row prices 4U-K22.5)
    Lister Petter (models from the Lister engine datasheets, `src/content/lister-models.ts`): the list's
    `TR219G1 (Air Cooling)` style names match on the engine code. Not linked: the list's SA315G1 (12 kVA) and
-   LP613EG3 (500 kVA) have no datasheet; `LP625SG3` / `LP625G5` are linked to 4U-L695 (LP625EG3) / 4U-L820
+   LP613EG3 (500 kVA) have no datasheet; `LP625SG3` / `LP625G5` are linked to 4U-L638 (LP625EG3) / 4U-L750
    (LP625EG5) as the same rating — confirm the spelling with the supplier.
 4. Insert the rows with a new `edition`; the editor always uses the latest edition. Open and closed (canopy /
    container) builds take the same list price (owner's decision, 26 Oct 2026).
@@ -30,10 +30,10 @@ editor reads them through `src/lib/price-book-data.ts`; `/admin/quotes/prices` s
 
 The price list is what 4U actually buys and sells, so it is the reference (owner's decision, 26 Oct 2026). Where
 the Leroy-Somer alternator frame on a 4U datasheet differed from the frame priced on the 2026 list, the datasheet
-was changed to the list's frame (29 models: 4U-C80, C150A, C150B, C275, C450, C455, C500, C550, C550A, C550B,
-C550C, C700, C715, C900B, C1000, C2250, B20, B44, B50, B72, B250, B250B, B300, B350, B440, B500, B550, B660,
-K13). Where the frame itself changed, the Stamford equivalent was removed until the supplier confirms it, rather
-than show a frame that no longer matches; the six C450–C550C changes are the same frame in the list's notation
+was changed to the list's frame (29 models: 4U-C80, C136, C135, C250, C409, C416, C455, C500B, C500C, C500,
+C455B, C640, C650, C900, C910, C2047, B18, B40, B45, B66, B200, B230, B275, B320, B400, B450, B500, B600,
+K12). Where the frame itself changed, the Stamford equivalent was removed until the supplier confirms it, rather
+than show a frame that no longer matches; the six C409–C500C changes are the same frame in the list's notation
 (TAL-A47 → TAL-A473) and keep their Stamford frame. The ratings were already the same on both documents.
 The Perkins list gives no alternator frame ("TAL"), so Perkins datasheets keep theirs.
 

@@ -145,8 +145,13 @@ const ASPIRATION: Record<Aspiration, [string, string]> = {
   "turbo-water": ["Turbocharged, water charge cooled", "تيربو مع تبريد مائي لهواء الشحن"],
 };
 
+/** "4U-P500 — 500 kVA prime / 550 kVA standby …": the code is the prime rating, so it comes first. */
 export function modelName(m: GensetModel, locale: Locale) {
-  return L(locale, `${m.code} — ${fmt(m.standbyKva, locale)} kVA ${m.brand} diesel generator`, `${m.code} — مولد ديزل ${GENSET_BRANDS[m.brand].ar} ${fmt(m.standbyKva, locale)} ك.ف.أ`);
+  return L(
+    locale,
+    `${m.code} — ${fmt(m.primeKva, locale)} kVA prime / ${fmt(m.standbyKva, locale)} kVA standby ${m.brand} diesel generator`,
+    `${m.code} — مولد ديزل ${GENSET_BRANDS[m.brand].ar} ${fmt(m.primeKva, locale)} ك.ف.أ أساسي / ${fmt(m.standbyKva, locale)} ك.ف.أ احتياطي`,
+  );
 }
 
 const dimText = (d: GensetDim | null, locale: Locale) =>

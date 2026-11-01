@@ -1,15 +1,16 @@
 /**
  * 4U Baudouin generating sets (50 Hz, 1500 rpm, 400/230 V, 3-phase, 0.8 pf) — from the group's technical datasheets
  * (50 Hz rating of each sheet). Fuel use is left null ("on request") where the sheet gives only the 110 % figure,
- * marks the values as approximate (~), says TBC, or where L/h does not match the sheet's own g/kWh. "B" marks a second
- * engine code at the same standby rating.
+ * marks the values as approximate (~), says TBC, or where L/h does not match the sheet's own g/kWh.
+ * Codes and URLs follow the prime kVA (owner's rule, 1 Nov 2026: 100 kVA prime / 110 kVA standby → 4U-x100); a B/C
+ * suffix marks another engine at the same prime rating. Old standby-based URLs redirect (src/lib/model-renames.ts).
  */
 import type { GensetModelData } from "./genset-types";
 
 export const baudouinModels: GensetModelData[] = [
   {
-    slug: "4u-b20",
-    code: "4U-B20",
+    slug: "4u-b18",
+    code: "4U-B18",
     standbyKva: 20,
     standbyKw: 16,
     primeKva: 18,
@@ -32,8 +33,8 @@ export const baudouinModels: GensetModelData[] = [
     breaker: "ls",
   },
   {
-    slug: "4u-b25",
-    code: "4U-B25",
+    slug: "4u-b23",
+    code: "4U-B23",
     standbyKva: 25,
     standbyKw: 20,
     primeKva: 23,
@@ -56,8 +57,8 @@ export const baudouinModels: GensetModelData[] = [
     breaker: "ls",
   },
   {
-    slug: "4u-b35",
-    code: "4U-B35",
+    slug: "4u-b32",
+    code: "4U-B32",
     standbyKva: 35,
     standbyKw: 28,
     primeKva: 32,
@@ -80,8 +81,8 @@ export const baudouinModels: GensetModelData[] = [
     breaker: "ls",
   },
   {
-    slug: "4u-b44",
-    code: "4U-B44",
+    slug: "4u-b40",
+    code: "4U-B40",
     standbyKva: 44,
     standbyKw: 35.2,
     primeKva: 40,
@@ -104,8 +105,8 @@ export const baudouinModels: GensetModelData[] = [
     breaker: "ls",
   },
   {
-    slug: "4u-b50",
-    code: "4U-B50",
+    slug: "4u-b45",
+    code: "4U-B45",
     standbyKva: 50,
     standbyKw: 40,
     primeKva: 45,
@@ -128,8 +129,8 @@ export const baudouinModels: GensetModelData[] = [
     breaker: "ls",
   },
   {
-    slug: "4u-b55",
-    code: "4U-B55",
+    slug: "4u-b50",
+    code: "4U-B50",
     standbyKva: 55,
     standbyKw: 44,
     primeKva: 50,
@@ -152,8 +153,8 @@ export const baudouinModels: GensetModelData[] = [
     breaker: "ls",
   },
   {
-    slug: "4u-b72",
-    code: "4U-B72",
+    slug: "4u-b66",
+    code: "4U-B66",
     standbyKva: 72,
     standbyKw: 57.6,
     primeKva: 66,
@@ -176,8 +177,8 @@ export const baudouinModels: GensetModelData[] = [
     breaker: "ls",
   },
   {
-    slug: "4u-b88",
-    code: "4U-B88",
+    slug: "4u-b80",
+    code: "4U-B80",
     standbyKva: 88,
     standbyKw: 70.4,
     primeKva: 80,
@@ -200,8 +201,8 @@ export const baudouinModels: GensetModelData[] = [
     breaker: "ls",
   },
   {
-    slug: "4u-b110",
-    code: "4U-B110",
+    slug: "4u-b100",
+    code: "4U-B100",
     standbyKva: 110,
     standbyKw: 88,
     primeKva: 100,
@@ -224,8 +225,8 @@ export const baudouinModels: GensetModelData[] = [
     breaker: "ls",
   },
   {
-    slug: "4u-b165",
-    code: "4U-B165",
+    slug: "4u-b150",
+    code: "4U-B150",
     standbyKva: 165,
     standbyKw: 132,
     primeKva: 150,
@@ -248,8 +249,8 @@ export const baudouinModels: GensetModelData[] = [
     breaker: "ls",
   },
   {
-    slug: "4u-b200",
-    code: "4U-B200",
+    slug: "4u-b180",
+    code: "4U-B180",
     standbyKva: 200,
     standbyKw: 160,
     primeKva: 180,
@@ -272,8 +273,8 @@ export const baudouinModels: GensetModelData[] = [
     breaker: "ls",
   },
   {
-    slug: "4u-b250",
-    code: "4U-B250",
+    slug: "4u-b200",
+    code: "4U-B200",
     standbyKva: 250,
     standbyKw: 200,
     primeKva: 200,
@@ -296,8 +297,8 @@ export const baudouinModels: GensetModelData[] = [
     breaker: "ls",
   },
   {
-    slug: "4u-b250b",
-    code: "4U-B250B",
+    slug: "4u-b230",
+    code: "4U-B230",
     standbyKva: 250,
     standbyKw: 200,
     primeKva: 230,
@@ -320,8 +321,8 @@ export const baudouinModels: GensetModelData[] = [
     breaker: "ls",
   },
   {
-    slug: "4u-b275",
-    code: "4U-B275",
+    slug: "4u-b250",
+    code: "4U-B250",
     standbyKva: 275,
     standbyKw: 220,
     primeKva: 250,
@@ -344,8 +345,8 @@ export const baudouinModels: GensetModelData[] = [
     breaker: "ls",
   },
   {
-    slug: "4u-b300",
-    code: "4U-B300",
+    slug: "4u-b275",
+    code: "4U-B275",
     standbyKva: 300,
     standbyKw: 240,
     primeKva: 275,
@@ -368,8 +369,8 @@ export const baudouinModels: GensetModelData[] = [
     breaker: "ls",
   },
   {
-    slug: "4u-b350",
-    code: "4U-B350",
+    slug: "4u-b320",
+    code: "4U-B320",
     standbyKva: 350,
     standbyKw: 280,
     primeKva: 320,
@@ -392,8 +393,8 @@ export const baudouinModels: GensetModelData[] = [
     breaker: "ls",
   },
   {
-    slug: "4u-b400",
-    code: "4U-B400",
+    slug: "4u-b375",
+    code: "4U-B375",
     standbyKva: 400,
     standbyKw: 320,
     primeKva: 375,
@@ -416,8 +417,8 @@ export const baudouinModels: GensetModelData[] = [
     breaker: "ls",
   },
   {
-    slug: "4u-b440",
-    code: "4U-B440",
+    slug: "4u-b400",
+    code: "4U-B400",
     standbyKva: 440,
     standbyKw: 352,
     primeKva: 400,
@@ -440,8 +441,8 @@ export const baudouinModels: GensetModelData[] = [
     breaker: "ls",
   },
   {
-    slug: "4u-b500",
-    code: "4U-B500",
+    slug: "4u-b450",
+    code: "4U-B450",
     standbyKva: 500,
     standbyKw: 400,
     primeKva: 450,
@@ -464,8 +465,8 @@ export const baudouinModels: GensetModelData[] = [
     breaker: "ls",
   },
   {
-    slug: "4u-b550",
-    code: "4U-B550",
+    slug: "4u-b500",
+    code: "4U-B500",
     standbyKva: 550,
     standbyKw: 440,
     primeKva: 500,
@@ -488,8 +489,8 @@ export const baudouinModels: GensetModelData[] = [
     breaker: "ls",
   },
   {
-    slug: "4u-b660",
-    code: "4U-B660",
+    slug: "4u-b600",
+    code: "4U-B600",
     standbyKva: 660,
     standbyKw: 528,
     primeKva: 600,
@@ -512,8 +513,8 @@ export const baudouinModels: GensetModelData[] = [
     breaker: "ls",
   },
   {
-    slug: "4u-b715",
-    code: "4U-B715",
+    slug: "4u-b650",
+    code: "4U-B650",
     standbyKva: 715,
     standbyKw: 572,
     primeKva: 650,
@@ -536,8 +537,8 @@ export const baudouinModels: GensetModelData[] = [
     breaker: "ls",
   },
   {
-    slug: "4u-b715b",
-    code: "4U-B715B",
+    slug: "4u-b650b",
+    code: "4U-B650B",
     standbyKva: 715,
     standbyKw: 572,
     primeKva: 650,
@@ -560,8 +561,8 @@ export const baudouinModels: GensetModelData[] = [
     breaker: "ls",
   },
   {
-    slug: "4u-b750",
-    code: "4U-B750",
+    slug: "4u-b680",
+    code: "4U-B680",
     standbyKva: 750,
     standbyKw: 600,
     primeKva: 680,
@@ -584,8 +585,8 @@ export const baudouinModels: GensetModelData[] = [
     breaker: "ls",
   },
   {
-    slug: "4u-b825",
-    code: "4U-B825",
+    slug: "4u-b750",
+    code: "4U-B750",
     standbyKva: 825,
     standbyKw: 660,
     primeKva: 750,
@@ -608,8 +609,8 @@ export const baudouinModels: GensetModelData[] = [
     breaker: "ls",
   },
   {
-    slug: "4u-b1000",
-    code: "4U-B1000",
+    slug: "4u-b900",
+    code: "4U-B900",
     standbyKva: 1000,
     standbyKw: 800,
     primeKva: 900,

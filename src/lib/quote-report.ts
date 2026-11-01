@@ -93,7 +93,7 @@ export function salesSummary(quotes: Quote[]): SalesRow[] {
     .sort((a, b) => b.quotes - a.quotes || a.person.localeCompare(b.person));
 }
 
-/** "1 × 4U-P550 — Perkins …; 2 × ATS Panel" — what was offered, on one line. */
+/** "1 × 4U-P500 — Perkins …; 2 × ATS Panel" — what was offered, on one line. */
 export const itemsSummary = (x: Pick<Quote, "items">) => x.items.map((i) => `${i.qty} × ${i.title}`).join("; ");
 
 /** Human description of the active filters, for the report header. */

@@ -24,7 +24,7 @@ export const newsPart6: NewsPost[] = [
 
 Generators are rated in kVA at a **0.8 power factor**, so a 100 kVA generator delivers about **80 kW** of real power. If your load list is in kW, divide by 0.8 to get the kVA you need.
 
-Check which rating the 100 kVA is. On our datasheets a set sold as "100 kVA" is usually **110 kVA standby / 100 kVA prime** — the [4U-P110](/en/models/4u-p110) (Perkins 1104C-44TAG2), [4U-C110A](/en/models/4u-c110a) (Cummins 6BTA5.9-G5) or 4U-B110 (Baudouin 4M10G6D0/S). If the set will run every day, it is the 100 kVA prime that must cover the load. See [prime vs standby](/en/news/prime-vs-standby-generator-rating).
+Check which rating the 100 kVA is. On our datasheets a set sold as "100 kVA" is usually **110 kVA standby / 100 kVA prime** — the [4U-P100](/en/models/4u-p100) (Perkins 1104C-44TAG2), [4U-C100B](/en/models/4u-c100b) (Cummins 6BTA5.9-G5) or 4U-B100 (Baudouin 4M10G6D0/S). If the set will run every day, it is the 100 kVA prime that must cover the load. See [prime vs standby](/en/news/prime-vs-standby-generator-rating).
 
 ## How many amps does a 100 kVA generator give?
 
@@ -75,7 +75,7 @@ We supply 100 kVA sets on Perkins, Cummins and Baudouin engines, open or in a si
 
 تُقنن المولدات بالكيلو فولت أمبير عند **معامل قدرة 0.8**، لذلك يعطي مولد 100 ك.ف.أ حوالي **80 كيلوواط** قدرة فعلية. وإذا كانت قائمة أحمالك بالكيلوواط، فاقسمها على 0.8 لتعرف الكيلو فولت أمبير المطلوب.
 
-انتبه لنوع القدرة. في الداتاشيت لدينا، المولد الذي يُباع على أنه "100 ك.ف.أ" يكون عادةً **110 ك.ف.أ Standby و100 ك.ف.أ Prime**، مثل [4U-P110](/ar/models/4u-p110) بمحرك بيركنز 1104C-44TAG2، و[4U-C110A](/ar/models/4u-c110a) بمحرك كمنز 6BTA5.9-G5، و4U-B110 بمحرك بودوان 4M10G6D0/S. إذا كان المولد سيعمل يومياً، فالقدرة الأساسية 100 ك.ف.أ هي التي يجب أن تغطي الحمل. اقرأ [الفرق بين Prime وStandby](/ar/news/prime-vs-standby-generator-rating).
+انتبه لنوع القدرة. في الداتاشيت لدينا، المولد الذي يُباع على أنه "100 ك.ف.أ" يكون عادةً **110 ك.ف.أ Standby و100 ك.ف.أ Prime**، مثل [4U-P100](/ar/models/4u-p100) بمحرك بيركنز 1104C-44TAG2، و[4U-C100B](/ar/models/4u-c100b) بمحرك كمنز 6BTA5.9-G5، و4U-B100 بمحرك بودوان 4M10G6D0/S. إذا كان المولد سيعمل يومياً، فالقدرة الأساسية 100 ك.ف.أ هي التي يجب أن تغطي الحمل. اقرأ [الفرق بين Prime وStandby](/ar/news/prime-vs-standby-generator-rating).
 
 ## كم أمبير يعطي مولد 100 ك.ف.أ؟
 
@@ -148,12 +148,12 @@ On our datasheets the 250 kVA class comes in two flavours:
 
 | Model | Engine | Standby / prime (kVA) |
 | --- | --- | --- |
-| [4U-P250](/en/models/4u-p250) | Perkins 1206A-E70TAG2 | 250 / 225 |
-| 4U-B250 | Baudouin 6M16G2D0/S | 250 / 200 |
-| 4U-B250B | Baudouin 6M16G4D0/S | 250 / 230 |
-| [4U-P275](/en/models/4u-p275) | Perkins 1206A-E70TTAG3 | 275 / 250 |
-| 4U-C275 | Cummins 6LTAA8.9-G2 | 270 / 250 |
-| 4U-C283 | Cummins QSL9-G3 | 284 / 250 |
+| [4U-P225](/en/models/4u-p225) | Perkins 1206A-E70TAG2 | 250 / 225 |
+| 4U-B200 | Baudouin 6M16G2D0/S | 250 / 200 |
+| 4U-B230 | Baudouin 6M16G4D0/S | 250 / 230 |
+| [4U-P250](/en/models/4u-p250) | Perkins 1206A-E70TTAG3 | 275 / 250 |
+| 4U-C250 | Cummins 6LTAA8.9-G2 | 270 / 250 |
+| 4U-C250B | Cummins QSL9-G3 | 284 / 250 |
 
 All are six-cylinder in-line engines at 1500 rpm, 50 Hz. For backup a few hours a year, a **250 kVA standby** set is enough. For a site or building that runs on the generator every day, choose **250 kVA prime** — the 270–284 kVA standby sets. See [prime vs standby](/en/news/prime-vs-standby-generator-rating).
 
@@ -205,12 +205,12 @@ Tell us the load, whether the set is for standby or daily duty, and where it wil
 
 | الموديل | المحرك | Standby / Prime (ك.ف.أ) |
 | --- | --- | --- |
-| [4U-P250](/ar/models/4u-p250) | بيركنز 1206A-E70TAG2 | 250 / 225 |
-| 4U-B250 | بودوان 6M16G2D0/S | 250 / 200 |
-| 4U-B250B | بودوان 6M16G4D0/S | 250 / 230 |
-| [4U-P275](/ar/models/4u-p275) | بيركنز 1206A-E70TTAG3 | 275 / 250 |
-| 4U-C275 | كمنز 6LTAA8.9-G2 | 270 / 250 |
-| 4U-C283 | كمنز QSL9-G3 | 284 / 250 |
+| [4U-P225](/ar/models/4u-p225) | بيركنز 1206A-E70TAG2 | 250 / 225 |
+| 4U-B200 | بودوان 6M16G2D0/S | 250 / 200 |
+| 4U-B230 | بودوان 6M16G4D0/S | 250 / 230 |
+| [4U-P250](/ar/models/4u-p250) | بيركنز 1206A-E70TTAG3 | 275 / 250 |
+| 4U-C250 | كمنز 6LTAA8.9-G2 | 270 / 250 |
+| 4U-C250B | كمنز QSL9-G3 | 284 / 250 |
 
 كلها محركات ست أسطوانات على خط واحد بسرعة 1500 دورة/دقيقة و50 هرتز. للطوارئ لساعات قليلة في السنة يكفي مولد **250 ك.ف.أ Standby**، أما الموقع أو المبنى الذي يعمل على المولد يومياً فاختر **250 ك.ف.أ Prime**، أي المولدات المقننة 270–284 ك.ف.أ Standby. اقرأ [الفرق بين Prime وStandby](/ar/news/prime-vs-standby-generator-rating).
 

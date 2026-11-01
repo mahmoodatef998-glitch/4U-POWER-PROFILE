@@ -10,6 +10,9 @@
   other alternator is a **"4U Power alternator"** — never "Chinese", a supplier brand, or a generic "brushless"
   alternator (owner's rule, 26 Oct 2026).
 - The 2026 price list is the reference for datasheet alternator frames and ratings (`docs/price-list.md`).
+- Model codes and URLs follow the **prime** kVA (100 prime / 110 standby → `4U-P100`; B/C = another engine at that
+  rating), since 1 Nov 2026. Old standby-based URLs redirect via `src/lib/model-renames.ts`; Search Console rows
+  before that date use the old slugs.
 - Articles: `docs/content-calendar.md`; the weekly SEO article run writes from the Search Console snapshot in
   Supabase `seo_snapshots`. ⚠️ regulatory topics need the owner's review.
 - Don't run prettier over whole files (it reformats everything). Checks: `npx tsc --noEmit -p .`,

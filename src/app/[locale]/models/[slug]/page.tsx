@@ -32,7 +32,9 @@ export async function generateMetadata({ params }: Props) {
   return buildMetadata({
     locale,
     path: modelPath(m),
-    title: ar ? `مولد ${brand} ${m.standbyKva} ك.ف.أ ${m.code} | المواصفات والداتا شيت` : `${m.code} ${brand} ${m.standbyKva} kVA Generator | Specs & Datasheet`,
+    title: ar
+      ? `مولد ${brand} ${m.primeKva}/${m.standbyKva} ك.ف.أ ${m.code} | المواصفات والداتا شيت`
+      : `${m.code} ${brand} ${m.primeKva}/${m.standbyKva} kVA Generator | Specs & Datasheet`,
     description: ar
       ? `مولد ديزل ${m.standbyKva} ك.ف.أ احتياطي / ${m.primeKva} ك.ف.أ أساسي بمحرك ${brand} ${m.engine}. المواصفات واستهلاك الوقود والمقاسات وتحميل الداتا شيت من فور يو باور الإمارات.`
       : `${m.standbyKva} kVA standby / ${m.primeKva} kVA prime diesel generator with ${brand} ${m.engine} engine. Specs, fuel consumption, dimensions and PDF datasheet from 4U Power, UAE.`,
@@ -55,11 +57,11 @@ export default async function ModelPage({ params }: Props) {
   const idx = range.indexOf(m);
   const neighbours = range.slice(Math.max(0, idx - 2), idx + 3);
   const wa = ar
-    ? `مرحباً، أرغب في عرض سعر للمولد ${m.code} (${brand} ${m.standbyKva} ك.ف.أ). مدينة التسليم: `
-    : `Hi, I need a price for the ${m.code} (${m.standbyKva} kVA ${brand}). Delivery city: `;
+    ? `مرحباً، أرغب في عرض سعر للمولد ${m.code} (${brand} ${m.primeKva} ك.ف.أ أساسي / ${m.standbyKva} ك.ف.أ احتياطي). مدينة التسليم: `
+    : `Hi, I need a price for the ${m.code} (${m.primeKva} kVA prime / ${m.standbyKva} kVA standby ${brand}). Delivery city: `;
   const intro = ar
-    ? `قدرة احتياطية ${m.standbyKva} ك.ف.أ وأساسية ${m.primeKva} ك.ف.أ بمحرك ${brand} ${m.engine} ودينامو ليروي سومر أو ستامفورد ووحدة تحكم ديب سي. متوفر مفتوحاً أو بكابينة عازلة للصوت${m.enclosed?.container ? " أو داخل حاوية" : ""}، مع التوريد والتركيب والتشغيل في الإمارات.`
-    : `${m.standbyKva} kVA standby / ${m.primeKva} kVA prime, powered by a ${brand} ${m.engine} engine with a Leroy-Somer or Stamford alternator and Deep Sea controller. Supplied open or in a silent canopy${m.enclosed?.container ? " or container" : ""}, with delivery, installation and commissioning across the UAE.`;
+    ? `قدرة أساسية ${m.primeKva} ك.ف.أ واحتياطية ${m.standbyKva} ك.ف.أ بمحرك ${brand} ${m.engine} ودينامو ليروي سومر أو ستامفورد ووحدة تحكم ديب سي. متوفر مفتوحاً أو بكابينة عازلة للصوت${m.enclosed?.container ? " أو داخل حاوية" : ""}، مع التوريد والتركيب والتشغيل في الإمارات.`
+    : `${m.primeKva} kVA prime / ${m.standbyKva} kVA standby, powered by a ${brand} ${m.engine} engine with a Leroy-Somer or Stamford alternator and Deep Sea controller. Supplied open or in a silent canopy${m.enclosed?.container ? " or container" : ""}, with delivery, installation and commissioning across the UAE.`;
 
   const schema = {
     "@context": "https://schema.org",
@@ -96,8 +98,8 @@ export default async function ModelPage({ params }: Props) {
         }
       >
         <ul className="mb-8 flex flex-wrap gap-2 text-sm font-bold" dir="ltr">
-          <li className="rounded-full bg-brand-500 px-3 py-1.5 text-ink-950">{`${m.standbyKva} kVA standby`}</li>
-          <li className="rounded-full bg-white/10 px-3 py-1.5">{`${m.primeKva} kVA prime`}</li>
+          <li className="rounded-full bg-brand-500 px-3 py-1.5 text-ink-950">{`${m.primeKva} kVA prime`}</li>
+          <li className="rounded-full bg-white/10 px-3 py-1.5">{`${m.standbyKva} kVA standby`}</li>
           <li className="rounded-full bg-white/10 px-3 py-1.5">{`${m.brand} ${m.engine}`}</li>
           <li className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/15 px-3 py-1.5 text-emerald-400">
             <ShieldCheck className="size-4" aria-hidden />

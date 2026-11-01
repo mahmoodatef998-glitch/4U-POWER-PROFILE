@@ -1,5 +1,7 @@
 import assert from "node:assert/strict";
-import { getModel } from "../src/lib/genset-models";
+import { gensetModels, getModel } from "../src/lib/genset-models";
+import { LEGACY_EXACT } from "../src/lib/legacy-exact";
+import { MODEL_RENAMES, currentModelSlug } from "../src/lib/model-renames";
 import { alternatorPhrase, countryOf, deliveryText, enclosureOptions, generatorItem, inCurrency, listPrice, withAlternator, money, printable, ratingSearch, searchModels, totals, ukDate, unprintable } from "../src/lib/quote";
 import { parseQuotePayload } from "../src/lib/quote-form";
 import { describeFilters, filterQuery, filterQuotes, itemsSummary, parseFilters, salesPeople, salesSummary } from "../src/lib/quote-report";
@@ -17,20 +19,38 @@ assert.equal(money(2635237.5), "2,635,237.50");
 assert.equal(money(0), "0.00");
 assert.equal(ukDate("2026-09-16"), "16/09/2026");
 
+// codes are the prime kVA (100 kVA prime / 110 kVA standby → 4U-x100), a B/C suffix for another engine at that rating
+const LETTER = { Perkins: "P", Cummins: "C", Kubota: "K", Baudouin: "B", "Lister Petter": "L" } as const;
+for (const m of gensetModels) {
+  assert.match(m.code, new RegExp(`^4U-${LETTER[m.brand]}${String(m.primeKva).replace(".", "\\.")}[B-D]?$`), m.code);
+  assert.equal(m.slug, m.code.toLowerCase().replace(".", "-"), m.code);
+}
+assert.equal(new Set(gensetModels.map((m) => m.slug)).size, gensetModels.length, "slugs are unique");
+// old standby-based URLs: each lands on a live model, never on another old address, and no live page is redirected away
+const live = new Set(gensetModels.map((m) => m.slug));
+for (const [from, to] of MODEL_RENAMES) {
+  assert.ok(live.has(to), `${from} → ${to} must exist`);
+  assert.ok(!live.has(from), `${from} is a live page and must not redirect`);
+}
+assert.equal(currentModelSlug("4u-p550"), "4u-p500");
+assert.equal(currentModelSlug("4u-c1675"), "4u-c1400");
+assert.equal(currentModelSlug("4u-p150"), "4u-p150", "now the 150 kVA prime set, a live page");
+assert.ok(LEGACY_EXACT.some(([a, b]) => a === "/:locale(en|ar)/models/4u-p165/datasheet" && b === "/:locale/models/4u-p150/datasheet"));
+
 // search: code with or without "4U-", kVA, engine words
-assert.equal(searchModels("4U-P550")[0]!.code, "4U-P550");
-assert.equal(searchModels("p550")[0]!.code, "4U-P550");
-assert.equal(searchModels("4up550")[0]!.code, "4U-P550");
+assert.equal(searchModels("4U-P500")[0]!.code, "4U-P500");
+assert.equal(searchModels("p500")[0]!.code, "4U-P500");
+assert.equal(searchModels("4up500")[0]!.code, "4U-P500");
 assert.ok(searchModels("550").every((m) => m.standbyKva === 550 || m.primeKva === 550));
 assert.ok(searchModels("cummins 200").every((m) => m.brand === "Cummins"));
 assert.equal(searchModels("").length, 0);
 assert.equal(searchModels("zzz").length, 0);
 // engine without punctuation, and the price-list code through aliases
-assert.equal(searchModels("KTA50G8")[0]!.code, "4U-C1675");
-assert.equal(searchModels("cummins kta50g9")[0]!.code, "4U-C1781");
+assert.equal(searchModels("KTA50G8")[0]!.code, "4U-C1400");
+assert.equal(searchModels("cummins kta50g9")[0]!.code, "4U-C1619");
 assert.equal(searchModels("CP1400").length, 0);
-assert.deepEqual(searchModels("CP1400", undefined, 8, { "4U-C1675": ["CP1400", "KTA50G8"] }).map((m) => m.code), ["4U-C1675"]);
-assert.equal(searchModels("cp1275/1400", undefined, 8, { "4U-C1426": ["CP1275/1400"] })[0]!.code, "4U-C1426");
+assert.deepEqual(searchModels("CP1400", undefined, 8, { "4U-C1400": ["CP1400", "KTA50G8"] }).map((m) => m.code), ["4U-C1400"]);
+assert.equal(searchModels("cp1275/1400", undefined, 8, { "4U-C1275": ["CP1275/1400"] })[0]!.code, "4U-C1275");
 // a rating search: everything at or up to +10 kVA above, plus each brand's nearest larger model however far
 const brands = (r: ReturnType<typeof ratingSearch>) => new Set(r!.hits.map((h) => h.m.brand));
 const r152 = ratingSearch("152 kVA")!;
@@ -39,11 +59,11 @@ assert.equal(r152.exact, false);
 assert.deepEqual(r152.hits.map((h) => h.gap), [...r152.hits.map((h) => h.gap)].sort((x, y) => x - y));
 assert.ok(r152.hits.every((h) => h.gap > 0 && Math.min(...[h.m.standbyKva, h.m.primeKva].filter((k) => k >= 152)) - 152 === h.gap));
 assert.ok(["Perkins", "Cummins", "Baudouin", "Lister Petter"].every((b) => brands(r152).has(b as never)));
-// 1500: Perkins is 5 kVA above (1505 prime), Cummins 40 above (4U-C1675, 1540 standby) — both shown
+// 1500: Perkins is 5 kVA above (1505 prime), Cummins 40 above (4U-C1400, 1540 standby) — both shown
 const r1500 = ratingSearch("1500")!;
-assert.ok(r1500.hits.some((h) => h.m.code === "4U-P1656" && h.gap === 5));
-assert.ok(r1500.hits.some((h) => h.m.code === "4U-C1675" && h.gap === 40));
-assert.ok(ratingSearch("1600")!.hits.some((h) => h.m.code === "4U-C1781" && h.gap === 19));
+assert.ok(r1500.hits.some((h) => h.m.code === "4U-P1505" && h.gap === 5));
+assert.ok(r1500.hits.some((h) => h.m.code === "4U-C1400" && h.gap === 40));
+assert.ok(ratingSearch("1600")!.hits.some((h) => h.m.code === "4U-C1619" && h.gap === 19));
 // exact matches come first with gap 0
 const r150 = ratingSearch("150")!;
 assert.equal(r150.exact, true);
@@ -52,7 +72,7 @@ assert.equal(r150.hits[0]!.gap, 0);
 assert.ok(ratingSearch("cummins 1500")!.hits.every((h) => h.m.brand === "Cummins"));
 assert.equal(ratingSearch("3000")!.hits.length, 0);
 assert.equal(ratingSearch("perkins"), null);
-assert.equal(ratingSearch("4U-P550"), null);
+assert.equal(ratingSearch("4U-P500"), null);
 
 // customer country: Saudi Arabia adds 6% to list prices; old quotations map from their price list
 assert.equal(listPrice(100000, "SA"), 106000);
@@ -69,13 +89,13 @@ assert.deepEqual([usd.subtotal, usd.discount, usd.total], [20000, 2000, 18000]);
 assert.equal(inCurrency({ items: [{ code: "", title: "", description: "", qty: 1, unit: "Units", unit_price: 500 }], vat_rate: 5, discount_pct: 0, currency: "AED", fx_rate: 1 }).total, 525);
 
 // description comes from the datasheet and prints with the standard PDF fonts
-const p550 = getModel("4u-p550")!;
+const p550 = getModel("4u-p500")!;
 assert.deepEqual(enclosureOptions(p550).map((o) => o.value), ["enclosed", "open"]);
 const canopy = generatorItem(p550, "enclosed");
-assert.equal(canopy.title, "4U-P550 — Perkins Diesel Generator Set 550 kVA, Closed Type");
+assert.equal(canopy.title, "4U-P500 — Perkins Diesel Generator Set 500 kVA Prime / 550 kVA Standby, Closed Type");
 for (const s of [
   "heavy-duty industrial grade Perkins diesel generator set, ready to run",
-  "550 kVA Standby / 500 kVA Prime | 50 Hz | 1500 RPM | 3-Phase | 0.8 Power Factor",
+  "500 kVA Prime / 550 kVA Standby | 50 Hz | 1500 RPM | 3-Phase | 0.8 Power Factor",
   "original Perkins 2506A-E15TAG2 engine (6-cylinder in-line), water-cooled",
   "directly coupled to a Leroy-Somer TAL-A47-C alternator and controlled by",
   "Deep Sea Electronics (DSE) digital control module with full monitoring and protection",
@@ -88,7 +108,7 @@ assert.ok(!/\bISO\b|\bBS ?\d|\bIEC\b|\d mm\b|\bkg\b|L\/h|\bfuel\b|dB\(A\)/i.test
 assert.equal(canopy.description.split("\n").length, 5);
 const open = generatorItem(p550, "open");
 assert.ok(open.title.endsWith("Open Type") && open.description.includes("Open type set") && !open.description.includes("canopy"));
-const p2500 = getModel("4u-p2500")!;
+const p2500 = getModel("4u-p2250")!;
 assert.match(enclosureOptions(p2500)[0]!.label, /^Container/);
 assert.ok(generatorItem(p2500, "enclosed").description.includes("(Containerised)"));
 assert.deepEqual(unprintable(canopy.title + canopy.description), [], "generated text is printable");
@@ -158,7 +178,7 @@ assert.ok(withAlternator("…water-cooled, directly coupled to a brushless alter
 const mk = (number: number, person: string, status: Quote["status"], total: number, date: string, name: string): Quote => ({
   id: String(number), number, quote_date: date, status, total, subtotal: total, discount: 0, discount_pct: 0, vat: 0, vat_rate: 0,
   customer: { name, address: "", trn: "", project: "", attention: "", contact: "+971 50 000 0000", email: "", ref: "" },
-  sales: { person, contact: "", email: "" }, items: [{ code: "4U-P550", title: "Gen", description: "", qty: 2, unit: "Units", unit_price: total / 2 }],
+  sales: { person, contact: "", email: "" }, items: [{ code: "4U-P500", title: "Gen", description: "", qty: 2, unit: "Units", unit_price: total / 2 }],
   validity: null, delivery: null, notes: null, price_list: "uae", country: "AE", currency: "AED", fx_rate: 1, fx_at: null, lead_id: null, created_at: "",
 });
 const qs = [mk(1001, "SHAMSA", "won", 100000, "2026-10-01", "Al Noor LLC"), mk(1002, "Shamsa ", "lost", 50000, "2026-10-10", "Gulf Steel"), mk(1003, "Mahmoud", "sent", 20000, "2026-10-20", "Al Noor Farms"), mk(1004, "Mahmoud", "won", 30000, "2026-11-02", "Delta")];

@@ -168,7 +168,7 @@ export function QuoteEditor({ initial, initialSearch = "", prices = null, fx = n
       {/* ------------------------------------------------ add a generator */}
       <section className="rounded-2xl border border-line bg-navy-900 p-5">
         <h2 className="text-lg font-extrabold">1 · Add a generator</h2>
-        <p className="mt-1 text-sm text-muted">Type the model code (4U-P550, p550), the kVA (550) or the engine. The standard description is filled in from the datasheet and the price from the price list.</p>
+        <p className="mt-1 text-sm text-muted">Type the model code (4U-P500, p500), the kVA (500) or the engine. The standard description is filled in from the datasheet and the price from the price list.</p>
         <div className="mt-3 flex flex-wrap items-center gap-2 text-sm">
           <label htmlFor="country" className="font-semibold">Customer in</label>
           <select id="country" value={countryId} onChange={(e) => switchCountry(e.target.value as CountryId)} className="rounded-lg border border-line px-3 py-1.5 font-semibold">
@@ -186,7 +186,7 @@ export function QuoteEditor({ initial, initialSearch = "", prices = null, fx = n
           value={q}
           onChange={(e) => setQ(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && e.preventDefault()}
-          placeholder="Search all datasheets: 4U-P550, 550, Cummins 200…"
+          placeholder="Search all datasheets: 4U-P500, 500, Cummins 200…"
           aria-label="Search generator models"
           className={`${input} mt-4 text-base`}
           autoFocus={!initial.id}
