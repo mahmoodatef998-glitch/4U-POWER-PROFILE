@@ -63,3 +63,27 @@ export function frameRating(alternator: string | null | undefined): FrameRating 
   f = f.replace(/^TAL-A47-/, "TAL-A473-").replace(/^LSA50\.2 M$/, "LSA50.2 M6");
   return LEROY_SOMER_RATINGS[f] ?? null;
 }
+
+/**
+ * General characteristics per Leroy-Somer frame family (same sheets): standard excitation and AVR (options after
+ * the slash), steady-state voltage regulation, winding, cooling air at 50 Hz and waveform. Insulation class H,
+ * IP 23 and 2,250 rpm overspeed on every family.
+ */
+export type FrameFamily = { excitation: string; avr: string; regulation: string; wires: string; airFlow: string; thd: string; tif: string };
+const FAMILIES: Record<string, FrameFamily> = {
+  "TAL-A40": { excitation: "SHUNT (AREP+ option)", avr: "R120 (R180 with AREP+)", regulation: "± 1 %", wires: "12", airFlow: "0.08 m³/s", thd: "THF < 2 %", tif: "< 50" },
+  "TAL-A42": { excitation: "SHUNT (AREP+ / PMG option)", avr: "R120 (R180 with AREP+)", regulation: "± 1 %", wires: "6 or 12", airFlow: "0.12 m³/s", thd: "< 3.5 % (no load)", tif: "< 50" },
+  "TAL-A44": { excitation: "SHUNT (AREP+ / PMG option)", avr: "R120 (R180 with AREP+)", regulation: "± 1 %", wires: "6 or 12", airFlow: "0.25 m³/s", thd: "< 3.5 % (no load)", tif: "< 50" },
+  "TAL-A46": { excitation: "SHUNT (AREP+ / PMG option)", avr: "R150 (R180 with AREP+)", regulation: "± 0.8 %", wires: "6 or 12", airFlow: "0.48 m³/s", thd: "< 3.5 % (no load)", tif: "< 50" },
+  "TAL-A473": { excitation: "SHUNT (AREP+ / PMG option)", avr: "R150 (R180 with AREP+)", regulation: "± 0.8 %", wires: "6 (12 option)", airFlow: "0.9 m³/s", thd: "< 2.5 % (no load)", tif: "< 50" },
+  "TAL-A49": { excitation: "SHUNT (AREP+ / PMG option)", avr: "R150 (R180 with AREP+)", regulation: "± 0.8 %", wires: "6 or 12", airFlow: "1 m³/s", thd: "< 3.5 % (no load)", tif: "< 50" },
+  "LSA50.2": { excitation: "AREP or PMG", avr: "D350", regulation: "± 0.25 %", wires: "6 (12 option)", airFlow: "1.8 m³/s", thd: "< 3.5 %", tif: "< 50" },
+};
+
+/** The frame family's general characteristics, or null for frames without a current Leroy-Somer sheet on file. */
+export function frameFamily(alternator: string | null | undefined): FrameFamily | null {
+  const f = alternator && frameName(alternator);
+  if (!f) return null;
+  const fam = f.replace(/^TAL-A47-/, "TAL-A473-").replace(/-[A-Z](\/[A-Z])?$/, "").replace(/ \S+$/, "");
+  return FAMILIES[fam] ?? null;
+}

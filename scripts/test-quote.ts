@@ -347,3 +347,14 @@ console.log("quotation tests passed");
   const orphans = Object.keys(detailsJson).filter((c) => !live.has(c));
   assert.deepEqual(orphans, []);
 }
+
+// the datasheet alternator follows the price list: frames offered, or a 4U Power alternator only
+{
+  const p300 = buildDatasheet(getModel("4u-p300")!, "en");
+  assert.equal(p300.alternatorMake, "4U Power alternator", "list sells 1506A-E88TAG5 with a 4U Power alternator only");
+  assert.equal(p300.operatingRows.length, 0);
+  const l100 = buildDatasheet(getModel("4u-l100")!, "en");
+  assert.ok(l100.alternatorRows.some(([k, v]) => k === "Options on the price list" && v === "Leroy-Somer TAL-A44-D · 4U Power alternator"));
+  assert.ok(l100.alternatorRows.some(([, v]) => v === "100 / 110 kVA (cont. / standby)"), "TAL-A44-D at 400 V 50 Hz");
+  assert.ok(l100.operatingRows.some(([k, v]) => k === "Voltage regulation" && v === "± 1 %"));
+}

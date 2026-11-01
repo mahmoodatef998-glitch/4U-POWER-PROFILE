@@ -1,6 +1,8 @@
 import details from "@/content/datasheet-details.json";
 import type { GensetModel } from "@/content/genset-types";
 import { ASPIRATION, brandName, gensetModels } from "./genset-models";
+import { frameFamily, frameRating } from "@/content/alternator-ratings";
+import { LIST_ALTERNATORS } from "@/content/list-alternators";
 import { amps, sixtyHz } from "./quote";
 import type { Locale } from "./utils";
 
@@ -17,7 +19,9 @@ import type { Locale } from "./utils";
  * - Fuel figures were measured at the engine's own rating; where a set is now held to a smaller alternator they
  *   overstate consumption slightly, which errs on the safe side.
  * - No claim without a source: breaker make only where the sheet names it, tank running hours worked out from the
- *   tank and the fuel figures, no "brushless", alternator always "4U · Leroy-Somer | Stamford".
+ *   tank and the fuel figures, no "brushless". Alternator: "4U · Leroy-Somer | Stamford" with the price list's frame(s),
+ *   or "4U Power alternator" where the list offers only that (src/content/list-alternators.ts); Leroy-Somer family data
+ *   (excitation, AVR, regulation, air flow) and the frame rating from src/content/alternator-ratings.ts.
  */
 
 type Detail = {
@@ -183,29 +187,58 @@ export function buildDatasheet(m: GensetModel, locale: Locale): Datasheet {
   const ls = m.alternator.leroySomer;
   const tal = !!ls && /^TAL/i.test(ls);
   const altVal = (re: RegExp) => pick(alt, re);
-  const alternatorRows: Row[] = [
-    ...row(L("Make", "الماركة"), "4U · Leroy-Somer | Stamford"),
-    ...row(L("Leroy-Somer frame", "موديل ليروي سومر"), ls),
-    ...row(L("Stamford frame", "موديل ستامفورد"), m.alternator.stamford ? clean(m.alternator.stamford) : null),
+  // the price list decides what is offered: its Leroy-Somer frame(s) and / or a 4U Power alternator
+  const offer = LIST_ALTERNATORS[m.code];
+  const listLs = offer?.leroySomer.filter((x) => x !== "TAL") ?? [];
+  const lsOffered = !offer || offer.leroySomer.length > 0;
+  const options = offer
+    ? [
+        ...(offer.leroySomer.length ? [listLs.length ? `Leroy-Somer ${listLs.join(" / ")}` : `Leroy-Somer${ls ? ` ${ls}` : ""}`] : []),
+        ...(offer.fourU ? ["4U Power alternator"] : []),
+      ].join(" · ")
+    : null;
+  const make = lsOffered ? "4U · Leroy-Somer | Stamford" : "4U Power alternator";
+  const fam = lsOffered ? frameFamily(ls) : null;
+  const fr = lsOffered ? frameRating(ls) : null;
+  const frPair = fr ? (m.ratedHz === 60 ? fr.hz60 : fr.hz50) : null;
+  const alternatorRowsLs: Row[] = [
+    ...row(L("Make", "الماركة"), make),
+    ...row(L("Options on the price list", "الخيارات في البرايس ليست"), options),
+    ...row(lsOffered ? L("Leroy-Somer frame", "موديل ليروي سومر") : L("Leroy-Somer frame (on request)", "موديل ليروي سومر (عند الطلب)"), ls),
+    ...row(
+      m.ratedHz === 60 ? L("Frame rating · 480 V 60 Hz", "قدرة الفريم · 480 فولت 60 هرتز") : L("Frame rating · 400 V 50 Hz", "قدرة الفريم · 400 فولت 50 هرتز"),
+      frPair ? `${n1(frPair[0])} / ${n1(frPair[1])} kVA (cont. / standby)` : null,
+    ),
+    ...row(L("Stamford frame", "موديل ستامفورد"), lsOffered && m.alternator.stamford ? clean(m.alternator.stamford) : null),
     ...row(L("Poles", "الأقطاب"), altVal(/Poles/) ?? "4"),
-    ...row(L("Winding leads", "أطراف الملفات"), altVal(/Winding leads/)),
-    ...row(L("Winding pitch", "خطوة الملف"), altVal(/Winding pitch/)),
+    ...row(L("Winding", "الملفات"), fam ? `2/3 pitch · ${fam.wires} wires` : altVal(/Winding pitch/) ? `${altVal(/Winding pitch/)} pitch${altVal(/Winding leads/) ? ` · ${altVal(/Winding leads/)} leads` : ""}` : altVal(/Winding leads/) ? `${altVal(/Winding leads/)} leads` : null),
     ...row(L("Bearing", "كرسي التحميل"), altVal(/Bearing/) ? sentence(altVal(/Bearing/)!) : "Single bearing"),
-    ...row(L("Insulation / temp. rise", "العزل / ارتفاع الحرارة"), altVal(/Insulation/)?.replace(/^Cont\.\s*/, "").replace(/\s*-\s*/, " – ") ?? "Class H"),
-    ...row(L("Protection", "الحماية"), altVal(/Protection/) ?? (tal ? "IP 23" : null)),
-    ...row(L("Excitation", "الإثارة"), altVal(/Excitation/) ? sentence(altVal(/Excitation/)!) : null),
-    ...row(L("AVR", "منظم الجهد"), altVal(/AVR/)),
+    ...row(L("Insulation / protection", "العزل / الحماية"), [fam ? "Class H" : altVal(/Insulation/)?.replace(/^Cont\.\s*/, "").replace(/\s*-\s*/, " – ") ?? "Class H", fam ? "IP 23" : altVal(/Protection/) ?? (tal ? "IP 23" : null)].filter(Boolean).join(" · ")),
+    ...row(L("Excitation", "الإثارة"), fam ? fam.excitation : altVal(/Excitation/) ? sentence(altVal(/Excitation/)!) : null),
+    ...row(L("AVR", "منظم الجهد"), fam ? fam.avr : altVal(/AVR/)),
   ];
-  const operatingRows: Row[] = [
-    ...row(L("Overspeed", "السرعة القصوى"), (() => {
-      const v = pick(altOp, /Overspeed/);
-      return v ? `${n1(num(v)!)} rpm` : tal ? "2,250 rpm" : null;
-    })()),
-    ...row(L("Voltage regulation", "تنظيم الجهد"), pick(altOp, /Voltage regulation/) ? clean(pick(altOp, /Voltage regulation/)!) : tal ? "± 1 %" : null),
-    ...row(L("Harmonic content (THF)", "التشوه التوافقي (THF)"), pick(altOp, /THF/) ? clean(pick(altOp, /THF/)!) : null),
-    ...row(L("Telephone influence (TIF)", "تأثير الهاتف (TIF)"), pick(altOp, /TIF/) ? clean(pick(altOp, /TIF/)!) : null),
-    ...row(L("Cooling air flow", "تدفق هواء التبريد"), pick(altOp, /Cooling air flow/) ? clean(pick(altOp, /Cooling air flow/)!) : null),
-  ];
+  // a 4U Power alternator only: the source sheets describe the Leroy-Somer frame, so none of that detail applies
+  const alternatorRows: Row[] = lsOffered ? alternatorRowsLs : alternatorRowsLs.filter(([k]) => /Make|Options|frame \(on request\)|Poles|الماركة|الخيارات|عند الطلب|الأقطاب/.test(k));
+  const operatingRows: Row[] = !lsOffered
+    ? []
+    : fam
+    ? [
+        [L("Overspeed", "السرعة القصوى"), "2,250 rpm"],
+        [L("Voltage regulation", "تنظيم الجهد"), fam.regulation],
+        [L("Harmonic distortion (THD)", "التشوه التوافقي (THD)"), fam.thd],
+        [L("Telephone influence (TIF)", "تأثير الهاتف (TIF)"), fam.tif],
+        [L("Cooling air flow (50 Hz)", "تدفق هواء التبريد (50 هرتز)"), fam.airFlow],
+      ]
+    : [
+        ...row(L("Overspeed", "السرعة القصوى"), (() => {
+          const v = pick(altOp, /Overspeed/);
+          return v ? `${n1(num(v)!)} rpm` : tal ? "2,250 rpm" : null;
+        })()),
+        ...row(L("Voltage regulation", "تنظيم الجهد"), pick(altOp, /Voltage regulation/) ? clean(pick(altOp, /Voltage regulation/)!) : tal ? "± 1 %" : null),
+        ...row(L("Harmonic content (THF)", "التشوه التوافقي (THF)"), pick(altOp, /THF/) ? clean(pick(altOp, /THF/)!) : null),
+        ...row(L("Telephone influence (TIF)", "تأثير الهاتف (TIF)"), pick(altOp, /TIF/) ? clean(pick(altOp, /TIF/)!) : null),
+        ...row(L("Cooling air flow", "تدفق هواء التبريد"), pick(altOp, /Cooling air flow/) ? clean(pick(altOp, /Cooling air flow/)!) : null),
+      ];
 
   // --- fuel ----------------------------------------------------------------------------------------------------
   const f = m.fuelLph;
@@ -297,7 +330,7 @@ export function buildDatasheet(m: GensetModel, locale: Locale): Datasheet {
   const breaker = d?.breaker ? `Main breaker: ${clean(d.breaker).replace(/^(\d) pole/, "$1-pole")}` : m.breaker === "schneider-acb" ? "Main breaker: Schneider ACB" : m.breaker === "ls" ? "Main breaker: 3-pole LS Electric" : "Main breaker: 3-pole LS MCCB";
   const scope = [
     `${m.brand} ${m.engine} engine with air, fuel and oil filters, starter motor and charging alternator`,
-    `4U · Leroy-Somer | Stamford alternator${ls ? ` (${ls})` : ""}`,
+    lsOffered ? `4U · Leroy-Somer | Stamford alternator${ls ? ` (${ls})` : ""}` : "4U Power alternator",
     ...(m.cooling === "air" ? [] : [`Radiator for ${ambient ?? 50} °C with fan protective shroud`]),
     ...(m.controller ? [`Deep Sea ${m.controller} auto start / AMF controller`] : []),
     breaker,
@@ -324,8 +357,8 @@ export function buildDatasheet(m: GensetModel, locale: Locale): Datasheet {
   const brandAr = brandName(m.brand, "ar");
   const overview = [
     L(
-      `The ${m.code} is a ${n1(m.primeKva)} kVA prime / ${n1(m.standbyKva)} kVA standby diesel generating set with a ${m.brand} ${m.engine} engine, a 4U · Leroy-Somer | Stamford alternator${m.controller ? ` and a ${m.controller} controller` : ""}.`,
-      `${m.code} مولد ديزل بقدرة ${n1(m.primeKva)} ك.ف.أ أساسي / ${n1(m.standbyKva)} ك.ف.أ احتياطي، بمحرك ${brandAr} ${m.engine} ودينامو 4U · Leroy-Somer | Stamford${m.controller ? ` ووحدة تحكم ${m.controller}` : ""}.`,
+      `The ${m.code} is a ${n1(m.primeKva)} kVA prime / ${n1(m.standbyKva)} kVA standby diesel generating set with a ${m.brand} ${m.engine} engine, a ${make} alternator${m.controller ? ` and a ${m.controller} controller` : ""}.`,
+      `${m.code} مولد ديزل بقدرة ${n1(m.primeKva)} ك.ف.أ أساسي / ${n1(m.standbyKva)} ك.ف.أ احتياطي، بمحرك ${brandAr} ${m.engine} ودينامو ${make}${m.controller ? ` ووحدة تحكم ${m.controller}` : ""}.`,
     ),
     m.ratedHz === 60
       ? L("Outputs at 480/277 V, 3-phase, 60 Hz, 1800 rpm, 0.8 pf", "الخرج 480/277 فولت، 3 فاز، 60 هرتز، 1800 لفة/دقيقة، معامل قدرة 0.8")
@@ -336,7 +369,7 @@ export function buildDatasheet(m: GensetModel, locale: Locale): Datasheet {
 
   const features: Datasheet["features"] = [
     { icon: "engine", title: `${m.brand} ${m.engine} diesel engine`, sub: [cyl, m.aspiration ? ASPIRATION[m.aspiration][0].toLowerCase() : null, m.cooling === "air" ? "air cooled" : "water cooled"].filter(Boolean).join(", ") },
-    { icon: "alternator", title: `4U · Leroy-Somer | Stamford alternator${ls ? ` · ${ls}` : ""}` },
+    { icon: "alternator", title: lsOffered ? `4U · Leroy-Somer | Stamford alternator${ls ? ` · ${ls}` : ""}` : "4U Power alternator", sub: options ?? undefined },
     ...(m.controller ? [{ icon: "control", title: `Deep Sea ${m.controller} auto start / AMF controller` }] : []),
     { icon: "bolt", title: m.ratedHz === 60 ? "480/277 V · 3-phase · 60 Hz · 1800 rpm · 0.8 pf" : "400/230 V · 3-phase · 50 Hz · 1500 rpm · 0.8 pf", sub: sixtyLine },
     ...(fuel75 ? [{ icon: "fuel", title: `Fuel use ${n1(fuel75)} L/h at 75 % prime load` }] : []),
@@ -364,7 +397,7 @@ export function buildDatasheet(m: GensetModel, locale: Locale): Datasheet {
     brandUpper: m.brand.toUpperCase(),
     engine: m.engine,
     controller: m.controller,
-    alternatorMake: "4U · Leroy-Somer | Stamford",
+    alternatorMake: make,
     prime: { kva: m.primeKva, kw: m.primeKw, amps: amps(m.primeKva, m.ratedHz === 60 ? "480/277" : "400/230") },
     standby: { kva: m.standbyKva, kw: m.standbyKw, amps: amps(m.standbyKva, m.ratedHz === 60 ? "480/277" : "400/230") },
     sixty,

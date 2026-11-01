@@ -55,3 +55,13 @@ stand-by net at 1500 rpm); 404D-22G (60HZ) → 4U-P24. Still without a model, fo
 2025 table lists the SA315G2 only), LP613EG3 (500 kVA — Lister gives 435 kW maximum at 1500 rpm, enough for 500 kVA
 standby but not prime) and V3800DI-T-E2CB (no Kubota sheet for this build). Sets without a list row (4U-C1500, 4U-C2290)
 are quoted at a typed-in price.
+
+## Alternator section (1 Nov 2026)
+
+The alternator follows the price list (`src/content/list-alternators.ts`, regenerated from `price_list_items` when a
+new edition is loaded): "Options on the price list" names the Leroy-Somer frame(s) and a 4U Power alternator where the
+list has one. Sets the list sells with a 4U Power alternator only (P300, P300B, P352, C180B) show that alternator, with
+the Leroy-Somer frame "on request" and no Leroy-Somer detail. For a Leroy-Somer frame the rows come from Leroy-Somer's
+own sheets (`frameFamily` / `frameRating` in `src/content/alternator-ratings.ts`): frame rating at 400 V 50 Hz (480 V
+for 60 Hz sets), winding, class H / IP 23, standard excitation and AVR, voltage regulation, THD / THF, TIF, overspeed
+and cooling air flow. Lister Petter sets get the same rows from their list frame (TAL-A40 … A49).

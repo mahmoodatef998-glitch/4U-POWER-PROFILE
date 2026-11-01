@@ -191,7 +191,7 @@ export default async function ModelDatasheetPage({ params }: Props) {
               </div>
               <div className={s.specLines}>
                 <div className={s.ltr}>{m.brand} {m.engine} engine</div>
-                <div className={s.ltr}>{d.alternatorMake} alternator</div>
+                <div className={s.ltr}>{d.alternatorMake.endsWith("alternator") ? d.alternatorMake : `${d.alternatorMake} alternator`}</div>
                 <div className={s.ltr}>{m.controller ? `${m.controller} controller` : "Deep Sea auto start controller"}</div>
               </div>
             </div>
