@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { money, quoteNumber } from "@/lib/quote";
+import { inCurrency, money, quoteNumber } from "@/lib/quote";
+import { fxRates } from "@/lib/fx";
 import { loadPriceBook } from "@/lib/price-book-data";
 import { loadQuote } from "@/lib/quote-data";
 import { deleteQuote } from "../actions";
@@ -9,7 +10,8 @@ import { QuoteEditor } from "../quote-editor";
 
 export default async function EditQuotePage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ saved?: string }> }) {
   const [{ id }, { saved }] = await Promise.all([params, searchParams]);
-  const [q, prices] = await Promise.all([loadQuote(id), loadPriceBook()]);
+  const fx = await fxRates();
+  const [q, prices] = await Promise.all([loadQuote(id), loadPriceBook(fx)]);
   if (!q) notFound();
   return (
     <div className="grid gap-6">
@@ -17,7 +19,9 @@ export default async function EditQuotePage({ params, searchParams }: { params: 
         <div>
           <Link href="/admin/quotes" className="text-sm font-semibold text-muted hover:text-ink">← Quotations</Link>
           <h1 className="mt-1 text-2xl font-extrabold">{quoteNumber(q.number)} · {q.customer.name}</h1>
-          <p className="text-sm text-muted tabular-nums">AED {money(q.total)} incl. VAT</p>
+          <p className="text-sm text-muted tabular-nums">
+            AED {money(q.total)}{q.currency !== "AED" && ` · ${q.currency} ${money(inCurrency(q).total)} on the PDF`} incl. VAT
+          </p>
         </div>
         <div className="grid justify-items-end gap-1">
           <div className="flex flex-wrap gap-2">
@@ -41,11 +45,16 @@ export default async function EditQuotePage({ params, searchParams }: { params: 
           delivery: q.delivery ?? "",
           notes: q.notes ?? "",
           price_list: q.price_list,
+          country: q.country,
+          currency: q.currency,
+          fx_rate: q.fx_rate,
+          fx_at: q.fx_at,
           discount_pct: q.discount_pct,
           vat_rate: q.vat_rate,
           items: q.items,
         }}
         prices={prices}
+        fx={fx}
       />
       <form action={deleteQuote} className="justify-self-start">
         <input type="hidden" name="id" value={q.id} />

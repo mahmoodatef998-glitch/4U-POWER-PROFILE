@@ -2,21 +2,29 @@
 
 import { useActionState, useEffect, useMemo, useState } from "react";
 import { brandModels, gensetModels, type GensetModel } from "@/lib/genset-models";
-import { PRICE_LISTS, defaultOption, listRef, optionLabel, type PriceBook, type PriceListId } from "@/lib/price-book";
+import { PRICE_LISTS, defaultOption, listRef, optionLabel, type PriceBook, type PriceListId, type PriceOption } from "@/lib/price-book";
 import {
+  COUNTRIES,
+  CURRENCIES,
   DELIVERY_OPTIONS,
+  FX_SOURCE,
   EXTRA_ITEMS,
   STATUSES,
   VAT_RATES,
   alternatorPhrase,
   deliveryText,
   enclosureOptions,
+  country,
   generatorItem,
+  inCurrency,
+  listPrice,
   money,
   ratingSearch,
   searchModels,
   totals,
   withAlternator,
+  type CountryId,
+  type Currency,
   type Enclosure,
   type QuoteCustomer,
   type QuoteItem,
@@ -36,10 +44,18 @@ export type EditorInitial = {
   delivery: string;
   notes: string;
   price_list: PriceListId;
+  country: CountryId;
+  currency: Currency;
+  fx_rate: number;
+  fx_at: string | null;
   discount_pct: number;
   vat_rate: number;
   items: QuoteItem[];
 };
+
+/** Today's rates (AED per unit) from src/lib/fx.ts, for a currency picked in the editor. */
+export type EditorFx = { EUR: number | null; USD: number; SAR: number; source: keyof typeof FX_SOURCE; at: string };
+const fxTime = (iso: string | null) => (iso ? new Date(iso).toLocaleString("en-GB", { timeZone: "Asia/Dubai", dateStyle: "medium", timeStyle: "short" }) : "");
 
 const input = "w-full rounded-lg border border-line px-3 py-2";
 const label = "grid gap-1 text-sm font-semibold";
@@ -55,7 +71,7 @@ const CUSTOMER_FIELDS: [keyof QuoteCustomer, string, string?][] = [
   ["ref", "Customer ref"],
 ];
 
-export function QuoteEditor({ initial, initialSearch = "", prices = null }: { initial: EditorInitial; initialSearch?: string; prices?: PriceBook | null }) {
+export function QuoteEditor({ initial, initialSearch = "", prices = null, fx = null }: { initial: EditorInitial; initialSearch?: string; prices?: PriceBook | null; fx?: EditorFx | null }) {
   const [customer, setCustomer] = useState(initial.customer);
   const [sales, setSales] = useState(initial.sales);
   const [quoteDate, setQuoteDate] = useState(initial.quote_date);
@@ -63,7 +79,11 @@ export function QuoteEditor({ initial, initialSearch = "", prices = null }: { in
   const [delivery, setDelivery] = useState(initial.delivery);
   const [notes, setNotes] = useState(initial.notes);
   const [status, setStatus] = useState(initial.status);
-  const [priceList, setPriceList] = useState(initial.price_list);
+  const [countryId, setCountryId] = useState<CountryId>(initial.country);
+  const priceList = country(countryId).list;
+  const [currency, setCurrency] = useState<Currency>(initial.currency);
+  const [fxRate, setFxRate] = useState(initial.fx_rate);
+  const [fxAt, setFxAt] = useState(initial.fx_at);
   const [discountPct, setDiscountPct] = useState(initial.discount_pct);
   const [vatRate, setVatRate] = useState(initial.vat_rate);
   const [items, setItems] = useState<QuoteItem[]>(initial.items);
@@ -85,10 +105,18 @@ export function QuoteEditor({ initial, initialSearch = "", prices = null }: { in
   // the price option each search result will be added with (default: the Leroy-Somer one, as on the datasheets)
   const [picked, setPicked] = useState<Record<string, string>>({});
   const t = totals(items, vatRate, discountPct);
-  const payload = JSON.stringify({ id: initial.id, lead_id: initial.lead_id, quote_date: quoteDate, status, customer, sales, validity, delivery, notes, price_list: priceList, discount_pct: discountPct, vat_rate: vatRate, items });
+  // the same totals in the quotation's currency, as the PDF prints them
+  const tc = inCurrency({ items, vat_rate: vatRate, discount_pct: discountPct, currency, fx_rate: fxRate });
+  const todayRate = (c: Currency) => (c === "AED" ? 1 : (fx?.[c] ?? null));
+  const pickCurrency = (c: Currency) => {
+    setCurrency(c);
+    setFxRate(todayRate(c) ?? 1);
+    setFxAt(c === "AED" ? null : (fx?.at ?? null));
+  };
+  const payload = JSON.stringify({ id: initial.id, lead_id: initial.lead_id, quote_date: quoteDate, status, customer, sales, validity, delivery, notes, price_list: priceList, country: countryId, currency, fx_rate: fxRate, fx_at: fxAt, discount_pct: discountPct, vat_rate: vatRate, items });
   // what was last saved (or the empty form): anything else is an unsaved change
   const [savedPayload] = useState(() =>
-    JSON.stringify({ id: initial.id, lead_id: initial.lead_id, quote_date: initial.quote_date, status: initial.status, customer: initial.customer, sales: initial.sales, validity: initial.validity, delivery: initial.delivery, notes: initial.notes, price_list: initial.price_list, discount_pct: initial.discount_pct, vat_rate: initial.vat_rate, items: initial.items }),
+    JSON.stringify({ id: initial.id, lead_id: initial.lead_id, quote_date: initial.quote_date, status: initial.status, customer: initial.customer, sales: initial.sales, validity: initial.validity, delivery: initial.delivery, notes: initial.notes, price_list: initial.price_list, country: initial.country, currency: initial.currency, fx_rate: initial.fx_rate, fx_at: initial.fx_at, discount_pct: initial.discount_pct, vat_rate: initial.vat_rate, items: initial.items }),
   );
   const dirty = payload !== savedPayload;
 
@@ -106,17 +134,20 @@ export function QuoteEditor({ initial, initialSearch = "", prices = null }: { in
     const opts = optionsFor(m.code);
     const opt = opts?.find((o) => o.key === key) ?? defaultOption(opts);
     const item = generatorItem(m, enclosure, opt?.alternator);
-    setItems((list) => [...list, opt ? { ...item, unit_price: opt.aed, price_key: opt.key } : item]);
+    setItems((list) => [...list, opt ? { ...item, unit_price: listPrice(opt.aed, countryId), price_key: opt.key } : item]);
     setQ("");
   };
-  // switching list re-prices the lines that came from the list (typed-in prices stay) and sets its usual VAT
-  const switchList = (id: PriceListId) => {
-    setPriceList(id);
-    setVatRate(PRICE_LISTS.find((l) => l.id === id)!.vat);
+  // a line still on its list price (for this customer country)
+  const onList = (it: QuoteItem, o: PriceOption) => o.key === it.price_key && listPrice(o.aed, countryId) === it.unit_price;
+  // switching country re-prices the lines that came from the list (typed-in prices stay) and sets its usual VAT
+  const switchCountry = (id: CountryId) => {
+    const c = country(id);
+    setCountryId(id);
+    setVatRate(c.vat);
     setItems((list) =>
       list.map((it) => {
-        const opt = it.price_key ? optionsFor(it.code, id)?.find((o) => o.key === it.price_key) : undefined;
-        return opt ? { ...it, unit_price: opt.aed } : it;
+        const opt = it.price_key ? optionsFor(it.code, c.list)?.find((o) => o.key === it.price_key) : undefined;
+        return opt ? { ...it, unit_price: listPrice(opt.aed, id) } : it;
       }),
     );
   };
@@ -139,13 +170,17 @@ export function QuoteEditor({ initial, initialSearch = "", prices = null }: { in
         <h2 className="text-lg font-extrabold">1 · Add a generator</h2>
         <p className="mt-1 text-sm text-muted">Type the model code (4U-P550, p550), the kVA (550) or the engine. The standard description is filled in from the datasheet and the price from the price list.</p>
         <div className="mt-3 flex flex-wrap items-center gap-2 text-sm">
-          <label htmlFor="price-list" className="font-semibold">Prices from</label>
-          <select id="price-list" value={priceList} onChange={(e) => switchList(e.target.value as PriceListId)} className="rounded-lg border border-line px-3 py-1.5 font-semibold">
-            {PRICE_LISTS.map((l) => (
-              <option key={l.id} value={l.id}>{l.label}{prices ? ` ${prices.edition}` : ""} · VAT {l.vat}%</option>
+          <label htmlFor="country" className="font-semibold">Customer in</label>
+          <select id="country" value={countryId} onChange={(e) => switchCountry(e.target.value as CountryId)} className="rounded-lg border border-line px-3 py-1.5 font-semibold">
+            {COUNTRIES.map((c) => (
+              <option key={c.id} value={c.id}>{c.label}</option>
             ))}
           </select>
-          <span className="text-xs text-muted">{prices ? "Switching re-prices the lines taken from the list and sets the VAT." : "No price list loaded yet: type the prices."}</span>
+          <span className="text-xs text-muted">
+            {listLabel}{prices ? ` ${prices.edition}` : ""}{country(countryId).uplift ? ` + ${country(countryId).uplift}%` : ""} · VAT {country(countryId).vat}%.{" "}
+            {prices ? "Switching re-prices the lines taken from the list and sets the VAT." : "No price list loaded yet: type the prices."}
+            {prices?.gbpSource ? ` Perkins (GBP) at 1 GBP = ${prices.gbpRate} AED, ${FX_SOURCE[prices.gbpSource]}${prices.gbpAt ? ` ${fxTime(prices.gbpAt)}` : ""}.` : ""}
+          </span>
         </div>
         <input
           value={q}
@@ -190,7 +225,7 @@ export function QuoteEditor({ initial, initialSearch = "", prices = null }: { in
                           title={listRef(o)}
                           className={`rounded-lg border px-2.5 py-1 text-start text-xs ${o === chosen ? "border-brand-600 bg-brand-50 font-bold text-ink" : "border-line text-muted hover:border-ink"}`}
                         >
-                          {optionLabel(o)} · AED {money(o.aed)}
+                          {optionLabel(o)} · AED {money(listPrice(o.aed, countryId))}
                         </button>
                       ))}
                     </div>
@@ -282,24 +317,24 @@ export function QuoteEditor({ initial, initialSearch = "", prices = null }: { in
                 <label className={`${label} mt-3`}>
                   Price from the {listLabel}
                   <select
-                    value={it.price_key && opts.some((o) => o.key === it.price_key && o.aed === it.unit_price) ? it.price_key : ""}
+                    value={it.price_key && opts.some((o) => onList(it, o)) ? it.price_key : ""}
                     onChange={(e) => {
                       const o = opts.find((x) => x.key === e.target.value);
                       const m = gensetModels.find((x) => x.code === it.code);
                       // the description names the alternator of the chosen option (Leroy-Somer frame or 4U Power)
-                      update(i, o ? { unit_price: o.aed, price_key: o.key, ...(m && { description: withAlternator(it.description, alternatorPhrase(m, o.alternator)) }) } : { price_key: undefined });
+                      update(i, o ? { unit_price: listPrice(o.aed, countryId), price_key: o.key, ...(m && { description: withAlternator(it.description, alternatorPhrase(m, o.alternator)) }) } : { price_key: undefined });
                     }}
                     className={`${input} font-normal`}
                   >
                     <option value="">Own price (typed in above)</option>
                     {opts.map((o) => (
                       <option key={o.key} value={o.key}>
-                        {optionLabel(o)} · AED {money(o.aed)}{o.currency === "GBP" ? ` (£${money(o.price)})` : ""} · {listRef(o)}
+                        {optionLabel(o)} · AED {money(listPrice(o.aed, countryId))}{o.currency === "GBP" ? ` (£${money(o.price)})` : ""} · {listRef(o)}
                       </option>
                     ))}
                   </select>
                   {(() => {
-                    const cur = opts.find((o) => o.key === it.price_key && o.aed === it.unit_price);
+                    const cur = opts.find((o) => onList(it, o));
                     return cur ? <span className="text-xs font-normal text-muted">{listRef(cur)}, check it matches {it.code}. Shown here only, never on the PDF.</span> : null;
                   })()}
                 </label>
@@ -324,6 +359,12 @@ export function QuoteEditor({ initial, initialSearch = "", prices = null }: { in
           )}
           <div className="flex justify-between"><dt className="text-muted">VAT {vatRate}%</dt><dd>AED {money(t.vat)}</dd></div>
           <div className="flex justify-between border-t border-line pt-1 text-base font-extrabold"><dt>Total</dt><dd>AED {money(t.total)}</dd></div>
+          {currency !== "AED" && (
+            <div className="flex justify-between rounded-lg bg-surface px-2 py-1 text-base font-extrabold">
+              <dt>On the quotation</dt>
+              <dd>{currency} {money(tc.total)}</dd>
+            </div>
+          )}
         </dl>
       </section>
 
@@ -376,6 +417,32 @@ export function QuoteEditor({ initial, initialSearch = "", prices = null }: { in
               ))}
             </select>
           </label>
+          <label className={label}>
+            Currency
+            <select value={currency} onChange={(e) => pickCurrency(e.target.value as Currency)} className={`${input} font-normal`}>
+              {CURRENCIES.map((c) => (
+                <option key={c} value={c} disabled={todayRate(c) === null && c !== currency}>
+                  {c === "AED" ? "AED (UAE dirham)" : c === "USD" ? "USD (US dollar)" : c === "EUR" ? "EUR (euro)" : "SAR (Saudi riyal)"}
+                </option>
+              ))}
+            </select>
+          </label>
+          {currency !== "AED" && (
+            <div className="grid gap-1 rounded-lg bg-surface p-3 text-xs sm:col-span-2">
+              <p>
+                <span className="font-semibold">1 {currency} = {fxRate} AED</span>
+                {fxAt ? ` · rate of ${fxTime(fxAt)}` : ""} · prices are entered in AED and printed in {currency}.
+              </p>
+              {todayRate(currency) !== null && todayRate(currency) !== fxRate && (
+                <p>
+                  Today: 1 {currency} = {todayRate(currency)} AED ({fx ? FX_SOURCE[fx.source] : ""}).{" "}
+                  <button type="button" onClick={() => pickCurrency(currency)} className="font-bold text-brand-700 underline">
+                    Use today&apos;s rate
+                  </button>
+                </p>
+              )}
+            </div>
+          )}
           <div className="grid gap-2 rounded-lg bg-surface p-3 text-xs sm:col-span-2 lg:col-span-4">
             <div className="flex flex-wrap items-center gap-1.5">
               <span className="font-semibold text-muted">Delivery:</span>
@@ -418,7 +485,10 @@ export function QuoteEditor({ initial, initialSearch = "", prices = null }: { in
       {state?.error && <p role="alert" className="rounded-xl bg-red-50 p-4 text-sm font-semibold text-red-800">{state.error}</p>}
       <div className="sticky bottom-0 -mx-4 flex flex-wrap items-center justify-between gap-3 border-t border-line bg-surface/95 px-4 py-3 backdrop-blur">
         <div>
-          <p className="font-extrabold tabular-nums">Total AED {money(t.total)} <span className="text-sm font-normal text-muted">incl. {vatRate}% VAT · {items.length} item{items.length === 1 ? "" : "s"}</span></p>
+          <p className="font-extrabold tabular-nums">
+            Total AED {money(t.total)}
+            {currency !== "AED" && ` · ${currency} ${money(tc.total)}`} <span className="text-sm font-normal text-muted">incl. {vatRate}% VAT · {items.length} item{items.length === 1 ? "" : "s"}</span>
+          </p>
           {dirty && initial.id && <p className="text-xs font-bold text-amber-700">Unsaved changes: Preview shows them, Save keeps them.</p>}
         </div>
         <div className="flex flex-wrap gap-2">

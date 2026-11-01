@@ -22,6 +22,12 @@ export type Quote = {
   delivery: string | null;
   notes: string | null;
   price_list: PriceListId;
+  /** where the customer is: sets the price list, the uplift on list prices and the usual VAT (COUNTRIES) */
+  country: CountryId;
+  /** currency printed on the quotation; prices are kept in AED and converted at fx_rate (AED per 1 unit) */
+  currency: Currency;
+  fx_rate: number;
+  fx_at: string | null;
   discount_pct: number;
   discount: number;
   vat_rate: number;
@@ -58,6 +64,41 @@ export const EXTRA_ITEMS = [
 ];
 
 export const quoteNumber = (n: number) => `QT ${n}`;
+
+/* ------------------------------------------------------------------ country, currency */
+
+export type CountryId = "AE" | "SA" | "OM" | "XX";
+/**
+ * Pricing by where the customer is (owner, 1 Nov 2026): UAE local list with 5% VAT; Saudi Arabia the local list + 6%,
+ * no VAT; Oman the local list, no VAT; anywhere else the export list, no VAT. The uplift applies to prices taken from
+ * the list, not to prices typed in.
+ */
+export const COUNTRIES: { id: CountryId; label: string; list: PriceListId; vat: number; uplift: number }[] = [
+  { id: "AE", label: "United Arab Emirates", list: "uae", vat: 5, uplift: 0 },
+  { id: "SA", label: "Saudi Arabia", list: "uae", vat: 0, uplift: 6 },
+  { id: "OM", label: "Oman", list: "uae", vat: 0, uplift: 0 },
+  { id: "XX", label: "Other countries (export)", list: "export", vat: 0, uplift: 0 },
+];
+export const country = (id: CountryId) => COUNTRIES.find((c) => c.id === id) ?? COUNTRIES[0]!;
+/** Quotations saved before the country existed: the UAE list meant the UAE, the export list another country. */
+export const countryOf = (q: { country?: string | null; price_list?: string | null }): CountryId =>
+  COUNTRIES.some((c) => c.id === q.country) ? (q.country as CountryId) : q.price_list === "export" ? "XX" : "AE";
+/** A list price (AED) for this customer country: the Saudi uplift on top, to the fils. */
+export const listPrice = (aed: number, id: CountryId) => Math.round(aed * (1 + country(id).uplift / 100) * 100) / 100;
+
+export const CURRENCIES = ["AED", "USD", "EUR", "SAR"] as const;
+export type Currency = (typeof CURRENCIES)[number];
+export const FX_SOURCE = { live: "live market rate", daily: "daily rate", saved: "saved fallback rate" } as const;
+
+/**
+ * The quotation as printed: unit prices converted from AED at its rate (AED per 1 unit of its currency), each to the
+ * cent, and the totals worked out again in that currency so the PDF adds up.
+ */
+export function inCurrency<T extends { items: QuoteItem[]; vat_rate: number; discount_pct: number; currency: Currency; fx_rate: number }>(q: T): T & ReturnType<typeof totals> {
+  if (q.currency === "AED" || !(q.fx_rate > 0)) return { ...q, ...totals(q.items, q.vat_rate, q.discount_pct) };
+  const items = q.items.map((i) => ({ ...i, unit_price: round2(i.unit_price / q.fx_rate) }));
+  return { ...q, items, ...totals(items, q.vat_rate, q.discount_pct) };
+}
 
 /**
  * The delivery term printed on page 1 (it is not on the Terms & Conditions sheet): a period ("10 days", "one week")

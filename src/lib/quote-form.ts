@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { STATUSES, VAT_RATE, VAT_RATES, unprintable, type QuoteStatus } from "./quote";
+import { COUNTRIES, CURRENCIES, STATUSES, VAT_RATE, VAT_RATES, country, unprintable, type CountryId, type QuoteStatus } from "./quote";
 
 /**
  * The quotation form as the editor sends it (one JSON field), checked the same way for saving and for the
@@ -28,6 +28,10 @@ const payloadSchema = (strict: boolean) =>
     delivery: str(120),
     notes: str(2000),
     price_list: z.enum(["uae", "export"]).default("uae"),
+    country: z.enum(COUNTRIES.map((c) => c.id) as [CountryId, ...CountryId[]]).default("AE"),
+    currency: z.enum(CURRENCIES).default("AED"),
+    fx_rate: z.coerce.number().positive("Exchange rate missing").max(1000).default(1),
+    fx_at: z.string().max(40).nullable().default(null),
     discount_pct: z.coerce.number().min(0, "Discount can't be negative").max(100, "Discount can't be above 100%").default(0),
     vat_rate: z.coerce.number().refine((r) => VAT_RATES.includes(r), "VAT must be 5% or 0%").default(VAT_RATE),
     items: z
@@ -58,6 +62,12 @@ export function parseQuotePayload(json: unknown, strict: boolean): { data: Quote
   const parsed = payloadSchema(strict).safeParse(raw);
   if (!parsed.success) return { error: parsed.error.issues.map((i) => i.message).join(" · ") };
   const d = parsed.data;
+  // the price list always follows the customer country; AED needs no rate
+  d.price_list = country(d.country).list;
+  if (d.currency === "AED") {
+    d.fx_rate = 1;
+    d.fx_at = null;
+  }
   if (!strict) return { data: d };
   // the PDF uses the standard fonts: anything they can't print (Arabic, emoji) is caught here, not on the PDF
   const fields: [string, string][] = [

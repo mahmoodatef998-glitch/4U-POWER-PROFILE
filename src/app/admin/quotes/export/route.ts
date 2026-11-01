@@ -1,5 +1,5 @@
 import ExcelJS from "exceljs";
-import { quoteNumber } from "@/lib/quote";
+import { country, inCurrency, quoteNumber } from "@/lib/quote";
 import { listQuotes } from "@/lib/quote-data";
 import { describeFilters, filterQuotes, itemsSummary, netValue, parseFilters, salesSummary } from "@/lib/quote-report";
 
@@ -65,6 +65,7 @@ export async function GET(req: Request) {
     { header: "Project", key: "project", width: 20 },
     { header: "Customer ref", key: "ref", width: 14 },
     { header: "What was offered", key: "items", width: 60 },
+    { header: "Customer in", key: "country", width: 18 },
     { header: "Price list", key: "list", width: 10 },
     { header: "Subtotal", key: "subtotal", width: 15, money: true },
     { header: "Discount %", key: "discountPct", width: 10 },
@@ -73,6 +74,9 @@ export async function GET(req: Request) {
     { header: "VAT %", key: "vatRate", width: 7 },
     { header: "VAT", key: "vat", width: 13, money: true },
     { header: "Total (AED)", key: "total", width: 15, money: true },
+    { header: "Quoted in", key: "currency", width: 9 },
+    { header: "Total in that currency", key: "totalCur", width: 16, money: true },
+    { header: "Rate (AED per unit)", key: "fx", width: 12 },
     { header: "Delivery", key: "delivery", width: 16 },
     { header: "Validity", key: "validity", width: 10 },
     { header: "Notes", key: "notes", width: 30 },
@@ -90,6 +94,7 @@ export async function GET(req: Request) {
       project: q.customer.project,
       ref: q.customer.ref,
       items: itemsSummary(q),
+      country: country(q.country).label,
       list: q.price_list === "export" ? "Export" : "UAE",
       subtotal: q.subtotal,
       discountPct: q.discount_pct,
@@ -98,6 +103,9 @@ export async function GET(req: Request) {
       vatRate: q.vat_rate,
       vat: q.vat,
       total: q.total,
+      currency: q.currency,
+      totalCur: inCurrency(q).total,
+      fx: q.fx_rate,
       delivery: q.delivery ?? "",
       validity: q.validity ?? "",
       notes: q.notes ?? "",

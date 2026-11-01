@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { getModel } from "../src/lib/genset-models";
-import { alternatorPhrase, deliveryText, enclosureOptions, generatorItem, withAlternator, money, printable, ratingSearch, searchModels, totals, ukDate, unprintable } from "../src/lib/quote";
+import { alternatorPhrase, countryOf, deliveryText, enclosureOptions, generatorItem, inCurrency, listPrice, withAlternator, money, printable, ratingSearch, searchModels, totals, ukDate, unprintable } from "../src/lib/quote";
 import { parseQuotePayload } from "../src/lib/quote-form";
 import { describeFilters, filterQuery, filterQuotes, itemsSummary, parseFilters, salesPeople, salesSummary } from "../src/lib/quote-report";
 import type { Quote } from "../src/lib/quote";
@@ -53,6 +53,20 @@ assert.ok(ratingSearch("cummins 1500")!.hits.every((h) => h.m.brand === "Cummins
 assert.equal(ratingSearch("3000")!.hits.length, 0);
 assert.equal(ratingSearch("perkins"), null);
 assert.equal(ratingSearch("4U-P550"), null);
+
+// customer country: Saudi Arabia adds 6% to list prices; old quotations map from their price list
+assert.equal(listPrice(100000, "SA"), 106000);
+assert.equal(listPrice(12345.67, "SA"), 13086.41);
+assert.equal(listPrice(100000, "OM"), 100000);
+assert.equal(listPrice(100000, "AE"), 100000);
+assert.equal(countryOf({ price_list: "export" }), "XX");
+assert.equal(countryOf({ price_list: "uae" }), "AE");
+assert.equal(countryOf({ country: "OM", price_list: "uae" }), "OM");
+// currency: AED prices printed in USD at 3.6725, totals redone in USD
+const usd = inCurrency({ items: [{ code: "", title: "", description: "", qty: 2, unit: "Units", unit_price: 36725 }], vat_rate: 0, discount_pct: 10, currency: "USD", fx_rate: 3.6725 });
+assert.equal(usd.items[0]!.unit_price, 10000);
+assert.deepEqual([usd.subtotal, usd.discount, usd.total], [20000, 2000, 18000]);
+assert.equal(inCurrency({ items: [{ code: "", title: "", description: "", qty: 1, unit: "Units", unit_price: 500 }], vat_rate: 5, discount_pct: 0, currency: "AED", fx_rate: 1 }).total, 525);
 
 // description comes from the datasheet and prints with the standard PDF fonts
 const p550 = getModel("4u-p550")!;
@@ -145,7 +159,7 @@ const mk = (number: number, person: string, status: Quote["status"], total: numb
   id: String(number), number, quote_date: date, status, total, subtotal: total, discount: 0, discount_pct: 0, vat: 0, vat_rate: 0,
   customer: { name, address: "", trn: "", project: "", attention: "", contact: "+971 50 000 0000", email: "", ref: "" },
   sales: { person, contact: "", email: "" }, items: [{ code: "4U-P550", title: "Gen", description: "", qty: 2, unit: "Units", unit_price: total / 2 }],
-  validity: null, delivery: null, notes: null, price_list: "uae", lead_id: null, created_at: "",
+  validity: null, delivery: null, notes: null, price_list: "uae", country: "AE", currency: "AED", fx_rate: 1, fx_at: null, lead_id: null, created_at: "",
 });
 const qs = [mk(1001, "SHAMSA", "won", 100000, "2026-10-01", "Al Noor LLC"), mk(1002, "Shamsa ", "lost", 50000, "2026-10-10", "Gulf Steel"), mk(1003, "Mahmoud", "sent", 20000, "2026-10-20", "Al Noor Farms"), mk(1004, "Mahmoud", "won", 30000, "2026-11-02", "Delta")];
 assert.deepEqual(salesPeople(qs), ["Mahmoud", "SHAMSA"]);

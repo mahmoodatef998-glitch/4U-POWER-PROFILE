@@ -1,8 +1,7 @@
 import "server-only";
+import { fxRates, type FxRates } from "./fx";
 import { optionKey, toAed, type PriceBook, type PriceListId } from "./price-book";
 import { getAdminClient } from "./supabase/server";
-
-export const DEFAULT_GBP_RATE = 4.91;
 
 export type PriceRow = {
   edition: string;
@@ -28,17 +27,11 @@ export async function priceRows(): Promise<PriceRow[]> {
   return data.filter((r) => r.edition === edition).map((r) => ({ ...r, price: Number(r.price), model_codes: r.model_codes ?? [] }) as PriceRow);
 }
 
-export async function gbpRate(): Promise<number> {
-  const sb = getAdminClient();
-  if (!sb) return DEFAULT_GBP_RATE;
-  const { data } = await sb.from("app_settings").select("value").eq("key", "gbp_aed_rate").maybeSingle();
-  const n = Number(data?.value);
-  return n > 0 ? n : DEFAULT_GBP_RATE;
-}
-
-/** Price options per 4U model for the quotation editor, or null when no price list is loaded. */
-export async function loadPriceBook(): Promise<PriceBook | null> {
-  const [rows, rate] = await Promise.all([priceRows(), gbpRate()]);
+/** Price options per 4U model for the quotation editor, or null when no price list is loaded. GBP prices (Perkins) are
+ *  converted at the live rate (src/lib/fx.ts); `fx` can be passed when the caller already has the rates. */
+export async function loadPriceBook(fx?: FxRates): Promise<PriceBook | null> {
+  const [rows, rates] = await Promise.all([priceRows(), fx ?? fxRates()]);
+  const rate = rates.GBP;
   if (!rows.length) return null;
   const models: PriceBook["models"] = {};
   for (const r of rows) {
@@ -56,5 +49,5 @@ export async function loadPriceBook(): Promise<PriceBook | null> {
       });
     }
   }
-  return { edition: rows[0]!.edition, gbpRate: rate, models };
+  return { edition: rows[0]!.edition, gbpRate: rate, gbpSource: rates.source, gbpAt: rates.at, models };
 }

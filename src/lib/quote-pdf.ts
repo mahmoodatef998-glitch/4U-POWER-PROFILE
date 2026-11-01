@@ -1,6 +1,6 @@
 import "server-only";
 import { PDFDocument, StandardFonts, degrees, rgb, type PDFFont, type PDFPage, type RGB } from "pdf-lib";
-import { COMPANY, SPEC_NOTE, deliveryText, money, printable, quoteNumber, ukDate, type Quote } from "./quote";
+import { COMPANY, SPEC_NOTE, deliveryText, inCurrency, money, printable, quoteNumber, ukDate, type Quote } from "./quote";
 import type { QuoteAssets } from "./quote-assets";
 
 /**
@@ -62,6 +62,9 @@ function roundRect(page: PDFPage, x: number, yTop: number, w: number, h: number,
 
 /** `draft`: an unsaved preview, labelled DRAFT and watermarked so it is never mistaken for the quotation sent. */
 export async function buildQuotePdf(q: Quote, assets: QuoteAssets, opts: { draft?: boolean } = {}): Promise<Uint8Array> {
+  // prices are kept in AED: print them in the quotation's currency, at its saved rate
+  q = inCurrency(q);
+  const cur = q.currency;
   const ref = opts.draft ? (q.number ? `${quoteNumber(q.number)} DRAFT` : "DRAFT") : quoteNumber(q.number);
   const doc = await PDFDocument.create();
   doc.setTitle(`Quotation ${ref} - ${printable(q.customer.name)}`);
@@ -190,7 +193,7 @@ export async function buildQuotePdf(q: Quote, assets: QuoteAssets, opts: { draft
     { label: "Qty", w: 46, right: true },
     { label: "Unit price", w: 76, right: true },
     { label: "VAT", w: 32, right: true },
-    { label: "Amount (AED)", w: X1 - X0 - 24 - 229 - 46 - 76 - 32, right: true },
+    { label: `Amount (${cur})`, w: X1 - X0 - 24 - 229 - 46 - 76 - 32, right: true },
   ];
   const colX = cols.map((_, i) => X0 + cols.slice(0, i).reduce((s, cc) => s + cc.w, 0));
   const cellPad = 6;
@@ -271,14 +274,14 @@ export async function buildQuotePdf(q: Quote, assets: QuoteAssets, opts: { draft
     .map(([k, v]) => ({ label: k, lines: wrap(v, fonts.regular, 8.2, notesW - 12) }));
   // a discount comes off the subtotal before VAT: show it and the net (taxable) amount
   const totalRows: [string, string][] = [
-    ["Subtotal", `AED ${money(q.subtotal)}`],
+    ["Subtotal", `${cur} ${money(q.subtotal)}`],
     ...(q.discount > 0
       ? ([
-          [`Discount ${q.discount_pct}%`, `- AED ${money(q.discount)}`],
-          ["Net amount", `AED ${money(q.subtotal - q.discount)}`],
+          [`Discount ${q.discount_pct}%`, `- ${cur} ${money(q.discount)}`],
+          ["Net amount", `${cur} ${money(q.subtotal - q.discount)}`],
         ] as [string, string][])
       : []),
-    [`VAT ${q.vat_rate}%`, `AED ${money(q.vat)}`],
+    [`VAT ${q.vat_rate}%`, `${cur} ${money(q.vat)}`],
   ];
   const totalsH = totalRows.length * 17 + 8 + 32;
   const notesH = leftBlocks.reduce((h, b) => h + 24 + b.lines.length * 11, 0);
@@ -295,7 +298,7 @@ export async function buildQuotePdf(q: Quote, assets: QuoteAssets, opts: { draft
   y -= 8;
   roundRect(page, tx, y, tw, 32, 6, NAVY);
   page.drawRectangle({ x: tx, y: y - 32 + 8, width: 3, height: 16, color: GOLD });
-  caps("Total (AED)", tx + 14, y - 19.5, 7.2, WHITE);
+  caps(`Total (${cur})`, tx + 14, y - 19.5, 7.2, WHITE);
   textRight(money(q.total), X1 - 12, y - 21, 13, fonts.bold, WHITE);
   caps(`incl. ${q.vat_rate}% VAT`, X1 - 12, y - 41, 6.2, MUTED, fonts.bold, "right");
   y -= 48;

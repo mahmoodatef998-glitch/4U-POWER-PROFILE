@@ -13,11 +13,18 @@ export const PRICE_LISTS: { id: PriceListId; label: string; vat: number }[] = [
 /** One way a model is priced on a list: alternator and origin, the list price and that price in AED, and the list's own model code and engine (to check against the datasheet). */
 export type PriceOption = { key: string; alternator: string; origin: string; currency: "AED" | "GBP"; price: number; aed: number; listLabel: string; listEngine: string };
 /** Options per 4U model code and list, in price-list order. */
-export type PriceBook = { edition: string; gbpRate: number; models: Record<string, Partial<Record<PriceListId, PriceOption[]>>> };
+export type PriceBook = {
+  edition: string;
+  /** AED per GBP used for the Perkins list, where it came from ("live" market quote, "daily" rate or the "saved" fallback) and when */
+  gbpRate: number;
+  gbpSource?: "live" | "daily" | "saved";
+  gbpAt?: string;
+  models: Record<string, Partial<Record<PriceListId, PriceOption[]>>>;
+};
 
 export const optionKey = (alternator: string, origin: string) => `${alternator}|${origin}`;
 
-/** The Perkins list is in pounds: converted at the rate set on /admin/quotes/prices, to the whole dirham. */
+/** The Perkins list is in pounds: converted at the live GBP rate (src/lib/fx.ts), to the whole dirham. */
 export const toAed = (price: number, currency: "AED" | "GBP", gbpRate: number) => (currency === "GBP" ? Math.round(price * gbpRate) : price);
 
 const titleCase = (s: string) => s.toLowerCase().replace(/\b[a-z]/g, (c) => c.toUpperCase()).replace(/\b(Usa|Uk|Eu)\b/g, (m) => m.toUpperCase());

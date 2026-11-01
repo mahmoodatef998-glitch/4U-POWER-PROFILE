@@ -1,5 +1,5 @@
 import "server-only";
-import { DEFAULT_SALES, EMPTY_CUSTOMER, type Quote, type QuoteCustomer, type QuoteSales } from "./quote";
+import { CURRENCIES, DEFAULT_SALES, EMPTY_CUSTOMER, countryOf, type Currency, type Quote, type QuoteCustomer, type QuoteSales } from "./quote";
 import { getAdminClient } from "./supabase/server";
 
 /** Shown when the quotations migration has not been run in Supabase yet. */
@@ -52,6 +52,10 @@ function normalize(r: Record<string, unknown>): Quote {
     items: Array.isArray(r.items) ? (r.items as Quote["items"]).map((i) => ({ ...i, qty: Number(i.qty), unit_price: Number(i.unit_price) })) : [],
     delivery: (r.delivery as string | null) ?? null,
     price_list: r.price_list === "export" ? "export" : "uae",
+    country: countryOf(r as { country?: string; price_list?: string }),
+    currency: CURRENCIES.includes(r.currency as Currency) ? (r.currency as Currency) : "AED",
+    fx_rate: Number(r.fx_rate) > 0 ? Number(r.fx_rate) : 1,
+    fx_at: (r.fx_at as string | null) ?? null,
     discount_pct: Number(r.discount_pct ?? 0),
     discount: Number(r.discount ?? 0),
     vat_rate: Number(r.vat_rate ?? 5),

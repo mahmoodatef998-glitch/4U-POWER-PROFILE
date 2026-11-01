@@ -1,15 +1,17 @@
 import Link from "next/link";
 import { brandModels } from "@/lib/genset-models";
 import { PRICE_LISTS, defaultOption, listRef, optionLabel } from "@/lib/price-book";
+import { fxRates } from "@/lib/fx";
 import { loadPriceBook, priceRows } from "@/lib/price-book-data";
-import { money } from "@/lib/quote";
-import { setGbpRate } from "./actions";
+import { FX_SOURCE, money } from "@/lib/quote";
+import { setFallbackRates } from "./actions";
 
 const BRANDS = ["Perkins", "Cummins", "Kubota", "Baudouin", "Lister Petter"] as const;
 
 /** Which 4U model gets which list price, to check the price lists against the datasheets. */
 export default async function PricesPage({ searchParams }: { searchParams: Promise<{ msg?: string }> }) {
-  const [book, rows, { msg }] = await Promise.all([loadPriceBook(), priceRows(), searchParams]);
+  const fx = await fxRates();
+  const [book, rows, { msg }] = await Promise.all([loadPriceBook(fx), priceRows(), searchParams]);
   const unlinked = rows.filter((r) => r.list === "uae" && !r.model_codes.length);
   return (
     <div className="grid gap-6">
@@ -25,16 +27,25 @@ export default async function PricesPage({ searchParams }: { searchParams: Promi
         <p className="rounded-xl bg-amber-50 p-4 font-semibold text-amber-900">No price list loaded yet.</p>
       ) : (
         <>
-          <form action={setGbpRate} className="flex flex-wrap items-end gap-3 rounded-2xl border border-line bg-navy-900 p-5 text-sm">
-            <label className="grid gap-1 font-semibold">
-              Perkins list is in pounds: 1 GBP =
-              <span className="flex items-center gap-2">
-                <input name="rate" type="number" step="0.0001" min="1" max="20" defaultValue={book.gbpRate} className="w-28 rounded-lg border border-line px-3 py-2" /> AED
-              </span>
-            </label>
-            <button className="rounded-lg bg-navy-950 px-4 py-2 font-bold text-white">Save rate</button>
-            <p className="basis-full text-xs text-muted">New Perkins lines use this rate. Saved quotations keep their prices.</p>
-          </form>
+          <div className="grid gap-3 rounded-2xl border border-line bg-navy-900 p-5 text-sm">
+            <p className="font-semibold">
+              Exchange rates now ({FX_SOURCE[fx.source]}, {new Date(fx.at).toLocaleString("en-GB", { timeZone: "Asia/Dubai", dateStyle: "medium", timeStyle: "short" })} UAE time):{" "}
+              <span className="tabular-nums">1 GBP = {fx.GBP} AED · 1 EUR = {fx.EUR ?? "–"} AED · 1 USD = {fx.USD} AED · 1 SAR = {fx.SAR} AED</span>
+            </p>
+            <p className="text-xs text-muted">The Perkins list is in pounds: new Perkins lines are priced at the GBP rate above. USD and SAR are fixed by their pegs. Saved quotations keep their prices and their rate.</p>
+            <form action={setFallbackRates} className="flex flex-wrap items-end gap-3 border-t border-line pt-3">
+              <label className="grid gap-1 font-semibold">
+                Fallback 1 GBP =
+                <input name="gbp" type="number" step="0.0001" min="1" max="20" defaultValue={fx.GBP} className="w-28 rounded-lg border border-line px-3 py-2" />
+              </label>
+              <label className="grid gap-1 font-semibold">
+                Fallback 1 EUR =
+                <input name="eur" type="number" step="0.0001" min="1" max="20" defaultValue={fx.EUR ?? ""} className="w-28 rounded-lg border border-line px-3 py-2" />
+              </label>
+              <button className="rounded-lg bg-navy-950 px-4 py-2 font-bold text-white">Save fallback</button>
+              <span className="text-xs text-muted">Used only if no live or daily rate can be fetched.</span>
+            </form>
+          </div>
 
           {BRANDS.map((brand) => {
             const models = brandModels(brand);
