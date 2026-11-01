@@ -100,10 +100,10 @@ assert.equal(r152.exact, false);
 assert.deepEqual(r152.hits.map((h) => h.gap), [...r152.hits.map((h) => h.gap)].sort((x, y) => x - y));
 assert.ok(r152.hits.every((h) => h.gap > 0 && Math.min(...[h.m.standbyKva, h.m.primeKva].filter((k) => k >= 152)) - 152 === h.gap));
 assert.ok(["Perkins", "Cummins", "Baudouin", "Lister Petter"].every((b) => brands(r152).has(b as never)));
-// 1500: Perkins 4U-P1500 is an exact match, Cummins' nearest larger is 4U-C1608 (+108, a 60 Hz build) — both shown
+// 1500: exact matches from Perkins (4U-P1500) and Cummins (4U-C1500)
 const r1500 = ratingSearch("1500")!;
 assert.ok(r1500.hits.some((h) => h.m.code === "4U-P1500" && h.gap === 0));
-assert.ok(r1500.hits.some((h) => h.m.code === "4U-C1608" && h.gap === 108));
+assert.ok(r1500.hits.some((h) => h.m.code === "4U-C1500" && h.gap === 0), "Cummins KTA50-GS8, 1500 kVA prime");
 assert.ok(ratingSearch("1600")!.hits.some((h) => h.m.code === "4U-C1608" && h.gap === 8));
 // exact matches come first with gap 0
 const r150 = ratingSearch("150")!;
@@ -322,7 +322,7 @@ console.log("quotation tests passed");
 // 60 Hz-only engine builds (Cummins rates them at 1800 rpm only): 60 Hz ratings, kept out of 50 Hz sizing
 {
   const sixtyOnly = gensetModels.filter((m) => m.ratedHz === 60).map((m) => m.code).sort();
-  assert.deepEqual(sixtyOnly, ["4U-C1608", "4U-C2290", "4U-C68"]);
+  assert.deepEqual(sixtyOnly, ["4U-C1608", "4U-C2290", "4U-C68", "4U-P24"]);
   assert.deepEqual(rated("4u-c1608"), ["KTA50-G9", 1608, 1913], "Cummins KTA50-G9 at 1800 rpm");
   assert.equal(currentModelSlug("4u-c1619"), "4u-c1608");
   assert.ok(!sizingModels().some((m) => sixtyOnly.includes(m.code)) && !configModels().some((m) => sixtyOnly.includes(m.code)));
@@ -333,6 +333,12 @@ console.log("quotation tests passed");
   assert.equal(ds.hz, 60);
   assert.equal(ds.prime.amps, 1934, "1608 kVA at 480 V");
   assert.equal(buildDatasheet(getModel("4u-p225")!, "en").engine, "1206A-E70TTAG2", "Perkins / price-list engine name");
+  // 50 Hz counterparts added from the makers' sheets
+  assert.deepEqual(rated("4u-c1500"), ["KTA50-GS8", 1500, 1650], "Cummins 1500 / 1675, LSA 50.2 L8 standby 1650");
+  assert.deepEqual(rated("4u-k20c"), ["V2403-M-DI-BG", 20, 22], "price list KU-20 / 23 held to TAL-A40-F");
+  const p24 = sixtyHz(getModel("4u-p24")!);
+  assert.ok(p24.kind === "datasheet" && p24.rating.prime === 24 && p24.rating.source === "perkins");
+  assert.ok(sizingModels().some((m) => m.code === "4U-C1500") && !sizingModels().some((m) => m.code === "4U-P24"));
 }
 
 // every datasheet detail entry belongs to a live model (codes move with ratings)

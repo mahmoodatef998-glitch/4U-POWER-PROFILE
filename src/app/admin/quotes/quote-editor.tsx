@@ -291,7 +291,7 @@ export function QuoteEditor({ initial, initialSearch = "", prices = null, fx = n
                     </p>
                   )}
                   {s60?.kind === "fifty-only" && <p className="text-sm font-semibold text-red-700">{s60.reason}</p>}
-                  {hz === 50 && m.ratedHz === 60 && <p className="text-sm font-semibold text-red-700">60 Hz build only (Cummins rates this engine at 1800 rpm) — switch the quotation to 60 Hz.</p>}
+                  {hz === 50 && m.ratedHz === 60 && <p className="text-sm font-semibold text-red-700">60 Hz build only ({m.brand} rates this engine at 1800 rpm) — switch the quotation to 60 Hz.</p>}
                   {s60?.kind === "manual" && (
                     <div className="mt-1 flex flex-wrap items-end gap-2 text-xs">
                       <span className="w-full font-semibold text-amber-700">No 60 Hz datasheet on file: type the supplier&apos;s 60 Hz figures.</span>

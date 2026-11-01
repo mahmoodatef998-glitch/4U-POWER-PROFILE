@@ -135,7 +135,7 @@ export default async function ModelDatasheetPage({ params }: Props) {
         ]
       : d.sixty.kind === "sixty-only"
         ? [
-            L(`Cummins rates this engine build at 1800 rpm (60 Hz) only; the ratings on this sheet are its 60 Hz figures.`, "كامنز بتقنّن نسخة المحرك دي على 1800 لفة (60 هرتز) بس؛ القدرات في الشيت دي على 60 هرتز."),
+            L(`${m.brand} rates this engine build at 1800 rpm (60 Hz) only; the ratings on this sheet are its 60 Hz figures.`, `${m.brand} بتقنّن نسخة المحرك دي على 1800 لفة (60 هرتز) بس؛ القدرات في الشيت دي على 60 هرتز.`),
             ...(d.sixty.fiftyHzModel ? [L(`For a 50 Hz supply, see ${d.sixty.fiftyHzModel}.`, `لشبكة 50 هرتز شوف ${d.sixty.fiftyHzModel}.`)] : []),
             L("Voltage range 380–480 V at 60 Hz; output below 480 V is confirmed with the quotation.", "مدى الجهد 380–480 فولت؛ الخرج تحت 480 فولت يتأكد مع عرض السعر."),
           ]
@@ -371,7 +371,7 @@ export default async function ModelDatasheetPage({ params }: Props) {
                       ? L(`60 Hz: engine build ${d.sixty.engine}; ${d.sixty.volts ? "" : "typical genset output, "}voltage confirmed per order.`, `60 هرتز: نسخة المحرك ${d.sixty.engine}؛ الجهد يتأكد مع الطلب.`)
                       : L(`60 Hz: ${d.sixty.volts ? "rated at " + d.sixty.volts + " V" : "typical genset output"}; other voltages confirmed per order.`, "60 هرتز: الجهود الأخرى تتأكد مع الطلب.")
                     : d.sixty.kind === "sixty-only"
-                      ? L(`60 Hz engine build — Cummins gives no 50 Hz rating${d.sixty.fiftyHzModel ? `; 50 Hz set: ${d.sixty.fiftyHzModel}` : ""}.`, `نسخة محرك 60 هرتز — مفيش قدرة 50 هرتز${d.sixty.fiftyHzModel ? `؛ موديل 50 هرتز: ${d.sixty.fiftyHzModel}` : ""}.`)
+                      ? L(`60 Hz engine build — ${m.brand} gives no 50 Hz rating${d.sixty.fiftyHzModel ? `; 50 Hz set: ${d.sixty.fiftyHzModel}` : ""}.`, `نسخة محرك 60 هرتز — مفيش قدرة 50 هرتز${d.sixty.fiftyHzModel ? `؛ موديل 50 هرتز: ${d.sixty.fiftyHzModel}` : ""}.`)
                     : d.sixty.kind === "fifty-only"
                       ? L("50 Hz engine build — not offered at 60 Hz.", "نسخة محرك 50 هرتز — غير متاحة على 60 هرتز.")
                       : L("60 Hz / 1800 rpm: kVA, kW and current follow the engine's 60 Hz rating — confirmed per order.", "60 هرتز / 1800 لفة: القدرة والتيار حسب قدرة المحرك على 60 هرتز — تتأكد مع الطلب.")}

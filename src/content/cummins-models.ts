@@ -17,6 +17,33 @@ import type { GensetModelData } from "./genset-types";
 
 export const cumminsModels: GensetModelData[] = [
   {
+    // Cummins KTA50-GS8 spec sheet (4/19): 50 Hz 1500 / 1675 kVA (1200 / 1340 kWe) — the 1500 rpm KTA50 closest to the
+    // 60 Hz-only KTA50-G9 (4U-C1608); on the LSA 50.2 L8 frame the price list uses for its KTA50 sets, held to 1650
+    // standby. Not on the 2026 price list: priced by hand.
+    slug: "4u-c1500",
+    code: "4U-C1500",
+    standbyKva: 1650,
+    standbyKw: 1320,
+    primeKva: 1500,
+    primeKw: 1200,
+    engine: "KTA50-GS8",
+    cylinders: 16,
+    layout: "V",
+    displacementL: 50.3,
+    boreStrokeMm: "159 × 159",
+    aspiration: "turbo-water",
+    governing: null,
+    alternator: { leroySomer: "LSA50.2 L8", stamford: null },
+    controller: null,
+    fuelLph: { p50: 167, p75: 238, p100: 309, standby: 345 },
+    coolantL: 496,
+    oilL: 178,
+    noiseDb: null,
+    open: null,
+    enclosed: null,
+    ambientC: 48,
+  },
+  {
     // added from the CKD rating list: ratings only, the rest of the datasheet "on request"
     // Cummins G-Drive ratings card: X2.5-G2 26 / 28 kVA at 50 Hz (alternator to suit) (1 Nov 2026, alternator ratings: Leroy-Somer 400 V / 50 Hz, class H)
     slug: "4u-c26",

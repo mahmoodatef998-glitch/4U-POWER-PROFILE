@@ -10,6 +10,32 @@ import type { GensetModelData } from "./genset-types";
 
 export const kubotaModels: GensetModelData[] = [
   {
+    // Kubota V2403-M-DI-BG (engine.kubota.com sheet: 22.4 kW stand-by / 20.9 kW continuous net at 1500 rpm); the 2026
+    // price list's KU-20 / 23 on TAL040F, held to the TAL-A40-F rating (20 / 22 kVA at 400 V 50 Hz)
+    slug: "4u-k20c",
+    code: "4U-K20C",
+    standbyKva: 22,
+    standbyKw: 17.6,
+    primeKva: 20,
+    primeKw: 16,
+    engine: "V2403-M-DI-BG",
+    cylinders: 4,
+    layout: "inline",
+    displacementL: 2.434,
+    boreStrokeMm: "87 × 102.4",
+    aspiration: "na",
+    governing: null,
+    alternator: { leroySomer: "TAL-A40-F", stamford: null },
+    controller: null,
+    fuelLph: null,
+    coolantL: null,
+    oilL: null,
+    noiseDb: null,
+    open: null,
+    enclosed: null,
+    ambientC: null,
+  },
+  {
     slug: "4u-k9",
     code: "4U-K9",
     standbyKva: 10,

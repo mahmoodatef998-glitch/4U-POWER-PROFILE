@@ -40,3 +40,18 @@ Engineering rules:
   named as Perkins and the list do, 1206A-E70TTAG2.
 
 `npm test` builds every sheet in both languages and checks ratings and wording.
+
+## 50 Hz counterparts and list rows (1 Nov 2026)
+
+| 60 Hz-only set | 60 Hz rating (kVA) | 50 Hz counterpart | 50 Hz rating (kVA) |
+| --- | --- | --- | --- |
+| 4U-C68 4BTAA3.3-G12 | 68 / 75 | 4U-C60 4BTAA3.3-G14 | 60 / 66 (Cummins 61 / 66) |
+| 4U-C1608 KTA50-G9 | 1608 / 1913 | 4U-C1500 KTA50-GS8 (added; sheet 4/19) | 1500 / 1650 (engine 1500 / 1675, LSA 50.2 L8) |
+| 4U-C2290 QSK60-G6 | 2290 / 2508 | 4U-C2047 QSK60-G4 | 2047 / 2250 — the largest 50 Hz QSK60; next step is QSK78 (2750 / 3000) |
+| 4U-P24 404D-22G (added) | 24 / 27 | 4U-P20 404A-22G1 | 20 / 22 |
+
+Price-list rows now linked: V2403-M-DI-BG (KU-20 / 23) → 4U-K20C, 20 / 22 kVA on TAL-A40-F (Kubota sheet 238: 22.4 kW
+stand-by net at 1500 rpm); 404D-22G (60HZ) → 4U-P24. Still without a model, for the owner: SA315G1 (12 kVA — Lister's own
+2025 table lists the SA315G2 only), LP613EG3 (500 kVA — Lister gives 435 kW maximum at 1500 rpm, enough for 500 kVA
+standby but not prime) and V3800DI-T-E2CB (no Kubota sheet for this build). Sets without a list row (4U-C1500, 4U-C2290)
+are quoted at a typed-in price.

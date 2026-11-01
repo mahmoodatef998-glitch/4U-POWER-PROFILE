@@ -10,6 +10,33 @@ import type { GensetModelData } from "./genset-types";
 
 export const perkinsModels: GensetModelData[] = [
   {
+    // Perkins 404D-22G: Perkins' Gen Set Power Selector Chart lists it at 1800 rpm only — 24 / 27 kVA (19 / 21 kWe);
+    // the 2026 price list's "404D-22G (60HZ)" row. 50 Hz set of the same size: 4U-P20 (404A-22G1)
+    slug: "4u-p24",
+    code: "4U-P24",
+    standbyKva: 27,
+    standbyKw: 21,
+    primeKva: 24,
+    primeKw: 19,
+    engine: "404D-22G",
+    cylinders: 4,
+    layout: "inline",
+    displacementL: 2.2,
+    boreStrokeMm: null,
+    aspiration: "na",
+    governing: null,
+    alternator: { leroySomer: null, stamford: null },
+    controller: null,
+    fuelLph: null,
+    coolantL: null,
+    oilL: null,
+    noiseDb: null,
+    open: null,
+    enclosed: null,
+    ambientC: null,
+    ratedHz: 60,
+  },
+  {
     slug: "4u-p9",
     code: "4U-P9",
     standbyKva: 9.9,

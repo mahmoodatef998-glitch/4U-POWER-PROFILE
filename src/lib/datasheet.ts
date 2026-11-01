@@ -414,7 +414,7 @@ export const OPTIONS: { icon: string; en: string; ar: string; items: string[] }[
   { icon: "tank", en: "Fuel & exhaust", ar: "الوقود والعادم", items: ["Single / double wall external tank (500–5000 L)", "Fuel transfer pump", "Residential, critical or hospital grade silencer"] },
 ];
 
-/** The 50 Hz set to offer instead of a 60 Hz-only engine build (Cummins' 1500 rpm engine of the same family). */
-const FIFTY_HZ_EQUIVALENT: Record<string, string> = { "4U-C68": "4U-C60", "4U-C1608": "4U-C1416", "4U-C2290": "4U-C2047" };
+/** The 50 Hz set to offer instead of a 60 Hz-only engine build (the maker's 1500 rpm engine of the same family / size). */
+const FIFTY_HZ_EQUIVALENT: Record<string, string> = { "4U-C68": "4U-C60", "4U-C1608": "4U-C1500", "4U-C2290": "4U-C2047", "4U-P24": "4U-P20" };
 
 export const VOLTAGES = ["400/230 V", "380/220 V", "415/240 V", "440/254 V", "480/277 V", "416/240 V", "220/127 V", "208/120 V"];

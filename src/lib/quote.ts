@@ -194,7 +194,7 @@ function heldToAlternator60(r: Rating60, alternator: string | null): Rating60 {
 
 export function sixtyHz(m: GensetModel): SixtyHz {
   if (m.ratedHz === 60)
-    return { kind: "datasheet", rating: { prime: m.primeKva, primeKw: m.primeKw, standby: m.standbyKva, standbyKw: m.standbyKw, volts: null, source: "cummins" } };
+    return { kind: "datasheet", rating: { prime: m.primeKva, primeKw: m.primeKw, standby: m.standbyKva, standbyKw: m.standbyKw, volts: null, source: m.brand === "Perkins" ? "perkins" : "cummins" } };
   const r = RATINGS_60HZ[m.engine];
   if (r) return { kind: "datasheet", rating: heldToAlternator60(r, m.alternator.leroySomer) };
   if (m.brand === "Baudouin" && m.engine.endsWith("/5")) return { kind: "fifty-only", reason: "50 Hz engine build (…/5), not offered at 60 Hz" };
