@@ -3,6 +3,7 @@ import { gensetModels, getModel } from "../src/lib/genset-models";
 import { LEGACY_EXACT } from "../src/lib/legacy-exact";
 import { MODEL_RENAMES, currentModelSlug } from "../src/lib/model-renames";
 import { frameRating } from "../src/content/alternator-ratings";
+import { buildDatasheet } from "../src/lib/datasheet";
 import { FIFTY_HZ_ONLY, RATINGS_60HZ } from "../src/content/genset-60hz";
 import { alternatorPhrase, amps, check60, countryOf, defaultHz, defaultVolts60, sixtyHz, deliveryText, enclosureOptions, generatorItem, inCurrency, listPrice, withAlternator, money, printable, ratingSearch, searchModels, totals, ukDate, unprintable } from "../src/lib/quote";
 import { parseQuotePayload } from "../src/lib/quote-form";
@@ -295,3 +296,23 @@ assert.equal(defaultVolts60("SA"), "380/220");
 assert.equal(defaultVolts60("XX"), "480/277");
 
 console.log("quotation tests passed");
+
+// customer datasheets: every set builds, ratings come from the model file, no forbidden wording
+{
+  for (const m of gensetModels) {
+    for (const loc of ["en", "ar"] as const) {
+      const d = buildDatasheet(m, loc);
+      assert.equal(d.prime.kva, m.primeKva);
+      assert.equal(d.standby.kva, m.standbyKva);
+      const text = JSON.stringify(d);
+      assert.ok(!/brushless|chinese|\bAQT\b|\bAs\b/i.test(text), `${m.code} datasheet wording`);
+    }
+  }
+  const p455 = buildDatasheet(getModel("4u-p455")!, "en");
+  assert.equal(p455.prime.amps, 657);
+  assert.equal(p455.sixty.kind, "fifty-only");
+  const k30 = buildDatasheet(getModel("4u-k30")!, "en");
+  assert.ok(k30.sixty.kind === "rated" && k30.sixty.prime === 35);
+  // implausible source values stay off the sheet (e.g. a 0.25 m³/s radiator fan on a 136 kVA set)
+  assert.ok(buildDatasheet(getModel("4u-c136")!, "en").hidden.some((h) => h.includes("cooling fan air flow")));
+}

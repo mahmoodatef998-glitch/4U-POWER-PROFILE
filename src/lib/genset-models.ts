@@ -136,7 +136,7 @@ export const sizingModels = (): SizingModel[] =>
 const fmt = (n: number, locale: Locale) => new Intl.NumberFormat(locale === "ar" ? "ar-AE" : "en-AE", { maximumFractionDigits: 1 }).format(n);
 const L = (locale: Locale, en: string, ar: string) => (locale === "ar" ? ar : en);
 
-const ASPIRATION: Record<Aspiration, [string, string]> = {
+export const ASPIRATION: Record<Aspiration, [string, string]> = {
   na: ["Naturally aspirated", "تنفس طبيعي"],
   turbo: ["Turbocharged", "تيربو"],
   "turbo-ac": ["Turbocharged & aftercooled", "تيربو مع تبريد لاحق (Aftercooled)"],
