@@ -223,3 +223,17 @@
 .doc[dir="rtl"] .opt { padding: 3mm 4mm; }
 .doc[dir="rtl"] .office { padding: 5mm 7mm; margin-bottom: 5mm; }
 .doc[dir="rtl"] .office p { line-height: 1.45; }
+
+/* ---------- product (range) sheet: one A4 page, same parts as the model cover ---------- */
+.pname { font-weight: 800; font-style: italic; font-size: 30pt; line-height: 1.02; margin: 4mm 0 6mm; letter-spacing: -0.005em; }
+.pname .tail { color: var(--red); }
+.doc[dir="rtl"] .pname { font-style: normal; font-size: 25pt; line-height: 1.25; }
+.kpiText { font-weight: 800; font-style: italic; font-size: 17pt; line-height: 1.1; }
+.doc[dir="rtl"] .kpiText { font-style: normal; font-size: 15pt; }
+.thumbs { display: grid; grid-template-columns: 1fr 1fr; gap: 3mm; }
+.thumbs img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 2mm; border: 0.3mm solid var(--line); display: block; }
+.note { font-size: 8.5pt; color: var(--muted); margin: 3mm 0 0; }
+.pname.long { font-size: 25pt; margin: 3mm 0 5mm; }
+.doc[dir="rtl"] .pname.long { font-size: 22pt; }
+.tiles2 { display: grid; grid-template-columns: 1fr 1fr; gap: 2.5mm; }
+.tiles2 .tile { text-align: start; justify-items: start; grid-template-columns: auto 1fr; align-items: center; display: grid; padding: 3mm 3.5mm; }

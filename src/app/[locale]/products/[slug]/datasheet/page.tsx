@@ -1,17 +1,22 @@
-import { ArrowLeft } from "lucide-react";
-import Image from "next/image";
+import { ArrowLeft, Cog, FlaskConical, Fuel, Globe, Layers, MapPin, Phone, ShieldCheck, Truck, Wrench, Zap, type LucideIcon } from "lucide-react";
+import { Barlow_Condensed } from "next/font/google";
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import type { ReactNode } from "react";
 import { PrintButton } from "@/components/print-button";
 import { products as seedProducts } from "@/content/products";
 import { categoryLabels, engineBrandLabels, fuelLabels } from "@/content/taxonomy";
 import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 import { getProduct } from "@/lib/data";
-import { kvaLabel } from "@/lib/product-meta";
 import { buildMetadata } from "@/lib/seo";
 import { company } from "@/lib/site";
 import { formatDate, type Locale } from "@/lib/utils";
+// same 4U sheet parts as the model datasheets (navy / red, Barlow Condensed, fixed A4 pages)
+import s from "../../../models/[slug]/datasheet/datasheet.module.css";
+import { FitPages } from "../../../models/[slug]/datasheet/fit-pages";
+
+const barlow = Barlow_Condensed({ subsets: ["latin"], weight: ["400", "500", "600", "700", "800"], style: ["normal", "italic"], variable: "--ds-font", display: "swap" });
 
 export const revalidate = 3600;
 
@@ -31,9 +36,12 @@ export async function generateMetadata({ params }: Props) {
   return buildMetadata({ locale, path: `/products/${slug}/datasheet`, title: `${name} — ${t("docTitle")}`, description: name, noindex: true });
 }
 
+type Kpi = { I: LucideIcon; head: string; value: ReactNode; sub?: string };
+
 /**
- * Printable A4 datasheet. Always rendered light (fixed colours, not theme tokens) so "Save as PDF"
- * gives a clean white document in either site theme; site chrome is hidden in print (see globals.css).
+ * Product (range) datasheet: one A4 page in the 4U navy / red style of the model datasheets — cover photo,
+ * key figures, overview, photos and the product's specification table. Every value comes from the product
+ * record; print / "Save as PDF" gives the page edge to edge.
  */
 export default async function DatasheetPage({ params }: Props) {
   const { locale, slug } = await params;
@@ -42,91 +50,175 @@ export default async function DatasheetPage({ params }: Props) {
   if (!p) notFound();
   const t = await getTranslations();
   const ar = locale === "ar";
+  const L = (en: string, a: string) => (ar ? a : en);
   const name = ar ? p.name_ar : p.name_en;
-  const kva = kvaLabel(p, locale, t("common.kva"));
-  const facts = [
-    { k: t("common.category"), v: categoryLabels[p.category][locale] },
-    ...(kva ? [{ k: t("products.kvaRange"), v: kva }] : []),
-    ...(p.engine_brand ? [{ k: t("common.engine"), v: engineBrandLabels[p.engine_brand]?.[locale] ?? p.engine_brand }] : []),
-    ...(p.fuel_type ? [{ k: t("common.fuel"), v: fuelLabels[p.fuel_type][locale] }] : []),
-    { k: ar ? "الضمان" : "Warranty", v: t("common.warrantyLong") },
-  ];
+  const category = categoryLabels[p.category][locale];
   const today = new Date().toISOString().slice(0, 10);
 
+  // last word(s) in red, as the model code's tail: the kVA range when the name ends with it
+  const m = name.match(/^(.*?)(\s[\d.,–-]+\s?(?:kVA|ك\.ف\.أ|A|أمبير|kV)?)$/);
+  const [head, tail] = m ? [m[1] ?? name, m[2] ?? ""] : [name, ""];
+
+  const kvaMin = p.kva_min != null && p.kva_max != null ? `${p.kva_min}–${p.kva_max}` : null;
+  const engine = p.engine_brand ? (engineBrandLabels[p.engine_brand]?.[locale] ?? p.engine_brand) : null;
+  const fuel = p.fuel_type ? fuelLabels[p.fuel_type][locale] : null;
+  const kpis: Kpi[] = [
+    kvaMin
+      ? { I: Zap, head: t("products.kvaRange"), value: <span className={`${s.kpiVal} ${s.ltr}`}>{kvaMin}<small>kVA</small></span>, sub: category }
+      : { I: Layers, head: t("common.category"), value: <span className={s.kpiText}>{category}</span> },
+    ...(engine ? [{ I: Cog, head: t("common.engine"), value: <span className={s.kpiText}>{engine}</span>, sub: fuel ?? undefined }] : fuel ? [{ I: Fuel, head: t("common.fuel"), value: <span className={s.kpiText}>{fuel}</span> }] : []),
+  ];
+  const specLines = p.specs.slice(0, 3).map((x) => (ar ? x.value_ar : x.value_en));
+  // real photos only (the line drawings are for cards)
+  const photos = p.images.slice(1).filter((src) => !src.endsWith(".svg")).slice(0, 2);
+  const H2 = ({ children }: { children: ReactNode }) => <h2 className={s.h2}>{children}</h2>;
+  /** number ranges ("10-200", "63–400") kept left-to-right and unbroken inside Arabic text */
+  const iso = (text: string): ReactNode[] =>
+    text.split(/(\d[\d.,]*\s?[–-]\s?\d[\d.,]*)/).map((part, i) => (i % 2 ? <span key={i} className={s.ltr} style={{ whiteSpace: "nowrap" }}>{part}</span> : part));
+
   return (
-    <div className="px-2 py-8 sm:px-4 print:p-0">
-      <div className="no-print mx-auto mb-5 flex max-w-[210mm] flex-wrap items-center justify-between gap-3">
+    <div className={barlow.variable}>
+      <div className="no-print mx-auto mt-6 flex max-w-[210mm] flex-wrap items-center justify-between gap-3 px-2">
         <Link href={`/products/${p.slug}`} className="inline-flex items-center gap-2 text-sm font-semibold text-muted hover:text-ink">
           <ArrowLeft className="flip-rtl size-4" aria-hidden />
           {t("datasheet.back")}
         </Link>
-        <PrintButton label={t("datasheet.print")} className="inline-flex h-11 items-center gap-2 rounded-full bg-brand-500 px-5 text-sm font-bold text-ink-950 hover:bg-brand-400" />
+        <PrintButton label={t("datasheet.print")} className="inline-flex h-11 items-center gap-2 rounded-full bg-[#e02b36] px-5 text-sm font-bold text-white hover:bg-[#b81d27]" />
       </div>
 
-      <article className="sheet mx-auto max-w-[210mm] overflow-hidden rounded-2xl bg-[#fff] text-[#111827] shadow-2xl print:max-w-none print:rounded-none print:shadow-none">
-        <header className="flex items-center justify-between gap-6 bg-[#0b1022] px-8 py-6 text-[#fff]">
-          <div className="flex items-center gap-3">
-            <Image src="/brand/logo-mark-dark.png" alt="" width={275} height={375} className="h-12 w-auto" />
-            <div className="leading-tight">
-              <p className="text-lg font-extrabold">{ar ? company.brandAr : company.brand}</p>
-              <p className="text-xs text-[#ffdf58]">{t("datasheet.docTitle")}</p>
+      <div className={`sheet ${s.doc}`} dir={ar ? "rtl" : "ltr"} lang={locale}>
+        <section className={s.page}>
+          <div className={s.hero}>
+            <div className={s.heroImg}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              {p.images[0] && <img src={p.images[0]} alt={name} />}
+            </div>
+            <div className={s.heroShade} />
+            <i className={s.slash} aria-hidden />
+            <div className={s.heroTop}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/brand/logo-full-red.png" alt="4U Power Generation" className={s.logo} />
+              <div className={s.docLabel}>
+                <span className={s.kicker}>{L("Product data sheet", "بيانات فنية للمنتج")}</span>
+                <span className={s.tag}>{category}</span>
+              </div>
+            </div>
+            <div className={s.heroText}>
+              <div className={s.powered}>{category}</div>
+              <h1 className={`${s.pname} ${name.length > 32 ? s.long : ""}`}>
+                {iso(head)}
+                {tail && <span className={`${s.tail} ${s.ltr}`}>{tail}</span>}
+              </h1>
+              {specLines.length > 0 && (
+                <div className={s.specLines}>
+                  {specLines.map((v) => (
+                    <div key={v}>{v}</div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
-          <div className="text-end text-xs text-[#c9cfdc]" dir="ltr">
-            <p>{company.phone}</p>
-            <p>{company.email}</p>
-            <p>4ugenerators.com</p>
-          </div>
-        </header>
-        <div className="h-1.5 bg-[repeating-linear-gradient(-45deg,#ffdf58_0_12px,#0b1022_12px_24px)]" />
 
-        <div className="grid gap-8 px-8 py-8 sm:grid-cols-5">
-          <div className="sm:col-span-3">
-            <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#7a5900]">{categoryLabels[p.category][locale]}</p>
-            <h1 className="mt-2 text-3xl leading-tight font-bold tracking-tight text-[#0b1022]">{name}</h1>
-            <p className="mt-4 text-sm leading-7 text-[#374151]">{ar ? p.description_ar : p.description_en}</p>
-            <dl className="mt-6 grid grid-cols-2 gap-3">
-              {facts.map((f) => (
-                <div key={f.k} className="rounded-xl border border-[#e5e7eb] p-3">
-                  <dt className="text-[0.7rem] font-semibold text-[#6b7280]">{f.k}</dt>
-                  <dd className="mt-0.5 text-sm font-bold text-[#0b1022]">{f.v}</dd>
+          <div className={s.kpis} style={{ gridTemplateColumns: `repeat(${kpis.length + 1}, 1fr)` }}>
+            {kpis.map(({ I, head: h, value, sub }, i) => (
+              <div key={h} className={`${s.kpi} ${i === 0 ? s.kpiRed : s.kpiNavy}`}>
+                <div className={s.kpiHead}>
+                  <I aria-hidden /> {h}
                 </div>
-              ))}
-            </dl>
-          </div>
-          <div className="sm:col-span-2">
-            {p.images[0] && (
-              <div className="relative aspect-[4/3] overflow-hidden rounded-xl bg-[#0b1022]">
-                <Image src={p.images[0]} alt={name} fill sizes="(min-width:640px) 30vw, 100vw" className="object-cover" />
+                {value}
+                {sub && <div className={s.kpiSub}>{sub}</div>}
               </div>
-            )}
+            ))}
+            <div className={`${s.kpi} ${s.kpiWhite}`}>
+              <div className={s.kpiHead}>
+                <ShieldCheck aria-hidden /> {L("Warranty", "الضمان")}
+              </div>
+              <span className={s.kpiVal}>
+                12<small>{L("months", "شهراً")}</small>
+              </span>
+              <div className={s.kpiSub}>{L("or 1,000 running hours", "أو 1,000 ساعة تشغيل")}</div>
+            </div>
           </div>
-        </div>
 
-        <section className="px-8 pb-8">
-          <h2 className="border-b-2 border-[#ffd426] pb-2 text-lg font-bold text-[#0b1022]">{t("products.specs")}</h2>
-          <table className="mt-3 w-full text-sm">
-            <tbody>
-              {p.specs.map((s, i) => (
-                <tr key={s.label_en} className={i % 2 ? "bg-[#f8fafc]" : undefined}>
-                  <th scope="row" className="w-2/5 px-3 py-2.5 text-start font-semibold text-[#4b5563]">{ar ? s.label_ar : s.label_en}</th>
-                  <td className="px-3 py-2.5 font-semibold text-[#111827]">{ar ? s.value_ar : s.value_en}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <p className="mt-4 text-xs text-[#6b7280]">{t("datasheet.note")}</p>
+          <div className={s.cols}>
+            <div className={s.col}>
+              <div>
+                <H2>{L("Overview", "نظرة عامة")}</H2>
+                <p className={s.p}>{ar ? p.description_ar : p.description_en}</p>
+              </div>
+              {photos.length > 0 && (
+                <div className={s.thumbs}>
+                  {photos.map((src) => (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img key={src} src={src} alt={name} />
+                  ))}
+                </div>
+              )}
+              <div>
+                <H2>{L("Service & support", "الخدمة والدعم")}</H2>
+                <div className={`${s.tiles} ${s.tiles2}`}>
+                  {[
+                    { I: ShieldCheck, t: t("common.warrantyLong") },
+                    { I: FlaskConical, t: L("Testing & commissioning", "اختبار وتشغيل") },
+                    { I: Wrench, t: L("Maintenance & AMC", "صيانة وعقود سنوية") },
+                    { I: Truck, t: L("Delivery: UAE · KSA · Iraq", "التوصيل: الإمارات · السعودية · العراق") },
+                  ].map(({ I, t: label }) => (
+                    <div key={label} className={s.tile}>
+                      <I aria-hidden />
+                      {label}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+            <div className={s.col}>
+              {p.specs.length > 0 && (
+                <div>
+                  <H2>{t("products.specs")}</H2>
+                  <table className={`${s.table} ${s.kv}`}>
+                    <tbody>
+                      {p.specs.map((x) => (
+                        <tr key={x.label_en}>
+                          <th scope="row">{ar ? x.label_ar : x.label_en}</th>
+                          <td>{ar ? x.value_ar : x.value_en}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                  <p className={s.note}>{t("datasheet.note")}</p>
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className={s.contactBar}>
+            <div className={s.contactItem}>
+              <MapPin aria-hidden />
+              <div>
+                <b>{ar ? company.legalNameAr : "4U Power Generation (FZC)"}</b>
+                <span>
+                  {t("footer.license", { no: company.licenseNo })} · {t("datasheet.issued")}: {formatDate(today, locale)}
+                </span>
+              </div>
+            </div>
+            <div className={s.contactItem}>
+              <Globe aria-hidden />
+              <div className={s.ltr}>
+                <b>www.4ugenerators.com</b>
+                <span>{company.email}</span>
+              </div>
+            </div>
+            <div className={s.contactItem}>
+              <Phone aria-hidden />
+              <div>
+                <b className={s.ltr}>{company.phone}</b>
+                <span>{L("Sales & support", "المبيعات والدعم")}</span>
+              </div>
+            </div>
+          </div>
         </section>
-
-        <footer className="flex flex-wrap items-center justify-between gap-3 border-t border-[#e5e7eb] bg-[#f8fafc] px-8 py-4 text-[0.7rem] text-[#6b7280]">
-          <p>
-            {ar ? company.legalNameAr : company.legalName} · {t("footer.license", { no: company.licenseNo })} · {ar ? company.address.streetAr : company.address.street}, {ar ? company.address.cityAr : company.address.city}
-          </p>
-          <p>
-            {t("datasheet.issued")}: {formatDate(today, locale)}
-          </p>
-        </footer>
-      </article>
+      </div>
+      <FitPages />
     </div>
   );
 }
