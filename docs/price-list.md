@@ -12,13 +12,28 @@ editor reads them through `src/lib/price-book-data.ts`; `/admin/quotes/prices` s
    aliases from the 2026 lists: `X3.3G1/2` → X3.3-G1/G2, `6BTA5.9G5/6` → 6BTA5.9-G5, `C6LTAA9.5G3` → 6LTAA9.5-G3,
    Kubota `…-E2BG` → `…-E2-BG` (`V3300-E2BG` → V3300-E2-BG2), `404A-22G1` → 404A(D)-22G1,
    `1206A-E70TTAG2` → 1206A-E70TAG2, `4008TAG2A` → 4008-TAG2, `2506A-E15AG2` → 2506A-E15TAG2.
-3. Then compare the list's rating (first number = prime kVA at 50 Hz, second = 60 Hz) with the datasheet's prime
-   rating. Small rounding gaps (≤ 4 %) are the same genset. **Do not link** where the gap is real — decided by
+3. Then compare the list's rating with the datasheet's prime rating. The first number is the 50 Hz prime kVA. The
+   second differs by brand: Baudouin = 60 Hz prime (matches the 60 Hz column of the …D0/S datasheets in 13 of 16);
+   Cummins = 50 Hz standby (CP60/68 is 4BTA3.9-G2 at 60 / 68 kVA); Kubota = probably 60 Hz prime, unconfirmed. So
+   the labels are not used as 60 Hz data (`src/content/genset-60hz.ts` takes datasheets only). Small rounding gaps (≤ 4 %) are the same genset. **Do not link** where the gap is real — decided by
    the owner on 26 Oct 2026, prices for these are typed per quotation until the supplier confirms:
    - 4U-B150 (6M11G2D0/S, 150 kVA prime) vs list BP130/150
    - 4U-B180 (6M11G4D0/S, 180 kVA prime) vs list BP150/180
    - 4U-K15 (D1703-E2-BG, 15 kVA prime) vs list KU-14/18
    - 4U-K20B (V2003-T-E2-BG, 20 kVA prime) vs list KU-22/27 (that row prices 4U-K22.5)
+
+   Engineering check (1 Nov 2026), each datasheet against its own engine power (output kWe cannot exceed engine net
+   kWm × alternator efficiency, ≈ 0.85–0.95; every other Baudouin sheet sits at 0.83–0.93):
+   - 4U-B150 at 50 Hz: 150 / 165 kVA = 120 / 132 kWe from a 113.8 / 125.8 kWm engine (ratio 1.05) — impossible. At
+     0.92 the engine gives ≈ 131 / 145 kVA, which is the list's BP130. The sheet's 50 Hz column repeats its 60 Hz one.
+   - 4U-B180 at 50 Hz: 180 / 200 kVA from 131.8 / 145.8 kWm (1.09–1.10) — impossible; ≈ 152 / 168 kVA, the list's BP150.
+   - 4U-B200 at 50 Hz: standby 250 kVA = 200 kWe from 191.4 kWm (1.04) — impossible; ≈ 220 kVA (prime 200 is right).
+   - 4U-K20B and 4U-K22.5 are the same engine (V2003-T-E2-BG) at two ratings; the list prices one (KU-22/27).
+   - 4U-L66 (SA441G2) 66 / 72 kVA fits its 59 / 66.4 kWm engine (0.90 / 0.87): the list's "68 KVA" is rounding.
+   - TR661G1 (left out): its 1500 rpm standby, 118 kVA / 95 kWe from 96 kWm (0.99), is impossible.
+   Proposed, awaiting the owner or the manufacturer's sheets: B150 → 130 / 143 kVA (4U-B130), B180 → 150 / 165
+   (4U-B150), B200 standby → 220, drop 4U-K20B (redirect to 4U-K22.5). Standby = 1.1 × prime, the ratio of every
+   other Baudouin sheet.
    Lister Petter (models from the Lister engine datasheets, `src/content/lister-models.ts`): the list's
    `TR219G1 (Air Cooling)` style names match on the engine code. Not linked: the list's SA315G1 (12 kVA) and
    LP613EG3 (500 kVA) have no datasheet; `LP625SG3` / `LP625G5` are linked to 4U-L638 (LP625EG3) / 4U-L750
