@@ -18,6 +18,7 @@ import {
   Zap,
   type LucideIcon,
 } from "lucide-react";
+import { FitPages } from "./fit-pages";
 import { Barlow_Condensed } from "next/font/google";
 import { notFound } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
@@ -34,6 +35,7 @@ import type { Locale } from "@/lib/utils";
 import s from "./datasheet.module.css";
 
 const barlow = Barlow_Condensed({ subsets: ["latin"], weight: ["400", "500", "600", "700", "800"], style: ["normal", "italic"], variable: "--ds-font", display: "swap" });
+
 
 export function generateStaticParams() {
   return routing.locales.flatMap((locale) => gensetModels.map((m) => ({ locale, slug: m.slug })));
@@ -646,6 +648,8 @@ export default async function ModelDatasheetPage({ params }: Props) {
           <Foot no={5} />
         </section>
       </div>
+      {/* phones: scale each A4 page to the screen width (layout-true zoom, so the whole sheet shows; print stays 1:1) */}
+      <FitPages />
     </div>
   );
 }

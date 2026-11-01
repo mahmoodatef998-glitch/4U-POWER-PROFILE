@@ -35,6 +35,9 @@
   -webkit-print-color-adjust: exact;
   print-color-adjust: exact;
 }
+/* phones / small tablets: whole pages scaled to the screen width (zoom keeps the layout box in step, unlike transform) */
+@media screen { .page { zoom: var(--ds-zoom, 1); } }
+@media screen and (max-width: 820px) { .doc { gap: 4mm; padding: 4mm 0 10mm; } }
 @media print {
   .doc { display: block; padding: 0; gap: 0; }
   .page { box-shadow: none; break-after: page; }

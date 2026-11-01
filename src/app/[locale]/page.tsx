@@ -106,39 +106,41 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
     <>
       {/* ------------------------------------------------ HERO: night render, gold headline, feature bar (always dark) */}
       <section className="stage-dark relative isolate overflow-hidden bg-navy-950 text-white" aria-labelledby="hero-title">
-        <picture className="absolute inset-0 -z-10">
+        {/* phones: the render is a photo band above the text; md+: full-bleed backdrop behind it */}
+        <picture className="relative -z-10 block aspect-[4/3] sm:aspect-[16/9] md:absolute md:inset-0 md:aspect-auto">
           <source media="(min-width: 768px)" srcSet="/images/hero/hero-night-genset.webp" />
           {/* decorative backdrop: the headline carries the meaning */}
           <img
             src="/images/hero/hero-night-genset-sm.webp"
             alt=""
             fetchPriority="high"
-            className="size-full object-cover object-[70%_center] opacity-60 md:object-center md:opacity-100 rtl:-scale-x-100"
+            className="size-full object-cover object-center rtl:-scale-x-100"
           />
+          <span aria-hidden className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-navy-950 to-transparent md:hidden" />
         </picture>
-        <div aria-hidden className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgb(11_12_15/0.96)_0%,rgb(11_12_15/0.82)_32%,rgb(11_12_15/0.2)_62%,transparent_80%)] rtl:bg-[linear-gradient(270deg,rgb(11_12_15/0.96)_0%,rgb(11_12_15/0.82)_32%,rgb(11_12_15/0.2)_62%,transparent_80%)]" />
-        <div aria-hidden className="absolute inset-x-0 bottom-0 -z-10 h-56 bg-gradient-to-t from-navy-950 to-transparent" />
+        <div aria-hidden className="absolute inset-0 -z-10 hidden bg-[linear-gradient(90deg,rgb(11_12_15/0.96)_0%,rgb(11_12_15/0.82)_32%,rgb(11_12_15/0.2)_62%,transparent_80%)] md:block rtl:bg-[linear-gradient(270deg,rgb(11_12_15/0.96)_0%,rgb(11_12_15/0.82)_32%,rgb(11_12_15/0.2)_62%,transparent_80%)]" />
+        <div aria-hidden className="absolute inset-x-0 bottom-0 -z-10 hidden h-56 bg-gradient-to-t from-navy-950 to-transparent md:block" />
 
-        <div className="container-x pb-10 pt-14 sm:pt-20 lg:pb-14 lg:pt-28">
+        <div className="container-x relative -mt-12 pb-8 sm:-mt-16 md:mt-0 md:pb-10 md:pt-20 lg:pb-14 lg:pt-28">
           <div className="max-w-2xl">
             <Reveal>
-              <p className="eyebrow">
+              <p className="eyebrow text-[0.66rem] tracking-[0.16em] sm:text-xs sm:tracking-[0.22em]">
                 <BadgeCheck className="size-4" aria-hidden />
                 {L(home.hero.eyebrow)}
               </p>
             </Reveal>
             <h1
               id="hero-title"
-              className="mt-5 font-[family-name:var(--font-heading)] text-[2.15rem] leading-[1.08] font-extrabold uppercase tracking-[-0.01em] text-white sm:text-5xl lg:text-[3.6rem] rtl:font-[family-name:var(--font-arabic-display)] rtl:text-[2.1rem] rtl:normal-case rtl:sm:text-5xl"
+              className="mt-4 font-[family-name:var(--font-heading)] text-[1.8rem] leading-[1.1] font-extrabold uppercase tracking-[-0.01em] text-white min-[400px]:text-[2rem] sm:mt-5 sm:text-5xl lg:text-[3.6rem] rtl:font-[family-name:var(--font-arabic-display)] rtl:text-[1.9rem] rtl:normal-case rtl:sm:text-5xl"
             >
               {gold(L(home.hero.h1))}
             </h1>
             <Reveal delay={0.15}>
-              <p className="mt-6 text-sm font-semibold tracking-wide text-brand-300 sm:text-base">
+              <p className="mt-4 text-[0.8rem] font-semibold tracking-wide text-brand-300 sm:mt-6 sm:text-base">
                 {locale === "ar" ? "مولدات ديزل | لوحات ATS ولوحات كهرباء | حلول الطاقة الشمسية" : "Diesel Generators | ATS & Switchgear | Solar Solutions"}
               </p>
-              <p className="mt-3 max-w-xl text-base leading-7 text-white/75">{L(home.hero.lead)}</p>
-              <div className="mt-8 flex flex-wrap items-center gap-3">
+              <p className="mt-3 max-w-xl text-[0.95rem] leading-7 text-white/75 sm:text-base">{L(home.hero.lead)}</p>
+              <div className="mt-6 grid gap-3 sm:mt-8 sm:flex sm:flex-wrap sm:items-center">
                 <Link href="/products" className={buttonVariants({ variant: "primary", size: "lg" })}>
                   {t("cta.browseProducts")}
                   <ArrowRight className="flip-rtl" aria-hidden />
@@ -148,10 +150,16 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
             </Reveal>
           </div>
 
-          {/* feature bar */}
-          <ul className="mt-14 grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-white/10 bg-white/10 backdrop-blur-md sm:grid-cols-3 lg:mt-20 lg:grid-cols-5">
+          {/* feature bar: a swipeable row on phones, a 3- then 5-column bar on larger screens */}
+          <ul className="-mx-4 mt-8 flex snap-x snap-mandatory gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] sm:mx-0 sm:mt-12 sm:grid sm:grid-cols-3 sm:gap-px sm:overflow-hidden sm:rounded-xl sm:border sm:border-white/10 sm:bg-white/10 sm:p-0 sm:backdrop-blur-md lg:mt-20 lg:grid-cols-5 [&::-webkit-scrollbar]:hidden">
             {FEATURES.map(({ I, en, ar }, i) => (
-              <li key={en} className={cn("flex items-center gap-3 bg-navy-950/75 px-4 py-4 sm:px-5", i === 4 && "col-span-2 sm:col-span-1")}>
+              <li
+                key={en}
+                className={cn(
+                  "flex w-[13.5rem] shrink-0 snap-start items-center gap-3 rounded-lg border border-white/10 bg-white/[0.04] px-4 py-3 sm:w-auto sm:rounded-none sm:border-0 sm:bg-navy-950/75 sm:px-5 sm:py-4",
+                  i === 4 && "sm:col-span-2 lg:col-span-1",
+                )}
+              >
                 <I className="size-7 shrink-0 text-brand-400" strokeWidth={1.5} aria-hidden />
                 <span className="text-[0.82rem] leading-snug font-medium text-white/85 sm:text-sm">{locale === "ar" ? ar : en}</span>
               </li>
