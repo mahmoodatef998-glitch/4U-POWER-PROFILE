@@ -55,15 +55,18 @@ editor reads them through `src/lib/price-book-data.ts`; `/admin/quotes/prices` s
    documents list at 1500 rpm only are blocked at 60 Hz. Not published openly: Lister Petter SA / LP / Mars ratings
    (sheets on request) and Kubota genset ratings (Kubota publishes engine kW only): these take the supplier's figures.
 
-   To settle with the supplier (owner's decision; the list stays the reference for 50 Hz until then): the Cummins
-   ratings card differs from several 4U Cummins ratings, and in five cases the 4U "standby" equals Cummins' 60 Hz
-   prime, the second number of the list label (CP370/425 → QSG12-G3 60 Hz prime 425; CP416/479 → QSG12-G4 479;
-   CP500/569 → KTA19-G4 570; CP640/681 → VTA28-G5 683; CP300/344 → QSL9-G5 344), so the 22 Oct 2026 update may have
-   stored 60 Hz prime as 50 Hz standby. Cummins at 50 Hz (prime / standby kVA): QSG12-G3 370 / 409, QSG12-G4 416 / 455,
-   KTA19-G4 503 / 562, VTA28-G5 646 / 700, QSL9-G5 298 / 344, X2.5-G2 26 / 28 (4U: 20 / 23), 6LTAA9.5-G1 321 / 352
-   (4U: 300 / 313), QSX15-G8 501 / 561 (4U: 455 / 500), KTA50-G8 1416 / 1675 (4U: 1400 / 1540). 4U-C68
-   (4BTAA3.3-G12), 4U-C1619 (KTA50-G9) and 4U-C2290 (QSK60-G6) are Cummins 60 Hz builds; their 4U 50 Hz ratings
-   equal Cummins' 60 Hz figures.
+   Cummins ratings corrected on 1 Nov 2026 (owner's go-ahead) to Cummins' G-Drive ratings card at 50 Hz, held to
+   the Leroy-Somer alternator's rating where that is lower (Leroy-Somer TAL-A42/A44/A46/A473 and LSA 50.2 data
+   sheets, 400 V 50 Hz, class H continuous / H 163 K standby): C20 → **C26** 26 / 28; C35 35 / 38; C50 → **C53**
+   53 / 60; C180B → **C182** 182 / 212; C250C → **C271** 271 / 302; C300 300 / 330 (engine 321 / 352, TAL-A46-F
+   300 / 330); C416 → **C410** 410 / 450 (engine 416 / 455, TAL-A473-A 410 / 450); C455B → **C501** 501 / 561;
+   C650 → **C652** 652 / 715; C1400 → **C1416** 1416 / 1650 (engine 1416 / 1675, LSA 50.2 L8 standby 1650).
+   Why: in five Cummins rows the 4U "standby" was Cummins' 60 Hz prime (the label's second number, e.g. CP416/479,
+   CP500/569), so the 22 Oct 2026 update had stored 60 Hz prime as 50 Hz standby. Still to check with the supplier:
+   4U-C68 (4BTAA3.3-G12), 4U-C1619 (KTA50-G9) and 4U-C2290 (QSK60-G6) are Cummins 60 Hz builds whose 4U 50 Hz
+   ratings equal Cummins' 60 Hz figures; the CKD-only engines (4BTA3.9-G2, 6BT5.9-G1, 6CTA8.3-G1, 6LTAA8.9-G2,
+   M15-G8, QSZ13-G3, KTA38-G2...) are not on Cummins' card. The alternators the list calls KWISE (China) have no
+   published ratings: a quotation on that option should be checked against the supplier's alternator data.
    Lister Petter (models from the Lister engine datasheets, `src/content/lister-models.ts`): the list's
    `TR219G1 (Air Cooling)` style names match on the engine code. Not linked: the list's SA315G1 (12 kVA) and
    LP613EG3 (500 kVA) have no datasheet; `LP625SG3` / `LP625G5` are linked to 4U-L638 (LP625EG3) / 4U-L750
@@ -75,8 +78,8 @@ editor reads them through `src/lib/price-book-data.ts`; `/admin/quotes/prices` s
 
 The price list is what 4U actually buys and sells, so it is the reference (owner's decision, 26 Oct 2026). Where
 the Leroy-Somer alternator frame on a 4U datasheet differed from the frame priced on the 2026 list, the datasheet
-was changed to the list's frame (29 models: 4U-C80, C136, C135, C250, C409, C416, C455, C500B, C500C, C500,
-C455B, C640, C650, C900, C910, C2047, B18, B40, B45, B66, B200, B230, B275, B320, B400, B450, B500, B600,
+was changed to the list's frame (29 models: 4U-C80, C136, C135, C250, C409, C410, C455, C500B, C500C, C500,
+C501, C640, C652, C900, C910, C2047, B18, B40, B45, B65, B200, B230, B275, B320, B400, B450, B500, B600,
 K12). Where the frame itself changed, the Stamford equivalent was removed until the supplier confirms it, rather
 than show a frame that no longer matches; the six C409–C500C changes are the same frame in the list's notation
 (TAL-A47 → TAL-A473) and keep their Stamford frame. The ratings were already the same on both documents.

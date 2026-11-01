@@ -8,7 +8,8 @@
  * Ratings follow 4U's updated datasheets (22 Oct 2026, e.g. the 4BTAA3.9-G11 sheet): prime / standby per the
  * supplier's CKD list. Dropped in that update: the old 4U-C63 (duplicate of 4BTA3.9-G2), 4U-C1109 (KTA38-G5, not in
  * the supplier list) and the QSK23-G2 set (on hold). Models marked "ratings only" come from the CKD list and have no
- * datasheet yet.
+ * datasheet yet. Ten sets were corrected on 1 Nov 2026 to Cummins' G-Drive ratings card, held to the alternator's
+ * rating (docs/price-list.md).
  * Codes and URLs follow the prime kVA (owner's rule, 1 Nov 2026: 100 kVA prime / 110 kVA standby → 4U-x100); a B/C
  * suffix marks another engine at the same prime rating. Old standby-based URLs redirect (src/lib/model-renames.ts).
  */
@@ -17,12 +18,13 @@ import type { GensetModelData } from "./genset-types";
 export const cumminsModels: GensetModelData[] = [
   {
     // added from the CKD rating list: ratings only, the rest of the datasheet "on request"
-    slug: "4u-c20",
-    code: "4U-C20",
-    standbyKva: 23,
-    standbyKw: 18.4,
-    primeKva: 20,
-    primeKw: 16,
+    // Cummins G-Drive ratings card: X2.5-G2 26 / 28 kVA at 50 Hz (alternator to suit) (1 Nov 2026, alternator ratings: Leroy-Somer 400 V / 50 Hz, class H)
+    slug: "4u-c26",
+    code: "4U-C26",
+    standbyKva: 28,
+    standbyKw: 22.4,
+    primeKva: 26,
+    primeKw: 20.8,
     engine: "X2.5-G2",
     cylinders: null,
     layout: null,
@@ -42,10 +44,11 @@ export const cumminsModels: GensetModelData[] = [
   },
   {
     // added from the CKD rating list: ratings only, the rest of the datasheet "on request"
+    // Cummins card: X3.3-G1 35 / 38 kVA; TAL-A42-F gives 45 / 50 (1 Nov 2026, alternator ratings: Leroy-Somer 400 V / 50 Hz, class H)
     slug: "4u-c35",
     code: "4U-C35",
-    standbyKva: 40,
-    standbyKw: 32,
+    standbyKva: 38,
+    standbyKw: 30.4,
     primeKva: 35,
     primeKw: 28,
     engine: "X3.3-G1/G2",
@@ -67,12 +70,13 @@ export const cumminsModels: GensetModelData[] = [
   },
   {
     // added from the CKD rating list: ratings only, the rest of the datasheet "on request"
-    slug: "4u-c50",
-    code: "4U-C50",
-    standbyKva: 55,
-    standbyKw: 44,
-    primeKva: 50,
-    primeKw: 40,
+    // Cummins card: 4BTAA3.3-G15 53 / 60 kVA; TAL-A42-H gives 63 / 70 (1 Nov 2026, alternator ratings: Leroy-Somer 400 V / 50 Hz, class H)
+    slug: "4u-c53",
+    code: "4U-C53",
+    standbyKva: 60,
+    standbyKw: 48,
+    primeKva: 53,
+    primeKw: 42.4,
     engine: "4BTAA3.3-G15",
     cylinders: 4,
     layout: null,
@@ -354,12 +358,13 @@ export const cumminsModels: GensetModelData[] = [
     ambientC: 60,
   },
   {
-    slug: "4u-c180b",
-    code: "4U-C180B",
-    standbyKva: 200,
-    standbyKw: 160,
-    primeKva: 180,
-    primeKw: 144,
+    // Cummins card: QSB7-G4 182 / 212 kVA; TAL-A44-L gives 195 / 215 (1 Nov 2026, alternator ratings: Leroy-Somer 400 V / 50 Hz, class H)
+    slug: "4u-c182",
+    code: "4U-C182",
+    standbyKva: 212,
+    standbyKw: 169.6,
+    primeKva: 182,
+    primeKw: 145.6,
     engine: "QSB7-G4",
     cylinders: 6,
     layout: "inline",
@@ -473,12 +478,13 @@ export const cumminsModels: GensetModelData[] = [
     ambientC: 55,
   },
   {
-    slug: "4u-c250c",
-    code: "4U-C250C",
-    standbyKva: 284,
-    standbyKw: 227,
-    primeKva: 250,
-    primeKw: 200,
+    // Cummins card: 6LTAA9.5-G3 271 / 302 kVA; TAL-A46-E gives 275 / 303 (1 Nov 2026, alternator ratings: Leroy-Somer 400 V / 50 Hz, class H)
+    slug: "4u-c271",
+    code: "4U-C271",
+    standbyKva: 302,
+    standbyKw: 241.6,
+    primeKva: 271,
+    primeKw: 216.8,
     engine: "6LTAA9.5-G3",
     cylinders: 6,
     layout: "inline",
@@ -519,10 +525,11 @@ export const cumminsModels: GensetModelData[] = [
     enclosed: { l: 5205, w: 1625, h: 2620, tankL: 625, kg: 4000 },
   },
   {
+    // Cummins card: 6LTAA9.5-G1 321 / 352 kVA, held to the TAL-A46-F alternator's 300 / 330 (1 Nov 2026, alternator ratings: Leroy-Somer 400 V / 50 Hz, class H)
     slug: "4u-c300",
     code: "4U-C300",
-    standbyKva: 313,
-    standbyKw: 250,
+    standbyKva: 330,
+    standbyKw: 264,
     primeKva: 300,
     primeKw: 240,
     engine: "6LTAA9.5-G1",
@@ -589,12 +596,13 @@ export const cumminsModels: GensetModelData[] = [
     enclosed: { l: 5204, w: 1624, h: 2618, tankL: 1039, kg: 4581 },
   },
   {
-    slug: "4u-c416",
-    code: "4U-C416",
-    standbyKva: 479,
-    standbyKw: 383,
-    primeKva: 416,
-    primeKw: 333,
+    // Cummins card: QSG12-G4 416 / 455 kVA, held to the TAL-A473-A alternator's 410 / 450 (1 Nov 2026, alternator ratings: Leroy-Somer 400 V / 50 Hz, class H)
+    slug: "4u-c410",
+    code: "4U-C410",
+    standbyKva: 450,
+    standbyKw: 360,
+    primeKva: 410,
+    primeKw: 328,
     engine: "QSG12-G4",
     cylinders: 6,
     layout: "inline",
@@ -705,12 +713,13 @@ export const cumminsModels: GensetModelData[] = [
     enclosed: { l: 5205, w: 1824, h: 2817, tankL: 1230, kg: 5393 },
   },
   {
-    slug: "4u-c455b",
-    code: "4U-C455B",
-    standbyKva: 500,
-    standbyKw: 400,
-    primeKva: 455,
-    primeKw: 364,
+    // Cummins card: QSX15-G8 501 / 561 kVA; TAL-A473-C gives 555 / 610 (1 Nov 2026, alternator ratings: Leroy-Somer 400 V / 50 Hz, class H)
+    slug: "4u-c501",
+    code: "4U-C501",
+    standbyKva: 561,
+    standbyKw: 448.8,
+    primeKva: 501,
+    primeKw: 400.8,
     engine: "QSX15-G8",
     cylinders: 6,
     layout: "inline",
@@ -751,12 +760,13 @@ export const cumminsModels: GensetModelData[] = [
     enclosed: { l: 5873, w: 2224, h: 2817.8, tankL: 1835, kg: 8815 },
   },
   {
-    slug: "4u-c650",
-    code: "4U-C650",
-    standbyKva: 681,
-    standbyKw: 545,
-    primeKva: 650,
-    primeKw: 520,
+    // Cummins card: QSK19-G4 652 / 715 kVA; TAL-A473-F gives 715 / 785 (1 Nov 2026, alternator ratings: Leroy-Somer 400 V / 50 Hz, class H)
+    slug: "4u-c652",
+    code: "4U-C652",
+    standbyKva: 715,
+    standbyKw: 572,
+    primeKva: 652,
+    primeKw: 521.6,
     engine: "QSK19-G4",
     cylinders: 6,
     layout: "inline",
@@ -947,12 +957,13 @@ export const cumminsModels: GensetModelData[] = [
     ambientC: 55.6,
   },
   {
-    slug: "4u-c1400",
-    code: "4U-C1400",
-    standbyKva: 1540,
-    standbyKw: 1232,
-    primeKva: 1400,
-    primeKw: 1120,
+    // Cummins card: KTA50-G8 1416 / 1675 kVA, standby held to the LSA 50.2 L8 alternator's 1650 (1 Nov 2026, alternator ratings: Leroy-Somer 400 V / 50 Hz, class H)
+    slug: "4u-c1416",
+    code: "4U-C1416",
+    standbyKva: 1650,
+    standbyKw: 1320,
+    primeKva: 1416,
+    primeKw: 1132.8,
     engine: "KTA50-G8",
     cylinders: 16,
     layout: "V",

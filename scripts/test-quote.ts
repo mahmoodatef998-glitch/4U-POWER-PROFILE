@@ -34,7 +34,7 @@ for (const [from, to] of MODEL_RENAMES) {
   assert.ok(!live.has(from), `${from} is a live page and must not redirect`);
 }
 assert.equal(currentModelSlug("4u-p550"), "4u-p500");
-assert.equal(currentModelSlug("4u-c1675"), "4u-c1400");
+assert.equal(currentModelSlug("4u-c1675"), "4u-c1416");
 assert.equal(currentModelSlug("4u-p150"), "4u-p150", "now the 150 kVA prime set, a live page");
 // ratings corrected against Baudouin's rating tables and Kubota's engine data (docs/price-list.md)
 const rated = (slug: string) => { const m = getModel(slug)!; return [m.engine, m.primeKva, m.standbyKva]; };
@@ -44,6 +44,12 @@ assert.deepEqual(rated("4u-b200"), ["6M16G2D0/S", 200, 220]);
 assert.deepEqual(rated("4u-b65"), ["4M10G2D0/S", 65, 72]);
 assert.deepEqual(rated("4u-k14"), ["D1703-E2-BG", 14, 16]);
 assert.equal(getModel("4u-k20b"), null, "derated duplicate of 4U-K22.5");
+// Cummins: Cummins' G-Drive ratings card, held to the Leroy-Somer alternator's rating where that is lower
+assert.deepEqual(rated("4u-c300"), ["6LTAA9.5-G1", 300, 330], "TAL-A46-F: 300 / 330 kVA");
+assert.deepEqual(rated("4u-c410"), ["QSG12-G4", 410, 450], "TAL-A473-A: 410 / 450 kVA");
+assert.deepEqual(rated("4u-c1416"), ["KTA50-G8", 1416, 1650], "LSA 50.2 L8 standby 1650 kVA");
+assert.deepEqual(rated("4u-c501"), ["QSX15-G8", 501, 561]);
+assert.equal(currentModelSlug("4u-c550c"), "4u-c501", "pre-1 Nov URL, no chain");
 assert.equal(currentModelSlug("4u-k22b"), "4u-k22-5");
 assert.equal(currentModelSlug("4u-k20b"), "4u-k22-5");
 assert.equal(currentModelSlug("4u-b72"), "4u-b65");
@@ -61,10 +67,10 @@ assert.ok(searchModels("cummins 200").every((m) => m.brand === "Cummins"));
 assert.equal(searchModels("").length, 0);
 assert.equal(searchModels("zzz").length, 0);
 // engine without punctuation, and the price-list code through aliases
-assert.equal(searchModels("KTA50G8")[0]!.code, "4U-C1400");
+assert.equal(searchModels("KTA50G8")[0]!.code, "4U-C1416");
 assert.equal(searchModels("cummins kta50g9")[0]!.code, "4U-C1619");
 assert.equal(searchModels("CP1400").length, 0);
-assert.deepEqual(searchModels("CP1400", undefined, 8, { "4U-C1400": ["CP1400", "KTA50G8"] }).map((m) => m.code), ["4U-C1400"]);
+assert.deepEqual(searchModels("CP1400", undefined, 8, { "4U-C1416": ["CP1400", "KTA50G8"] }).map((m) => m.code), ["4U-C1416"]);
 assert.equal(searchModels("cp1275/1400", undefined, 8, { "4U-C1275": ["CP1275/1400"] })[0]!.code, "4U-C1275");
 // a rating search: everything at or up to +10 kVA above, plus each brand's nearest larger model however far
 const brands = (r: ReturnType<typeof ratingSearch>) => new Set(r!.hits.map((h) => h.m.brand));
@@ -74,10 +80,10 @@ assert.equal(r152.exact, false);
 assert.deepEqual(r152.hits.map((h) => h.gap), [...r152.hits.map((h) => h.gap)].sort((x, y) => x - y));
 assert.ok(r152.hits.every((h) => h.gap > 0 && Math.min(...[h.m.standbyKva, h.m.primeKva].filter((k) => k >= 152)) - 152 === h.gap));
 assert.ok(["Perkins", "Cummins", "Baudouin", "Lister Petter"].every((b) => brands(r152).has(b as never)));
-// 1500: Perkins is 5 kVA above (1505 prime), Cummins 40 above (4U-C1400, 1540 standby) — both shown
+// 1500: Perkins is 5 kVA above (1505 prime), Cummins' nearest larger is 4U-C1619 (+119) — both shown
 const r1500 = ratingSearch("1500")!;
 assert.ok(r1500.hits.some((h) => h.m.code === "4U-P1505" && h.gap === 5));
-assert.ok(r1500.hits.some((h) => h.m.code === "4U-C1400" && h.gap === 40));
+assert.ok(r1500.hits.some((h) => h.m.code === "4U-C1619" && h.gap === 119));
 assert.ok(ratingSearch("1600")!.hits.some((h) => h.m.code === "4U-C1619" && h.gap === 19));
 // exact matches come first with gap 0
 const r150 = ratingSearch("150")!;
