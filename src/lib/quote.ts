@@ -248,17 +248,10 @@ export function generatorItem(m: GensetModel, enclosure: Enclosure, listAlternat
         : "Packaged inside a sound-attenuated, weather-protective industrial canopy (Closed Type).";
   const lines = [
     `Brand new, heavy-duty industrial grade ${m.brand} diesel generator set, ready to run.`,
-    ...(at60
-      ? [
-          `${n0(at60.prime)} kVA Prime${at60.standby ? ` / ${n0(at60.standby)} kVA Standby` : ""} | 60 Hz | 1800 RPM | 3-Phase | 0.8 Power Factor | ${at60.volts} V.`,
-          `Rated current at ${at60.volts} V: ${amps(at60.prime, at60.volts)} A prime${at60.standby ? ` / ${amps(at60.standby, at60.volts)} A standby` : ""}.`,
-          ...(at60.ratedVolts && at60.ratedVolts !== at60.volts
-            ? [`60 Hz ratings as per datasheet at ${at60.ratedVolts} V; the output at ${at60.volts} V is confirmed with the order (alternator voltage derating may apply).`]
-            : at60.ratedVolts === null
-              ? [`60 Hz ratings are the engine maker's typical generator set output; the alternator for ${at60.volts} V is confirmed with the order.`]
-              : []),
-        ]
-      : [`${n0(m.primeKva)} kVA Prime / ${n0(m.standbyKva)} kVA Standby | 50 Hz | 1500 RPM | 3-Phase | 0.8 Power Factor.`]),
+    // the basic five-line description (owner, 2 Nov 2026): one rating line at 50 or 60 Hz, no current / voltage notes
+    at60
+      ? `${n0(at60.prime)} kVA Prime${at60.standby ? ` / ${n0(at60.standby)} kVA Standby` : ""} | 60 Hz | 1800 RPM | 3-Phase | 0.8 Power Factor | ${at60.volts} V.`
+      : `${n0(m.primeKva)} kVA Prime / ${n0(m.standbyKva)} kVA Standby | 50 Hz | 1500 RPM | 3-Phase | 0.8 Power Factor.`,
     `Powered by an original ${m.brand} ${at60?.engine ?? m.engine} engine${m.cylinders ? ` (${m.cylinders}-cylinder${m.layout ? ` ${m.layout === "V" ? "V" : "in-line"}` : ""})` : ""}, ${m.cooling === "air" ? "air-cooled" : "water-cooled"}, directly coupled to ${alternatorPhrase(m, listAlternator)} and controlled by a Deep Sea Electronics (DSE) digital control module with full monitoring and protection.`,
     housing,
     "Factory assembled, tested and supplied as a complete ready-to-run industrial package.",

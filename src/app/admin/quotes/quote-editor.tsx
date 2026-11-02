@@ -328,7 +328,7 @@ export function QuoteEditor({ initial, initialSearch = "", prices = null, fx = n
                     <p className="text-sm font-semibold text-ink">
                       60 Hz: {s60.rating.prime} kVA prime · {s60.rating.standby} kVA standby{s60.rating.volts ? ` (rated at ${s60.rating.volts} V)` : ""} · {amps(s60.rating.prime, volts)} A at {volts} V
                       <span className="font-normal text-muted"> · {SOURCE_60[s60.rating.source]}{s60.rating.engine ? ` · 60 Hz engine build ${s60.rating.engine}` : ""}</span>
-                      {s60.rating.volts && s60.rating.volts !== volts && <span className="block text-xs font-normal text-amber-700">Rated at {s60.rating.volts} V: the quotation notes that {volts} V output is confirmed with the order.</span>}
+                      {s60.rating.volts && s60.rating.volts !== volts && <span className="block text-xs font-normal text-amber-700">Rated at {s60.rating.volts} V: confirm the {volts} V output with the customer.</span>}
                     </p>
                   )}
                   {s60?.kind === "fifty-only" && <p className="text-sm font-semibold text-red-700">{s60.reason}</p>}

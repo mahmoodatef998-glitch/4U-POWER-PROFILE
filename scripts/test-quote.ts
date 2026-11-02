@@ -267,11 +267,11 @@ const b100at60 = generatorItem(b100, "enclosed", null, { prime: 113, standby: 12
 assert.equal(b100at60.title, "4U-B100 — Baudouin Diesel Generator Set 113 kVA Prime / 125 kVA Standby, 60 Hz, Closed Type");
 assert.equal(b100at60.code, "4U-B100");
 assert.ok(b100at60.description.includes("113 kVA Prime / 125 kVA Standby | 60 Hz | 1800 RPM | 3-Phase | 0.8 Power Factor | 480/277 V."));
-assert.ok(b100at60.description.includes("Rated current at 480/277 V: 136 A prime / 150 A standby."));
+assert.ok(!b100at60.description.includes("Rated current"), "basic description: no current line");
 assert.ok(!b100at60.description.includes("derating"), "quoted at the rated voltage: no note");
 const ksa = generatorItem(b100, "enclosed", null, { prime: 113, standby: 125, volts: "380/220", ratedVolts: "480/277" });
-assert.ok(ksa.description.includes("Rated current at 380/220 V: 172 A prime / 190 A standby."));
-assert.ok(ksa.description.includes("60 Hz ratings as per datasheet at 480/277 V; the output at 380/220 V is confirmed with the order"));
+assert.ok(ksa.description.includes("| 60 Hz | 1800 RPM | 3-Phase | 0.8 Power Factor | 380/220 V."));
+assert.equal(ksa.description.split("\n").length, 5, "basic five-line description at 60 Hz too");
 assert.ok(!ksa.description.includes("50 Hz"), "no 50 Hz line on a 60 Hz quotation");
 // sets that keep their 50 Hz rating at 60 Hz (no fixed factor)
 assert.equal(RATINGS_60HZ["6M21G8D0/S"]!.prime, 500);
@@ -293,8 +293,7 @@ const b150at60 = sixtyHz(getModel("4u-b150")!);
 assert.ok(b150at60.kind === "datasheet" && b150at60.rating.prime === 180 && b150at60.rating.standby === 198, "Baudouin 181 / 200 held to TAL-A44-J 180 / 198");
 const c100bLine = generatorItem(c100b, "enclosed", null, { prime: 124, standby: 137, volts: "480/277", engine: "6BTA5.9-G6" });
 assert.ok(c100bLine.description.includes("original Cummins 6BTA5.9-G6 engine") && !c100bLine.description.includes("6BTA5.9-G5"));
-assert.ok(generatorItem(c100b, "open", null, { prime: 124, standby: 137, volts: "380/220", ratedVolts: null }).description.includes("typical generator set output; the alternator for 380/220 V is confirmed with the order"));
-assert.ok(!generatorItem(c100b, "open", null, { prime: 124, standby: 137, volts: "380/220" }).description.includes("typical generator set output"), "typed-in figures: no maker note");
+assert.ok(!generatorItem(c100b, "open", null, { prime: 124, standby: 137, volts: "380/220", ratedVolts: null }).description.includes("confirmed with the order"), "no voltage note");
 assert.equal(sixtyHz(getModel("4u-l12-5")!).kind, "datasheet");
 // typed-in figures: prime needed, standby ≥ prime, and a ratio far from 50 Hz is flagged
 const p500 = getModel("4u-p500")!;
@@ -304,7 +303,7 @@ assert.match(check60(p500, 560, 500)!, /Standby can't be below prime/);
 assert.match(check60(p500, 800, null)!, /Check it/);
 const p500at60 = generatorItem(p500, "open", null, { prime: 560, standby: null, volts: "480/277" });
 assert.equal(p500at60.title, "4U-P500 — Perkins Diesel Generator Set 560 kVA Prime, 60 Hz, Open Type");
-assert.ok(p500at60.description.includes("Rated current at 480/277 V: 674 A prime."));
+assert.ok(p500at60.description.includes("kVA Prime | 60 Hz | 1800 RPM"));
 assert.equal(defaultHz("SA"), 60);
 assert.equal(defaultHz("AE"), 50);
 assert.equal(defaultVolts60("SA"), "380/220");
