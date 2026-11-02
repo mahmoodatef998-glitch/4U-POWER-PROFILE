@@ -34,12 +34,14 @@ const NAV = [
 ] as const;
 
 /** Site wordmark: the main 4U POWER logo in its own yellow + "Generation FZC". Always sits on charcoal (header, footer, menu). */
-export function Brand({ className }: { className?: string }) {
+export function Brand({ className, adaptive = false }: { className?: string; adaptive?: boolean }) {
   const locale = useLocale();
   const ar = locale === "ar";
   return (
     <span className={cn("flex items-center gap-3", className)} dir="ltr">
-      <Image src="/brand/logo-full-dark.png" alt="4U Power" width={751} height={375} className="h-11 w-auto shrink-0 lg:h-[3.25rem]" priority />
+      <Image src="/brand/logo-full-dark.png" alt="4U Power" width={751} height={375} className={cn("h-11 w-auto shrink-0 lg:h-[3.25rem]", adaptive && "light:hidden")} priority />
+      {/* the header follows the theme: on the light (see-through) header the logo's white parts are black */}
+      {adaptive && <Image src="/brand/logo-full-light.png" alt="4U Power" width={751} height={375} className="hidden h-11 w-auto shrink-0 light:block lg:h-[3.25rem]" priority />}
       <span className="h-8 w-px bg-white/20" aria-hidden />
       <span className="leading-none" dir={ar ? "rtl" : "ltr"}>
         <span className="block font-[family-name:var(--font-heading)] text-[0.82rem] font-bold uppercase tracking-[0.16em] text-white rtl:font-[family-name:var(--font-arabic-display)] rtl:text-[0.95rem] rtl:tracking-normal">
@@ -92,8 +94,10 @@ export function Header() {
   return (
     <header
       className={cn(
-        "stage-dark sticky top-0 z-50 border-b border-white/10 bg-navy-950/95 text-white backdrop-blur-xl transition-shadow duration-500",
-        scrolled && "shadow-[0_18px_40px_-18px_rgb(0_0_0/0.85)]",
+        // charcoal on the night theme; on the light theme a see-through glass bar (theme tokens, so text flips dark)
+        "sticky top-0 z-50 border-b border-white/10 bg-navy-950/95 text-white backdrop-blur-xl transition-[background-color,box-shadow] duration-500 light:backdrop-saturate-150",
+        // light theme: fully see-through at the top of the page, frosted glass once the page scrolls under it
+        scrolled ? "shadow-[0_18px_40px_-18px_rgb(0_0_0/0.85)] light:bg-navy-950/60 light:shadow-[0_12px_30px_-18px_rgb(20_20_24/0.3)]" : "light:bg-transparent",
       )}
     >
       <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:start-4 focus:top-3 focus:z-50 focus:rounded-lg focus:bg-brand-500 focus:px-4 focus:py-2 focus:font-bold focus:text-ink-950">
@@ -103,7 +107,7 @@ export function Header() {
       <div className={cn("container-x flex items-center justify-between gap-4 transition-[height] duration-500", scrolled ? "h-16" : "h-16 lg:h-[4.5rem]")}>
         <div className="flex items-center gap-6">
           <Link href="/" className="rounded-lg">
-            <Brand />
+            <Brand adaptive />
           </Link>
           <p className="hidden border-s border-white/15 ps-6 text-[0.72rem] font-medium uppercase leading-snug tracking-[0.18em] text-white/60 rtl:text-sm rtl:normal-case lg:block">
             {locale === "ar" ? (
@@ -182,7 +186,7 @@ export function Header() {
       </div>
 
       {/* nav bar (desktop): every section a click away, the current one on a gold tab */}
-      <div className="relative hidden border-t border-white/[0.07] bg-black/30 xl:block">
+      <div className="relative hidden border-t border-white/[0.07] bg-black/30 light:bg-transparent xl:block">
         <div aria-hidden className="gold-rule absolute inset-x-0 top-0 h-px opacity-60" />
         <nav aria-label={t("primary")} className="container-x">
           <ul className="flex items-stretch justify-between">
@@ -192,7 +196,7 @@ export function Header() {
                   href={n.href}
                   aria-current={isActive(n.href) ? "page" : undefined}
                   className={cn(
-                    "relative flex h-11 items-center whitespace-nowrap px-3 text-[0.88rem] 2xl:px-4 font-semibold text-white/80 transition hover:text-brand-300",
+                    "relative flex h-11 items-center whitespace-nowrap px-3 text-[0.88rem] 2xl:px-4 font-semibold text-white/80 transition hover:text-brand-300 light:hover:text-brand-700",
                     isActive(n.href) && "bg-gold text-ink-950 hover:text-ink-950",
                   )}
                 >
