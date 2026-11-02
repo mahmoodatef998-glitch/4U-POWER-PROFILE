@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useEffect, useMemo, useState } from "react";
+import { useActionState, useEffect, useMemo, useRef, useState } from "react";
 import { brandModels, gensetModels, type GensetModel } from "@/lib/genset-models";
 import { PRICE_LISTS, defaultOption, listRef, optionLabel, type PriceBook, type PriceListId, type PriceOption } from "@/lib/price-book";
 import {
@@ -28,6 +28,7 @@ import {
   searchModels,
   sixtyHz,
   totals,
+  upliftEditable,
   withAlternator,
   type At60,
   type CountryId,
@@ -53,6 +54,7 @@ export type EditorInitial = {
   notes: string;
   price_list: PriceListId;
   country: CountryId;
+  uplift_pct: number;
   currency: Currency;
   fx_rate: number;
   fx_at: string | null;
@@ -97,6 +99,10 @@ export function QuoteEditor({ initial, initialSearch = "", prices = null, fx = n
   const [status, setStatus] = useState(initial.status);
   const [countryId, setCountryId] = useState<CountryId>(initial.country);
   const priceList = country(countryId).list;
+  // % on top of the list for this quotation (Saudi Arabia; 6% unless changed); the last Saudi % is kept if the
+  // country is switched away and back
+  const [upliftPct, setUpliftPct] = useState(initial.uplift_pct);
+  const saUplift = useRef(upliftEditable(initial.country) ? initial.uplift_pct : country("SA").uplift);
   const [currency, setCurrency] = useState<Currency>(initial.currency);
   const [fxRate, setFxRate] = useState(initial.fx_rate);
   const [fxAt, setFxAt] = useState(initial.fx_at);
@@ -134,10 +140,10 @@ export function QuoteEditor({ initial, initialSearch = "", prices = null, fx = n
     setFxRate(todayRate(c) ?? 1);
     setFxAt(c === "AED" ? null : (fx?.at ?? null));
   };
-  const payload = JSON.stringify({ id: initial.id, lead_id: initial.lead_id, quote_date: quoteDate, status, customer, sales, validity, delivery, notes, price_list: priceList, country: countryId, currency, fx_rate: fxRate, fx_at: fxAt, discount_pct: discountPct, vat_rate: vatRate, items });
+  const payload = JSON.stringify({ id: initial.id, lead_id: initial.lead_id, quote_date: quoteDate, status, customer, sales, validity, delivery, notes, price_list: priceList, country: countryId, uplift_pct: upliftPct, currency, fx_rate: fxRate, fx_at: fxAt, discount_pct: discountPct, vat_rate: vatRate, items });
   // what was last saved (or the empty form): anything else is an unsaved change
   const [savedPayload] = useState(() =>
-    JSON.stringify({ id: initial.id, lead_id: initial.lead_id, quote_date: initial.quote_date, status: initial.status, customer: initial.customer, sales: initial.sales, validity: initial.validity, delivery: initial.delivery, notes: initial.notes, price_list: initial.price_list, country: initial.country, currency: initial.currency, fx_rate: initial.fx_rate, fx_at: initial.fx_at, discount_pct: initial.discount_pct, vat_rate: initial.vat_rate, items: initial.items }),
+    JSON.stringify({ id: initial.id, lead_id: initial.lead_id, quote_date: initial.quote_date, status: initial.status, customer: initial.customer, sales: initial.sales, validity: initial.validity, delivery: initial.delivery, notes: initial.notes, price_list: initial.price_list, country: initial.country, uplift_pct: initial.uplift_pct, currency: initial.currency, fx_rate: initial.fx_rate, fx_at: initial.fx_at, discount_pct: initial.discount_pct, vat_rate: initial.vat_rate, items: initial.items }),
   );
   const dirty = payload !== savedPayload;
 
@@ -169,24 +175,38 @@ export function QuoteEditor({ initial, initialSearch = "", prices = null, fx = n
     if (hz === 60 && !at60) return;
     if (hz === 50 && m.ratedHz === 60) return;
     const item = generatorItem(m, enclosure, opt?.alternator, at60);
-    setItems((list) => [...list, opt ? { ...item, unit_price: listPrice(opt.aed, countryId), price_key: opt.key } : item]);
+    setItems((list) => [...list, opt ? { ...item, unit_price: listPrice(opt.aed, upliftPct), price_key: opt.key } : item]);
     setQ("");
   };
   // a line still on its list price (for this customer country)
-  const onList = (it: QuoteItem, o: PriceOption) => o.key === it.price_key && listPrice(o.aed, countryId) === it.unit_price;
+  const onList = (it: QuoteItem, o: PriceOption) => o.key === it.price_key && listPrice(o.aed, upliftPct) === it.unit_price;
   // switching country re-prices the lines that came from the list (typed-in prices stay) and sets its usual VAT
   const switchCountry = (id: CountryId) => {
     const c = country(id);
+    const up = upliftEditable(id) ? saUplift.current : 0;
     setCountryId(id);
+    setUpliftPct(up);
     setVatRate(c.vat);
     setHz(defaultHz(id));
     setVolts(defaultVolts60(id));
     setItems((list) =>
       list.map((it) => {
         const opt = it.price_key ? optionsFor(it.code, c.list)?.find((o) => o.key === it.price_key) : undefined;
-        return opt ? { ...it, unit_price: listPrice(opt.aed, id) } : it;
+        return opt ? { ...it, unit_price: listPrice(opt.aed, up) } : it;
       }),
     );
+  };
+  // a new uplift re-prices the lines still on their list price (typed-in prices stay)
+  const changeUplift = (raw: string) => {
+    const v = Math.min(100, Math.max(0, Number(raw) || 0));
+    saUplift.current = v;
+    setItems((list) =>
+      list.map((it) => {
+        const opt = it.price_key ? optionsFor(it.code)?.find((o) => o.key === it.price_key) : undefined;
+        return opt && listPrice(opt.aed, upliftPct) === it.unit_price ? { ...it, unit_price: listPrice(opt.aed, v) } : it;
+      }),
+    );
+    setUpliftPct(v);
   };
 
   const update = (i: number, patch: Partial<QuoteItem>) => setItems((list) => list.map((it, j) => (j === i ? { ...it, ...patch } : it)));
@@ -213,8 +233,29 @@ export function QuoteEditor({ initial, initialSearch = "", prices = null, fx = n
               <option key={c.id} value={c.id}>{c.label}</option>
             ))}
           </select>
-          <span className="text-xs text-muted">
-            {listLabel}{prices ? ` ${prices.edition}` : ""}{country(countryId).uplift ? ` + ${country(countryId).uplift}%` : ""} · VAT {country(countryId).vat}%.{" "}
+          {upliftEditable(countryId) && (
+            <>
+              <label htmlFor="uplift" className="ms-1 font-semibold">List +</label>
+              <span className="inline-flex items-center rounded-lg border border-line pe-2.5 focus-within:border-brand-500">
+                <input
+                  id="uplift"
+                  type="number"
+                  inputMode="decimal"
+                  min={0}
+                  max={100}
+                  step={0.5}
+                  value={upliftPct}
+                  onChange={(e) => changeUplift(e.target.value)}
+                  className="w-20 rounded-lg bg-transparent px-3 py-1.5 text-end font-semibold tabular-nums outline-none"
+                  aria-describedby="uplift-note"
+                />
+                <span className="font-semibold text-muted">%</span>
+              </span>
+            </>
+          )}
+          <span id="uplift-note" className="text-xs text-muted">
+            {listLabel}{prices ? ` ${prices.edition}` : ""}{upliftPct ? ` + ${upliftPct}%` : ""} · VAT {country(countryId).vat}%.{" "}
+            {upliftEditable(countryId) ? "Changing the % re-prices the lines still on the list price. " : ""}
             {prices ? "Switching re-prices the lines taken from the list and sets the VAT." : "No price list loaded yet: type the prices."}
             {prices?.gbpSource ? ` Perkins (GBP) at 1 GBP = ${prices.gbpRate} AED, ${FX_SOURCE[prices.gbpSource]}${prices.gbpAt ? ` ${fxTime(prices.gbpAt)}` : ""}.` : ""}
           </span>
@@ -326,7 +367,7 @@ export function QuoteEditor({ initial, initialSearch = "", prices = null, fx = n
                           title={listRef(o)}
                           className={`rounded-lg border px-2.5 py-1 text-start text-xs ${o === chosen ? "border-brand-600 bg-brand-50 font-bold text-ink" : "border-line text-muted hover:border-ink"}`}
                         >
-                          {optionLabel(o)} · AED {money(listPrice(o.aed, countryId))}
+                          {optionLabel(o)} · AED {money(listPrice(o.aed, upliftPct))}
                         </button>
                       ))}
                     </div>
@@ -424,14 +465,14 @@ export function QuoteEditor({ initial, initialSearch = "", prices = null, fx = n
                       const o = opts.find((x) => x.key === e.target.value);
                       const m = gensetModels.find((x) => x.code === it.code);
                       // the description names the alternator of the chosen option (Leroy-Somer frame or 4U Power)
-                      update(i, o ? { unit_price: listPrice(o.aed, countryId), price_key: o.key, ...(m && { description: withAlternator(it.description, alternatorPhrase(m, o.alternator)) }) } : { price_key: undefined });
+                      update(i, o ? { unit_price: listPrice(o.aed, upliftPct), price_key: o.key, ...(m && { description: withAlternator(it.description, alternatorPhrase(m, o.alternator)) }) } : { price_key: undefined });
                     }}
                     className={`${input} font-normal`}
                   >
                     <option value="">Own price (typed in above)</option>
                     {opts.map((o) => (
                       <option key={o.key} value={o.key}>
-                        {optionLabel(o)} · AED {money(listPrice(o.aed, countryId))}{o.currency === "GBP" ? ` (£${money(o.price)})` : ""} · {listRef(o)}
+                        {optionLabel(o)} · AED {money(listPrice(o.aed, upliftPct))}{o.currency === "GBP" ? ` (£${money(o.price)})` : ""} · {listRef(o)}
                       </option>
                     ))}
                   </select>

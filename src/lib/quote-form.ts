@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { COUNTRIES, CURRENCIES, STATUSES, VAT_RATE, VAT_RATES, country, unprintable, type CountryId, type QuoteStatus } from "./quote";
+import { COUNTRIES, CURRENCIES, STATUSES, VAT_RATE, VAT_RATES, country, unprintable, upliftEditable, type CountryId, type QuoteStatus } from "./quote";
 
 /**
  * The quotation form as the editor sends it (one JSON field), checked the same way for saving and for the
@@ -29,6 +29,7 @@ const payloadSchema = (strict: boolean) =>
     notes: str(2000),
     price_list: z.enum(["uae", "export"]).default("uae"),
     country: z.enum(COUNTRIES.map((c) => c.id) as [CountryId, ...CountryId[]]).default("AE"),
+    uplift_pct: z.coerce.number().min(0, "Uplift can't be negative").max(100, "Uplift can't be above 100%").default(0),
     currency: z.enum(CURRENCIES).default("AED"),
     fx_rate: z.coerce.number().positive("Exchange rate missing").max(1000).default(1),
     fx_at: z.string().max(40).nullable().default(null),
@@ -64,6 +65,8 @@ export function parseQuotePayload(json: unknown, strict: boolean): { data: Quote
   const d = parsed.data;
   // the price list always follows the customer country; AED needs no rate
   d.price_list = country(d.country).list;
+  // only Saudi Arabia carries an uplift; it is kept to two decimals
+  d.uplift_pct = upliftEditable(d.country) ? Math.round(d.uplift_pct * 100) / 100 : 0;
   if (d.currency === "AED") {
     d.fx_rate = 1;
     d.fx_at = null;

@@ -26,6 +26,8 @@ export type Quote = {
   price_list: PriceListId;
   /** where the customer is: sets the price list, the uplift on list prices and the usual VAT (COUNTRIES) */
   country: CountryId;
+  /** % added to list prices for this quotation (Saudi Arabia: 6 by default, set per quotation); 0 elsewhere */
+  uplift_pct: number;
   /** currency printed on the quotation; prices are kept in AED and converted at fx_rate (AED per 1 unit) */
   currency: Currency;
   fx_rate: number;
@@ -71,7 +73,8 @@ export const quoteNumber = (n: number) => `QT ${n}`;
 
 export type CountryId = "AE" | "SA" | "OM" | "XX";
 /**
- * Pricing by where the customer is (owner, 1 Nov 2026): UAE local list with 5% VAT; Saudi Arabia the local list + 6%,
+ * Pricing by where the customer is (owner, 1 Nov 2026): UAE local list with 5% VAT; Saudi Arabia the local list + 6%
+ * by default — the % is set per quotation (owner, 2 Nov 2026; `uplift` here is the starting value),
  * no VAT; Oman the local list, no VAT; anywhere else the export list, no VAT. The uplift applies to prices taken from
  * the list, not to prices typed in.
  */
@@ -85,8 +88,13 @@ export const country = (id: CountryId) => COUNTRIES.find((c) => c.id === id) ?? 
 /** Quotations saved before the country existed: the UAE list meant the UAE, the export list another country. */
 export const countryOf = (q: { country?: string | null; price_list?: string | null }): CountryId =>
   COUNTRIES.some((c) => c.id === q.country) ? (q.country as CountryId) : q.price_list === "export" ? "XX" : "AE";
-/** A list price (AED) for this customer country: the Saudi uplift on top, to the fils. */
-export const listPrice = (aed: number, id: CountryId) => Math.round(aed * (1 + country(id).uplift / 100) * 100) / 100;
+/** Countries whose uplift the quotation sets (Saudi Arabia); the others always quote the list price. */
+export const upliftEditable = (id: CountryId) => country(id).uplift > 0;
+/** The uplift a quotation carries: its own % where the country has one (older quotations: the default), else 0. */
+export const upliftOf = (q: { country: CountryId; uplift_pct?: number | string | null }) =>
+  !upliftEditable(q.country) ? 0 : q.uplift_pct != null && q.uplift_pct !== "" && Number.isFinite(Number(q.uplift_pct)) ? Number(q.uplift_pct) : country(q.country).uplift;
+/** A list price (AED) with the quotation's uplift on top, to the fils. */
+export const listPrice = (aed: number, upliftPct: number) => Math.round(aed * (1 + upliftPct / 100) * 100) / 100;
 
 export const CURRENCIES = ["AED", "USD", "EUR", "SAR"] as const;
 export type Currency = (typeof CURRENCIES)[number];

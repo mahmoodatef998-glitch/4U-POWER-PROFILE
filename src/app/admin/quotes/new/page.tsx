@@ -30,6 +30,7 @@ export default async function NewQuotePage({ searchParams }: { searchParams: Pro
           notes: "",
           price_list: "uae",
           country: "AE",
+          uplift_pct: 0,
           currency: "AED",
           fx_rate: 1,
           fx_at: null,

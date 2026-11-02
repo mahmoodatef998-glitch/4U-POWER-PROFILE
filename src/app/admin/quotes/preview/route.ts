@@ -35,6 +35,7 @@ export async function POST(req: Request) {
     notes: d.notes || null,
     price_list: d.price_list,
     country: d.country,
+    uplift_pct: d.uplift_pct,
     currency: d.currency,
     fx_rate: d.fx_rate,
     fx_at: d.fx_at,
