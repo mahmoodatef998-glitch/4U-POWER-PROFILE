@@ -68,7 +68,7 @@ export function ProductCatalog({ products }: { products: Product[] }) {
   return (
     <div className="grid gap-8 lg:grid-cols-12">
       <aside className="lg:col-span-3" aria-labelledby="filters-title">
-        <div className="rounded-2xl border border-line bg-navy-900 p-5 lg:sticky lg:top-24">
+        <div className="rounded-2xl border border-line bg-navy-900 p-5 lg:sticky lg:top-24 xl:top-36">
           <div className="flex items-center justify-between">
             <h2 id="filters-title" className="flex items-center gap-2 text-base font-extrabold">
               <SlidersHorizontal className="size-4 text-brand-600" aria-hidden />

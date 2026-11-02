@@ -98,7 +98,7 @@ export async function PillarPage({
             ))}
           </div>
           <aside className="lg:col-span-4">
-            <div className="on-dark rounded-3xl bg-navy-950 p-6 text-white lg:sticky lg:top-28">
+            <div className="on-dark rounded-3xl bg-navy-950 p-6 text-white lg:sticky lg:top-28 xl:top-36">
               <p className="text-lg font-extrabold">{L(pillar.cta.title)}</p>
               <p className="mt-2 text-sm leading-6 text-white/75">{L(pillar.cta.body)}</p>
               <div className="mt-5 grid gap-2">

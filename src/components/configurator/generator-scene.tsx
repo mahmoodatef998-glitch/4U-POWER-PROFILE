@@ -1,6 +1,6 @@
 "use client";
 
-import { Bounds, ContactShadows, Environment, Html, Lightformer, OrbitControls, RoundedBox, useBounds, useTexture } from "@react-three/drei";
+import { Bounds, ContactShadows, Environment, Html, Lightformer, Line, OrbitControls, RoundedBox, useBounds, useTexture } from "@react-three/drei";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { forwardRef, useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
@@ -308,6 +308,42 @@ function Tag({ position, children }: { position: V3; children: string }) {
   );
 }
 
+/** A measured edge: line, end ticks and a "L 2,977 mm" chip at its middle. */
+function Measure({ from, to, tick, name, value }: { from: V3; to: V3; tick: V3; name: string; value: string }) {
+  const mid: V3 = [(from[0] + to[0]) / 2, (from[1] + to[1]) / 2, (from[2] + to[2]) / 2];
+  const end = (p: V3): [V3, V3] => [
+    [p[0] - tick[0], p[1] - tick[1], p[2] - tick[2]],
+    [p[0] + tick[0], p[1] + tick[1], p[2] + tick[2]],
+  ];
+  return (
+    <group>
+      <Line points={[from, to]} color="#0b1022" lineWidth={2} />
+      <Line points={end(from)} color="#0b1022" lineWidth={2} />
+      <Line points={end(to)} color="#0b1022" lineWidth={2} />
+      <Html position={mid} center zIndexRange={[30, 0]}>
+        <span className="pointer-events-none whitespace-nowrap rounded-md bg-[#c9a14a] px-2 py-0.5 text-[11px] font-extrabold text-[#0b1022] shadow-md">
+          {name} <bdi dir="ltr">{value}</bdi>
+        </span>
+      </Html>
+    </group>
+  );
+}
+
+/** Overall length, width and height of one set (the front one), measured just outside it. */
+function Dimensions({ L, W, H, lift, z, mm, labels }: { L: number; W: number; H: number; lift: number; z: number; mm: { l: number; w: number; h: number }; labels: DimLabels }) {
+  const off = 0.35;
+  const t = 0.09;
+  const f = (v: number) => `${v.toLocaleString("en")} mm`;
+  const y = 0.03;
+  return (
+    <group>
+      <Measure from={[-L / 2, y, z + W / 2 + off]} to={[L / 2, y, z + W / 2 + off]} tick={[0, 0, t]} name={labels.l} value={f(mm.l)} />
+      <Measure from={[L / 2 + off, y, z - W / 2]} to={[L / 2 + off, y, z + W / 2]} tick={[t, 0, 0]} name={labels.w} value={f(mm.w)} />
+      <Measure from={[L / 2 + off, lift, z + W / 2 + off]} to={[L / 2 + off, lift + H, z + W / 2 + off]} tick={[t, 0, 0]} name={labels.h} value={f(mm.h)} />
+    </group>
+  );
+}
+
 function Refit({ deps }: { deps: string }) {
   const api = useBounds();
   useEffect(() => {
@@ -318,6 +354,7 @@ function Refit({ deps }: { deps: string }) {
 }
 
 export type SceneLabels = { ats: string; sync: string; tank: string; trailer: string; remote: string };
+export type DimLabels = { l: string; w: string; h: string };
 
 export type GeneratorSceneProps = {
   brand: GensetBrand;
@@ -329,9 +366,12 @@ export type GeneratorSceneProps = {
   autoRotate: boolean;
   showLabels: boolean;
   labels: SceneLabels;
+  /** draw the set's length, width and height on the model */
+  showDims?: boolean;
+  dimLabels?: DimLabels;
 };
 
-export const GeneratorScene = forwardRef<HTMLCanvasElement, GeneratorSceneProps>(function GeneratorScene({ brand, code, config, dims, atsAmps, autoRotate, showLabels, labels }, ref) {
+export const GeneratorScene = forwardRef<HTMLCanvasElement, GeneratorSceneProps>(function GeneratorScene({ brand, code, config, dims, atsAmps, autoRotate, showLabels, labels, showDims = false, dimLabels = { l: "L", w: "W", h: "H" } }, ref) {
   const L = dims.l / 1000;
   const W = dims.w / 1000;
   const H = dims.h / 1000;
@@ -377,6 +417,7 @@ export const GeneratorScene = forwardRef<HTMLCanvasElement, GeneratorSceneProps>
           {config.tankL > 0 && <FuelTank litres={config.tankL} position={[tankX, 0, zs[0]!]} />}
         </group>
       </Bounds>
+      {showDims && <Dimensions L={L} W={W} H={H} lift={lift} z={zs[zs.length - 1]!} mm={dims} labels={dimLabels} />}
       {showLabels && (
         <>
           <Tag position={[L * 0.15, H + lift + 1.15, zs[zs.length - 1]!]}>{config.units > 1 ? `${config.units} × ${code}` : code}</Tag>

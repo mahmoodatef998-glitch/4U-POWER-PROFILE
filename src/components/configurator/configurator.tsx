@@ -1,6 +1,6 @@
 "use client";
 
-import { Camera, Check, Copy, FileText, Minus, Pause, Play, Plus, Tag as TagIcon } from "lucide-react";
+import { Camera, Check, Copy, FileText, Minus, Pause, Play, Plus, Ruler, Tag as TagIcon } from "lucide-react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useLocale } from "next-intl";
@@ -31,6 +31,7 @@ import {
   type Silencer,
 } from "@/lib/configurator";
 import { currentModelSlug } from "@/lib/model-renames";
+import type { ModelSpec } from "@/app/api/model-spec/route";
 import { whatsappUrl } from "@/lib/site";
 import { cn, type Locale } from "@/lib/utils";
 import { WhatsAppIcon } from "../icons";
@@ -84,6 +85,35 @@ const COPY = {
     snapshot: "Save image",
     rotate: "Auto-rotate",
     labels: "Labels",
+    measure: "Dimensions",
+    dimLabels: { l: "L", w: "W", h: "H" },
+    tech: "Technical data",
+    techIntro: "From the model's datasheet. Final details are confirmed on the GA drawing with the order.",
+    tabs: { dims: "Dimensions & weight", ratings: "Ratings & fuel", engine: "Engine", alt: "Alternator", ctrl: "Controller & canopy" },
+    build: "Build",
+    lwh: "L × W × H (mm)",
+    tankCol: "Base tank",
+    noise: "Noise @ 7 m",
+    output: "Output · 400/230 V · 50 Hz · 0.8 pf",
+    output60: "Output · 480/277 V · 60 Hz · 0.8 pf",
+    kva: "kVA",
+    kw: "kW",
+    amps: "Current",
+    prime: "Prime (PRP)",
+    standby: "Standby (ESP)",
+    at60: "At 60 Hz · 1800 rpm",
+    fuelUse: "Fuel consumption",
+    load: "Load",
+    lph: "L/h",
+    cooling: "Cooling",
+    lube: "Lubrication & exhaust",
+    air: "Air intake",
+    operating: "Performance",
+    features: "Controller features",
+    canopy: "Enclosure",
+    loading: "Loading the datasheet…",
+    failed: "The technical data could not be loaded. Open the model page for the full datasheet.",
+    fullDs: "Full datasheet (PDF)",
     hint: "Drag to rotate · scroll or pinch to zoom",
     noWebgl: "3D view isn't available on this device — here's the product photo.",
     sceneLabels: { ats: "ATS", sync: "Sync panel", tank: "Fuel tank", trailer: "Road trailer", remote: "Remote monitoring" },
@@ -129,6 +159,35 @@ const COPY = {
     snapshot: "حفظ صورة",
     rotate: "دوران تلقائي",
     labels: "التسميات",
+    measure: "المقاسات",
+    dimLabels: { l: "الطول", w: "العرض", h: "الارتفاع" },
+    tech: "البيانات الفنية",
+    techIntro: "من الداتا شيت الخاصة بالموديل، والتفاصيل النهائية تتأكد في رسم الترتيب العام (GA) مع الطلب.",
+    tabs: { dims: "المقاسات والوزن", ratings: "القدرات والوقود", engine: "المحرك", alt: "الدينامو", ctrl: "التحكم والكابينة" },
+    build: "النوع",
+    lwh: "طول × عرض × ارتفاع (مم)",
+    tankCol: "خزان القاعدة",
+    noise: "الصوت على 7 م",
+    output: "القدرة · 400/230 فولت · 50 هرتز · 0.8",
+    output60: "القدرة · 480/277 فولت · 60 هرتز · 0.8",
+    kva: "ك.ف.أ",
+    kw: "ك.و",
+    amps: "التيار",
+    prime: "أساسي (PRP)",
+    standby: "احتياطي (ESP)",
+    at60: "على 60 هرتز · 1800 لفة",
+    fuelUse: "استهلاك الوقود",
+    load: "الحمل",
+    lph: "لتر/ساعة",
+    cooling: "التبريد",
+    lube: "التزييت والعادم",
+    air: "سحب الهواء",
+    operating: "الأداء",
+    features: "مميزات وحدة التحكم",
+    canopy: "الكابينة",
+    loading: "جاري تحميل الداتا شيت…",
+    failed: "تعذر تحميل البيانات الفنية. افتح صفحة الموديل للداتا شيت الكاملة.",
+    fullDs: "الداتا شيت الكاملة (PDF)",
     hint: "اسحب للتدوير · مرّر أو قرّب بإصبعين للتكبير",
     noWebgl: "العرض ثلاثي الأبعاد غير متاح على هذا الجهاز — هذه صورة المنتج.",
     sceneLabels: { ats: "ATS", sync: "لوحة تزامن", tank: "خزان وقود", trailer: "مقطورة", remote: "مراقبة عن بُعد" },
@@ -182,6 +241,10 @@ export function Configurator({ models }: { models: ConfigModel[] }) {
   const [webgl, setWebgl] = useState(true);
   const [autoRotate, setAutoRotate] = useState(true);
   const [showLabels, setShowLabels] = useState(true);
+  const [showDims, setShowDims] = useState(true);
+  const [spec, setSpec] = useState<ModelSpec | null>(null);
+  const [specState, setSpecState] = useState<"loading" | "ok" | "error">("loading");
+  const [tab, setTab] = useState<"dims" | "ratings" | "engine" | "alt" | "ctrl">("dims");
   const [copied, setCopied] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const stageRef = useRef<HTMLDivElement>(null);
@@ -212,6 +275,22 @@ export function Configurator({ models }: { models: ConfigModel[] }) {
       return normalise({ ...prev, model: slug, enclosure: keepEnc ?? base.enclosure }, m);
     });
   };
+
+  // the selected model's datasheet data (fetched per model, cached at the edge)
+  useEffect(() => {
+    const ctl = new AbortController();
+    setSpecState("loading");
+    fetch(`/api/model-spec?slug=${encodeURIComponent(model.slug)}&locale=${locale}`, { signal: ctl.signal })
+      .then((r) => (r.ok ? r.json() : Promise.reject(new Error(String(r.status)))))
+      .then((d: ModelSpec) => {
+        setSpec(d);
+        setSpecState("ok");
+      })
+      .catch((e) => {
+        if ((e as Error).name !== "AbortError") setSpecState("error");
+      });
+    return () => ctl.abort();
+  }, [model.slug, locale]);
 
   const dims = dimsMm(model, config.enclosure);
   const encl = allowedEnclosures(model);
@@ -273,9 +352,10 @@ export function Configurator({ models }: { models: ConfigModel[] }) {
   const h = "text-sm font-extrabold uppercase tracking-wide text-muted";
 
   return (
+    <>
     <div className="grid gap-6 lg:grid-cols-12 lg:items-start">
       {/* ------------------------------------------------ 3D stage */}
-      <div className="min-w-0 lg:sticky lg:top-24 lg:col-span-7">
+      <div className="min-w-0 lg:sticky lg:top-24 xl:top-36 lg:col-span-7">
         <div ref={stageRef} className="relative h-[52vh] min-h-[340px] overflow-hidden rounded-3xl border border-line bg-[radial-gradient(120%_90%_at_50%_15%,#ffffff_0%,#e6eaef_55%,#cdd4dd_100%)] lg:h-[72vh]">
           {webgl ? (
             <GeneratorScene
@@ -287,6 +367,8 @@ export function Configurator({ models }: { models: ConfigModel[] }) {
               autoRotate={autoRotate}
               showLabels={showLabels}
               labels={c.sceneLabels}
+              showDims={showDims}
+              dimLabels={c.dimLabels}
             />
           ) : (
             <div className="grid h-full place-items-center p-6 text-center">
@@ -305,6 +387,7 @@ export function Configurator({ models }: { models: ConfigModel[] }) {
               {[
                 { on: autoRotate, set: () => setAutoRotate((v) => !v), icon: autoRotate ? Pause : Play, label: c.rotate },
                 { on: showLabels, set: () => setShowLabels((v) => !v), icon: TagIcon, label: c.labels },
+                { on: showDims, set: () => setShowDims((v) => !v), icon: Ruler, label: c.measure },
                 { on: false, set: snapshot, icon: Camera, label: c.snapshot },
               ].map((b) => (
                 <button key={b.label} type="button" onClick={b.set} aria-pressed={b.on} aria-label={b.label} title={b.label} className={cn("grid size-10 place-items-center rounded-full shadow-md ring-1 ring-black/10 transition", b.on ? "bg-[#0b1022] text-[#fff]" : "bg-[#fff] text-[#0b1022] hover:bg-[#eef0f3]")}>
@@ -476,5 +559,195 @@ export function Configurator({ models }: { models: ConfigModel[] }) {
         )}
       </div>
     </div>
+
+    {/* ------------------------------------------------ technical data (the model's datasheet); outside the grid so
+        the sticky 3D stage never slides over it */}
+    <TechData spec={spec} state={specState} tab={tab} setTab={setTab} c={c} n={n} enclosure={config.enclosure} slug={model.slug} code={model.code} />
+    </>
+  );
+}
+
+type Copy = (typeof COPY)["en"];
+type Tab = "dims" | "ratings" | "engine" | "alt" | "ctrl";
+
+function Rows({ title, rows }: { title?: string; rows: [string, string][] }) {
+  if (!rows.length) return null;
+  return (
+    <div className="min-w-0">
+      {title && <h4 className="mb-2 text-xs font-extrabold uppercase tracking-wide text-brand-700 rtl:tracking-normal">{title}</h4>}
+      <dl className="divide-y divide-line overflow-hidden rounded-2xl border border-line">
+        {rows.map(([k, v]) => (
+          <div key={k} className="grid grid-cols-5 gap-3 px-4 py-2.5 text-sm odd:bg-surface">
+            <dt className="col-span-2 text-muted">{k}</dt>
+            <dd className="col-span-3 font-semibold text-ink" dir="auto">{v}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  );
+}
+
+function TechData({ spec, state, tab, setTab, c, n, enclosure, slug, code }: { spec: ModelSpec | null; state: "loading" | "ok" | "error"; tab: Tab; setTab: (t: Tab) => void; c: Copy; n: (v: number) => string; enclosure: Enclosure; slug: string; code: string }) {
+  const tabs = Object.entries(c.tabs) as [Tab, string][];
+  // the build row matching the enclosure picked above
+  const isCurrent = (name: string) => (enclosure === "open" ? /open|مفتوح/i.test(name) : enclosure === "canopy" ? /canopy|كابينة/i.test(name) : /container|حاوية/i.test(name));
+  const th = "px-4 py-2.5 text-start text-xs font-bold uppercase tracking-wide text-muted rtl:tracking-normal";
+  const td = "px-4 py-2.5 text-sm font-semibold text-ink";
+  return (
+    <section className="mt-6 min-w-0 rounded-3xl border border-line bg-navy-900 p-5 sm:p-6" aria-labelledby="cfg-tech">
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <h2 id="cfg-tech" className="text-xl font-extrabold text-ink sm:text-2xl">
+            {c.tech} · <span dir="ltr">{spec?.code ?? code}</span>
+          </h2>
+          <p className="mt-1 text-sm text-muted">{c.techIntro}</p>
+        </div>
+        <Link href={`/models/${slug}`} className={buttonVariants({ variant: "outline", size: "md" })}>
+          <FileText aria-hidden />
+          {c.fullDs}
+        </Link>
+      </div>
+
+      <div role="tablist" aria-label={c.tech} className="-mx-1 mt-5 flex gap-1 overflow-x-auto px-1 pb-1 [scrollbar-width:none]">
+        {tabs.map(([id, label]) => (
+          <button
+            key={id}
+            type="button"
+            role="tab"
+            id={`tab-${id}`}
+            aria-selected={tab === id}
+            aria-controls={`panel-${id}`}
+            onClick={() => setTab(id)}
+            className={cn("shrink-0 rounded-lg px-4 py-2 text-sm font-bold transition", tab === id ? "bg-gold text-ink-950" : "border border-line text-muted hover:text-ink")}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+
+      <div role="tabpanel" id={`panel-${tab}`} aria-labelledby={`tab-${tab}`} className="mt-5">
+        {state === "loading" && !spec && <p className="animate-pulse text-sm text-muted">{c.loading}</p>}
+        {state === "error" && <p className="text-sm text-muted">{c.failed}</p>}
+        {spec && (
+          <div className={cn("transition-opacity", state === "loading" && "opacity-50")}>
+            {tab === "dims" && (
+              <div className="overflow-x-auto rounded-2xl border border-line">
+                <table className="w-full min-w-[34rem] text-start">
+                  <thead className="bg-surface">
+                    <tr>
+                      <th className={th}>{c.build}</th>
+                      <th className={th}>{c.lwh}</th>
+                      <th className={th}>{c.weight}</th>
+                      <th className={th}>{c.tankCol}</th>
+                      <th className={th}>{c.noise}</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-line">
+                    {spec.builds.map((b) => (
+                      <tr key={b.name} className={isCurrent(b.name) ? "bg-brand-50" : undefined}>
+                        <td className={td}>{b.name}</td>
+                        <td className={td} dir="ltr">{b.dims}</td>
+                        <td className={td} dir="ltr">{b.weight}</td>
+                        <td className={td} dir="ltr">{b.tank}</td>
+                        <td className={td} dir="ltr">{b.noise}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+            {tab === "ratings" && (
+              <div className="grid gap-5 lg:grid-cols-2">
+                <div className="min-w-0">
+                  <div className="overflow-x-auto rounded-2xl border border-line">
+                    <table className="w-full text-start">
+                      <thead className="bg-surface">
+                        <tr>
+                          <th className={th} dir="auto">{spec.hz === 60 ? c.output60 : c.output}</th>
+                          <th className={th}>{c.kva}</th>
+                          <th className={th}>{c.kw}</th>
+                          <th className={th}>{c.amps}</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-line">
+                        {[[c.prime, spec.prime], [c.standby, spec.standby]].map(([k, r]) => {
+                          const v = r as ModelSpec["prime"];
+                          return (
+                            <tr key={k as string}>
+                              <td className={td}>{k as string}</td>
+                              <td className={td} dir="ltr">{n(v.kva)}</td>
+                              <td className={td} dir="ltr">{n(v.kw)}</td>
+                              <td className={td} dir="ltr">{n(v.amps)} A</td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+                  {spec.sixty && (
+                    <p className="mt-3 text-sm text-muted">
+                      {c.at60}: <b className="text-ink" dir="ltr">{n(spec.sixty.prime)}{spec.sixty.standby ? ` / ${n(spec.sixty.standby)}` : ""} kVA</b>
+                    </p>
+                  )}
+                </div>
+                {spec.fuel.length > 0 && (
+                  <div className="min-w-0">
+                    <h4 className="mb-2 text-xs font-extrabold uppercase tracking-wide text-brand-700 rtl:tracking-normal">{c.fuelUse}</h4>
+                    <ul className="grid gap-2">
+                      {spec.fuel.map((f) => {
+                        const max = Math.max(...spec.fuel.map((x) => x.lph));
+                        return (
+                          <li key={f.label} className="grid grid-cols-[7rem_1fr_auto] items-center gap-3 text-sm">
+                            <span className="text-muted">{f.label}</span>
+                            <span className="h-2.5 overflow-hidden rounded-full bg-surface ring-1 ring-line">
+                              <span className={cn("block h-full rounded-full", f.highlight ? "bg-brand-500" : "bg-zinc-400")} style={{ width: `${(f.lph / max) * 100}%` }} />
+                            </span>
+                            <b className="text-ink tabular-nums" dir="ltr">{f.lph} {c.lph}</b>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            )}
+            {tab === "engine" && (
+              <div className="grid gap-5 lg:grid-cols-2">
+                <Rows rows={spec.engineRows} />
+                <div className="grid gap-5">
+                  <Rows title={c.cooling} rows={spec.coolingRows} />
+                  <Rows title={c.lube} rows={spec.lubeRows} />
+                  <Rows title={c.air} rows={spec.airRows} />
+                </div>
+              </div>
+            )}
+            {tab === "alt" && (
+              <div className="grid gap-5 lg:grid-cols-2">
+                <Rows rows={spec.alternatorRows} />
+                <Rows title={c.operating} rows={spec.operatingRows} />
+              </div>
+            )}
+            {tab === "ctrl" && (
+              <div className="grid gap-5 lg:grid-cols-2">
+                <div className="min-w-0">
+                  <h4 className="mb-2 text-xs font-extrabold uppercase tracking-wide text-brand-700 rtl:tracking-normal">
+                    {c.features}{spec.controller ? <> · <span dir="ltr">Deep Sea {spec.controller}</span></> : null}
+                  </h4>
+                  <ul className="grid gap-1.5 text-sm sm:grid-cols-2">
+                    {spec.controllerFeatures.map((f) => (
+                      <li key={f} className="flex gap-2 text-ink">
+                        <Check className="mt-0.5 size-4 shrink-0 text-brand-500" aria-hidden />
+                        <span>{f}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <Rows title={c.canopy} rows={spec.enclosureRows} />
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    </section>
   );
 }

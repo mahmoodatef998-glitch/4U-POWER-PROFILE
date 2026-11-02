@@ -145,7 +145,7 @@ export default async function ModelPage({ params }: Props) {
           </div>
 
           <div id="request" className="scroll-mt-24 lg:col-span-5">
-            <div className="space-y-6 lg:sticky lg:top-28">
+            <div className="space-y-6 lg:sticky lg:top-28 xl:top-36">
               <DatasheetGate slug={m.slug} productName={name} href={`${modelPath(m)}/datasheet`} />
               <div className="rounded-3xl border border-line bg-surface p-6 sm:p-8">
                 <h2 className="text-2xl">{t("cta.requestSpec")}</h2>

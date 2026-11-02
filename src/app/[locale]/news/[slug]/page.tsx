@@ -95,7 +95,7 @@ export default async function NewsPostPage({ params }: Props) {
             <Markdown source={ar ? p.body_ar : p.body_en} />
           </div>
           <aside className="lg:col-span-4">
-            <div className="on-dark rounded-3xl bg-navy-950 p-6 text-white lg:sticky lg:top-28">
+            <div className="on-dark rounded-3xl bg-navy-950 p-6 text-white lg:sticky lg:top-28 xl:top-36">
               <p className="text-lg font-extrabold">{ar ? "تحتاج مساعدة في الاختيار؟" : "Need help choosing?"}</p>
               <p className="mt-2 text-sm leading-6 text-white/75">
                 {ar ? "أرسل لنا الحمل أو القدرة المطلوبة وسيرد مهندس خلال ساعة عمل." : "Send us your load or required kVA — an engineer replies within the working hour."}
