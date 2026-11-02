@@ -107,7 +107,8 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
       {/* ------------------------------------------------ HERO: night render, gold headline, feature bar (always dark) */}
       <section className="stage-dark relative isolate overflow-hidden bg-navy-950 text-white" aria-labelledby="hero-title">
         {/* phones: the render is a photo band above the text; md+: full-bleed backdrop behind it.
-            The 4U label is on the canopy, so Arabic uses its own mirrored render (label still reads correctly). */}
+            The canopy carries the 4U label (md+) or, on phones where the label would be too small to read,
+            the 4U logo alone; Arabic uses its own mirrored render so both still read correctly. */}
         <picture className="relative -z-10 block aspect-[4/3] sm:aspect-[16/9] md:absolute md:inset-0 md:aspect-auto">
           <source media="(min-width: 768px)" srcSet={`/images/hero/hero-night-genset${ar ? "-ar" : ""}.webp`} />
           {/* decorative backdrop: the headline carries the meaning */}
