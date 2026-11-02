@@ -46,7 +46,6 @@ export default async function EditQuotePage({ params, searchParams }: { params: 
           notes: q.notes ?? "",
           price_list: q.price_list,
           country: q.country,
-          uplift_pct: q.uplift_pct,
           currency: q.currency,
           fx_rate: q.fx_rate,
           fx_at: q.fx_at,

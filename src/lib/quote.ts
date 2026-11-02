@@ -24,10 +24,8 @@ export type Quote = {
   delivery: string | null;
   notes: string | null;
   price_list: PriceListId;
-  /** where the customer is: sets the price list, the uplift on list prices and the usual VAT (COUNTRIES) */
+  /** where the customer is: sets the price list and the usual VAT (COUNTRIES) */
   country: CountryId;
-  /** % added to list prices for this quotation (Saudi Arabia: 6 by default, set per quotation); 0 elsewhere */
-  uplift_pct: number;
   /** currency printed on the quotation; prices are kept in AED and converted at fx_rate (AED per 1 unit) */
   currency: Currency;
   fx_rate: number;
@@ -73,28 +71,21 @@ export const quoteNumber = (n: number) => `QT ${n}`;
 
 export type CountryId = "AE" | "SA" | "OM" | "XX";
 /**
- * Pricing by where the customer is (owner, 1 Nov 2026): UAE local list with 5% VAT; Saudi Arabia the local list + 6%
- * by default — the % is set per quotation (owner, 2 Nov 2026; `uplift` here is the starting value),
- * no VAT; Oman the local list, no VAT; anywhere else the export list, no VAT. The uplift applies to prices taken from
- * the list, not to prices typed in.
+ * Pricing by where the customer is: UAE local list with 5% VAT; Saudi Arabia and Oman the local list with no VAT
+ * (the Saudi uplift was dropped by the owner, 2 Nov 2026); anywhere else the export list, no VAT.
  */
-export const COUNTRIES: { id: CountryId; label: string; list: PriceListId; vat: number; uplift: number }[] = [
-  { id: "AE", label: "United Arab Emirates", list: "uae", vat: 5, uplift: 0 },
-  { id: "SA", label: "Saudi Arabia", list: "uae", vat: 0, uplift: 6 },
-  { id: "OM", label: "Oman", list: "uae", vat: 0, uplift: 0 },
-  { id: "XX", label: "Other countries (export)", list: "export", vat: 0, uplift: 0 },
+export const COUNTRIES: { id: CountryId; label: string; list: PriceListId; vat: number }[] = [
+  { id: "AE", label: "United Arab Emirates", list: "uae", vat: 5 },
+  { id: "SA", label: "Saudi Arabia", list: "uae", vat: 0 },
+  { id: "OM", label: "Oman", list: "uae", vat: 0 },
+  { id: "XX", label: "Other countries (export)", list: "export", vat: 0 },
 ];
 export const country = (id: CountryId) => COUNTRIES.find((c) => c.id === id) ?? COUNTRIES[0]!;
 /** Quotations saved before the country existed: the UAE list meant the UAE, the export list another country. */
 export const countryOf = (q: { country?: string | null; price_list?: string | null }): CountryId =>
   COUNTRIES.some((c) => c.id === q.country) ? (q.country as CountryId) : q.price_list === "export" ? "XX" : "AE";
-/** Countries whose uplift the quotation sets (Saudi Arabia); the others always quote the list price. */
-export const upliftEditable = (id: CountryId) => country(id).uplift > 0;
-/** The uplift a quotation carries: its own % where the country has one (older quotations: the default), else 0. */
-export const upliftOf = (q: { country: CountryId; uplift_pct?: number | string | null }) =>
-  !upliftEditable(q.country) ? 0 : q.uplift_pct != null && q.uplift_pct !== "" && Number.isFinite(Number(q.uplift_pct)) ? Number(q.uplift_pct) : country(q.country).uplift;
-/** A list price (AED) with the quotation's uplift on top, to the fils. */
-export const listPrice = (aed: number, upliftPct: number) => Math.round(aed * (1 + upliftPct / 100) * 100) / 100;
+/** A list price (AED) on a quotation line, to the fils. */
+export const listPrice = (aed: number) => Math.round(aed * 100) / 100;
 
 export const CURRENCIES = ["AED", "USD", "EUR", "SAR"] as const;
 export type Currency = (typeof CURRENCIES)[number];
@@ -304,36 +295,30 @@ export function searchModels(q: string, models: GensetModel[] = gensetModels, ma
     .map((x) => x.m);
 }
 
-/** Models up to this many kVA above the rating searched for are all shown, as well as each brand's nearest. */
+/** A search by rating shows the models whose prime kVA is this close to it, above or below. */
 export const NEAREST_KVA_STEP = 10;
 
 export type RatingHit = { m: GensetModel; gap: number };
 
 /**
- * A search by rating ("152", "152 kva", "cummins 1500"; other words narrow it to a brand or engine), the way the
- * sales team quotes (owner, 30 Oct 2026): every model at the rating or up to +10 kVA above it, and from each brand
- * its nearest larger model however far above, so every brand is always on offer. `gap` is how far above the asked
- * rating the model's closer rating (standby or prime) is; 0 is an exact match. Closest first. Null when the query
- * is not a rating.
+ * A search by rating ("150", "150 kva", "cummins 1500"; other words narrow it to a brand or engine). Model codes
+ * follow the prime kVA, so the search does too (owner, 2 Nov 2026): the models at exactly that prime rating first,
+ * then those within ±10 kVA of it (closest first, the smaller one first on a tie), nothing further away. `gap` is
+ * the model's prime minus the rating asked for (negative = below); 0 is an exact match. Null when the query is not
+ * a rating.
  */
-export function ratingSearch(q: string, models: GensetModel[] = gensetModels, max = 12): { kva: number; exact: boolean; hits: RatingHit[] } | null {
+export function ratingSearch(q: string, models: GensetModel[] = gensetModels, max = 16): { kva: number; exact: boolean; hits: RatingHit[] } | null {
   const tokens = q.trim().toLowerCase().split(/\s+/).filter((t) => t && t !== "kva");
   const num = tokens.map((t) => /^(\d+(?:\.\d+)?)(?:kva)?$/.exec(t)).find(Boolean);
   const kva = num ? Number(num[1]) : 0;
   if (!(kva > 0)) return null;
   const words = tokens.filter((t) => t !== num![0]);
-  const all = models
+  const hits = models
     .filter((m) => words.every((w) => `${m.code} ${m.brand} ${m.engine}`.toLowerCase().includes(w)))
-    .map((m) => ({ m, gap: Math.round(Math.min(...[m.standbyKva, m.primeKva].map((r) => r - kva).filter((g) => g >= 0), Infinity) * 10) / 10 }))
-    .filter((h) => h.gap !== Infinity);
-  const nearest = new Map<string, number>();
-  for (const h of all) nearest.set(h.m.brand, Math.min(nearest.get(h.m.brand) ?? Infinity, h.gap));
-  const isNearest = (h: RatingHit) => h.gap === nearest.get(h.m.brand);
-  const byGap = (a: RatingHit, b: RatingHit) => a.gap - b.gap || a.m.standbyKva - b.m.standbyKva || a.m.code.localeCompare(b.m.code);
-  // each brand's nearest always stays; the other close ones fill the rest, closest first
-  const must = all.filter(isNearest);
-  const rest = all.filter((h) => !isNearest(h) && h.gap <= NEAREST_KVA_STEP).sort(byGap);
-  const hits = [...must, ...rest.slice(0, Math.max(0, max - must.length))].sort(byGap);
+    .map((m) => ({ m, gap: Math.round((m.primeKva - kva) * 10) / 10 }))
+    .filter((h) => Math.abs(h.gap) <= NEAREST_KVA_STEP)
+    .sort((a, b) => Math.abs(a.gap) - Math.abs(b.gap) || a.gap - b.gap || a.m.code.localeCompare(b.m.code))
+    .slice(0, max);
   return { kva, exact: hits.some((h) => h.gap === 0), hits };
 }
 

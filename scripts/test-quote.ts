@@ -6,7 +6,7 @@ import { frameRating } from "../src/content/alternator-ratings";
 import detailsJson from "../src/content/datasheet-details.json";
 import { buildDatasheet } from "../src/lib/datasheet";
 import { FIFTY_HZ_ONLY, RATINGS_60HZ } from "../src/content/genset-60hz";
-import { alternatorPhrase, amps, check60, countryOf, defaultHz, defaultVolts60, sixtyHz, deliveryText, enclosureOptions, generatorItem, inCurrency, listPrice, withAlternator, money, printable, ratingSearch, searchModels, totals, ukDate, unprintable, upliftEditable, upliftOf } from "../src/lib/quote";
+import { alternatorPhrase, amps, check60, countryOf, defaultHz, defaultVolts60, sixtyHz, deliveryText, enclosureOptions, generatorItem, inCurrency, listPrice, withAlternator, money, printable, ratingSearch, searchModels, totals, ukDate, unprintable } from "../src/lib/quote";
 import { parseQuotePayload } from "../src/lib/quote-form";
 import { describeFilters, filterQuery, filterQuotes, itemsSummary, parseFilters, salesPeople, salesSummary } from "../src/lib/quote-report";
 import type { Quote } from "../src/lib/quote";
@@ -93,40 +93,31 @@ assert.equal(searchModels("CP1400").length, 0);
 assert.deepEqual(searchModels("CP1400", undefined, 8, { "4U-C1416": ["CP1400", "KTA50G8"] }).map((m) => m.code), ["4U-C1416"]);
 assert.equal(searchModels("cp1275/1400", undefined, 8, { "4U-C1250": ["CP1275/1400"] })[0]!.code, "4U-C1250");
 // a rating search: everything at or up to +10 kVA above, plus each brand's nearest larger model however far
-const brands = (r: ReturnType<typeof ratingSearch>) => new Set(r!.hits.map((h) => h.m.brand));
+// search by rating: prime kVA, exact first, then within ±10 kVA either side, nothing further (owner, 2 Nov 2026)
+const r150 = ratingSearch("150")!;
+assert.equal(r150.exact, true);
+assert.ok(r150.hits.every((h) => Math.abs(h.m.primeKva - 150) <= 10 && h.gap === h.m.primeKva - 150), "all within ±10 kVA prime");
+assert.ok(r150.hits.slice(0, r150.hits.filter((h) => h.gap === 0).length).every((h) => h.gap === 0), "exact matches first");
+assert.ok(r150.hits.some((h) => h.m.code === "4U-P150" && h.gap === 0));
+assert.ok(!r150.hits.some((h) => h.m.code === "4U-C135"), "a 135 / 150 kVA set is 15 kVA below on prime: not shown");
+assert.deepEqual(r150.hits.map((h) => Math.abs(h.gap)), [...r150.hits.map((h) => Math.abs(h.gap))].sort((x, y) => x - y), "closest first");
 const r152 = ratingSearch("152 kVA")!;
 assert.equal(r152.kva, 152);
 assert.equal(r152.exact, false);
-assert.deepEqual(r152.hits.map((h) => h.gap), [...r152.hits.map((h) => h.gap)].sort((x, y) => x - y));
-assert.ok(r152.hits.every((h) => h.gap > 0 && Math.min(...[h.m.standbyKva, h.m.primeKva].filter((k) => k >= 152)) - 152 === h.gap));
-assert.ok(["Perkins", "Cummins", "Baudouin", "Lister Petter"].every((b) => brands(r152).has(b as never)));
-// 1500: exact matches from Perkins (4U-P1500) and Cummins (4U-C1500)
+assert.ok(r152.hits.length > 0 && r152.hits.every((h) => Math.abs(h.gap) <= 10));
+assert.ok(r152.hits.some((h) => h.gap < 0), "models below the rating count too");
 const r1500 = ratingSearch("1500")!;
 assert.ok(r1500.hits.some((h) => h.m.code === "4U-P1500" && h.gap === 0));
 assert.ok(r1500.hits.some((h) => h.m.code === "4U-C1500" && h.gap === 0), "Cummins KTA50-GS8, 1500 kVA prime");
 assert.ok(ratingSearch("1600")!.hits.some((h) => h.m.code === "4U-C1608" && h.gap === 8));
-// exact matches come first with gap 0
-const r150 = ratingSearch("150")!;
-assert.equal(r150.exact, true);
-assert.ok(r150.hits.filter((h) => h.gap === 0).every((h) => h.m.standbyKva === 150 || h.m.primeKva === 150));
-assert.equal(r150.hits[0]!.gap, 0);
 assert.ok(ratingSearch("cummins 1500")!.hits.every((h) => h.m.brand === "Cummins"));
 assert.equal(ratingSearch("3000")!.hits.length, 0);
 assert.equal(ratingSearch("perkins"), null);
 assert.equal(ratingSearch("4U-P500"), null);
 
-// customer country: Saudi Arabia adds 6% to list prices; old quotations map from their price list
-assert.equal(listPrice(100000, 6), 106000);
-assert.equal(listPrice(12345.67, 6), 13086.41);
-assert.equal(listPrice(100000, 0), 100000);
-assert.equal(listPrice(100000, 8.5), 108500);
-// the uplift a quotation carries: Saudi Arabia its own % (default 6 for quotations saved before it existed), else 0
-assert.equal(upliftOf({ country: "SA", uplift_pct: 9 }), 9);
-assert.equal(upliftOf({ country: "SA", uplift_pct: null }), 6);
-assert.equal(upliftOf({ country: "SA", uplift_pct: 0 }), 0);
-assert.equal(upliftOf({ country: "AE", uplift_pct: 9 }), 0);
-assert.equal(upliftOf({ country: "XX" }), 0);
-assert.ok(upliftEditable("SA") && !upliftEditable("AE") && !upliftEditable("OM") && !upliftEditable("XX"));
+// list prices go on the line as they are (no Saudi uplift since 2 Nov 2026), to the fils
+assert.equal(listPrice(100000), 100000);
+assert.equal(listPrice(12345.678), 12345.68);
 assert.equal(countryOf({ price_list: "export" }), "XX");
 assert.equal(countryOf({ price_list: "uae" }), "AE");
 assert.equal(countryOf({ country: "OM", price_list: "uae" }), "OM");
@@ -172,12 +163,6 @@ const form = (extra: object) =>
 assert.equal(parseQuotePayload(form({}), true).data?.vat_rate, 5);
 assert.equal(parseQuotePayload(form({ vat_rate: 0 }), true).data?.vat_rate, 0);
 assert.match(parseQuotePayload(form({ vat_rate: 7 }), true).error ?? "", /VAT/);
-// the Saudi uplift is set per quotation (0–100%, two decimals); other countries always save 0
-assert.equal(parseQuotePayload(form({ country: "SA", vat_rate: 0, uplift_pct: 7.5 }), true).data?.uplift_pct, 7.5);
-assert.equal(parseQuotePayload(form({ country: "SA", vat_rate: 0, uplift_pct: "8.333" }), true).data?.uplift_pct, 8.33);
-assert.equal(parseQuotePayload(form({ country: "AE", uplift_pct: 7 }), true).data?.uplift_pct, 0);
-assert.match(parseQuotePayload(form({ country: "SA", uplift_pct: 150 }), true).error ?? "", /Uplift/);
-assert.match(parseQuotePayload(form({ country: "SA", uplift_pct: -1 }), true).error ?? "", /Uplift/);
 
 // delivery: a period goes into the standard sentence, anything else prints as typed, empty prints nothing
 assert.equal(deliveryText("10 days"), "Delivery within 10 days from receipt of the confirmed LPO and the advance payment, subject to prior booking.");
@@ -233,7 +218,7 @@ const mk = (number: number, person: string, status: Quote["status"], total: numb
   id: String(number), number, quote_date: date, status, total, subtotal: total, discount: 0, discount_pct: 0, vat: 0, vat_rate: 0,
   customer: { name, address: "", trn: "", project: "", attention: "", contact: "+971 50 000 0000", email: "", ref: "" },
   sales: { person, contact: "", email: "" }, items: [{ code: "4U-P500", title: "Gen", description: "", qty: 2, unit: "Units", unit_price: total / 2 }],
-  validity: null, delivery: null, notes: null, price_list: "uae", country: "AE", uplift_pct: 0, currency: "AED", fx_rate: 1, fx_at: null, lead_id: null, created_at: "",
+  validity: null, delivery: null, notes: null, price_list: "uae", country: "AE", currency: "AED", fx_rate: 1, fx_at: null, lead_id: null, created_at: "",
 });
 const qs = [mk(1001, "SHAMSA", "won", 100000, "2026-10-01", "Al Noor LLC"), mk(1002, "Shamsa ", "lost", 50000, "2026-10-10", "Gulf Steel"), mk(1003, "Mahmoud", "sent", 20000, "2026-10-20", "Al Noor Farms"), mk(1004, "Mahmoud", "won", 30000, "2026-11-02", "Delta")];
 assert.deepEqual(salesPeople(qs), ["Mahmoud", "SHAMSA"]);
