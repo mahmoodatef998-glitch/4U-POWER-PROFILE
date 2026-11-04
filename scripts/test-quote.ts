@@ -6,7 +6,7 @@ import { frameRating } from "../src/content/alternator-ratings";
 import detailsJson from "../src/content/datasheet-details.json";
 import { buildDatasheet } from "../src/lib/datasheet";
 import { FIFTY_HZ_ONLY, RATINGS_60HZ } from "../src/content/genset-60hz";
-import { alternatorPhrase, amps, check60, countryOf, defaultHz, defaultVolts60, sixtyHz, deliveryText, enclosureOptions, generatorItem, inCurrency, listPrice, withAlternator, money, printable, ratingSearch, searchModels, totals, ukDate, unprintable } from "../src/lib/quote";
+import { alternatorPhrase, amps, check60, countryOf, defaultHz, defaultVolts60, sixtyHz, deliveryText, enclosureOptions, generatorItem, inCurrency, listPrice, withAlternator, money, printable, ratingSearch, searchModels, totals, ukDate, unprintable, checkLine } from "../src/lib/quote";
 import { parseQuotePayload } from "../src/lib/quote-form";
 import { describeFilters, filterQuery, filterQuotes, itemsSummary, parseFilters, salesPeople, salesSummary } from "../src/lib/quote-report";
 import type { Quote } from "../src/lib/quote";
@@ -355,3 +355,25 @@ console.log("quotation tests passed");
   assert.ok(l100.alternatorRows.some(([, v]) => v === "100 / 110 kVA (cont. / standby)"), "TAL-A44-D at 400 V 50 Hz");
   assert.ok(l100.operatingRows.some(([k, v]) => k === "Voltage regulation" && v === "± 1 %"));
 }
+
+// lines written before a code / rating change are flagged against today's datasheet, with a rewrite
+{
+  const D = (rating: string, engine: string, alt = "a 4U Power alternator") =>
+    `Brand new, heavy-duty industrial grade diesel generator set, ready to run.\n${rating}\nPowered by an original ${engine} engine (16-cylinder V), water-cooled, directly coupled to ${alt} and controlled by a Deep Sea Electronics (DSE) digital control module with full monitoring and protection.\nPackaged inside a sound-attenuated, weather-protective industrial canopy (Closed Type).\nFactory assembled, tested and supplied as a complete ready-to-run industrial package.`;
+  const g9 = checkLine({ code: "4U-C1608", title: "4U-C1781 — Cummins Diesel Generator Set 1,781 kVA, Closed Type", description: D("1,781 kVA Standby / 1,619 kVA Prime | 50 Hz | 1500 RPM | 3-Phase | 0.8 Power Factor.", "Cummins KTA50-G9") })!;
+  assert.equal(g9.oldCode, "4U-C1781");
+  assert.equal(g9.sixtyOnlyAt50, "4U-C1500", "KTA50-G9 is 60 Hz only: offer the 50 Hz KTA50-GS8 set");
+  assert.equal(g9.refreshed, null);
+  assert.match(g9.refreshed60!.description, /\| 60 Hz \| 1800 RPM/);
+  const b130 = checkLine({ code: "4U-B130", title: "4U-B165 — Baudouin Diesel Generator Set 165 kVA, Closed Type", description: D("165 kVA Standby / 150 kVA Prime | 50 Hz | 1500 RPM | 3-Phase | 0.8 Power Factor.", "Baudouin 6M11G2D0/S", "a brushless alternator") })!;
+  assert.ok(b130.ratingsDiffer);
+  assert.match(b130.refreshed!.title, /^4U-B130 — .* 130 kVA Prime \/ 143 kVA Standby/);
+  assert.ok(b130.refreshed!.description.includes("a 4U Power alternator"));
+  const p600 = checkLine({ code: "4U-P600", title: "4U-P660 — Perkins Diesel Generator Set 660 kVA, Closed Type", description: D("660 kVA Standby / 600 kVA Prime | 50 Hz | 1500 RPM | 3-Phase | 0.8 Power Factor.", "Perkins 2806A-E18TAG1A", "a Leroy-Somer TAL-A49-B alternator") })!;
+  assert.ok(p600.oldCode && !p600.ratingsDiffer);
+  assert.ok(p600.refreshed!.description.includes("a Leroy-Somer TAL-A49-B alternator"), "keeps the quoted frame");
+  assert.ok(checkLine({ code: "4U-K36", title: "4U-K45 — Kubota Diesel Generator Set 45 kVA, Closed Type", description: D("50 kVA Standby / 45 kVA Prime | 50 Hz | 1500 RPM | 3-Phase | 0.8 Power Factor.", "Kubota V3800DI-T-E2CB") })!.otherEngine);
+  assert.equal(checkLine(generatorItem(getModel("4u-p100")!, "enclosed", "TAL-A44-D")), null, "a fresh line matches");
+  assert.equal(checkLine({ code: "", title: "Delivery to Site", description: "" }), null);
+}
+

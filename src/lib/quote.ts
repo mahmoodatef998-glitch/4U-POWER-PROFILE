@@ -259,6 +259,73 @@ export function generatorItem(m: GensetModel, enclosure: Enclosure, listAlternat
   };
 }
 
+/* ------------------------------------------------------------------ lines written before a model changed */
+
+/** 60 Hz-only engine builds and the 50 Hz set to offer instead. */
+export const FIFTY_HZ_EQUIVALENT: Record<string, string> = { "4U-C68": "4U-C60", "4U-C1608": "4U-C1500", "4U-C2290": "4U-C2047", "4U-P24": "4U-P20" };
+
+export type LineCheck = {
+  model: GensetModel;
+  /** the code the title was written with, when it is not the model's code today (codes follow prime since 1 Nov) */
+  oldCode: string | null;
+  quoted: { prime: number; standby: number | null; hz: Hz } | null;
+  /** the datasheet's figures at the quoted frequency; null when there are none (60 Hz typed in, or a 60 Hz-only set at 50 Hz) */
+  current: { prime: number; standby: number | null } | null;
+  ratingsDiffer: boolean;
+  /** a 60 Hz-only engine build written as a 50 Hz set: no datasheet can match it */
+  sixtyOnlyAt50: string | null;
+  /** the line names an engine that is not this model's: no datasheet matches it */
+  otherEngine: boolean;
+  /** title and description rewritten from today's datasheet (same enclosure, alternator, frequency and voltage) */
+  refreshed: Pick<QuoteItem, "title" | "description"> | null;
+  /** for a 60 Hz-only set written at 50 Hz: the line rewritten as the 60 Hz set it is */
+  refreshed60: Pick<QuoteItem, "title" | "description"> | null;
+};
+
+const numOf = (s: string | undefined) => (s ? Number(s.replace(/,/g, "")) : NaN);
+
+/**
+ * Checks a generator line against today's model data. Quotations keep the text they were written with, so a line
+ * written before a code or rating change (1 Nov 2026) can name an old code or other figures than the datasheet the
+ * customer is sent. Null when the line is not a generator, or it matches.
+ */
+export function checkLine(it: Pick<QuoteItem, "code" | "title" | "description" | "price_key">): LineCheck | null {
+  const m = gensetModels.find((x) => x.code === it.code);
+  if (!m) return null;
+  const titleCode = /^(4U-[A-Z0-9.]+)/.exec(it.title.trim())?.[1] ?? null;
+  const oldCode = titleCode && titleCode !== m.code ? titleCode : null;
+  const rl = it.description.split("\n").find((l) => /kVA/.test(l) && /\bHz\b/.test(l)) ?? "";
+  const prime = numOf(/([\d,.]+) kVA Prime/i.exec(rl)?.[1]);
+  const standby = numOf(/([\d,.]+) kVA Standby/i.exec(rl)?.[1]);
+  const hz: Hz = /\b60 Hz\b/.test(rl) ? 60 : 50;
+  const volts = /\| (\d{3}\/\d{3}) V/.exec(rl)?.[1] ?? "480/277";
+  const quoted = Number.isFinite(prime) ? { prime, standby: Number.isFinite(standby) ? standby : null, hz } : null;
+  const sixtyOnlyAt50 = hz === 50 && m.ratedHz === 60 ? (FIFTY_HZ_EQUIVALENT[m.code] ?? "") : null;
+  let current: LineCheck["current"] = null;
+  let at60: At60 | undefined;
+  if (hz === 50 && m.ratedHz !== 60) current = { prime: m.primeKva, standby: m.standbyKva };
+  if (hz === 60) {
+    const s = sixtyHz(m);
+    if (s.kind === "datasheet") {
+      current = { prime: s.rating.prime, standby: s.rating.standby };
+      at60 = { prime: s.rating.prime, standby: s.rating.standby, volts, ratedVolts: s.rating.volts, engine: s.rating.engine };
+    } else if (quoted) at60 = { prime: quoted.prime, standby: quoted.standby, volts };
+  }
+  const ratingsDiffer = !!quoted && !!current && (Math.abs(current.prime - quoted.prime) > 0.5 || (quoted.standby != null && current.standby != null && Math.abs(current.standby - quoted.standby) > 0.5));
+  const squash = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, "");
+  const engineInText = /original \S+(?: Petter| Penta)? (\S+) engine/i.exec(it.description)?.[1];
+  const otherEngine = !!engineInText && !squash(engineInText).startsWith(squash(m.engine).slice(0, Math.max(6, squash(m.engine).length - 2)));
+  if (!oldCode && !ratingsDiffer && sixtyOnlyAt50 == null && !otherEngine) return null;
+  // the alternator the line was priced with: a Leroy-Somer frame from the price key or the text, else a 4U Power one
+  const keyAlt = it.price_key?.split("|")[0];
+  const textAlt = /directly coupled to (.*?) and controlled/i.exec(it.description)?.[1] ?? "";
+  const lsFrame = keyAlt && isLeroySomer(keyAlt) ? keyAlt : /leroy-somer/i.test(textAlt) ? (frameName(textAlt.replace(/^an? Leroy-Somer\s*/i, "").replace(/\s*alternator$/i, "")) ?? m.alternator.leroySomer ?? "TAL") : null;
+  const enclosure: Enclosure = /open type/i.test(it.title) ? "open" : "enclosed";
+  const refreshed = sixtyOnlyAt50 != null || otherEngine ? null : (({ title, description }) => ({ title, description }))(generatorItem(m, enclosure, lsFrame ?? "4U", hz === 60 ? at60 : undefined));
+  const refreshed60 = sixtyOnlyAt50 != null && !otherEngine ? (({ title, description }) => ({ title, description }))(generatorItem(m, enclosure, lsFrame ?? "4U")) : null;
+  return { model: m, oldCode, quoted, current, ratingsDiffer, sixtyOnlyAt50, otherEngine, refreshed, refreshed60 };
+}
+
 /* ------------------------------------------------------------------ model search */
 
 const squash = (s: string) => s.toLowerCase().replace(/[^a-z0-9.]/g, "");

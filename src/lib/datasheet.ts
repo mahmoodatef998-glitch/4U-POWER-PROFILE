@@ -3,7 +3,7 @@ import type { GensetModel } from "@/content/genset-types";
 import { ASPIRATION, brandName, gensetModels } from "./genset-models";
 import { frameFamily, frameRating } from "@/content/alternator-ratings";
 import { LIST_ALTERNATORS } from "@/content/list-alternators";
-import { amps, sixtyHz } from "./quote";
+import { amps, FIFTY_HZ_EQUIVALENT, sixtyHz } from "./quote";
 import type { Locale } from "./utils";
 
 /**
@@ -448,6 +448,5 @@ export const OPTIONS: { icon: string; en: string; ar: string; items: string[] }[
 ];
 
 /** The 50 Hz set to offer instead of a 60 Hz-only engine build (the maker's 1500 rpm engine of the same family / size). */
-const FIFTY_HZ_EQUIVALENT: Record<string, string> = { "4U-C68": "4U-C60", "4U-C1608": "4U-C1500", "4U-C2290": "4U-C2047", "4U-P24": "4U-P20" };
 
 export const VOLTAGES = ["400/230 V", "380/220 V", "415/240 V", "440/254 V", "480/277 V", "416/240 V", "220/127 V", "208/120 V"];

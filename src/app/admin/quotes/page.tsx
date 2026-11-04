@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { money, quoteNumber, ukDate, type QuoteStatus } from "@/lib/quote";
+import { money, quoteNumber, ukDate, type QuoteStatus, checkLine } from "@/lib/quote";
 import { assetStatus } from "@/lib/quote-assets";
 import { listQuotes } from "@/lib/quote-data";
 import { describeFilters, filterQuery, filterQuotes, hasFilters, netValue, parseFilters, salesPeople, salesSummary } from "@/lib/quote-report";
@@ -168,7 +168,14 @@ export default async function QuotesPage({ searchParams }: { searchParams: Promi
               <tbody className="divide-y divide-line">
                 {quotes!.map((q) => (
                   <tr key={q.id}>
-                    <td className="whitespace-nowrap px-4 py-3 font-bold"><Link href={`/admin/quotes/${q.id}`} className="hover:text-brand-700">{quoteNumber(q.number)}</Link></td>
+                    <td className="whitespace-nowrap px-4 py-3 font-bold">
+                      <Link href={`/admin/quotes/${q.id}`} className="hover:text-brand-700">{quoteNumber(q.number)}</Link>
+                      {(() => {
+                        // lines written before a model's code or rating changed (open the quotation to update them)
+                        const n = q.items.filter((it) => checkLine(it)).length;
+                        return n ? <span title="Lines that don't match today's datasheet: open the quotation to update them" className="ms-2 rounded-full bg-amber-100 px-2 py-0.5 text-[0.7rem] font-bold text-amber-800">⚠ {n}</span> : null;
+                      })()}
+                    </td>
                     <td className="whitespace-nowrap px-4 py-3 text-muted">{ukDate(q.quote_date)}</td>
                     <td className="px-4 py-3">
                       <p className="font-bold">{q.customer.name}</p>

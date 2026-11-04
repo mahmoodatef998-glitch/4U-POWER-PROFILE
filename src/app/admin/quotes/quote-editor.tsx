@@ -15,6 +15,7 @@ import {
   alternatorPhrase,
   amps,
   check60,
+  checkLine,
   deliveryText,
   enclosureOptions,
   country,
@@ -75,6 +76,7 @@ const fxTime = (iso: string | null) => (iso ? new Date(iso).toLocaleString("en-G
 
 const input = "w-full rounded-lg border border-line px-3 py-2";
 const label = "grid gap-1 text-sm font-semibold";
+const money0 = (n: number) => n.toLocaleString("en", { maximumFractionDigits: 1 });
 
 const CUSTOMER_FIELDS: [keyof QuoteCustomer, string, string?][] = [
   ["name", "Customer (company)", "e.g. Technomak Process Systems"],
@@ -390,6 +392,43 @@ export function QuoteEditor({ initial, initialSearch = "", prices = null, fx = n
                   <button type="button" onClick={() => setItems((list) => list.filter((_, j) => j !== i))} className="rounded border border-red-300 px-2 font-bold text-red-700">Remove</button>
                 </span>
               </div>
+              {(() => {
+                const chk = checkLine(it);
+                if (!chk) return null;
+                const bad = chk.sixtyOnlyAt50 != null || chk.otherEngine;
+                const kva = (p: number, sb: number | null) => `${money0(p)}${sb != null ? ` / ${money0(sb)}` : ""} kVA`;
+                return (
+                  <div className={`mt-3 rounded-lg border px-3 py-2.5 text-sm ${bad ? "border-red-300 bg-red-50 text-red-800" : "border-amber-300 bg-amber-50 text-amber-900"}`}>
+                    <p className="font-bold">This line does not match today&apos;s {chk.model.code} datasheet</p>
+                    <ul className="mt-1 list-disc space-y-0.5 ps-5">
+                      {chk.oldCode && <li>Written as {chk.oldCode}; the model is now {chk.model.code} (codes follow the prime kVA since 1 Nov).</li>}
+                      {chk.ratingsDiffer && chk.quoted && chk.current && (
+                        <li>Quoted {kva(chk.quoted.prime, chk.quoted.standby)} (prime / standby) at {chk.quoted.hz} Hz; the datasheet gives {kva(chk.current.prime, chk.current.standby)}.</li>
+                      )}
+                      {chk.sixtyOnlyAt50 != null && (
+                        <li>
+                          {chk.model.brand} rates the {chk.model.engine} at 60 Hz (1800 rpm) only, so no 50 Hz datasheet matches this line.
+                          {chk.sixtyOnlyAt50 ? ` For a 50 Hz site quote ${chk.sixtyOnlyAt50} instead (search it above); for a 60 Hz site make it a 60 Hz line.` : " For a 60 Hz site make it a 60 Hz line."}
+                        </li>
+                      )}
+                      {chk.otherEngine && <li>The engine in the text is not the {chk.model.code} engine ({chk.model.engine}): no datasheet matches it. Replace the line with the right model.</li>}
+                    </ul>
+                    <div className="mt-2 flex flex-wrap gap-2">
+                      {chk.refreshed && (
+                        <button type="button" onClick={() => update(i, chk.refreshed!)} className="rounded-lg bg-[#141518] px-3 py-1.5 text-xs font-bold text-[#fff] hover:bg-black">
+                          Update title &amp; description to the datasheet
+                        </button>
+                      )}
+                      {chk.refreshed60 && (
+                        <button type="button" onClick={() => update(i, chk.refreshed60!)} className="rounded-lg bg-[#141518] px-3 py-1.5 text-xs font-bold text-[#fff] hover:bg-black">
+                          Make it a 60 Hz line ({chk.model.code} datasheet)
+                        </button>
+                      )}
+                    </div>
+                    <p className="mt-1.5 text-xs opacity-80">Price and quantity stay as they are; check the price if the rating changes.</p>
+                  </div>
+                );
+              })()}
               <label className={`${label} mt-3`}>
                 Title
                 <input value={it.title} onChange={(e) => update(i, { title: e.target.value })} required maxLength={300} className={input} />
