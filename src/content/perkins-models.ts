@@ -10,6 +10,7 @@ import type { GensetModelData } from "./genset-types";
 
 export const perkinsModels: GensetModelData[] = [
   {
+    // 4U canopy, base tank and controller as 4U-P20 (4U builds the canopy; owner, 1 Nov 2026); weight and noise depend on the engine: on request
     // Perkins 404D-22G: Perkins' Gen Set Power Selector Chart lists it at 1800 rpm only — 24 / 27 kVA (19 / 21 kWe);
     // the 2026 price list's "404D-22G (60HZ)" row. 50 Hz set of the same size: 4U-P20 (404A-22G1)
     slug: "4u-p24",
@@ -26,13 +27,13 @@ export const perkinsModels: GensetModelData[] = [
     aspiration: "na",
     governing: null,
     alternator: { leroySomer: null, stamford: null },
-    controller: null,
+    controller: "DSE4520 MKII",
     fuelLph: null,
     coolantL: null,
     oilL: null,
     noiseDb: null,
-    open: null,
-    enclosed: null,
+    open: { l: 1540, w: 750, h: 1245, tankL: 92, kg: null },
+    enclosed: { l: 2152, w: 1004, h: 1342, tankL: 169, kg: null },
     ambientC: null,
     ratedHz: 60,
   },

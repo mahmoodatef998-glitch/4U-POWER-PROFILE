@@ -333,6 +333,8 @@ html[dir="rtl"] :is(h3, h4) { line-height: 1.5; }
 @media print {
   @page { size: A4; margin: 10mm; }
   html, body { background: #fff !important; }
+  /* no trailing space after the last sheet (a blank extra page on some PDF printers) */
+  body { min-height: 0 !important; padding-bottom: 0 !important; }
   header.sticky, footer, .no-print, .nebula, .fixed { display: none !important; }
   main { isolation: auto !important; }
   .sheet { -webkit-print-color-adjust: exact; print-color-adjust: exact; }

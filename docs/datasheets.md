@@ -67,3 +67,11 @@ the Leroy-Somer frame "on request" and no Leroy-Somer detail. For a Leroy-Somer 
 own sheets (`frameFamily` / `frameRating` in `src/content/alternator-ratings.ts`): frame rating at 400 V 50 Hz (480 V
 for 60 Hz sets), winding, class H / IP 23, standard excitation and AVR, voltage regulation, THD / THF, TIF, overspeed
 and cooling air flow. Lister Petter sets get the same rows from their list frame (TAL-A40 … A49).
+
+## Sets added from the price list without a sheet of their own (2 Nov 2026)
+
+4U-P24, C26, C35, C53, C60, C68, C1500, C1608, C2290 and K20C had no dimensions. As for Lister, 4U builds the canopy,
+so each takes the canopy, open-set dimensions, base tank and controller of the 4U set of the same or next size up
+with an engine of at least ~85 % of the displacement (P24 ← P20, C26 ← P30, C35 ← K36, C53 / C60 ← C60B, C68 ← C80,
+C1500 / C1608 ← C1416 (KTA50), C2290 ← C2047 (QSK60), K20C ← K20). Weight and noise depend on the engine: on request.
+

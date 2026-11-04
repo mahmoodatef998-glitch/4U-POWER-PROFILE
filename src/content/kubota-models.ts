@@ -10,6 +10,7 @@ import type { GensetModelData } from "./genset-types";
 
 export const kubotaModels: GensetModelData[] = [
   {
+    // 4U canopy, base tank and controller as 4U-K20 (4U builds the canopy; owner, 1 Nov 2026); weight and noise depend on the engine: on request
     // Kubota V2403-M-DI-BG (engine.kubota.com sheet: 22.4 kW stand-by / 20.9 kW continuous net at 1500 rpm); the 2026
     // price list's KU-20 / 23 on TAL040F, held to the TAL-A40-F rating (20 / 22 kVA at 400 V 50 Hz)
     slug: "4u-k20c",
@@ -26,13 +27,13 @@ export const kubotaModels: GensetModelData[] = [
     aspiration: "na",
     governing: null,
     alternator: { leroySomer: "TAL-A40-F", stamford: null },
-    controller: null,
+    controller: "DSE4520 MKII",
     fuelLph: null,
     coolantL: null,
     oilL: null,
     noiseDb: null,
-    open: null,
-    enclosed: null,
+    open: { l: 1540, w: 750, h: 1245, tankL: 92, kg: null },
+    enclosed: { l: 2152, w: 1004, h: 1342, tankL: 169, kg: null },
     ambientC: null,
   },
   {

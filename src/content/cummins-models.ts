@@ -17,6 +17,7 @@ import type { GensetModelData } from "./genset-types";
 
 export const cumminsModels: GensetModelData[] = [
   {
+    // 4U canopy, base tank and controller as 4U-C1416 (4U builds the canopy; owner, 1 Nov 2026); weight and noise depend on the engine: on request
     // Cummins KTA50-GS8 spec sheet (4/19): 50 Hz 1500 / 1675 kVA (1200 / 1340 kWe) — the 1500 rpm KTA50 closest to the
     // 60 Hz-only KTA50-G9 (4U-C1608); on the LSA 50.2 L8 frame the price list uses for its KTA50 sets, held to 1650
     // standby. Not on the 2026 price list: priced by hand.
@@ -34,16 +35,17 @@ export const cumminsModels: GensetModelData[] = [
     aspiration: "turbo-water",
     governing: null,
     alternator: { leroySomer: "LSA50.2 L8", stamford: null },
-    controller: null,
+    controller: "DSE6120",
     fuelLph: { p50: 167, p75: 238, p100: 309, standby: 345 },
     coolantL: 496,
     oilL: 178,
     noiseDb: null,
-    open: null,
-    enclosed: null,
+    open: { l: 5830, w: 2280, h: 3065, tankL: null, kg: null },
+    enclosed: { l: 9209, w: 2292, h: 3615, tankL: null, kg: null },
     ambientC: 48,
   },
   {
+    // 4U canopy, base tank and controller as 4U-P30 (4U builds the canopy; owner, 1 Nov 2026); weight and noise depend on the engine: on request
     // added from the CKD rating list: ratings only, the rest of the datasheet "on request"
     // Cummins G-Drive ratings card: X2.5-G2 26 / 28 kVA at 50 Hz (alternator to suit) (1 Nov 2026, alternator ratings: Leroy-Somer 400 V / 50 Hz, class H)
     slug: "4u-c26",
@@ -60,16 +62,17 @@ export const cumminsModels: GensetModelData[] = [
     aspiration: "na",
     governing: null,
     alternator: { leroySomer: null, stamford: null },
-    controller: null,
+    controller: "DSE4520 MKII",
     fuelLph: { p50: 3.5, p75: 4.8, p100: 6, standby: 6.5 },
     coolantL: 5.5,
     oilL: 6.5,
     noiseDb: null,
-    open: null,
-    enclosed: null,
+    open: { l: 1900, w: 750, h: 1400, tankL: 173, kg: null },
+    enclosed: { l: 2307, w: 1044, h: 1415, tankL: 198, kg: null },
     ambientC: 50,
   },
   {
+    // 4U canopy, base tank and controller as 4U-K36 (4U builds the canopy; owner, 1 Nov 2026); weight and noise depend on the engine: on request
     // added from the CKD rating list: ratings only, the rest of the datasheet "on request"
     // Cummins card: X3.3-G1 35 / 38 kVA; TAL-A42-F gives 45 / 50 (1 Nov 2026, alternator ratings: Leroy-Somer 400 V / 50 Hz, class H)
     slug: "4u-c35",
@@ -86,16 +89,17 @@ export const cumminsModels: GensetModelData[] = [
     aspiration: "na",
     governing: null,
     alternator: { leroySomer: "TAL-A42-F", stamford: null },
-    controller: null,
+    controller: "DSE4520 MKII",
     fuelLph: { p50: 4.3, p75: 6.1, p100: 8.5, standby: 10.4 },
     coolantL: 8.6,
     oilL: 6.5,
     noiseDb: null,
-    open: null,
-    enclosed: null,
+    open: { l: 1900, w: 750, h: 1400, tankL: 173, kg: null },
+    enclosed: { l: 2307, w: 1044, h: 1415, tankL: 198, kg: null },
     ambientC: 50,
   },
   {
+    // 4U canopy, base tank and controller as 4U-C60B (4U builds the canopy; owner, 1 Nov 2026); weight and noise depend on the engine: on request
     // added from the CKD rating list: ratings only, the rest of the datasheet "on request"
     // Cummins card: 4BTAA3.3-G15 53 / 60 kVA; TAL-A42-H gives 63 / 70 (1 Nov 2026, alternator ratings: Leroy-Somer 400 V / 50 Hz, class H)
     slug: "4u-c53",
@@ -112,13 +116,13 @@ export const cumminsModels: GensetModelData[] = [
     aspiration: "turbo-aa",
     governing: "mechanical",
     alternator: { leroySomer: "TAL-A42-H", stamford: null },
-    controller: null,
+    controller: "DSE4520",
     fuelLph: { p50: 7, p75: 10, p100: 13, standby: 15 },
     coolantL: 13,
     oilL: 7.9,
     noiseDb: null,
-    open: null,
-    enclosed: null,
+    open: { l: 1860, w: 900, h: 1455, tankL: 89, kg: null },
+    enclosed: { l: 2977, w: 1155, h: 1695, tankL: 269, kg: null },
     ambientC: 50,
   },
   {
@@ -146,6 +150,7 @@ export const cumminsModels: GensetModelData[] = [
     ambientC: 55,
   },
   {
+    // 4U canopy, base tank and controller as 4U-C60B (4U builds the canopy; owner, 1 Nov 2026); weight and noise depend on the engine: on request
     // added from the CKD rating list: ratings only, the rest of the datasheet "on request"
     slug: "4u-c60",
     code: "4U-C60",
@@ -161,16 +166,17 @@ export const cumminsModels: GensetModelData[] = [
     aspiration: "turbo-aa",
     governing: "mechanical",
     alternator: { leroySomer: "TAL-A42-H", stamford: null },
-    controller: null,
+    controller: "DSE4520",
     fuelLph: { p50: 8, p75: 11, p100: 15, standby: 16 },
     coolantL: 13,
     oilL: 7.9,
     noiseDb: null,
-    open: null,
-    enclosed: null,
+    open: { l: 1860, w: 900, h: 1455, tankL: 89, kg: null },
+    enclosed: { l: 2977, w: 1155, h: 1695, tankL: 269, kg: null },
     ambientC: 50,
   },
   {
+    // 4U canopy, base tank and controller as 4U-C80 (4U builds the canopy; owner, 1 Nov 2026); weight and noise depend on the engine: on request
     // added from the CKD rating list: ratings only, the rest of the datasheet "on request"
     // Cummins 4BTAA3.3-G12 spec sheet (12/20): rated at 1800 rpm / 60 Hz only — 68 / 75 kVA (55 / 60 kWe); 50 Hz build: 4U-C60
     slug: "4u-c68",
@@ -187,13 +193,13 @@ export const cumminsModels: GensetModelData[] = [
     aspiration: "turbo-aa",
     governing: "mechanical",
     alternator: { leroySomer: "TAL-A42-H", stamford: null },
-    controller: null,
+    controller: "DSE4520",
     fuelLph: { p50: 9, p75: 13, p100: 18, standby: 20 },
     coolantL: 13,
     oilL: 7.9,
     noiseDb: null,
-    open: null,
-    enclosed: null,
+    open: { l: 2195, w: 900, h: 1445, tankL: 240, kg: null },
+    enclosed: { l: 2977, w: 1155, h: 1693, tankL: 269, kg: null },
     ambientC: 55,
     ratedHz: 60,
   },
@@ -1025,6 +1031,7 @@ export const cumminsModels: GensetModelData[] = [
     ambientC: 48,
   },
   {
+    // 4U canopy, base tank and controller as 4U-C1416 (4U builds the canopy; owner, 1 Nov 2026); weight and noise depend on the engine: on request
     // added from the CKD rating list: ratings only, the rest of the datasheet "on request"
     // Cummins KTA50-G9 spec sheet (07/21): rated at 1800 rpm / 60 Hz only — 1608 / 1913 kVA (1286 / 1530 kWe); 50 Hz build: KTA50-G8, 4U-C1416
     slug: "4u-c1608",
@@ -1041,13 +1048,13 @@ export const cumminsModels: GensetModelData[] = [
     aspiration: "turbo-water",
     governing: null,
     alternator: { leroySomer: "LSA50.2 L8", stamford: null },
-    controller: null,
+    controller: "DSE6120",
     fuelLph: { p50: 180, p75: 257, p100: 330, standby: 392 },
     coolantL: 240,
     oilL: 204,
     noiseDb: null,
-    open: null,
-    enclosed: null,
+    open: { l: 5830, w: 2280, h: 3065, tankL: null, kg: null },
+    enclosed: { l: 9209, w: 2292, h: 3615, tankL: null, kg: null },
     ambientC: 50,
     ratedHz: 60,
   },
@@ -1076,6 +1083,7 @@ export const cumminsModels: GensetModelData[] = [
     breaker: "schneider-acb",
   },
   {
+    // 4U canopy, base tank and controller as 4U-C2047 (4U builds the canopy; owner, 1 Nov 2026); weight and noise depend on the engine: on request
     // added from the CKD rating list: ratings only, the rest of the datasheet "on request"
     // Cummins QSK60-G6 spec sheet (04/22): no 50 Hz rating; 1800 rpm / 60 Hz 2290 / 2508 kVA (1832 / 2006 kWe); 50 Hz build: QSK60-G4, 4U-C2047
     slug: "4u-c2290",
@@ -1092,13 +1100,13 @@ export const cumminsModels: GensetModelData[] = [
     aspiration: "turbo-water",
     governing: "electronic",
     alternator: { leroySomer: null, stamford: null },
-    controller: null,
+    controller: "DSE6120",
     fuelLph: { p50: 247, p75: 356, p100: 466, standby: 521 },
     coolantL: 490,
     oilL: 261,
     noiseDb: null,
-    open: null,
-    enclosed: null,
+    open: { l: 6140, w: 2885, h: 3540, tankL: null, kg: null },
+    enclosed: { l: 12000, w: 3600, h: 4400, tankL: null, kg: null },
     ambientC: 50,
     ratedHz: 60,
   },
