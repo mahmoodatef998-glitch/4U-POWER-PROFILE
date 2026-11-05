@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
+import { allowSubmission } from "@/lib/rate-limit";
 import { getAdminClient } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
@@ -18,6 +19,7 @@ const Click = z.object({
 
 /** Logs a tap on a call (tel:) button, sent with navigator.sendBeacon, for the sales report. */
 export async function POST(req: NextRequest) {
+  if (!(await allowSubmission("click"))) return new NextResponse(null, { status: 429 });
   const raw = await req.text();
   if (raw.length > 4000) return new NextResponse(null, { status: 413 });
   let body: unknown;

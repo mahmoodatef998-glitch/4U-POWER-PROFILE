@@ -1,7 +1,15 @@
 import { Marked } from "marked";
 
 // Raw HTML inside Markdown is dropped so a compromised admin account cannot inject scripts.
-const md = new Marked({ gfm: true, renderer: { html: () => "" } });
+// Links and images may only point to http(s), mail, phone or on-site addresses (no javascript: / data: URLs).
+const SAFE_URL = /^(https?:|mailto:|tel:|\/(?!\/)|#)/i;
+const md = new Marked({
+  gfm: true,
+  renderer: { html: () => "" },
+  walkTokens(token) {
+    if ((token.type === "link" || token.type === "image") && !SAFE_URL.test(token.href.trim())) token.href = "#";
+  },
+});
 
 /**
  * Renders trusted Markdown (news posts authored via /admin or Supabase). Heading levels in the

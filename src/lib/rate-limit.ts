@@ -16,6 +16,7 @@ const LIMITS = {
   lead: [[600, 5], [86_400, 50]],
   parts: [[600, 4], [86_400, 10]],
   calc: [[600, 30], [86_400, 200]],
+  click: [[600, 60], [86_400, 400]],
 } satisfies Record<string, [number, number][]>;
 
 /**
@@ -38,4 +39,16 @@ export async function allowSubmission(form: keyof typeof LIMITS): Promise<boolea
     }
   }
   return true;
+}
+
+/** One shared limit for everyone (e.g. jobs that call outside services). Fails open like allowSubmission. */
+export async function allowGlobal(name: string, windowSeconds: number, max: number): Promise<boolean> {
+  const sb = getAdminClient();
+  if (!sb) return true;
+  const { data, error } = await sb.rpc("form_rate_ok", { p_key: `global:${name}`, p_window_seconds: windowSeconds, p_max: max });
+  if (error) {
+    console.error("[rate-limit]", error.message);
+    return true;
+  }
+  return data !== false;
 }

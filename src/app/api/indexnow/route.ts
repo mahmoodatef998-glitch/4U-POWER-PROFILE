@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import sitemap from "@/app/sitemap";
 import { getNews } from "@/lib/data";
 import { submitIndexNow } from "@/lib/indexnow";
+import { allowGlobal } from "@/lib/rate-limit";
 import { localeUrl } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
@@ -22,6 +23,8 @@ export async function GET(req: NextRequest) {
   if (secret && req.headers.get("authorization") !== `Bearer ${secret}`) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
+  // without CRON_SECRET anyone can call this: cap it so it cannot be used to spam the search engines
+  if (!secret && !(await allowGlobal("indexnow", 86_400, 6))) return NextResponse.json({ error: "rate limited" }, { status: 429 });
   if (req.nextUrl.searchParams.get("scope") === "recent") {
     const since = Date.now() - RECENT_MS;
     const fresh = (await getNews()).filter((n) => Date.parse(n.published_at) >= since);

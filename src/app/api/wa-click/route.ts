@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
+import { allowSubmission } from "@/lib/rate-limit";
 import { getAdminClient } from "@/lib/supabase/server";
 import { WA_REF_RE } from "@/lib/wa-ref";
 
@@ -20,6 +21,7 @@ const Click = z.object({
 
 /** Logs a WhatsApp click (sent with navigator.sendBeacon) so sales can match the chat's ref code to its source. */
 export async function POST(req: NextRequest) {
+  if (!(await allowSubmission("click"))) return new NextResponse(null, { status: 429 });
   const raw = await req.text();
   if (raw.length > 4000) return new NextResponse(null, { status: 413 });
   let body: unknown;
