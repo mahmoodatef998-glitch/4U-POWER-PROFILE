@@ -3,6 +3,7 @@ import "server-only";
 import { headers } from "next/headers";
 import { z } from "zod";
 import { notifyLead } from "@/lib/notify";
+import { clientInfo } from "@/lib/rate-limit";
 import { getAdminClient } from "@/lib/supabase/server";
 
 export type PartsState = { status: "idle" | "success" | "error"; errors?: Partial<Record<"name" | "phone" | "part", string>> };
@@ -10,6 +11,16 @@ export type PartsState = { status: "idle" | "success" | "error"; errors?: Partia
 const MAX_PHOTOS = 3;
 const MAX_BYTES = 1.5 * 1024 * 1024; // photos are downscaled in the browser before upload
 const TYPES: Record<string, string> = { "image/jpeg": "jpg", "image/png": "png", "image/webp": "webp" };
+
+/** The real image type from the file's first bytes; the browser-declared type is not trusted. */
+async function sniffImage(f: File): Promise<string | null> {
+  const b = new Uint8Array(await f.slice(0, 12).arrayBuffer());
+  const ascii = (from: number, to: number) => String.fromCharCode(...b.slice(from, to));
+  if (b[0] === 0xff && b[1] === 0xd8 && b[2] === 0xff) return "image/jpeg";
+  if (b[0] === 0x89 && ascii(1, 4) === "PNG") return "image/png";
+  if (ascii(0, 4) === "RIFF" && ascii(8, 12) === "WEBP") return "image/webp";
+  return null;
+}
 
 const PartsSchema = z.object({
   name: z.string().trim().min(2, "errName").max(120),
@@ -49,16 +60,19 @@ export async function submitPartsRequest(formData: FormData): Promise<PartsState
   }
   if (parsed.success && !parsed.data.parts && !parsed.data.model && !photos.length) errors.part = "errPart";
   if (!parsed.success || Object.keys(errors).length) return { status: "error", errors };
-  if (photos.some((f) => !TYPES[f.type] || f.size > MAX_BYTES)) return { status: "error" };
+  if (photos.some((f) => f.size > MAX_BYTES)) return { status: "error" };
+  const kinds = await Promise.all(photos.map(sniffImage));
+  if (kinds.some((k) => !k)) return { status: "error" };
 
   const d = parsed.data;
   const sb = getAdminClient();
   const attachments: string[] = [];
   if (sb) {
     const month = new Date().toISOString().slice(0, 7);
-    for (const f of photos) {
-      const path = `parts/${month}/${crypto.randomUUID()}.${TYPES[f.type]}`;
-      const { error } = await sb.storage.from("lead-files").upload(path, f, { contentType: f.type, upsert: false });
+    for (const [i, f] of photos.entries()) {
+      const type = kinds[i]!;
+      const path = `parts/${month}/${crypto.randomUUID()}.${TYPES[type]}`;
+      const { error } = await sb.storage.from("lead-files").upload(path, f, { contentType: type, upsert: false });
       if (error) console.error("[parts] upload failed", error.message);
       else attachments.push(path);
     }
@@ -74,6 +88,7 @@ export async function submitPartsRequest(formData: FormData): Promise<PartsState
     .filter(Boolean)
     .join("\n");
 
+  const { ip, ua } = await clientInfo();
   const row = {
     name: d.name,
     phone: d.phone,
@@ -88,6 +103,8 @@ export async function submitPartsRequest(formData: FormData): Promise<PartsState
     utm_campaign: d.utm_campaign || null,
     gclid: d.gclid || null,
     attachments: attachments.length ? attachments : null,
+    client_ip: ip,
+    user_agent: ua,
   };
 
   if (!sb) {

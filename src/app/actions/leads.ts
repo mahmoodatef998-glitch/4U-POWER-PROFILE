@@ -4,6 +4,7 @@ import { headers } from "next/headers";
 import { z } from "zod";
 import { getAdminClient } from "@/lib/supabase/server";
 import { notifyLead } from "@/lib/notify";
+import { clientInfo } from "@/lib/rate-limit";
 
 export type LeadState = {
   status: "idle" | "success" | "error";
@@ -47,6 +48,7 @@ export async function submitLead(_prev: LeadState, formData: FormData): Promise<
   }
 
   const { calc_submission_id, ...d } = parsed.data;
+  const { ip, ua } = await clientInfo();
   const row = {
     name: d.name,
     phone: d.phone,
@@ -62,6 +64,8 @@ export async function submitLead(_prev: LeadState, formData: FormData): Promise<
     utm_medium: d.utm_medium || null,
     utm_campaign: d.utm_campaign || null,
     gclid: d.gclid || null,
+    client_ip: ip,
+    user_agent: ua,
   };
 
   const sb = getAdminClient();
