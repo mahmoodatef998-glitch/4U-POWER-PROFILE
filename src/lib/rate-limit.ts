@@ -1,6 +1,7 @@
 import "server-only";
 
 import { headers } from "next/headers";
+import { isBlockedIp } from "@/lib/blocklist";
 import { getAdminClient } from "@/lib/supabase/server";
 
 /** Visitor IP and user agent. On Vercel `x-real-ip` / `x-forwarded-for` are set by the edge, not the client. */
@@ -25,6 +26,7 @@ const LIMITS = {
  */
 export async function allowSubmission(form: keyof typeof LIMITS): Promise<boolean> {
   const { ip } = await clientInfo();
+  if (isBlockedIp(ip)) return false;
   const sb = getAdminClient();
   if (!ip || !sb) return true;
   for (const [win, max] of LIMITS[form]) {

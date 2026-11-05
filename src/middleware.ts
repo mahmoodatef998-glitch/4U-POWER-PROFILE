@@ -2,6 +2,7 @@ import createMiddleware from "next-intl/middleware";
 import { NextResponse, type NextRequest } from "next/server";
 import { routing } from "./i18n/routing";
 import { validAdminAuth } from "./lib/admin-auth";
+import { isBlockedIp } from "./lib/blocklist";
 
 const intl = createMiddleware(routing);
 
@@ -61,6 +62,9 @@ async function adminGuard(req: NextRequest) {
 }
 
 export default async function middleware(req: NextRequest) {
+  if (isBlockedIp(req.headers.get("x-real-ip") || req.headers.get("x-forwarded-for")?.split(",")[0])) {
+    return new NextResponse("Forbidden", { status: 403 });
+  }
   if (req.nextUrl.pathname.startsWith("/admin")) return adminGuard(req);
   const res = intl(req);
   // next-intl adds the missing locale with a temporary (307) redirect, so Google kept ranking addresses like
