@@ -2,11 +2,13 @@ import type { NextRequest } from "next/server";
 import { googleConfigured, gscRows } from "@/lib/google";
 import { csvCell } from "@/lib/sales";
 import { classify, KIND_LABEL } from "@/lib/seo-opportunities";
+import { isAdmin, unauthorized } from "@/lib/admin-guard";
 
 export const dynamic = "force-dynamic";
 
 /** SEO opportunities as CSV for Excel (behind the /admin Basic Auth). */
 export async function GET(req: NextRequest) {
+  if (!(await isAdmin())) return unauthorized();
   if (!googleConfigured()) return new Response("Search Console is not connected.", { status: 503 });
   const days = req.nextUrl.searchParams.get("days") === "90" ? 90 : 28;
   const ops = classify(await gscRows(days, 5000));

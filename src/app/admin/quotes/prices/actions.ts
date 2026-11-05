@@ -3,10 +3,12 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
+import { requireAdmin } from "@/lib/admin-guard";
 import { getAdminClient } from "@/lib/supabase/server";
 
 /** Fallback GBP / EUR → AED rates, used only when no live or daily rate can be fetched (src/lib/fx.ts). */
 export async function setFallbackRates(formData: FormData) {
+  await requireAdmin();
   const rate = z.coerce.number().min(1).max(20);
   const gbp = rate.safeParse(formData.get("gbp"));
   const eur = rate.safeParse(formData.get("eur"));

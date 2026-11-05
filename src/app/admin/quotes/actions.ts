@@ -6,11 +6,13 @@ import { z } from "zod";
 import { STATUSES, totals, type QuoteStatus } from "@/lib/quote";
 import { parseQuotePayload } from "@/lib/quote-form";
 import { MIGRATION_HINT, missingTable } from "@/lib/quote-data";
+import { requireAdmin } from "@/lib/admin-guard";
 import { getAdminClient } from "@/lib/supabase/server";
 
 export type SaveState = { error?: string } | null;
 
 export async function saveQuote(_prev: SaveState, formData: FormData): Promise<SaveState> {
+  await requireAdmin();
   const parsed = parseQuotePayload(formData.get("payload"), true);
   if (parsed.error !== undefined) return { error: parsed.error };
   const d = parsed.data;
@@ -45,6 +47,7 @@ export async function saveQuote(_prev: SaveState, formData: FormData): Promise<S
 }
 
 export async function deleteQuote(formData: FormData) {
+  await requireAdmin();
   const id = z.string().uuid().parse(formData.get("id"));
   const sb = getAdminClient();
   if (!sb) throw new Error("Supabase is not configured.");
@@ -55,6 +58,7 @@ export async function deleteQuote(formData: FormData) {
 }
 
 export async function setQuoteStatus(formData: FormData) {
+  await requireAdmin();
   const id = z.string().uuid().parse(formData.get("id"));
   const status = z.enum(STATUSES as [QuoteStatus, ...QuoteStatus[]]).parse(formData.get("status"));
   const sb = getAdminClient();

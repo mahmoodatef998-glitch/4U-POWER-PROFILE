@@ -3,6 +3,7 @@ import { loadQuoteAssets } from "@/lib/quote-assets";
 import { loadQuote } from "@/lib/quote-data";
 import { parseQuotePayload } from "@/lib/quote-form";
 import { buildQuotePdf } from "@/lib/quote-pdf";
+import { isAdmin, unauthorized } from "@/lib/admin-guard";
 
 export const runtime = "nodejs";
 
@@ -13,6 +14,7 @@ const text = (body: string, status: number) => new Response(body, { status, head
  * The editor posts here into a new tab; admin Basic Auth applies (no file extension in the path).
  */
 export async function POST(req: Request) {
+  if (!(await isAdmin())) return unauthorized();
   const origin = req.headers.get("origin");
   if (origin && origin !== new URL(req.url).origin) return text("Forbidden", 403);
   const form = await req.formData();

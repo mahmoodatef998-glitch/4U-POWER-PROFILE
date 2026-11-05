@@ -1,11 +1,13 @@
 import { buildQuotePdf, quoteFileName } from "@/lib/quote-pdf";
 import { loadQuoteAssets } from "@/lib/quote-assets";
 import { loadQuote } from "@/lib/quote-data";
+import { isAdmin, unauthorized } from "@/lib/admin-guard";
 
 export const runtime = "nodejs";
 
 /** The quotation as a PDF (behind the admin Basic Auth: this path has no file extension, so middleware guards it). */
 export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
+  if (!(await isAdmin())) return unauthorized();
   const q = await loadQuote((await params).id);
   if (!q) return new Response("Quotation not found", { status: 404 });
   const assets = await loadQuoteAssets();

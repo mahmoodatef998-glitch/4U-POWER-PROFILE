@@ -2,6 +2,7 @@ import { PDFDocument } from "pdf-lib";
 import { revalidatePath } from "next/cache";
 import { ASSET_FILES, BUCKET, type AssetKey } from "@/lib/quote-assets";
 import { getAdminClient } from "@/lib/supabase/server";
+import { isAdmin, unauthorized } from "@/lib/admin-guard";
 
 export const runtime = "nodejs";
 
@@ -13,6 +14,7 @@ const back = (req: Request, msg: string) => Response.redirect(new URL(`/admin/qu
  * A route handler rather than a server action so the 1 MB server-action body limit doesn't apply.
  */
 export async function POST(req: Request) {
+  if (!(await isAdmin())) return unauthorized();
   // same-origin only: a cached Basic Auth login must not let another site replace the letterhead
   const origin = req.headers.get("origin");
   if (origin && origin !== new URL(req.url).origin) return new Response("Forbidden", { status: 403 });

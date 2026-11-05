@@ -1,12 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
+import { isAdmin } from "@/lib/admin-guard";
 
 export const metadata: Metadata = { title: "4U Admin", robots: { index: false, follow: false } };
 export const dynamic = "force-dynamic";
 
-/** Protected by HTTP Basic Auth in middleware (ADMIN_USER / ADMIN_PASSWORD). */
-export default function AdminLayout({ children }: { children: ReactNode }) {
+/** Protected by HTTP Basic Auth in middleware (ADMIN_USER / ADMIN_PASSWORD), checked again here. */
+export default async function AdminLayout({ children }: { children: ReactNode }) {
+  if (!(await isAdmin())) notFound();
   return (
     <html lang="en" data-theme="light">
       <body className="min-h-screen bg-surface font-sans text-ink">

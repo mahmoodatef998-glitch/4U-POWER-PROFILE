@@ -2,6 +2,7 @@ import type { NextRequest } from "next/server";
 import { ownerKey, periodRange, toCsv, type SalesTable } from "@/lib/sales";
 import { loadEnquiries } from "@/lib/sales-data";
 import { getAdminClient } from "@/lib/supabase/server";
+import { isAdmin, unauthorized } from "@/lib/admin-guard";
 
 export const dynamic = "force-dynamic";
 
@@ -12,6 +13,7 @@ const TABLES: SalesTable[] = ["leads", "whatsapp_clicks", "call_clicks"];
  * `p=all` for everything, `only=leads` for form/logged leads, plus optional owner / source / status / q filters.
  */
 export async function GET(req: NextRequest) {
+  if (!(await isAdmin())) return unauthorized();
   const sb = getAdminClient();
   if (!sb) return new Response("Supabase is not configured.", { status: 503 });
   const q = req.nextUrl.searchParams;

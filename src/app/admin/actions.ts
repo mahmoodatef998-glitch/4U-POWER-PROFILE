@@ -8,6 +8,7 @@ import { newsPosts as bundledNews } from "@/content/news";
 import { submitIndexNow } from "@/lib/indexnow";
 import { localeUrl } from "@/lib/seo";
 import { LOST_REASON_KEYS, MANUAL_SOURCE_KEYS, STATUSES, type LostReason, type ManualSource, type SalesTable } from "@/lib/sales";
+import { requireAdmin } from "@/lib/admin-guard";
 import { getAdminClient } from "@/lib/supabase/server";
 
 // All admin routes sit behind Basic Auth in middleware; these actions also require the service role.
@@ -33,6 +34,7 @@ const SalesUpdate = z.object({
 });
 
 export async function updateSales(formData: FormData) {
+  await requireAdmin();
   const { table, id, ...fields } = SalesUpdate.parse(Object.fromEntries(formData));
   // contacted_at / closed_at are stamped by the sales_stamps trigger
   let { error } = await db().from(table).update(fields).eq("id", id);
@@ -55,6 +57,7 @@ const ManualLead = z.object({
 });
 
 export async function addLead(formData: FormData) {
+  await requireAdmin();
   const d = ManualLead.parse(Object.fromEntries(formData));
   const { error } = await db().from("leads").insert({ ...d, source_page: "admin" });
   if (error) throw new Error(error.message);
@@ -77,6 +80,7 @@ const PostSchema = z.object({
 });
 
 export async function createPost(_prev: { error?: string } | null, formData: FormData) {
+  await requireAdmin();
   const parsed = PostSchema.safeParse(Object.fromEntries(formData));
   if (!parsed.success) return { error: parsed.error.issues.map((i) => `${i.path.join(".")}: ${i.message}`).join(" · ") };
   const d = parsed.data;
@@ -102,6 +106,7 @@ export async function createPost(_prev: { error?: string } | null, formData: For
 }
 
 export async function togglePost(formData: FormData) {
+  await requireAdmin();
   const id = z.string().uuid().parse(formData.get("id"));
   const next = formData.get("next") === "true";
   const { error } = await db().from("news_posts").update({ is_published: next }).eq("id", id);
@@ -114,6 +119,7 @@ export async function togglePost(formData: FormData) {
  * over bundled ones, so a hidden copy in news_posts takes it off the site; "Show" then uses togglePost.
  */
 export async function hideBundledPost(formData: FormData) {
+  await requireAdmin();
   const slug = z.string().parse(formData.get("slug"));
   const post = bundledNews.find((p) => p.slug === slug);
   if (!post) throw new Error(`No calendar article with slug ${slug}`);

@@ -2,6 +2,7 @@ import ExcelJS from "exceljs";
 import { country, inCurrency, quoteNumber } from "@/lib/quote";
 import { listQuotes } from "@/lib/quote-data";
 import { describeFilters, filterQuotes, itemsSummary, netValue, parseFilters, salesSummary } from "@/lib/quote-report";
+import { isAdmin, unauthorized } from "@/lib/admin-guard";
 
 export const runtime = "nodejs";
 
@@ -27,6 +28,7 @@ function sheet(wb: ExcelJS.Workbook, name: string, columns: { header: string; ke
  * (no file extension in the path).
  */
 export async function GET(req: Request) {
+  if (!(await isAdmin())) return unauthorized();
   const f = parseFilters(Object.fromEntries(new URL(req.url).searchParams));
   const res = await listQuotes();
   if (res.error !== undefined) return new Response(res.error, { status: 500, headers: { "content-type": "text/plain; charset=utf-8" } });
