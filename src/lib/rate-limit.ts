@@ -13,7 +13,7 @@ export async function clientInfo() {
 
 /** [window in seconds, max submissions] per IP and form. */
 const LIMITS = {
-  lead: [[600, 5], [86_400, 15]],
+  lead: [[600, 5], [86_400, 50]],
   parts: [[600, 4], [86_400, 10]],
   calc: [[600, 30], [86_400, 200]],
 } satisfies Record<string, [number, number][]>;

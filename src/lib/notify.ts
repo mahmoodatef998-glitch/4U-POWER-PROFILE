@@ -6,9 +6,11 @@ export async function notifyLead(lead: Record<string, unknown>) {
   const to = process.env.LEAD_NOTIFY_EMAIL;
   if (!key || !to) return;
   const from = process.env.LEAD_FROM_EMAIL || "leads@4ugenerators.com";
+  // Visitor text never reaches a mail header with a line break (header-injection probes, 5 Nov 2026).
+  const oneLine = (v: unknown) => String(v ?? "").replace(/[\r\n]+/g, " ").slice(0, 120).trim();
   const rows = Object.entries(lead)
     .filter(([, v]) => v !== null && v !== undefined && v !== "")
-    .map(([k, v]) => `<tr><td style="padding:4px 12px 4px 0;color:#475569">${k}</td><td style="padding:4px 0"><b>${String(v).replace(/</g, "&lt;")}</b></td></tr>`)
+    .map(([k, v]) => `<tr><td style="padding:4px 12px 4px 0;color:#475569">${k}</td><td style="padding:4px 0"><b>${String(v).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")}</b></td></tr>`)
     .join("");
   try {
     await fetch("https://api.resend.com/emails", {
@@ -17,7 +19,7 @@ export async function notifyLead(lead: Record<string, unknown>) {
       body: JSON.stringify({
         from: `4U Website <${from}>`,
         to: [to],
-        subject: `New lead: ${lead.name ?? ""} ${lead.calculated_kva ? `(${lead.calculated_kva} kVA)` : ""}`.trim(),
+        subject: `New lead: ${oneLine(lead.name)} ${lead.calculated_kva ? `(${oneLine(lead.calculated_kva)} kVA)` : ""}`.trim(),
         html: `<h2>New website lead</h2><table>${rows}</table>`,
       }),
     });
