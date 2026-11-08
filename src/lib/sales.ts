@@ -38,6 +38,9 @@ export const FORM_SOURCES: Record<string, string> = {
   datasheet: "Datasheet download",
   rfq: "Quote basket (RFQ)",
   parts: "Spare-parts form",
+  service: "Service visit request",
+  callback: "Call-back request",
+  expert: "Ask an engineer",
 };
 
 /** Every `leads.source`, for filters. */

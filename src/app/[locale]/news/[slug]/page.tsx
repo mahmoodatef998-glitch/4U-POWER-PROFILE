@@ -5,6 +5,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { CtaBanner } from "@/components/cta-banner";
 import { WhatsAppButton } from "@/components/cta-buttons";
 import { JsonLd } from "@/components/json-ld";
+import { EnquiryForm } from "@/components/enquiry-form";
 import { Markdown } from "@/components/markdown";
 import { NewsCard } from "@/components/news-card";
 import { PageHero } from "@/components/page-hero";
@@ -93,6 +94,13 @@ export default async function NewsPostPage({ params }: Props) {
               </div>
             )}
             <Markdown source={ar ? p.body_ar : p.body_en} />
+            <section aria-labelledby="ask-title" className="mt-14 rounded-3xl border border-line bg-surface p-6 sm:p-8">
+              <h2 id="ask-title" className="text-2xl">{ar ? "اسأل مهندساً" : "Ask an engineer"}</h2>
+              <p className="mt-2 text-muted">
+                {ar ? "عندك سؤال عن موقعك أو أحمالك بعد قراءة المقال؟ اكتبه هنا ويرد عليك مهندس." : "A question about your own site or loads after reading this? Write it here and an engineer will reply."}
+              </p>
+              <EnquiryForm kind="expert" topic={p.slug} className="mt-6" />
+            </section>
           </div>
           <aside className="lg:col-span-4">
             <div className="on-dark rounded-3xl bg-navy-950 p-6 text-white lg:sticky lg:top-28 xl:top-36">

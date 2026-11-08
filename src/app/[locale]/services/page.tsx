@@ -4,7 +4,7 @@ import { CtaBanner } from "@/components/cta-banner";
 import { CallButton, WhatsAppButton } from "@/components/cta-buttons";
 import { FaqBlock } from "@/components/faq-block";
 import { JsonLd } from "@/components/json-ld";
-import { LeadForm } from "@/components/lead-form";
+import { EnquiryForm } from "@/components/enquiry-form";
 import { Reveal } from "@/components/motion";
 import { PageHero } from "@/components/page-hero";
 import { SectionHeading } from "@/components/section-heading";
@@ -132,11 +132,11 @@ export default async function ServicesPage({ params }: { params: Promise<{ local
               id="req-title"
               eyebrow={ar ? "اطلب خدمة" : "Request service"}
               title={ar ? "احجز زيارة صيانة أو فحص" : "Book a maintenance or inspection visit"}
-              intro={ar ? "أخبرنا بماركة المعدات وقدرتها والموقع، وسنرد بموعد الزيارة وعرض عقد الصيانة." : "Tell us the equipment brand, rating and location — we reply with a visit slot and an AMC proposal."}
+              intro={ar ? "أخبرنا بالمولد والموقع والموعد المناسب، ونتواصل معك لتأكيد الزيارة. عقد الصيانة السنوي يُسعَّر حسب موقعك ومولداتك بعد التواصل." : "Tell us the generator, the location and a date that suits you — we call to confirm the visit. Annual maintenance contracts are priced for your site after a short call."}
             />
           </div>
           <div className="rounded-3xl border border-line bg-surface p-6 sm:p-8 lg:col-span-7">
-            <LeadForm source="quote_form" defaultMessage={ar ? "خدمة صيانة: " : "Maintenance service: "} />
+            <EnquiryForm kind="service" />
           </div>
         </div>
       </section>

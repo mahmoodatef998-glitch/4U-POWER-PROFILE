@@ -1,6 +1,7 @@
 import { Clock, Mail, MapPin, Phone } from "lucide-react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { CallButton, WhatsAppButton } from "@/components/cta-buttons";
+import { EnquiryForm } from "@/components/enquiry-form";
 import { LeadForm } from "@/components/lead-form";
 import { PageHero } from "@/components/page-hero";
 import { pageSeo } from "@/content/seo";
@@ -76,6 +77,11 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
             </div>
           </div>
           <div className="space-y-6 lg:col-span-5">
+            <section aria-labelledby="callback-title" className="rounded-3xl border border-line bg-navy-900 p-6 sm:p-8">
+              <h2 id="callback-title" className="text-xl">{ar ? "تفضّل أن نتصل بك؟" : "Prefer a call?"}</h2>
+              <p className="mt-2 text-sm text-muted">{ar ? "اترك رقمك والوقت المناسب، ويتصل بك مهندس." : "Leave your number and a good time, and an engineer will call you."}</p>
+              <EnquiryForm kind="callback" className="mt-5" />
+            </section>
             <section aria-labelledby="nap-title" className="rounded-3xl border border-line bg-navy-900 p-6 sm:p-8">
               <h2 id="nap-title" className="text-xl">{ar ? "بيانات الشركة" : "Company details"}</h2>
               <ul className="mt-6 space-y-5">
