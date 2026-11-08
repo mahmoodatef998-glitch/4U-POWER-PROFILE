@@ -93,6 +93,18 @@ export async function PillarPage({
                       ))}
                     </ul>
                   )}
+                  {s.links && (
+                    <ul className="mt-5 flex flex-wrap gap-2">
+                      {s.links.map((l) => (
+                        <li key={l.href}>
+                          <Link href={l.href} className="inline-flex items-center gap-1.5 rounded-full border border-line px-3.5 py-1.5 text-sm font-semibold text-brand-700 transition hover:border-brand-500/50 hover:bg-white/5">
+                            {L(l.label)}
+                            <ArrowRight className="flip-rtl size-3.5" aria-hidden />
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                 </section>
               </Reveal>
             ))}

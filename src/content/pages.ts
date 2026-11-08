@@ -235,7 +235,7 @@ export type Pillar = {
   eyebrow: L10n;
   h1: L10n;
   intro: L10n;
-  sections: { id?: string; title: L10n; body: L10n; bullets?: L10n[] }[];
+  sections: { id?: string; title: L10n; body: L10n; bullets?: L10n[]; links?: { href: string; label: L10n }[] }[];
   highlights: Block[];
   productsTitle: L10n;
   waTopic: L10n;
@@ -273,6 +273,14 @@ export const generatorsPillar: Pillar = {
         en: "Perkins is the most widely serviced platform in the Gulf below 500 kVA. Cummins is favoured for heavy load acceptance on industrial and construction sites. Kubota powers our quietest compact sets for villas and clinics, and Baudouin covers 20 to 2500 kVA at a competitive price. For budget-driven projects, our Chinese Engine Series delivers dependable standby power at a lower upfront cost.",
         ar: "بيركنز هي المنصة الأكثر انتشاراً في الصيانة بالخليج تحت 500 ك.ف.أ، وكمنز مفضلة لتحمّل الأحمال الثقيلة في المواقع الصناعية والإنشائية. كوبوتا تشغّل أهدأ مولداتنا الصغيرة للفلل والعيادات، وبودوان تغطي من 20 إلى 2500 ك.ف.أ بسعر منافس. وللمشاريع ذات الميزانية المحدودة، توفر مولداتنا بالمحركات الصينية طاقة احتياطية موثوقة بتكلفة شراء أقل.",
       },
+      links: [
+        { href: "/perkins-diesel-generators", label: { en: "Perkins generators", ar: "مولدات بيركنز" } },
+        { href: "/cummins-diesel-generators", label: { en: "Cummins generators", ar: "مولدات كمنز" } },
+        { href: "/baudouin-diesel-generators", label: { en: "Baudouin generators", ar: "مولدات بودوان" } },
+        { href: "/kubota-diesel-generators", label: { en: "Kubota silent generators", ar: "مولدات كوبوتا الصامتة" } },
+        { href: "/lister-petter-diesel-generators", label: { en: "Lister Petter generators", ar: "مولدات ليستر بيتر" } },
+        { href: "/models", label: { en: "Find a model by kVA and compare", ar: "ابحث عن موديل بالقدرة وقارن" } },
+      ],
     },
     {
       id: "fuel-types",
@@ -288,6 +296,40 @@ export const generatorsPillar: Pillar = {
         en: "Add up the running load in kW, divide by the power factor (typically 0.8) to get kVA, check the starting demand of your largest motor, then add a 20–25% margin for Gulf heat and growth. Use our kVA calculator below — it rounds up to a real catalog rating and suggests the matching ATS panel.",
         ar: "اجمع الحمل التشغيلي بالكيلوواط، واقسمه على معامل القدرة (عادةً 0.8) لتحصل على ك.ف.أ، وتحقق من تيار بدء أكبر محرك لديك، ثم أضف هامشاً من 20 إلى 25% لحرارة الخليج والتوسع. استخدم حاسبة القدرة أدناه، فهي تقرّب النتيجة إلى قدرة حقيقية من الكتالوج وتقترح لوحة ATS المناسبة.",
       },
+      links: [
+        { href: "/calculator", label: { en: "kVA calculator", ar: "حاسبة القدرة" } },
+        { href: "/generators/sizes", label: { en: "Diesel generator size chart", ar: "جدول أحجام مولدات الديزل" } },
+        { href: "/news/prime-vs-standby-generator-rating", label: { en: "Prime vs standby", ar: "الفرق بين Prime وStandby" } },
+      ],
+    },
+    {
+      title: { en: "Diesel generators in Dubai, Abu Dhabi, Sharjah and across the UAE", ar: "مولدات ديزل في دبي وأبوظبي والشارقة وكل الإمارات" },
+      body: {
+        en: "We hold stock of the most requested ratings in our SAIF Zone warehouse in Sharjah and deliver to sites in every emirate — from villas and towers in Dubai to industrial plants in Abu Dhabi, farms in Al Ain and projects in the northern emirates. Testing, commissioning and handover documents are available for new installations.",
+        ar: "نحتفظ بمخزون من أكثر القدرات طلباً في مستودعنا بالمنطقة الحرة في الشارقة، ونوصّل إلى المواقع في كل الإمارات: من الفلل والأبراج في دبي إلى المصانع في أبوظبي والمزارع في العين والمشاريع في الإمارات الشمالية. ونوفر الاختبار والتشغيل الأولي ومستندات التسليم للتركيبات الجديدة.",
+      },
+      links: [
+        { href: "/locations/dubai", label: { en: "Generators in Dubai", ar: "مولدات في دبي" } },
+        { href: "/locations/abu-dhabi", label: { en: "Generators in Abu Dhabi", ar: "مولدات في أبوظبي" } },
+        { href: "/locations/sharjah", label: { en: "Generators in Sharjah", ar: "مولدات في الشارقة" } },
+        { href: "/locations/ajman", label: { en: "Ajman", ar: "عجمان" } },
+        { href: "/locations/ras-al-khaimah", label: { en: "Ras Al Khaimah", ar: "رأس الخيمة" } },
+        { href: "/locations/fujairah", label: { en: "Fujairah", ar: "الفجيرة" } },
+        { href: "/locations/al-ain", label: { en: "Al Ain", ar: "العين" } },
+      ],
+    },
+    {
+      title: { en: "Buying a diesel generator from 4U in four steps", ar: "شراء مولد ديزل من فور يو في أربع خطوات" },
+      body: {
+        en: "We keep the process short, so you can compare offers and decide quickly:",
+        ar: "نختصر الإجراءات لتقارن العروض وتقرر بسرعة:",
+      },
+      bullets: [
+        { en: "Send the kVA, or your load list, and the delivery city on WhatsApp.", ar: "أرسل القدرة أو قائمة الأحمال ومدينة التسليم على الواتساب." },
+        { en: "Get two or three engine options with their datasheets, so you compare like with like.", ar: "تصلك خيارات من محركين أو ثلاثة مع الداتا شيت لكل منها، لتقارن بشكل عادل." },
+        { en: "Receive a written quotation the same day, with the ATS panel and fuel tank if you need them.", ar: "يصلك عرض سعر مكتوب في نفس اليوم، مع لوحة ATS وخزان الوقود إذا احتجتهما." },
+        { en: "Confirm, and we deliver from Sharjah with a 12-month / 1,000-hour warranty.", ar: "أكّد الطلب ونسلّم من الشارقة مع ضمان 12 شهراً أو 1,000 ساعة." },
+      ],
     },
     {
       title: { en: "What's included with every generator", ar: "ما يشمله كل مولد" },
