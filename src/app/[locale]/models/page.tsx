@@ -1,10 +1,11 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { PopularSearches } from "@/components/popular-searches";
 import { CallButton, WhatsAppButton } from "@/components/cta-buttons";
+import { ModelFinder, type FinderModel } from "@/components/model-finder";
 import { ModelTable } from "@/components/model-table";
 import { PageHero } from "@/components/page-hero";
 import { Link } from "@/i18n/navigation";
-import { BRANDS, brandHubPath, brandList, brandModels, brandName, gensetModels } from "@/lib/genset-models";
+import { BRANDS, brandHubPath, brandList, brandModels, brandName, fiftyHzModels, gensetModels } from "@/lib/genset-models";
 import { buildMetadata } from "@/lib/seo";
 import type { Locale } from "@/lib/utils";
 
@@ -32,6 +33,21 @@ export default async function ModelsPage({ params }: Props) {
     const list = brandModels(brand);
     return { brand, list, min: list[0]!.standbyKva, max: list[list.length - 1]!.standbyKva };
   });
+  const finder: FinderModel[] = fiftyHzModels().map((m) => ({
+    slug: m.slug,
+    code: m.code,
+    brand: m.brand,
+    engine: m.engine,
+    primeKva: m.primeKva,
+    primeKw: m.primeKw,
+    standbyKva: m.standbyKva,
+    standbyKw: m.standbyKw,
+    fuel75: m.fuelLph?.p75 ?? null,
+    fuel100: m.fuelLph?.p100 ?? null,
+    canopy: m.enclosed ? { l: m.enclosed.l, w: m.enclosed.w, h: m.enclosed.h, kg: m.enclosed.kg, tankL: m.enclosed.tankL } : null,
+    noiseDb: m.noiseDb,
+    controller: m.controller,
+  }));
   return (
     <>
       <PageHero
@@ -63,6 +79,7 @@ export default async function ModelsPage({ params }: Props) {
           <CallButton location="models_index" size="lg" variant="ghostDark" />
         </div>
       </PageHero>
+      <ModelFinder models={finder} brands={BRANDS.map((b) => ({ id: b, label: brandName(b, locale) }))} locale={locale} />
       {ranges.map((r, i) => (
         <section key={r.brand} id={r.brand.toLowerCase()} className={`section scroll-mt-24 ${i % 2 ? "bg-surface" : "bg-navy-900"}`} aria-labelledby={`${r.brand.toLowerCase()}-title`}>
           <div className="container-x">

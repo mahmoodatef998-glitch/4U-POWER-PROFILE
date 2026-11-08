@@ -14,6 +14,7 @@ export type ConversionEvent =
   | "datasheet_download"
   | "configurator_quote_click"
   | "configurator_snapshot"
+  | "model_compare"
   | "app_install_click"
   | "app_installed";
 
