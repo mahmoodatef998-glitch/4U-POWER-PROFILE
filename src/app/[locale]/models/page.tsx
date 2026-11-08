@@ -16,7 +16,7 @@ export async function generateMetadata({ params }: Props) {
   return buildMetadata({
     locale,
     path: "/models",
-    title: ar ? `موديلات مولدات ${brandList(locale)} 10–2500 ك.ف.أ | الداتا شيت` : `${brandList(locale)} Generator Models 10–2500 kVA | Datasheets`,
+    title: ar ? "موديلات مولدات الديزل 10–2500 ك.ف.أ | الداتا شيت | فور يو" : "Diesel Generator Models 10–2500 kVA | Datasheets | 4U Power",
     description: ar
       ? `${gensetModels.length} موديل مولد ديزل ${brandList(locale)} من فور يو باور: القدرة الاحتياطية والأساسية والمحرك واستهلاك الوقود، مع داتا شيت لكل موديل.`
       : `${gensetModels.length} ${brandList(locale)} diesel generator models from 4U Power: standby and prime ratings, engine and fuel consumption, with a datasheet for every model.`,

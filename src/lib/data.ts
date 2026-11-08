@@ -4,6 +4,7 @@ import { cache } from "react";
 import { getAdminClient, getPublicClient } from "./supabase/server";
 import type { NewsPost, Product, Project, Testimonial } from "./types";
 import { products as seedProducts } from "@/content/products";
+import { REMOVED_PRODUCT_SLUGS } from "@/lib/site-flags";
 import { projects as seedProjects, testimonials as seedTestimonials } from "@/content/projects";
 import { newsPosts as seedNews } from "@/content/news";
 
@@ -25,7 +26,9 @@ async function fromSupabase<T>(table: string, order: { column: string; ascending
 
 export const getProducts = cache(async (): Promise<Product[]> => {
   const rows = await fromSupabase<Product>("products", { column: "sort_order", ascending: true });
-  return (rows ?? seedProducts.filter((p) => p.is_published)).map((p) => ({ ...p, specs: p.specs ?? [], images: p.images ?? [] }));
+  return (rows ?? seedProducts.filter((p) => p.is_published))
+    .filter((p) => !REMOVED_PRODUCT_SLUGS.has(p.slug))
+    .map((p) => ({ ...p, specs: p.specs ?? [], images: p.images ?? [] }));
 });
 
 export const getProduct = cache(async (slug: string) => (await getProducts()).find((p) => p.slug === slug) ?? null);

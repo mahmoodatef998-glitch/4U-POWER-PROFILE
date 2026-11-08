@@ -21,7 +21,19 @@ type MetaInput = {
   noindex?: boolean;
 };
 
-export function buildMetadata({ locale, path, title, description, image, type = "website", publishedTime, noindex }: MetaInput): Metadata {
+/** Google cuts titles at about 60 characters: drop trailing " | …" parts (brand, "Specs & Datasheet") until it fits. */
+export function fitTitle(title: string, max = 60): string {
+  let t = title;
+  while (t.length > max && t.includes(" | ")) {
+    const shorter = t.slice(0, t.lastIndexOf(" | "));
+    if (shorter.length < 30) break;
+    t = shorter;
+  }
+  return t;
+}
+
+export function buildMetadata({ locale, path, title: fullTitle, description, image, type = "website", publishedTime, noindex }: MetaInput): Metadata {
+  const title = fitTitle(fullTitle);
   const url = localeUrl(locale, path);
   const ogImage = image && !image.endsWith(".svg") ? image : OG_IMAGE;
   return {

@@ -125,19 +125,19 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
 
         <div className="container-x relative -mt-12 pb-8 sm:-mt-16 md:mt-0 md:pb-10 md:pt-20 lg:pb-14 lg:pt-28">
           <div className="max-w-2xl">
-            <Reveal>
+            <div>
               <p className="eyebrow text-[0.66rem] tracking-[0.16em] sm:text-xs sm:tracking-[0.22em]">
                 <BadgeCheck className="size-4" aria-hidden />
                 {L(home.hero.eyebrow)}
               </p>
-            </Reveal>
+            </div>
             <h1
               id="hero-title"
               className="mt-4 font-[family-name:var(--font-heading)] text-[1.8rem] leading-[1.1] font-extrabold uppercase tracking-[-0.01em] text-white min-[400px]:text-[2rem] sm:mt-5 sm:text-5xl lg:text-[3.6rem] rtl:font-[family-name:var(--font-arabic-display)] rtl:text-[1.9rem] rtl:normal-case rtl:sm:text-5xl"
             >
               {gold(L(home.hero.h1))}
             </h1>
-            <Reveal delay={0.15}>
+            <div>
               <p className="mt-4 text-[0.8rem] font-semibold tracking-wide text-brand-300 sm:mt-6 sm:text-base">
                 {locale === "ar" ? "مولدات ديزل | لوحات ATS ولوحات كهرباء | حلول الطاقة الشمسية" : "Diesel Generators | ATS & Switchgear | Solar Solutions"}
               </p>
@@ -149,7 +149,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
                 </Link>
                 <WhatsAppButton location="hero" variant="outline" size="lg" label={locale === "ar" ? "سعر اليوم على واتساب" : "Get a price on WhatsApp"} />
               </div>
-            </Reveal>
+            </div>
           </div>
 
           {/* feature bar: a swipeable row on phones, a 3- then 5-column bar on larger screens */}

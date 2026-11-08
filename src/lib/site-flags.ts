@@ -5,3 +5,6 @@
  * (owner, 8 Nov 2026). Set it back to true when they arrive.
  */
 export const PROJECTS_LIVE = false;
+
+/** Products dropped from the range but still in the Supabase table until it is cleaned up (Volvo Penta, 8 Nov 2026). */
+export const REMOVED_PRODUCT_SLUGS = new Set(["volvo-penta-generator-80-700kva"]);
