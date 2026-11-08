@@ -99,7 +99,6 @@ export function ProductLines({ items, labels }: { items: ProductLine[]; labels: 
                 src={it.image}
                 alt={it.title}
                 fill
-                priority={i === 0}
                 sizes="(min-width:1024px) 66vw, 100vw"
                 className={cn("object-cover transition-transform ease-out", on ? "scale-100 duration-[3600ms]" : "scale-110 duration-0")}
               />

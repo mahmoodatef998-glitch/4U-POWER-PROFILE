@@ -40,9 +40,9 @@ export function Brand({ className, adaptive = false }: { className?: string; ada
   const ar = locale === "ar";
   return (
     <span className={cn("flex items-center gap-3", className)} dir="ltr">
-      <Image src="/brand/logo-full-dark.png" alt="4U Power" width={751} height={375} className={cn("h-11 w-auto shrink-0 lg:h-[3.25rem]", adaptive && "light:hidden")} priority />
+      <Image src="/brand/logo-full-dark.png" alt="4U Power" width={208} height={104} className={cn("h-11 w-auto shrink-0 lg:h-[3.25rem]", adaptive && "light:hidden")} priority />
       {/* the header follows the theme: on the light (see-through) header the logo's white parts are black */}
-      {adaptive && <Image src="/brand/logo-full-light.png" alt="4U Power" width={751} height={375} className="hidden h-11 w-auto shrink-0 light:block lg:h-[3.25rem]" priority />}
+      {adaptive && <Image src="/brand/logo-full-light.png" alt="4U Power" width={208} height={104} className="hidden h-11 w-auto shrink-0 light:block lg:h-[3.25rem]" priority />}
       <span className="h-8 w-px bg-white/20" aria-hidden />
       <span className="leading-none" dir={ar ? "rtl" : "ltr"}>
         <span className="block font-[family-name:var(--font-heading)] text-[0.82rem] font-bold uppercase tracking-[0.16em] text-white rtl:font-[family-name:var(--font-arabic-display)] rtl:text-[0.95rem] rtl:tracking-normal">
