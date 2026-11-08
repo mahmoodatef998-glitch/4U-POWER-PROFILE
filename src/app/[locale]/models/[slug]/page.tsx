@@ -162,6 +162,11 @@ export default async function ModelPage({ params }: Props) {
       <section className="section bg-surface" aria-labelledby="range-title">
         <div className="container-x">
           <h2 id="range-title" className="text-2xl sm:text-3xl">{ar ? "موديلات قريبة" : "Nearby models"}</h2>
+          <p className="mt-2 text-muted">
+            <Link href="/models#finder-title" className="font-semibold text-brand-700 underline">
+              {ar ? "قارن هذا الموديل مع موديلات أخرى بنفس القدرة" : "Compare this model with others at the same rating"}
+            </Link>
+          </p>
           <div className="mt-6">
             <ModelTable models={neighbours} locale={locale} highlight={m.slug} />
           </div>

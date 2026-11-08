@@ -19,6 +19,7 @@ import { PROJECTS_LIVE } from "@/lib/site-flags";
 const NAV = [
   { href: "/", key: "home", top: true },
   { href: "/generators", key: "generators", top: true },
+  { href: "/models", key: "models", top: true },
   { href: "/ats-panels", key: "ats", top: true },
   { href: "/switchgear", key: "switchgear", top: true },
   { href: "/products", key: "products", top: true },

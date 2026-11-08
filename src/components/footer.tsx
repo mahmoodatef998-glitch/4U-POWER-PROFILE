@@ -23,6 +23,7 @@ export async function Footer() {
       title: t("productsTitle"),
       links: [
         { href: "/generators", label: nav("generators") },
+        { href: "/models", label: nav("models") },
         { href: "/ats-panels", label: nav("ats") },
         { href: "/switchgear", label: nav("switchgear") },
         { href: "/products", label: nav("products") },
