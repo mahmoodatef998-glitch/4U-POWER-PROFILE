@@ -1,5 +1,6 @@
 import { Gauge, Layers, ShieldCheck, Zap } from "lucide-react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { BuySteps } from "@/components/buy-steps";
 import { CtaBanner } from "@/components/cta-banner";
 import { CallButton, WhatsAppButton } from "@/components/cta-buttons";
 import { FaqBlock } from "@/components/faq-block";
@@ -212,8 +213,11 @@ export async function BrandHub({ brand, locale }: { brand: GensetBrand; locale: 
             {brand !== "Perkins" && (ar ? " الحرف (A/B/C) بعد الكود يعني محركاً بديلاً لنفس القدرة." : " A letter suffix (A/B/C) marks an alternative engine at the same rating.")}
           </p>
           <div className="mt-6">
-            <ModelTable models={f.list} locale={locale} />
+            <ModelTable models={f.list} locale={locale} detailed />
           </div>
+          <Link href={`/models?brand=${encodeURIComponent(brand)}`} className="mt-4 inline-flex font-semibold text-brand-700 underline">
+            {ar ? `ابحث في موديلات ${name} بالقدرة وقارن بينها ←` : `Find ${brand} models by kVA and compare them →`}
+          </Link>
           <p className="mt-3 text-xs text-muted">{ar ? "القيم حسب ISO 8528 عند 50 هرتز و1500 لفة/دقيقة." : "Ratings to ISO 8528 at 50 Hz, 1500 rpm."}</p>
         </div>
       </section>
@@ -253,6 +257,8 @@ export async function BrandHub({ brand, locale }: { brand: GensetBrand; locale: 
           </div>
         </section>
       )}
+
+      <BuySteps locale={locale} what={{ en: `a ${brand} generator`, ar: `مولد ${name}` }} />
 
       <FaqBlock locale={locale} items={faq} title={ar ? `أسئلة عن مولدات ${name}` : `${brand} generator questions`} />
 

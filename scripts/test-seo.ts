@@ -55,3 +55,25 @@ assert.equal(snap.quick_wins[0]!.query, "500 kva generator price uae");
 assert.equal(snap.top.length, classify(rows).length);
 assert.ok(snap.top.every((t, i) => i === 0 || snap.top[i - 1]!.impressions >= t.impressions), "most impressions first");
 console.log("seo opportunity tests passed");
+
+// ---------------------------------------------------------------- internal auto-links in articles
+import { autoLink } from "../src/lib/autolink";
+{
+  const md = "## Perkins or Cummins\n\nA 250 kVA set with Perkins power and an ATS panel. See the [Cummins range](/en/cummins-diesel-generators). Ranges 10–2500 kVA. Another 250 kVA mention.";
+  const out = autoLink(md, "en");
+  assert.ok(out.includes("[250 kVA](/en/generators/250-kva)"), "first size mention linked");
+  assert.equal(out.match(/\/en\/generators\/250-kva/g)!.length, 1, "a size is linked once");
+  assert.ok(out.includes("[Perkins](/en/perkins-diesel-generators) power"), "brand linked in body text, not in the heading");
+  assert.ok(out.startsWith("## Perkins or Cummins"), "headings untouched");
+  assert.ok(out.includes("[ATS panel](/en/ats-panels)"));
+  assert.equal(out.match(/cummins-diesel-generators/g)!.length, 1, "a page already linked is not linked again");
+  assert.ok(!out.includes("[2500 kVA]"), "the end of a range is not linked");
+  assert.ok(!autoLink("sets from 10 to 2500 kVA", "en").includes("]("), "'to 2500 kVA' is a range end");
+  const arOut = autoLink("مولد 100 ك.ف.أ بمحرك بيركنز مع لوحة ATS وخزان الوقود.", "ar");
+  assert.ok(arOut.includes("[100 ك.ف.أ](/ar/generators/100-kva)"));
+  assert.ok(arOut.includes("[بيركنز](/ar/perkins-diesel-generators)"));
+  assert.ok(arOut.includes("[لوحة ATS](/ar/ats-panels)"));
+  const many = autoLink("Perkins, Cummins, Baudouin, Kubota, Lister Petter, ATS panel, fuel tank, switchgear, 100 kVA, 200 kVA.", "en");
+  assert.ok((many.match(/\]\(\/en\//g) ?? []).length <= 6, "at most six links");
+  console.log("autolink tests passed");
+}

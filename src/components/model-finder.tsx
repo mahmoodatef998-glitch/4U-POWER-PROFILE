@@ -1,7 +1,7 @@
 "use client";
 
 import { Check, FileText, Plus, Scale, X } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "@/i18n/navigation";
 import { trackEvent } from "@/lib/analytics";
 import type { GensetBrand } from "@/lib/genset-models";
@@ -44,6 +44,18 @@ export function ModelFinder({ models, brands, locale }: { models: FinderModel[];
   const [basis, setBasis] = useState<"prime" | "standby">("prime");
   const [picked, setPicked] = useState<Set<GensetBrand>>(new Set());
   const [compare, setCompare] = useState<string[]>([]);
+
+  // links from size pages and brand hubs open the finder pre-filled: /models?kva=300 or ?brand=Perkins
+  useEffect(() => {
+    const q = new URLSearchParams(window.location.search);
+    const k = Number(q.get("kva"));
+    if (k > 0 && k <= 5000) setKva(k);
+    const b = q.get("brand");
+    const hit = brands.find((x) => x.id.toLowerCase() === (b ?? "").toLowerCase());
+    if (hit) setPicked(new Set([hit.id]));
+    if (k > 0 || hit) document.getElementById("finder-title")?.scrollIntoView({ block: "start" });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const results = useMemo(() => {
     if (!kva) return [];

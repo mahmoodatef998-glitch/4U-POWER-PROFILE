@@ -7,6 +7,7 @@ import { WhatsAppButton } from "@/components/cta-buttons";
 import { JsonLd } from "@/components/json-ld";
 import { EnquiryForm } from "@/components/enquiry-form";
 import { Markdown } from "@/components/markdown";
+import { autoLink } from "@/lib/autolink";
 import { NewsCard } from "@/components/news-card";
 import { PageHero } from "@/components/page-hero";
 import { newsPosts } from "@/content/news";
@@ -93,7 +94,7 @@ export default async function NewsPostPage({ params }: Props) {
                 <Image src={p.cover_image} alt={title} fill priority sizes="(min-width:1024px) 60vw, 100vw" className="object-cover" />
               </div>
             )}
-            <Markdown source={ar ? p.body_ar : p.body_en} />
+            <Markdown source={autoLink(ar ? p.body_ar : p.body_en, locale)} />
             <section aria-labelledby="ask-title" className="mt-14 rounded-3xl border border-line bg-surface p-6 sm:p-8">
               <h2 id="ask-title" className="text-2xl">{ar ? "اسأل مهندساً" : "Ask an engineer"}</h2>
               <p className="mt-2 text-muted">
