@@ -2,6 +2,7 @@ import { CheckCircle2, Gauge } from "lucide-react";
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { CtaBanner } from "@/components/cta-banner";
+import { EnquiryForm } from "@/components/enquiry-form";
 import { CallButton, WhatsAppButton } from "@/components/cta-buttons";
 import { FaqBlock } from "@/components/faq-block";
 import { IndustryIcon } from "@/components/industry-icon";
@@ -9,10 +10,12 @@ import { Reveal } from "@/components/motion";
 import { PageHero } from "@/components/page-hero";
 import { ProductCard } from "@/components/product-card";
 import { SectionHeading } from "@/components/section-heading";
+import { GENERATOR_SIZES, sizeSlug } from "@/content/generator-sizes";
+import { industryExtras } from "@/content/industry-extras";
 import { getIndustry, industries } from "@/content/industries";
 import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
-import { getProducts } from "@/lib/data";
+import { getNews, getProducts } from "@/lib/data";
 import { buildMetadata } from "@/lib/seo";
 import { pick, type Locale } from "@/lib/utils";
 
@@ -43,6 +46,22 @@ export default async function IndustryPage({ params }: Props) {
   const name = L(ind.name);
   const all = await getProducts();
   const featured = ind.products.map((s) => all.find((p) => p.slug === s)).filter((p) => p !== undefined);
+  const extra = industryExtras[ind.slug];
+  const news = extra ? await getNews() : [];
+  const guides = extra ? extra.guides.map((g) => news.find((n) => n.slug === g)).filter((n) => n !== undefined) : [];
+  const nf = new Intl.NumberFormat(ar ? "ar-AE" : "en-AE", { maximumFractionDigits: 1 });
+  const KW = ar ? "ك.و" : "kW";
+  const KVA = ar ? "ك.ف.أ" : "kVA";
+  const calc = extra
+    ? (() => {
+        const connected = extra.example.loads.reduce((a, x) => a + x.kw, 0);
+        const running = connected * extra.example.diversity;
+        const kva = running / 0.8;
+        const margin = kva * 1.2;
+        const pickKva = GENERATOR_SIZES.find((k) => k >= margin) ?? GENERATOR_SIZES[GENERATOR_SIZES.length - 1]!;
+        return { connected, running, kva, margin, pickKva };
+      })()
+    : null;
   const waMessage = t("cta.whatsappPage", { topic: ar ? `حلول الطاقة لقطاع ${name}` : `power for ${name.toLowerCase()}` });
 
   return (
@@ -110,6 +129,81 @@ export default async function IndustryPage({ params }: Props) {
         </div>
       </section>
 
+      {extra && calc && (
+        <section className="section pt-0" aria-labelledby="size-title">
+          <div className="container-x grid gap-10 lg:grid-cols-12">
+            <div className="lg:col-span-5">
+              <SectionHeading
+                id="size-title"
+                eyebrow={ar ? "مثال على الحساب" : "Sizing example"}
+                title={L(extra.example.title)}
+                intro={ar ? "أحمال توضيحية لمنشأة نموذجية، محسوبة بنفس طريقة حاسبة القدرة: الحمل المتزامن ÷ 0.8 ثم هامش 20%." : "Illustrative loads for a typical site, worked the same way as our kVA calculator: running load ÷ 0.8, then a 20 % margin."}
+              />
+              <p className="mt-5 text-sm leading-7 text-muted">{L(extra.example.note)}</p>
+              <div className="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-sm font-bold">
+                <Link href="/calculator" className="text-brand-700 hover:underline">{ar ? "احسب لموقعك ←" : "Size your own site →"}</Link>
+                <Link href="/models" className="text-brand-700 hover:underline">{ar ? "قارن الموديلات" : "Compare models"}</Link>
+              </div>
+            </div>
+            <div className="min-w-0 lg:col-span-7">
+              <div className="overflow-x-auto rounded-2xl border border-line bg-navy-900">
+                <table className="w-full min-w-[22rem] text-start text-sm tabular-nums">
+                  <caption className="sr-only">{L(extra.example.title)}</caption>
+                  <thead className="bg-surface text-xs uppercase tracking-wide text-muted">
+                    <tr>
+                      <th scope="col" className="px-4 py-3 text-start">{ar ? "الحمل" : "Load"}</th>
+                      <th scope="col" className="px-4 py-3 text-end">{KW}</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-line">
+                    {extra.example.loads.map((x) => (
+                      <tr key={x.name.en}>
+                        <td className="px-4 py-2.5 text-ink">{L(x.name)}</td>
+                        <td className="px-4 py-2.5 text-end text-ink">{nf.format(x.kw)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                  <tfoot className="border-t border-line bg-surface text-ink">
+                    <tr>
+                      <th scope="row" className="px-4 py-2.5 text-start font-semibold">{ar ? "الحمل الموصول" : "Connected load"}</th>
+                      <td className="px-4 py-2.5 text-end font-semibold">{nf.format(calc.connected)} {KW}</td>
+                    </tr>
+                    <tr>
+                      <th scope="row" className="px-4 py-2.5 text-start font-normal text-muted">{ar ? `يعمل في نفس الوقت (${nf.format(extra.example.diversity * 100)}%)` : `Running at the same time (${nf.format(extra.example.diversity * 100)} %)`}</th>
+                      <td className="px-4 py-2.5 text-end">{nf.format(calc.running)} {KW}</td>
+                    </tr>
+                    <tr>
+                      <th scope="row" className="px-4 py-2.5 text-start font-normal text-muted">{ar ? "بالكيلو فولت أمبير (÷ 0.8)" : "In kVA (÷ 0.8 power factor)"}</th>
+                      <td className="px-4 py-2.5 text-end">{nf.format(calc.kva)} {KVA}</td>
+                    </tr>
+                    <tr>
+                      <th scope="row" className="px-4 py-2.5 text-start font-normal text-muted">{ar ? "مع هامش 20% للحرارة والتوسع" : "With 20 % margin for heat and growth"}</th>
+                      <td className="px-4 py-2.5 text-end">{nf.format(calc.margin)} {KVA}</td>
+                    </tr>
+                    <tr className="bg-brand-500/10">
+                      <th scope="row" className="px-4 py-3 text-start font-extrabold">{ar ? "المقاس القياسي المناسب" : "Standard size to choose"}</th>
+                      <td className="px-4 py-3 text-end font-extrabold">
+                        <Link href={`/generators/${sizeSlug(calc.pickKva)}`} className="text-brand-700 underline">{nf.format(calc.pickKva)} {KVA}</Link>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+              <p className="mt-6 text-sm font-bold text-ink">{ar ? `المقاسات المعتادة لقطاع ${name}` : `Sizes usually chosen for ${name.toLowerCase()}`}</p>
+              <ul className="mt-3 flex flex-wrap gap-2">
+                {extra.sizes.map((k) => (
+                  <li key={k}>
+                    <Link href={`/generators/${sizeSlug(k)}`} dir="ltr" className="inline-flex rounded-full border border-line px-4 py-2 text-sm font-semibold text-ink transition hover:border-brand-500/50 hover:bg-white/5">
+                      {k} kVA
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </section>
+      )}
+
       {featured.length > 0 && (
         <section className="section pt-0" aria-labelledby="rec-title">
           <div className="container-x">
@@ -126,6 +220,35 @@ export default async function IndustryPage({ params }: Props) {
       )}
 
       <FaqBlock locale={locale} items={ind.faq} title={ar ? "أسئلة شائعة" : "Common questions"} eyebrow={name} dark />
+      <section className="section" aria-labelledby="ask-ind-title">
+        <div className="container-x grid gap-10 lg:grid-cols-12">
+          <div className="lg:col-span-5">
+            <SectionHeading
+              id="ask-ind-title"
+              eyebrow={ar ? "اسأل مهندساً" : "Ask an engineer"}
+              title={ar ? `سؤال عن مشروع ${name}؟` : `A question about your ${name.toLowerCase()} project?`}
+              intro={ar ? "اكتب الأحمال أو المشكلة، ويرد عليك مهندس بالحل والمقاس المناسب." : "Describe the loads or the problem, and an engineer will reply with the right setup and size."}
+            />
+            {guides.length > 0 && (
+              <>
+                <p className="mt-8 text-sm font-bold text-ink">{ar ? "أدلة مفيدة" : "Useful guides"}</p>
+                <ul className="mt-3 grid gap-2">
+                  {guides.map((n) => (
+                    <li key={n.slug}>
+                      <Link href={`/news/${n.slug}`} className="font-semibold text-brand-700 hover:underline">
+                        {ar ? n.title_ar : n.title_en}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
+          </div>
+          <div className="rounded-3xl border border-line bg-surface p-6 sm:p-8 lg:col-span-7 lg:self-start">
+            <EnquiryForm kind="expert" topic={`industry:${ind.slug}`} />
+          </div>
+        </div>
+      </section>
 
       <section className="section pt-0" aria-labelledby="more-title">
         <div className="container-x">
