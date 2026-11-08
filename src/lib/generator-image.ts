@@ -13,7 +13,6 @@ export const CONTAINER_IMAGES = [`${P}/generator-container-2000kva-4u.webp`, `${
 const MEDIUM: Record<string, string> = {
   Perkins: `${P}/perkins-diesel-generator-250-1000kva-4u.webp`,
   Cummins: `${P}/cummins-diesel-generator-250-1000kva-4u.webp`,
-  "Volvo Penta": `${P}/volvo-penta-diesel-generator-250-1000kva-4u.webp`,
   Baudouin: `${P}/baudouin-diesel-generator-250-1000kva-4u.webp`,
   // no 250–1000 kVA Lister photo yet: its own set photo rather than the Perkins one (which reads "PERKINS")
   "Lister Petter": `${P}/lister-petter-diesel-generator-4u.webp`,

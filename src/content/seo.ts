@@ -13,8 +13,8 @@ export const pageSeo = {
       ar: "مولدات كهرباء للبيع ولوحات ATS في الإمارات | فور يو باور",
     },
     description: {
-      en: "Diesel generators 10–2500 kVA, ATS panels, switchgear & MDBs from SAIF Zone, Sharjah. Perkins, Cummins, Volvo. Fast delivery to UAE, KSA & Iraq.",
-      ar: "مولدات ديزل من 10 إلى 2500 ك.ف.أ ولوحات ATS ولوحات توزيع من المنطقة الحرة بالشارقة. بيركنز وكمنز وفولفو، وتوصيل سريع للإمارات والسعودية والعراق.",
+      en: "Diesel generators 10–2500 kVA, ATS panels, switchgear & MDBs from SAIF Zone, Sharjah. Perkins, Cummins, Baudouin. Fast delivery to UAE, KSA & Iraq.",
+      ar: "مولدات ديزل من 10 إلى 2500 ك.ف.أ ولوحات ATS ولوحات توزيع من المنطقة الحرة بالشارقة. بيركنز وكمنز وبودوان، وتوصيل سريع للإمارات والسعودية والعراق.",
     },
   },
   about: {
@@ -43,8 +43,8 @@ export const pageSeo = {
       ar: "مولدات كهربائية للبيع في الإمارات | أسعار 10–2500 ك.ف.أ",
     },
     description: {
-      en: "Perkins, Cummins, Kubota & Volvo diesel generators 10–2500 kVA from Sharjah. Standby & prime sets for industry, towers and sites. WhatsApp for a price.",
-      ar: "مولدات ديزل بيركنز وكمنز وكوبوتا وفولفو من 10 إلى 2500 ك.ف.أ من الشارقة، احتياطية وأساسية للمصانع والأبراج والمواقع. اطلب السعر عبر الواتساب.",
+      en: "Perkins, Cummins, Kubota & Baudouin diesel generators 10–2500 kVA from Sharjah. Standby & prime sets for industry, towers and sites. WhatsApp for a price.",
+      ar: "مولدات ديزل بيركنز وكمنز وكوبوتا وبودوان من 10 إلى 2500 ك.ف.أ من الشارقة، احتياطية وأساسية للمصانع والأبراج والمواقع. اطلب السعر عبر الواتساب.",
     },
   },
   ats: {

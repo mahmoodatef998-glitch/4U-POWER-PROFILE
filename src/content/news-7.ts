@@ -52,7 +52,7 @@ Fuel figures are planning values (about 0.25 litres per kWh at load); each model
 
 - **10–40 kVA** — villas, shops, site cabins, telecom shelters and pumps. Usually a compact silent canopy; our sets in this range run on Kubota, Perkins and Lister Petter engines.
 - **50–150 kVA** — small office buildings, clinics, restaurants, workshops and large villas with many air-conditioning units. See what a [100 kva generator load capacity](/en/generators/100-kva) really covers.
-- **200–500 kVA** — mid-rise buildings, schools, supermarkets, small factories and construction sites with tower cranes. Canopy or open sets with Perkins, Cummins, Volvo Penta or Baudouin engines.
+- **200–500 kVA** — mid-rise buildings, schools, supermarkets, small factories and construction sites with tower cranes. Canopy or open sets with Perkins, Cummins or Baudouin engines.
 - **650–1250 kVA** — hospitals, malls, large factories and hotels, often as open sets in a plant room or in a container.
 - **1500–2500 kVA** — data centres, utilities and heavy industry, normally containerised and often synchronised in parallel.
 
@@ -72,7 +72,7 @@ Our model codes follow the **prime** rating: a 4U-P100 is 100 kVA prime and 110 
 
 ## Get the size confirmed
 
-We supply sets across the whole chart on Perkins, Cummins, Baudouin, Volvo Penta and Kubota engines, with Deep Sea controllers, 4U · Leroy-Somer | Stamford alternators and a 12-month / 1,000-hour warranty. Send your load list on WhatsApp and we will confirm the size and the model for your site.`,
+We supply sets across the whole chart on Perkins, Cummins, Baudouin, Kubota and Lister Petter engines, with Deep Sea controllers, 4U · Leroy-Somer | Stamford alternators and a 12-month / 1,000-hour warranty. Send your load list on WhatsApp and we will confirm the size and the model for your site.`,
     body_ar: `تُباع المولدات بسلّم من المقاسات القياسية، وتستخدم معظم عروض الأسعار والمناقصات ومخططات الاستشاريين في الخليج نفس هذه الدرجات. معرفة هذا السلّم تسهّل مقارنة العروض، وتكشف لك متى يكون المقاس المكتوب في العرض قدرةً مختلفة في الحقيقة.
 
 ## أحجام المولدات القياسية بالكيلو فولت أمبير
@@ -106,7 +106,7 @@ We supply sets across the whole chart on Perkins, Cummins, Baudouin, Volvo Penta
 
 - **10–40 ك.ف.أ**: الفلل والمحلات وكبائن المواقع وغرف الاتصالات والمضخات. غالباً بكانوبي صامت صغير، ومولداتنا في هذه الفئة تعمل بمحركات كوبوتا وبيركنز وليستر بيتر.
 - **50–150 ك.ف.أ**: مباني المكاتب الصغيرة والعيادات والمطاعم والورش والفلل الكبيرة ذات وحدات التكييف الكثيرة. اقرأ ما الذي تغطيه فعلاً [قدرة الحمل لمولد 100 ك.ف.أ](/ar/generators/100-kva).
-- **200–500 ك.ف.أ**: المباني متوسطة الارتفاع والمدارس والسوبرماركت والمصانع الصغيرة ومواقع البناء التي فيها رافعات برجية. بكانوبي أو مفتوحة، بمحركات بيركنز وكمنز وفولفو بنتا وبودوان.
+- **200–500 ك.ف.أ**: المباني متوسطة الارتفاع والمدارس والسوبرماركت والمصانع الصغيرة ومواقع البناء التي فيها رافعات برجية. بكانوبي أو مفتوحة، بمحركات بيركنز وكمنز وبودوان.
 - **650–1250 ك.ف.أ**: المستشفيات والمولات والمصانع الكبيرة والفنادق، غالباً مولدات مفتوحة في غرفة محركات أو داخل حاوية.
 - **1500–2500 ك.ف.أ**: مراكز البيانات والمرافق والصناعات الثقيلة، عادةً داخل حاويات وكثيراً ما تعمل على التوازي بالتزامن.
 
@@ -126,7 +126,7 @@ We supply sets across the whole chart on Perkins, Cummins, Baudouin, Volvo Penta
 
 ## تأكد من المقاس قبل الشراء
 
-نورّد مولدات على كامل هذا الجدول بمحركات بيركنز وكمنز وبودوان وفولفو بنتا وكوبوتا، مع وحدات تحكم Deep Sea ومولدات تيار 4U · Leroy-Somer | Stamford وضمان 12 شهراً أو 1,000 ساعة. أرسل لنا قائمة الأحمال على الواتساب، وسنؤكد لك المقاس والموديل المناسب لموقعك.`,
+نورّد مولدات على كامل هذا الجدول بمحركات بيركنز وكمنز وبودوان وكوبوتا وليستر بيتر، مع وحدات تحكم Deep Sea ومولدات تيار 4U · Leroy-Somer | Stamford وضمان 12 شهراً أو 1,000 ساعة. أرسل لنا قائمة الأحمال على الواتساب، وسنؤكد لك المقاس والموديل المناسب لموقعك.`,
   },
   {
     slug: "300-kva-generator-guide",

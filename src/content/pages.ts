@@ -11,8 +11,8 @@ export const home = {
       ar: "مورد **مولدات ديزل** ولوحات ATS ولوحات كهرباء في **الإمارات**",
     },
     lead: {
-      en: "Perkins, Cummins, Volvo Penta, Baudouin, Kubota and Lister Petter generator sets from 7 to 2500 kVA — with the ATS, MDB and synchronising panels to match. Stocked in Sharjah, delivered across the UAE, Saudi Arabia and Iraq.",
-      ar: "مولدات بيركنز وكمنز وفولفو بنتا وبودوان وكوبوتا وليستر بيتر من 7 إلى 2500 ك.ف.أ مع لوحات ATS والتوزيع والتزامن المناسبة لها. مخزون في الشارقة وتوصيل إلى الإمارات والسعودية والعراق.",
+      en: "Perkins, Cummins, Baudouin, Kubota and Lister Petter generator sets from 7 to 2500 kVA — with the ATS, MDB and synchronising panels to match. Stocked in Sharjah, delivered across the UAE, Saudi Arabia and Iraq.",
+      ar: "مولدات بيركنز وكمنز وبودوان وكوبوتا وليستر بيتر من 7 إلى 2500 ك.ف.أ مع لوحات ATS والتوزيع والتزامن المناسبة لها. مخزون في الشارقة وتوصيل إلى الإمارات والسعودية والعراق.",
     },
     chips: [
       { en: "10 – 2500 kVA", ar: "10 – 2500 ك.ف.أ" },
@@ -27,8 +27,8 @@ export const home = {
       word: { en: "ENGINE", ar: "المحرك" },
       title: { en: "Engines you can trust in 50 °C", ar: "محركات تعتمد عليها في حرارة 50 درجة" },
       body: {
-        en: "Perkins, Cummins, Kubota, Volvo Penta, Baudouin, Lister Petter and Chinese engine platforms from 10 to 2500 kVA — quoted side by side so you choose on facts, not brand loyalty.",
-        ar: "محركات بيركنز وكمنز وكوبوتا وفولفو بنتا وبودوان وليستر بيتر والمحركات الصينية من 10 إلى 2500 ك.ف.أ، نقدّمها لك جنباً إلى جنب لتختار بالأرقام لا بالاسم.",
+        en: "Perkins, Cummins, Kubota, Baudouin, Lister Petter and Chinese engine platforms from 10 to 2500 kVA — quoted side by side so you choose on facts, not brand loyalty.",
+        ar: "محركات بيركنز وكمنز وكوبوتا وبودوان وليستر بيتر والمحركات الصينية من 10 إلى 2500 ك.ف.أ، نقدّمها لك جنباً إلى جنب لتختار بالأرقام لا بالاسم.",
       },
       stat: { en: "10–2500 kVA", ar: "10–2500 ك.ف.أ" },
     },
@@ -250,8 +250,8 @@ export const generatorsPillar: Pillar = {
     ar: "مولدات ديزل في الإمارات والشارقة — من 10 إلى 2500 ك.ف.أ",
   },
   intro: {
-    en: "Standby and prime-rated generator sets with Perkins, Cummins, Kubota, Volvo Penta, Baudouin, Lister Petter and Chinese engine options — supplied from our SAIF Zone warehouse in Sharjah to sites across the UAE, Saudi Arabia and Iraq.",
-    ar: "مولدات احتياطية وأساسية بمحركات بيركنز وكمنز وكوبوتا وفولفو بنتا وبودوان وليستر بيتر والمحركات الصينية، من مستودعنا في المنطقة الحرة بالشارقة إلى المواقع في الإمارات والسعودية والعراق.",
+    en: "Standby and prime-rated generator sets with Perkins, Cummins, Kubota, Baudouin, Lister Petter and Chinese engine options — supplied from our SAIF Zone warehouse in Sharjah to sites across the UAE, Saudi Arabia and Iraq.",
+    ar: "مولدات احتياطية وأساسية بمحركات بيركنز وكمنز وكوبوتا وبودوان وليستر بيتر والمحركات الصينية، من مستودعنا في المنطقة الحرة بالشارقة إلى المواقع في الإمارات والسعودية والعراق.",
   },
   highlights: [
     { title: { en: "10–2500 kVA", ar: "10–2500 ك.ف.أ" }, body: { en: "Single sets, or synchronised plants beyond", ar: "مولد واحد أو محطات متزامنة لما فوق ذلك" } },
@@ -268,10 +268,10 @@ export const generatorsPillar: Pillar = {
       },
     },
     {
-      title: { en: "Perkins, Cummins, Kubota & Volvo Penta generators in the UAE", ar: "مولدات بيركنز وكمنز وكوبوتا وفولفو بنتا في الإمارات" },
+      title: { en: "Perkins, Cummins, Kubota & Baudouin generators in the UAE", ar: "مولدات بيركنز وكمنز وكوبوتا وبودوان في الإمارات" },
       body: {
-        en: "Perkins is the most widely serviced platform in the Gulf below 500 kVA. Cummins is favoured for heavy load acceptance on industrial and construction sites. Kubota powers our quietest compact sets for villas and clinics, and Volvo Penta offers excellent fuel economy for hotels and towers. For budget-driven projects, our Chinese Engine Series delivers dependable standby power at a lower upfront cost.",
-        ar: "بيركنز هي المنصة الأكثر انتشاراً في الصيانة بالخليج تحت 500 ك.ف.أ، وكمنز مفضلة لتحمّل الأحمال الثقيلة في المواقع الصناعية والإنشائية. كوبوتا تشغّل أهدأ مولداتنا الصغيرة للفلل والعيادات، وفولفو بنتا توفر كفاءة ممتازة في الوقود للفنادق والأبراج. وللمشاريع ذات الميزانية المحدودة، توفر مولداتنا بالمحركات الصينية طاقة احتياطية موثوقة بتكلفة شراء أقل.",
+        en: "Perkins is the most widely serviced platform in the Gulf below 500 kVA. Cummins is favoured for heavy load acceptance on industrial and construction sites. Kubota powers our quietest compact sets for villas and clinics, and Baudouin covers 20 to 2500 kVA at a competitive price. For budget-driven projects, our Chinese Engine Series delivers dependable standby power at a lower upfront cost.",
+        ar: "بيركنز هي المنصة الأكثر انتشاراً في الصيانة بالخليج تحت 500 ك.ف.أ، وكمنز مفضلة لتحمّل الأحمال الثقيلة في المواقع الصناعية والإنشائية. كوبوتا تشغّل أهدأ مولداتنا الصغيرة للفلل والعيادات، وبودوان تغطي من 20 إلى 2500 ك.ف.أ بسعر منافس. وللمشاريع ذات الميزانية المحدودة، توفر مولداتنا بالمحركات الصينية طاقة احتياطية موثوقة بتكلفة شراء أقل.",
       },
     },
     {

@@ -13,7 +13,6 @@ const RULES: [RegExp, string][] = [
   [/kubota|كوبوتا/, "/kubota-diesel-generators"],
   [/baudouin|بودوين|بودوان/, "/baudouin-diesel-generators"],
   [/lister|ليستر/, "/lister-petter-diesel-generators"],
-  [/volvo|فولفو/, "/products/volvo-penta-generator-80-700kva"],
   [/\bats\b|transfer switch|change ?over|تحويل/, "/ats-panels"],
   [/sync|تزامن|مزامنة/, "/products/generator-synchronizing-panel"],
   [/light ?tower|برج إنارة|ابراج انارة|أبراج إنارة/, "/products/diesel-light-tower"],

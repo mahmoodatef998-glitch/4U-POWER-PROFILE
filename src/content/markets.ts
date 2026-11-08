@@ -93,8 +93,8 @@ export const marketPages: MarketPage[] = [
         ar: "مولدات ديزل ولوحات ATS في السعودية | فور يو باور",
       },
       description: {
-        en: "Diesel generators 10–2500 kVA, ATS panels and switchgear exported from Sharjah to Riyadh, Jeddah and Dammam. Perkins, Cummins & Volvo sets for KSA projects.",
-        ar: "مولدات ديزل من 10 إلى 2500 ك.ف.أ ولوحات ATS ولوحات كهرباء تُصدّر من الشارقة إلى الرياض وجدة والدمام. مولدات بيركنز وكمنز وفولفو لمشاريع المملكة.",
+        en: "Diesel generators 10–2500 kVA, ATS panels and switchgear exported from Sharjah to Riyadh, Jeddah and Dammam. Perkins, Cummins & Baudouin sets for KSA projects.",
+        ar: "مولدات ديزل من 10 إلى 2500 ك.ف.أ ولوحات ATS ولوحات كهرباء تُصدّر من الشارقة إلى الرياض وجدة والدمام. مولدات بيركنز وكمنز وبودوان لمشاريع المملكة.",
       },
     },
     h1: {
@@ -231,8 +231,8 @@ export const marketPages: MarketPage[] = [
         ar: "مولدات ولوحات ATS لقطر | توريد إلى الدوحة | فور يو باور",
       },
       description: {
-        en: "Diesel generators, hybrid telecom power and ATS panels shipped from Sharjah to Doha and projects across Qatar. Perkins, Cummins and Volvo Penta options.",
-        ar: "مولدات ديزل وأنظمة طاقة هجينة للاتصالات ولوحات ATS تُشحن من الشارقة إلى الدوحة ومشاريع قطر، بخيارات بيركنز وكمنز وفولفو بنتا.",
+        en: "Diesel generators, hybrid telecom power and ATS panels shipped from Sharjah to Doha and projects across Qatar. Perkins, Cummins and Baudouin options.",
+        ar: "مولدات ديزل وأنظمة طاقة هجينة للاتصالات ولوحات ATS تُشحن من الشارقة إلى الدوحة ومشاريع قطر، بخيارات بيركنز وكمنز وبودوان.",
       },
     },
     h1: { en: "Generator Supplier for Qatar", ar: "مورد مولدات كهرباء في قطر" },

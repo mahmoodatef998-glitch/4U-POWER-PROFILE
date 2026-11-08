@@ -34,7 +34,7 @@ const FEATURED: Record<string, string[]> = {
   uae: ["perkins-diesel-generator-10-200kva", "ats-panel-63a-400a", "main-distribution-board-mdb"],
   "saudi-arabia": ["cummins-diesel-generator-20-500kva", "generator-synchronizing-panel", "ats-panel-630a-4000a"],
   iraq: ["perkins-diesel-generator-250-2500kva", "cummins-diesel-generator-550-2500kva", "generator-synchronizing-panel"],
-  qatar: ["hybrid-battery-generator-20-200kva", "volvo-penta-generator-80-700kva", "ats-panel-63a-400a"],
+  qatar: ["hybrid-battery-generator-20-200kva", "baudouin-diesel-generator-20-2500kva", "ats-panel-63a-400a"],
   kenya: ["solar-hybrid-power-system-10-100kva", "chinese-engine-generator-series-20-1000kva", "perkins-diesel-generator-10-200kva"],
   "south-africa": ["cummins-diesel-generator-20-500kva", "ats-panel-63a-400a", "cummins-diesel-generator-550-2500kva"],
 };

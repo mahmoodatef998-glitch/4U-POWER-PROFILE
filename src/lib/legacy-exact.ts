@@ -18,6 +18,8 @@ export const LEGACY_EXACT: [string, string][] = [
   ["/project/:slug*", "/en/projects"],
   ["/our_projects", "/en/projects"],
   ["/shop", "/en/products"],
+  // Volvo Penta range dropped (owner, 8 Nov 2026)
+  ["/:locale(en|ar)/products/volvo-penta-generator-80-700kva/:rest*", "/:locale/generators"],
   ["/feed", "/en/news"],
   ["/blog", "/en/news"],
   // model codes renamed to the prime kVA (1 Nov 2026) and models dropped earlier → the same set's page

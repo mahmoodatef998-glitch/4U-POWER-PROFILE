@@ -7,6 +7,7 @@ import { company, telUrl } from "@/lib/site";
 import { pick, type Locale } from "@/lib/utils";
 import { Brand } from "./header";
 import { SocialLinks } from "./social-links";
+import { PROJECTS_LIVE } from "@/lib/site-flags";
 
 const POPULAR = [20, 30, 50, 100, 150, 200, 250, 300, 500, 750, 1000, 1500, 2000];
 
@@ -37,7 +38,7 @@ export async function Footer() {
         { href: "/industries", label: nav("industries") },
         { href: "/services", label: nav("services") },
         { href: "/spare-parts", label: nav("parts") },
-        { href: "/projects", label: nav("projects") },
+        ...(PROJECTS_LIVE ? [{ href: "/projects", label: nav("projects") }] : []),
         { href: "/markets", label: nav("markets") },
         { href: "/locations", label: ar ? "مناطق التوريد" : "Locations" },
         { href: "/news", label: nav("news") },

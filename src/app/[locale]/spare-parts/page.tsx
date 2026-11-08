@@ -21,8 +21,8 @@ export async function generateMetadata({ params }: Props) {
     title: locale === "ar" ? "قطع غيار المولدات في الإمارات | فلاتر وAVR ووحدات تحكم" : "Generator Spare Parts in UAE | Filters, AVR & Controllers",
     description:
       locale === "ar"
-        ? "قطع غيار مولدات بيركنز وكمنز وفولفو وبودوان وغيرها: فلاتر وسيور وAVR ووحدات تحكم ومارشات. أرسل رقم القطعة أو صورتها واحصل على السعر في نفس اليوم."
-        : "Spare parts for Perkins, Cummins, Volvo, Baudouin and more: filters, belts, AVRs, controllers, starters. Send a part number or photo for a same-day price.",
+        ? "قطع غيار مولدات بيركنز وكمنز وبودوان وكوبوتا وغيرها: فلاتر وسيور وAVR ووحدات تحكم ومارشات. أرسل رقم القطعة أو صورتها واحصل على السعر في نفس اليوم."
+        : "Spare parts for Perkins, Cummins, Baudouin, Kubota and more: filters, belts, AVRs, controllers, starters. Send a part number or photo for a same-day price.",
   });
 }
 
@@ -44,8 +44,8 @@ const FAQ: Faq[] = [
   {
     q: { en: "Which generator brands do you supply parts for?", ar: "لأي ماركات مولدات توفرون قطع الغيار؟" },
     a: {
-      en: "Perkins, Cummins, Volvo Penta, Baudouin, Kubota, Lister Petter and Chinese engine series, plus common alternator and controller brands such as Stamford, Leroy-Somer, Deep Sea and ComAp. Send the nameplate and we will confirm.",
-      ar: "بيركنز وكمنز وفولفو بنتا وبودوان وكوبوتا وليستر بيتر والمحركات الصينية، إضافة إلى ماركات الدينامو ووحدات التحكم الشائعة مثل ستامفورد وليروي سومر وديب سي وكوم آب. أرسل لوحة البيانات وسنؤكد لك.",
+      en: "Perkins, Cummins, Baudouin, Kubota, Lister Petter and Chinese engine series, plus common alternator and controller brands such as Stamford, Leroy-Somer, Deep Sea and ComAp. Send the nameplate and we will confirm.",
+      ar: "بيركنز وكمنز وبودوان وكوبوتا وليستر بيتر والمحركات الصينية، إضافة إلى ماركات الدينامو ووحدات التحكم الشائعة مثل ستامفورد وليروي سومر وديب سي وكوم آب. أرسل لوحة البيانات وسنؤكد لك.",
     },
   },
   {
@@ -104,8 +104,8 @@ export default async function SparePartsPage({ params }: Props) {
         title={ar ? "صوّر القطعة، ونرسل لك السعر" : "Snap the part. We'll send the price."}
         intro={
           ar
-            ? "فلاتر وأطقم صيانة ووحدات تحكم وAVR ومارشات ومبردات لمولدات بيركنز وكمنز وفولفو وبودوان وغيرها. أرسل رقم القطعة أو صورتها، ويرد مهندس بالسعر ومدة التوصيل."
-            : "Filters, service kits, controllers, AVRs, starters and radiators for Perkins, Cummins, Volvo, Baudouin and more. Send a part number or a photo — an engineer replies with price and delivery."
+            ? "فلاتر وأطقم صيانة ووحدات تحكم وAVR ومارشات ومبردات لمولدات بيركنز وكمنز وبودوان وكوبوتا وغيرها. أرسل رقم القطعة أو صورتها، ويرد مهندس بالسعر ومدة التوصيل."
+            : "Filters, service kits, controllers, AVRs, starters and radiators for Perkins, Cummins, Baudouin, Kubota and more. Send a part number or a photo — an engineer replies with price and delivery."
         }
       >
         <div className="flex flex-col gap-3 sm:flex-row">

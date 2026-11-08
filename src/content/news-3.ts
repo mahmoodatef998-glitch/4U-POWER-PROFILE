@@ -26,7 +26,7 @@ Size is the biggest driver: a 500 kVA set costs far more than a 100 kVA one. But
 
 ## 2. Engine brand
 
-Perkins, Cummins, Volvo Penta, Baudouin, Kubota, Lister Petter and Chinese engine series all sit at different price points. Premium brands cost more up front but usually win on parts availability across the GCC, resale value and service network. See how they compare in [Perkins vs Cummins vs Kubota](/en/news/perkins-vs-cummins-vs-kubota-engine-brand-uae).
+Perkins, Cummins, Baudouin, Kubota, Lister Petter and Chinese engine series all sit at different price points. Premium brands cost more up front but usually win on parts availability across the GCC, resale value and service network. See how they compare in [Perkins vs Cummins vs Kubota](/en/news/perkins-vs-cummins-vs-kubota-engine-brand-uae).
 
 ## 3. The alternator
 
@@ -82,7 +82,7 @@ Use the [generator size chart](/en/generators/sizes) or the [kVA calculator](/en
 
 ## 2. ماركة المحرك
 
-بيركنز وكمنز وفولفو بنتا وبودوان وكوبوتا وليستر بيتر والمحركات الصينية لكل منها مستوى سعري مختلف. الماركات الأعلى تكلف أكثر في البداية، لكنها غالباً تتفوق في توفر قطع الغيار في الخليج وقيمة إعادة البيع وشبكة الصيانة. اطلع على المقارنة في [بيركنز أم كمنز أم كوبوتا](/ar/news/perkins-vs-cummins-vs-kubota-engine-brand-uae).
+بيركنز وكمنز وبودوان وكوبوتا وليستر بيتر والمحركات الصينية لكل منها مستوى سعري مختلف. الماركات الأعلى تكلف أكثر في البداية، لكنها غالباً تتفوق في توفر قطع الغيار في الخليج وقيمة إعادة البيع وشبكة الصيانة. اطلع على المقارنة في [بيركنز أم كمنز أم كوبوتا](/ar/news/perkins-vs-cummins-vs-kubota-engine-brand-uae).
 
 ## 3. الدينامو (المولّد الكهربائي)
 
@@ -367,7 +367,7 @@ Our [generator size pages](/en/generators/sizes) show both the standby kVA and t
       "Heat, sand and long idle periods are what kill standby generators in the Gulf. A weekly, monthly and yearly checklist your facility team can follow.",
     excerpt_ar:
       "الحرارة والرمال وفترات التوقف الطويلة هي ما يُتلف المولدات الاحتياطية في الخليج. قائمة صيانة أسبوعية وشهرية وسنوية يمكن لفريق المنشأة اتباعها.",
-    cover_image: "/images/products/volvo-penta-diesel-generator-4u.webp",
+    cover_image: "/images/products/perkins-diesel-generator-4u.webp",
     published_at: "2026-10-13T06:00:00Z",
     is_published: true,
     body_en: `A standby generator can sit idle for months and then must start within seconds and carry the full load on the hottest day of the year. In the Gulf, the usual reasons it fails are a flat battery, a blocked radiator, a clogged air filter or stale fuel. This checklist prevents all four.

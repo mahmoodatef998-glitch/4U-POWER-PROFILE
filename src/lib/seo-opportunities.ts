@@ -8,7 +8,7 @@ import type { SearchRow } from "./google-core";
 
 /** A search is about our business when it names a product, engine brand, rating or application. */
 const BUSINESS =
-  /generat|genset|gen set|kva|\bkw\b|diesel|silent|canopy|perkins|cummins|kubota|baudouin|volvo|lister|\bats\b|transfer switch|change ?over|switch ?gear|\bmdb\b|\bsmdb\b|distribution board|\bsync|synchron|\bamf\b|alternator|stamford|leroy|load ?bank|light ?tower|fuel tank|solar|hybrid|\bbess\b|backup power|standby power|prime power|مولد|ديزل|كيلو ?فولت|ك\.?ف\.?أ|لوح|تحويل|توزيع|بيركنز|بركنز|كمنز|كامنز|كوبوتا|بودوين|طاقة|كهرباء/i;
+  /generat|genset|gen set|kva|\bkw\b|diesel|silent|canopy|perkins|cummins|kubota|baudouin|lister|\bats\b|transfer switch|change ?over|switch ?gear|\bmdb\b|\bsmdb\b|distribution board|\bsync|synchron|\bamf\b|alternator|stamford|leroy|load ?bank|light ?tower|fuel tank|solar|hybrid|\bbess\b|backup power|standby power|prime power|مولد|ديزل|كيلو ?فولت|ك\.?ف\.?أ|لوح|تحويل|توزيع|بيركنز|بركنز|كمنز|كامنز|كوبوتا|بودوين|طاقة|كهرباء/i;
 /** …but not job hunting, second-hand or consumer gadgets. */
 const EXCLUDE = /\bjobs?\b|vacanc|salary|career|hiring|وظيف|وظائف|راتب|\bused\b|مستعمل|second ?hand|wikipedia|\bhonda\b|inverter generator|home depot|walmart|\bamazon\b/i;
 /** Searches for our own name are kept apart: they show brand demand, not content gaps. */

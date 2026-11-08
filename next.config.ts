@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
 import { LEGACY_EXACT } from "./src/lib/legacy-exact";
+import { PROJECTS_LIVE } from "./src/lib/site-flags";
 
 const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 
@@ -43,7 +44,8 @@ const nextConfig: NextConfig = {
   },
   // URLs from the previous website on this domain that Google still crawls → closest new page (see src/lib/legacy-redirects.ts).
   async redirects() {
-    return LEGACY_EXACT.map(([source, destination]) => ({ source, destination, permanent: true }));
+    const hidden = PROJECTS_LIVE ? [] : [{ source: "/:locale(en|ar)/projects", destination: "/:locale/about", permanent: false }];
+    return [...hidden, ...LEGACY_EXACT.map(([source, destination]) => ({ source, destination, permanent: true }))];
   },
   async headers() {
     return [

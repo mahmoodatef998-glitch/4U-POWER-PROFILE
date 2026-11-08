@@ -57,7 +57,7 @@ export const industries: Industry[] = [
       },
     ],
     solution: [
-      { en: "Prime or standby sets on Perkins, Cummins or Volvo Penta engines with AMF controllers", ar: "مولدات احتياطية أو أساسية بمحركات بيركنز أو كمنز أو فولفو بنتا مع وحدات تحكم AMF" },
+      { en: "Prime or standby sets on Perkins, Cummins or Baudouin engines with AMF controllers", ar: "مولدات احتياطية أو أساسية بمحركات بيركنز أو كمنز أو بودوان مع وحدات تحكم AMF" },
       { en: "4-pole ATS panels with adjustable timers and transfer in 5–10 seconds", ar: "لوحات ATS رباعية الأقطاب بمؤقتات قابلة للضبط وتحويل خلال 5–10 ثوانٍ" },
       { en: "Synchronising panels for N+1 redundancy and load sharing", ar: "لوحات تزامن لتحقيق احتياطية N+1 وتوزيع الأحمال" },
       { en: "MDBs with separate essential and non-essential sections", ar: "لوحات توزيع رئيسية بأقسام منفصلة للأحمال الأساسية وغير الأساسية" },
@@ -313,12 +313,12 @@ export const industries: Industry[] = [
       },
     ],
     solution: [
-      { en: "Volvo Penta and Perkins sets in sound-attenuated canopies", ar: "مولدات فولفو بنتا وبيركنز في كبائن عازلة للصوت" },
+      { en: "Perkins and Cummins sets in sound-attenuated canopies", ar: "مولدات بيركنز وكمنز في كبائن عازلة للصوت" },
       { en: "ATS panels with load-shed and priority transfer", ar: "لوحات ATS مع فصل الأحمال والتحويل حسب الأولوية" },
       { en: "MDB and SMDB sets prepared for DEWA / SEWA / ADDC inspection", ar: "لوحات توزيع رئيسية وفرعية مجهزة لفحص ديوا وسيوا وأدك" },
       { en: "Dimension drawings for plant-room coordination", ar: "رسومات الأبعاد للتنسيق مع غرف المعدات" },
     ],
-    products: ["volvo-penta-generator-80-700kva", "ats-panel-630a-4000a", "main-distribution-board-mdb"],
+    products: ["perkins-diesel-generator-250-2500kva", "ats-panel-630a-4000a", "main-distribution-board-mdb"],
     faq: [
       {
         q: { en: "How quiet can a building generator be?", ar: "إلى أي درجة يمكن أن يكون مولد المبنى هادئاً؟" },

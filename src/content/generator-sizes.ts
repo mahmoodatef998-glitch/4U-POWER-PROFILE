@@ -34,7 +34,7 @@ export function sizeData(kva: number) {
   // typical split-AC units (2 TR ≈ 2.4 kW running) the set can carry at 80 % of its kW
   const acUnits = Math.max(1, Math.floor((kw * 0.8) / 2.4));
   const enclosure = kva <= 60 ? "canopy" : kva <= 500 ? "canopy-or-open" : kva <= 1250 ? "open-or-container" : "container";
-  const engines = kva <= 40 ? ["Kubota", "Perkins", "Lister Petter"] : kva <= 60 ? ["Perkins", "Cummins", "Lister Petter"] : kva <= 200 ? ["Perkins", "Cummins", "Volvo Penta", "Baudouin"] : kva <= 700 ? ["Cummins", "Perkins", "Volvo Penta", "Baudouin"] : ["Cummins", "Perkins", "Baudouin"];
+  const engines = kva <= 40 ? ["Kubota", "Perkins", "Lister Petter"] : kva <= 60 ? ["Perkins", "Cummins", "Lister Petter"] : kva <= 200 ? ["Perkins", "Cummins", "Baudouin"] : kva <= 700 ? ["Cummins", "Perkins", "Baudouin"] : ["Cummins", "Perkins", "Baudouin"];
   return { kva, kw, amps, ats, fuel50, fuel75, fuel100, tank8h, tank24h, primeKva, acUnits, enclosure, engines };
 }
 

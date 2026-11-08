@@ -14,6 +14,7 @@ import { WhatsAppButton } from "./cta-buttons";
 import { buttonVariants } from "./ui/button";
 import { QuoteCart } from "./quote-cart";
 import { ThemeToggle } from "./theme-toggle";
+import { PROJECTS_LIVE } from "@/lib/site-flags";
 
 const NAV = [
   { href: "/", key: "home", top: true },
@@ -26,7 +27,7 @@ const NAV = [
   { href: "/industries", key: "industries" },
   { href: "/services", key: "services", top: true },
   { href: "/spare-parts", key: "parts" },
-  { href: "/projects", key: "projects" },
+  ...(PROJECTS_LIVE ? [{ href: "/projects", key: "projects" }] : []),
   { href: "/markets", key: "markets" },
   { href: "/news", key: "news", top: true },
   { href: "/about", key: "about", top: true },

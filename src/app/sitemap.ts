@@ -7,6 +7,7 @@ import { getNews, getProducts } from "@/lib/data";
 import { BRANDS, brandHubPath, gensetModels, modelImage, modelPath } from "@/lib/genset-models";
 import { localeUrl } from "@/lib/seo";
 import { SITE_URL } from "@/lib/site";
+import { PROJECTS_LIVE } from "@/lib/site-flags";
 
 export const revalidate = 3600;
 
@@ -24,7 +25,7 @@ const STATIC: { path: string; priority: number; freq: MetadataRoute.Sitemap[numb
   { path: "/services", priority: 0.8, freq: "monthly" },
   { path: "/spare-parts", priority: 0.8, freq: "monthly" },
   { path: "/markets", priority: 0.7, freq: "monthly" },
-  { path: "/projects", priority: 0.7, freq: "monthly" },
+  ...(PROJECTS_LIVE ? [{ path: "/projects", priority: 0.7, freq: "monthly" as const }] : []),
   { path: "/news", priority: 0.8, freq: "weekly" },
   { path: "/about", priority: 0.6, freq: "yearly" },
   { path: "/contact", priority: 0.8, freq: "yearly" },

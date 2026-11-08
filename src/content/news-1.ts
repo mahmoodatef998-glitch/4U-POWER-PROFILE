@@ -212,9 +212,9 @@ Browse our [ATS panel range](/en/ats-panels) from 63 A to 4000 A, or use the [kV
     meta_title_en: "Perkins vs Cummins vs Kubota Generators in the UAE | 4U Power",
     meta_title_ar: "بيركنز أم كمنز أم كوبوتا؟ أفضل محرك مولد في الإمارات",
     excerpt_en:
-      "The engine is half a generator's cost and most of its reputation. An honest comparison of Perkins, Cummins, Kubota and Volvo Penta for UAE sites.",
+      "The engine is half a generator's cost and most of its reputation. An honest comparison of Perkins, Cummins, Kubota and Baudouin for UAE sites.",
     excerpt_ar:
-      "المحرك يمثل نصف تكلفة المولد ومعظم سمعته. مقارنة صريحة بين بيركنز وكمنز وكوبوتا وفولفو بنتا، ومتى تكون كل ماركة الخيار الأنسب لموقعك في الإمارات.",
+      "المحرك يمثل نصف تكلفة المولد ومعظم سمعته. مقارنة صريحة بين بيركنز وكمنز وكوبوتا وبودوان، ومتى تكون كل ماركة الخيار الأنسب لموقعك في الإمارات.",
     cover_image: "/images/news/engine-brands.svg",
     published_at: "2026-07-01T08:00:00Z",
     is_published: true,
@@ -241,10 +241,10 @@ Kubota specialises in small, very quiet engines.
 - **Strengths:** low noise, compact size, smooth running.
 - **Best for:** 10–40 kVA sets for villas, clinics, shops, events and anywhere noise complaints are a risk.
 
-## Volvo Penta
+## Baudouin
 
-- **Strengths:** excellent fuel efficiency and clean emissions in the 80–700 kVA range.
-- **Best for:** hotels, commercial towers and sites where running cost over the life of the set matters most.
+- **Strengths:** one of the widest ranges we offer, from 20 to 2500 kVA, at a competitive price for the output.
+- **Best for:** prime and standby projects where budget matters, including large open and containerised sets.
 
 ## Chinese engine series
 
@@ -286,10 +286,10 @@ We don't push one brand. Tell us your kVA and application and we will quote two 
 - **نقاط القوة:** ضوضاء منخفضة وحجم صغير وتشغيل سلس.
 - **الأنسب لـ:** مولدات من 10 إلى 40 ك.ف.أ للفلل والعيادات والمحلات والفعاليات وأي مكان تكون فيه الضوضاء مشكلة.
 
-## فولفو بنتا (Volvo Penta)
+## بودوان (Baudouin)
 
-- **نقاط القوة:** كفاءة ممتازة في استهلاك الوقود وانبعاثات منخفضة في نطاق 80–700 ك.ف.أ.
-- **الأنسب لـ:** الفنادق والأبراج التجارية والمواقع التي تهمها تكلفة التشغيل على مدى عمر المولد.
+- **نقاط القوة:** من أوسع النطاقات التي نوفرها، من 20 إلى 2500 ك.ف.أ، بسعر منافس مقابل القدرة.
+- **الأنسب لـ:** مشاريع التشغيل الأساسي والاحتياطي التي تهمها الميزانية، بما فيها المولدات الكبيرة المفتوحة وداخل الحاويات.
 
 ## المحركات الصينية
 

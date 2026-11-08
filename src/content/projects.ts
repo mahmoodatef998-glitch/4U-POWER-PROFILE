@@ -84,9 +84,9 @@ export const projects: Project[] = [
     sector: "hospitality",
     kva: 630,
     summary_en:
-      "630 kVA Volvo Penta set, ATS and a new 1600 A main distribution board to separate essential and non-essential loads.",
+      "630 kVA set, ATS and a new 1600 A main distribution board to separate essential and non-essential loads.",
     summary_ar:
-      "مولد فولفو بنتا 630 ك.ف.أ مع لوحة ATS ولوحة توزيع رئيسية جديدة 1600 أمبير لفصل الأحمال الأساسية عن غير الأساسية.",
+      "مولد 630 ك.ف.أ مع لوحة ATS ولوحة توزيع رئيسية جديدة 1600 أمبير لفصل الأحمال الأساسية عن غير الأساسية.",
     images: ["/images/projects/hotel.svg"],
     is_published: true,
   },

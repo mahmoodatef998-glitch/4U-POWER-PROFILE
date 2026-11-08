@@ -196,29 +196,6 @@ const coreProducts: Product[] = [
   },
   {
     category: "generator",
-    slug: "volvo-penta-generator-80-700kva",
-    name_en: "Volvo Penta Generator 80–700 kVA",
-    name_ar: "مولد فولفو بنتا 80–700 كيلو فولت أمبير",
-    kva_min: 80,
-    kva_max: 700,
-    engine_brand: "Volvo Penta",
-    fuel_type: "diesel",
-    description_en:
-      "Volvo Penta TAD-series gensets offering excellent fuel economy and clean emissions for hotels, commercial towers and marine-adjacent facilities.",
-    description_ar:
-      "مولدات فولفو بنتا من فئة TAD توفر كفاءة عالية في استهلاك الوقود وانبعاثات منخفضة، مناسبة للفنادق والأبراج التجارية والمنشآت القريبة من البحر.",
-    specs: [
-      s("Power range", "نطاق القدرة", "80 – 700 kVA", "80 – 700 ك.ف.أ"),
-      s("Engine", "المحرك", "Volvo Penta TAD series", "فولفو بنتا فئة TAD"),
-      ...genCommon(),
-    ],
-    spec_sheet_url: DATASHEET,
-    images: ["/images/products/volvo-penta-diesel-generator-250-1000kva-4u.webp", "/images/products/volvo-penta-diesel-generator-4u.webp"],
-    sort_order: 60,
-    is_published: true,
-  },
-  {
-    category: "generator",
     slug: "baudouin-diesel-generator-20-2500kva",
     name_en: "Baudouin Diesel Generator 20–2500 kVA",
     name_ar: "مولد ديزل بودوان 20–2500 كيلو فولت أمبير",
