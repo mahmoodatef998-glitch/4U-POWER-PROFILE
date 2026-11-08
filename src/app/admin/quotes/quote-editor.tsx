@@ -560,6 +560,22 @@ export function QuoteEditor({ initial, initialSearch = "", prices = null, fx = n
             </select>
           </label>
           <label className={label}>
+            Discount %
+            <input
+              type="number"
+              min="0"
+              max="100"
+              step="0.01"
+              inputMode="decimal"
+              value={discountPct}
+              onChange={(e) => setDiscountPct(Math.min(100, Math.max(0, e.target.valueAsNumber || 0)))}
+              className={`${input} font-normal`}
+            />
+            <span className="text-xs font-normal text-muted">
+              {t.discount > 0 ? `- AED ${money(t.discount)} off the subtotal, before VAT` : "Any % you like; taken off the subtotal before VAT"}
+            </span>
+          </label>
+          <label className={label}>
             Currency
             <select value={currency} onChange={(e) => pickCurrency(e.target.value as Currency)} className={`${input} font-normal`}>
               {CURRENCIES.map((c) => (
