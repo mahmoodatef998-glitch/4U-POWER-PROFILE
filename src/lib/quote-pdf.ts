@@ -1,7 +1,8 @@
 import "server-only";
-import { PDFDocument, StandardFonts, degrees, rgb, type PDFFont, type PDFPage, type RGB } from "pdf-lib";
+import { PDFDocument, PDFHexString, PDFName, StandardFonts, degrees, rgb, type PDFDict, type PDFFont, type PDFPage, type RGB } from "pdf-lib";
 import { COMPANY, SPEC_NOTE, deliveryText, inCurrency, money, printable, quoteNumber, ukDate, type Quote } from "./quote";
 import type { QuoteAssets } from "./quote-assets";
+import { QUOTE_DATA_KEY, type EmbeddedQuote } from "./quote-import";
 
 /**
  * Quotation PDF on the 4U letterhead: page 1 (and more if the items run long) is drawn on the letterhead,
@@ -68,6 +69,21 @@ export async function buildQuotePdf(q: Quote, assets: QuoteAssets, opts: { draft
   const ref = opts.draft ? (q.number ? `${quoteNumber(q.number)} DRAFT` : "DRAFT") : quoteNumber(q.number);
   const doc = await PDFDocument.create();
   doc.setTitle(`Quotation ${ref} - ${printable(q.customer.name)}`);
+  // the quotation's data travels inside the PDF, so it can be imported again exactly (quote-import.ts)
+  const embedded: EmbeddedQuote = {
+    v: 1,
+    customer: q.customer,
+    items: q.items.map(({ code, title, description, qty, unit, unit_price }) => ({ code, title, description, qty, unit, unit_price })),
+    currency: cur,
+    vat_rate: q.vat_rate,
+    discount_pct: q.discount_pct,
+    quote_date: q.quote_date,
+    validity: q.validity,
+    delivery: q.delivery,
+    notes: q.notes,
+    total: q.total,
+  };
+  (doc as unknown as { getInfoDict(): PDFDict }).getInfoDict().set(PDFName.of(QUOTE_DATA_KEY), PDFHexString.fromText(JSON.stringify(embedded)));
   doc.setAuthor(COMPANY.name);
   doc.setCreator("4U Power Generation admin");
   const [letterhead] = await doc.embedPdf(assets.letterhead, [0]);

@@ -9,7 +9,7 @@
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
     "seed:sql": "tsx scripts/generate-seed.ts",
-    "test": "tsx scripts/test-calculator.ts && tsx scripts/test-sales.ts && tsx scripts/test-seo.ts && tsx scripts/test-quote.ts",
+    "test": "tsx scripts/test-calculator.ts && tsx scripts/test-sales.ts && tsx scripts/test-seo.ts && tsx scripts/test-quote.ts && tsx scripts/test-quote-import.ts",
     "check:seo": "tsx scripts/seo-lengths.ts",
     "audit:seo": "node scripts/seo-audit.mjs"
   },
@@ -36,6 +36,7 @@
     "server-only": "^0.0.1",
     "tailwind-merge": "^3.7.0",
     "three": "^0.180.0",
+    "unpdf": "1.9.1",
     "zod": "^4.6.7"
   },
   "devDependencies": {

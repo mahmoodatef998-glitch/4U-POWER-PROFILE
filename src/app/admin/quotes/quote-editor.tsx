@@ -41,6 +41,7 @@ import {
   type QuoteStatus,
 } from "@/lib/quote";
 import { saveQuote, type SaveState } from "./actions";
+import type { ImportedQuote } from "@/lib/quote-import";
 
 export type EditorInitial = {
   id: string | null;
@@ -193,6 +194,36 @@ export function QuoteEditor({ initial, initialSearch = "", prices = null, fx = n
 
 
   const update = (i: number, patch: Partial<QuoteItem>) => setItems((list) => list.map((it, j) => (j === i ? { ...it, ...patch } : it)));
+  /** Fills the form from a ready PDF quotation (/admin/quotes/import); prices come in the PDF's currency. */
+  function applyImport(q: ImportedQuote): string[] {
+    const notes: string[] = [...q.warnings];
+    const cur = q.currency && (CURRENCIES as readonly string[]).includes(q.currency) ? q.currency : "AED";
+    let toAed = 1;
+    if (cur !== "AED") {
+      const rate = todayRate(cur);
+      if (rate) {
+        pickCurrency(cur);
+        toAed = rate;
+      } else notes.push(`No ${cur} rate is available today: the prices were kept as printed and treated as AED.`);
+    }
+    setItems(q.items.map((i) => ({ code: i.code, title: i.title, description: i.description, qty: i.qty, unit: i.unit || "Units", unit_price: Math.round(i.unit_price * toAed * 100) / 100 })));
+    const found = Object.fromEntries(Object.entries(q.customer).filter(([, v]) => typeof v === "string" && v.trim()));
+    if (Object.keys(found).length) setCustomer((c) => ({ ...c, ...found }));
+    if (q.discount_pct !== null) setDiscountPct(q.discount_pct);
+    if (q.vat_rate !== null && VAT_RATES.includes(q.vat_rate)) setVatRate(q.vat_rate);
+    if (q.quote_date) setQuoteDate(q.quote_date);
+    if (q.validity) setValidity(q.validity);
+    if (q.delivery) setDelivery(q.delivery);
+    if (q.notes) setNotes(q.notes);
+    if (q.printed_total !== null) {
+      const check = totals(q.items, q.vat_rate ?? vatRate, q.discount_pct ?? 0).total;
+      if (Math.abs(check - q.printed_total) > Math.max(1, q.printed_total * 0.005)) {
+        notes.push(`The PDF total is ${money(q.printed_total)} ${cur} but the imported lines give ${money(check)} ${cur} — compare the lines with the PDF.`);
+      }
+    }
+    return notes;
+  }
+
   const move = (i: number, d: -1 | 1) =>
     setItems((list) => {
       const next = [...list];
@@ -204,6 +235,8 @@ export function QuoteEditor({ initial, initialSearch = "", prices = null, fx = n
   return (
     <form action={action} className="grid gap-8">
       <input type="hidden" name="payload" value={payload} />
+
+      {!initial.id && <ImportPdf hasLines={items.length > 0} onImport={applyImport} />}
 
       {/* ------------------------------------------------ add a generator */}
       <section className="rounded-2xl border border-line bg-navy-900 p-5">
@@ -660,5 +693,60 @@ export function QuoteEditor({ initial, initialSearch = "", prices = null, fx = n
         </div>
       </div>
     </form>
+  );
+}
+
+/** Upload a ready PDF quotation to fill the form (the result is reviewed here before saving). */
+function ImportPdf({ hasLines, onImport }: { hasLines: boolean; onImport: (q: ImportedQuote) => string[] }) {
+  const [busy, setBusy] = useState(false);
+  const [msg, setMsg] = useState<{ ok: boolean; text: string; notes: string[] } | null>(null);
+  async function upload(file: File | undefined) {
+    if (!file) return;
+    if (hasLines && !window.confirm("Replace the lines already on this quotation with the ones in the PDF?")) return;
+    setBusy(true);
+    setMsg(null);
+    try {
+      const fd = new FormData();
+      fd.append("file", file);
+      const res = await fetch("/admin/quotes/import", { method: "POST", body: fd });
+      const data = (await res.json().catch(() => ({}))) as ImportedQuote & { error?: string };
+      if (!res.ok || data.error) {
+        setMsg({ ok: false, text: data.error ?? "The PDF could not be imported.", notes: [] });
+        return;
+      }
+      const notes = onImport(data);
+      const how = data.source === "embedded" ? "read exactly from the data inside the PDF" : "read from the PDF's text";
+      setMsg({
+        ok: data.items.length > 0,
+        text: data.items.length ? `${data.items.length} line${data.items.length === 1 ? "" : "s"} imported (${how}). Check the lines, customer and totals below before saving.` : "No priced lines were found in this PDF.",
+        notes,
+      });
+    } catch {
+      setMsg({ ok: false, text: "The upload failed. Try again.", notes: [] });
+    } finally {
+      setBusy(false);
+    }
+  }
+  return (
+    <section className="rounded-2xl border border-dashed border-brand-500/60 bg-brand-500/5 p-5">
+      <h2 className="text-lg font-extrabold">Start from a ready quotation (PDF)</h2>
+      <p className="mt-1 text-sm text-muted">
+        Upload a quotation PDF: the customer, lines, quantities, prices, discount, VAT, validity and delivery are filled in for you. Nothing is saved until you press Save.
+      </p>
+      <label className="mt-3 inline-flex cursor-pointer items-center gap-2 rounded-lg bg-brand-500 px-4 py-2 text-sm font-bold text-ink-950">
+        {busy ? "Reading the PDF…" : "Upload PDF"}
+        <input type="file" accept="application/pdf,.pdf" className="sr-only" disabled={busy} onChange={(e) => { void upload(e.target.files?.[0]); e.target.value = ""; }} />
+      </label>
+      {msg && (
+        <div role="status" className={`mt-3 rounded-lg p-3 text-sm ${msg.ok ? "bg-emerald-50 text-emerald-900" : "bg-amber-50 text-amber-900"}`}>
+          <p className="font-semibold">{msg.text}</p>
+          {msg.notes.length > 0 && (
+            <ul className="mt-2 list-disc space-y-1 ps-5">
+              {msg.notes.map((n) => <li key={n}>{n}</li>)}
+            </ul>
+          )}
+        </div>
+      )}
+    </section>
   );
 }
