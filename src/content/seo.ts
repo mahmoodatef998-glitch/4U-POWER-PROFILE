@@ -40,30 +40,30 @@ export const pageSeo = {
   generators: {
     title: {
       en: "Diesel Generators for Sale in UAE | 10–2500 kVA | 4U Power",
-      ar: "مولدات كهربائية للبيع في الإمارات | أسعار 10–2500 ك.ف.أ",
+      ar: "أسعار المولدات الكهربائية في الإمارات | مولدات ديزل للبيع",
     },
     description: {
       en: "Perkins, Cummins, Kubota & Baudouin diesel generators 10–2500 kVA from Sharjah. Standby & prime sets for industry, towers and sites. WhatsApp for a price.",
-      ar: "مولدات ديزل بيركنز وكمنز وكوبوتا وبودوان من 10 إلى 2500 ك.ف.أ من الشارقة، احتياطية وأساسية للمصانع والأبراج والمواقع. اطلب السعر عبر الواتساب.",
+      ar: "مولدات كهربائية للبيع في الإمارات: بيركنز وكمنز وكوبوتا وبودوان من 10 إلى 2500 ك.ف.أ من الشارقة، احتياطية وأساسية. عرض سعر خلال 24 ساعة.",
     },
   },
   ats: {
     title: {
-      en: "ATS Panel Supplier UAE | Automatic Transfer Switch Sharjah",
-      ar: "لوحات ATS الإمارات | لوحات تحويل أوتوماتيكي في الشارقة",
+      en: "ATS Panel Suppliers in UAE | Automatic Transfer Switch",
+      ar: "لوحة ATS للمولدات في الإمارات | لوحات تحويل أوتوماتيكي",
     },
     description: {
-      en: "Automatic transfer switch panels 63–4000 A for generators, built and tested in Sharjah. 3/4-pole, ACB and motorised types. Delivery across UAE, KSA & Iraq.",
-      ar: "لوحات تحويل أوتوماتيكي ATS من 63 إلى 4000 أمبير للمولدات، مختبرة في الشارقة، 3 و4 أقطاب بقواطع ACB أو مُحرّكة، مع توصيل للإمارات والسعودية والعراق.",
+      en: "ATS panel supplier in the UAE: automatic transfer switches 63–4000 A for generators, 3/4-pole, ACB or motorised, tested in Sharjah. Quote in 24 hours.",
+      ar: "مورد لوحات ATS في الإمارات: لوحات تحويل أوتوماتيكي للمولدات من 63 إلى 4000 أمبير، 3 و4 أقطاب، ACB أو مُحرّكة، مختبرة في الشارقة. عرض سعر خلال 24 ساعة.",
     },
   },
   switchgear: {
     title: {
-      en: "LV Switchgear & MDB Panel Supplier UAE | 4U Power Sharjah",
+      en: "LV & 33kV Switchgear, MDB Panel Supplier UAE | 4U Power",
       ar: "لوحات كهرباء وتوزيع MDB في الإمارات | فور يو باور الشارقة",
     },
     description: {
-      en: "Low voltage switchgear, MDB, SMDB, control and generator synchronizing panels to IEC 61439 from Sharjah. Built to your SLD for projects in the UAE and GCC.",
+      en: "LV switchgear, MDB, SMDB and synchronizing panels to IEC 61439, plus 33kV MV switchgear and RMUs, built to your SLD in Sharjah. UAE quote in 24 hours.",
       ar: "لوحات جهد منخفض ولوحات توزيع رئيسية وفرعية ولوحات تحكم وتزامن مولدات وفق IEC 61439 من الشارقة، حسب المخطط أحادي الخط لمشاريع الإمارات والخليج.",
     },
   },
@@ -138,3 +138,32 @@ export const pageSeo = {
     },
   },
 } satisfies Record<string, PageSeo>;
+
+/**
+ * Title / description overrides for catalog products whose Search Console queries the product name
+ * alone doesn't match (e.g. "33kv switchgear", "ats panel supplier"). Without an entry the product page
+ * uses its name + brand and its description.
+ */
+export const productSeo: Record<string, PageSeo> = {
+  "ats-panel-63a-400a": {
+    title: { en: "ATS Panel Supplier in UAE | 63–400 A Transfer Switch", ar: "لوحة ATS من 63 إلى 400 أمبير | مورد لوحات ATS في الإمارات" },
+    description: {
+      en: "ATS panels 63–400 A from a UAE supplier: 3- or 4-pole, motorised or contactor changeover, IP54, factory function-tested in Sharjah. Quote in 24 hours.",
+      ar: "لوحة ATS للمولدات من 63 إلى 400 أمبير: 3 أو 4 أقطاب، تحويل بمحرك أو كونتاكتور، غلاف IP54 ومختبرة في الشارقة قبل الشحن. عرض سعر خلال 24 ساعة.",
+    },
+  },
+  "ats-panel-630a-4000a": {
+    title: { en: "ATS Panel 630–4000 A | ACB Changeover Supplier in UAE", ar: "لوحة ATS من 630 إلى 4000 أمبير بقواطع ACB في الإمارات" },
+    description: {
+      en: "High-current ATS panels 630–4000 A with motorised ACB pair, metering and Modbus, up to Form 4b, for plants, hospitals and towers in the UAE. Quote in 24h.",
+      ar: "لوحات ATS للتيارات العالية من 630 إلى 4000 أمبير بزوج قواطع ACB مُحرّكة وعداد وModbus حتى Form 4b للمصانع والمستشفيات والأبراج. عرض سعر خلال 24 ساعة.",
+    },
+  },
+  "mv-switchgear-33kv": {
+    title: { en: "33kV Switchgear Supplier in UAE | MV Switchgear & RMU", ar: "لوحات جهد متوسط 33 ك.ف في الإمارات | سويتشجير 33kV" },
+    description: {
+      en: "33kV switchgear and ring main units for substations and generator step-up: metal-clad panels, numerical relays, CT/VT metering. UAE supply, quote in 24h.",
+      ar: "لوحات جهد متوسط حتى 33 ك.ف ووحدات RMU للمحطات الفرعية ورفع جهد المولدات، مع مرحلات حماية رقمية وقياس. توريد في الإمارات وعرض سعر خلال 24 ساعة.",
+    },
+  },
+};

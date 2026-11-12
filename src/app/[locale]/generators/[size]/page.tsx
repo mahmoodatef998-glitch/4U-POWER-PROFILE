@@ -13,6 +13,7 @@ import { ModelTable } from "@/components/model-table";
 import { fiftyHzModels, nearestModels } from "@/lib/genset-models";
 import { SectionHeading } from "@/components/section-heading";
 import { GENERATOR_SIZES, sizeCopy, sizeFromSlug, sizeSlug } from "@/content/generator-sizes";
+import { engineBrandLabels } from "@/content/taxonomy";
 import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 import { matchAts, matchProducts } from "@/lib/calculator";
@@ -142,6 +143,46 @@ export default async function GeneratorSizePage({ params }: Props) {
                 {t("cta.tryCalculator")} →
               </Link>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="section pt-0" aria-labelledby="price-title">
+        <div className="container-x rounded-[2rem] border border-line bg-surface p-7 sm:p-10">
+          <h2 id="price-title" className="text-2xl text-ink sm:text-3xl">{ar ? `سعر مولد ${kva} ك.ف.أ في الإمارات` : `${kva} kVA generator price in UAE`}</h2>
+          <p className="mt-3 max-w-3xl leading-7 text-muted">
+            {ar
+              ? `لا يوجد سعر واحد لمولد ${kva} ك.ف.أ؛ السعر يتحدد حسب المواصفات التي تختارها، ونرسل لك عرض سعر مكتوباً خلال 24 ساعة بخيارين أو ثلاثة جنباً إلى جنب:`
+              : `There is no single price for a ${kva} kVA generator — it depends on the specification you choose. We send a written quotation within 24 hours with two or three options side by side:`}
+          </p>
+          <ul className="mt-5 grid gap-3 text-sm leading-6 text-ink sm:grid-cols-2 lg:grid-cols-3">
+            {(ar
+              ? [
+                  `ماركة المحرك (${d.engines.map((e) => engineBrandLabels[e]?.ar ?? e).join(" أو ")})`,
+                  "نوع الهيكل: كابينة صامتة أو إطار مفتوح أو حاوية",
+                  "وحدة التحكم وخيار AMF للتشغيل التلقائي",
+                  `لوحة ATS (${d.ats} أمبير) وخزان وقود إضافي إن لزم`,
+                  "القدرة الاحتياطية أو الأساسية حسب ساعات التشغيل",
+                  "مدينة التسليم والتركيب والتشغيل",
+                ]
+              : [
+                  `Engine brand (${d.engines.join(", ").replace(/, ([^,]*)$/, " or $1")})`,
+                  "Enclosure: silent canopy, open frame or container",
+                  "Controller and AMF auto-start option",
+                  `ATS panel (${d.ats} A) and any extra fuel tank`,
+                  "Standby or prime rating for your running hours",
+                  "Delivery city, installation and commissioning",
+                ]
+            ).map((x) => (
+              <li key={x} className="flex gap-2 rounded-xl border border-line bg-white/[0.03] px-4 py-3">
+                <span className="text-brand-400" aria-hidden>✓</span>
+                <span>{x}</span>
+              </li>
+            ))}
+          </ul>
+          <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
+            <WhatsAppButton location={`size_price_${kva}`} message={wa} label={ar ? `اطلب سعر مولد ${kva} ك.ف.أ خلال 24 ساعة` : `Get a ${kva} kVA quote in 24h`} />
+            <Link href="/contact" className="font-semibold text-brand-400 hover:underline">{ar ? "أو أرسل طلبك من نموذج التواصل ←" : "or send your request through the contact form →"}</Link>
           </div>
         </div>
       </section>

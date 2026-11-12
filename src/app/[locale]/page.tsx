@@ -484,6 +484,23 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
               </div>
             </div>
           </Tilt3D>
+          <nav className="container-x relative mt-10 text-center" aria-label={locale === "ar" ? "أحجام المولدات الشائعة" : "Popular generator sizes"}>
+            <p className="text-sm text-white/60">{locale === "ar" ? "تعرف الحجم؟ افتح صفحته للمواصفات والسعر:" : "Already know the size? Open its page for specs and a price:"}</p>
+            <ul className="mt-4 flex flex-wrap justify-center gap-2">
+              {[100, 250, 500, 1000, 1500].map((k) => (
+                <li key={k}>
+                  <Link href={`/generators/${k}-kva`} className="inline-flex rounded-full border border-white/15 px-4 py-2 text-sm font-semibold text-white hover:border-brand-500/60 hover:bg-white/5">
+                    {locale === "ar" ? `مولد ${k} ك.ف.أ` : `${k} kVA generator`}
+                  </Link>
+                </li>
+              ))}
+              <li>
+                <Link href="/generators/sizes" className="inline-flex rounded-full px-4 py-2 text-sm font-semibold text-brand-400 hover:underline">
+                  {locale === "ar" ? "جدول أحجام المولدات الكامل ←" : "Full generator size chart →"}
+                </Link>
+              </li>
+            </ul>
+          </nav>
         </section>
 
         {/* ---------------------------------------------- COVERAGE */}

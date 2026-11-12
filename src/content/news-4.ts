@@ -232,12 +232,12 @@ We supply generators, ATS and distribution panels, fuel tanks and canopies with 
     slug: "generator-fuel-consumption-chart",
     title_en: "Generator Fuel Consumption Chart: Litres per Hour from 20 to 2000 kVA",
     title_ar: "جدول استهلاك المولد للديزل: لتر في الساعة من 20 إلى 2000 ك.ف.أ",
-    meta_title_en: "Generator Fuel Consumption Chart (L/h) 20–2000 kVA | 4U Power",
-    meta_title_ar: "جدول استهلاك المولد للديزل باللتر في الساعة | فور يو باور",
+    meta_title_en: "Generator Fuel Consumption in Litres per Hour: 20–2000 kVA",
+    meta_title_ar: "كم يستهلك مولد الكهرباء من الديزل في الساعة؟ جدول الاستهلاك",
     excerpt_en:
-      "How much diesel does a generator use per hour? A consumption chart from 20 to 2000 kVA at 50%, 75% and full load, plus how to size the fuel tank.",
+      "Generator fuel consumption in litres per hour for 20 to 2000 kVA sets at 50%, 75% and full load, with tank sizing. Need a set in the UAE? Quote in 24h.",
     excerpt_ar:
-      "كم لتر ديزل يستهلك المولد في الساعة؟ جدول استهلاك من 20 إلى 2000 ك.ف.أ عند حمل 50% و75% والحمل الكامل، مع طريقة حساب سعة خزان الوقود.",
+      "كم يستهلك مولد الكهرباء من الديزل في الساعة؟ جدول معدل استهلاك الوقود للمولدات من 20 إلى 2000 ك.ف.أ عند 50% و75% والحمل الكامل، مع حساب سعة الخزان.",
     cover_image: "/images/products/baudouin-diesel-generator-4u.webp",
     published_at: "2026-10-19T06:00:00Z",
     is_published: true,

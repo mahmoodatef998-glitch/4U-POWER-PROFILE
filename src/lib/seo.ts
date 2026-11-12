@@ -64,9 +64,8 @@ export function buildMetadata({ locale, path, title: fullTitle, description, ima
 export const ORG_ID = `${SITE_URL}/#organization`;
 export const BUSINESS_ID = `${SITE_URL}/#localbusiness`;
 
-export function organizationSchema(locale: Locale) {
-  const sameAs = [...Object.values(social).filter((u) => u && !u.includes("wa.me")), ...listings];
-  const address = {
+function postalAddress(locale: Locale) {
+  return {
     "@type": "PostalAddress",
     streetAddress: locale === "ar" ? company.address.streetAr : company.address.street,
     postOfficeBoxNumber: company.address.poBox.replace("P.O. Box ", ""),
@@ -74,6 +73,34 @@ export function organizationSchema(locale: Locale) {
     addressRegion: locale === "ar" ? company.address.cityAr : company.address.city,
     addressCountry: company.address.countryCode,
   };
+}
+
+/**
+ * The company's one real LocalBusiness (same @id as in organizationSchema, so Google merges the nodes),
+ * with the city a location page serves added as areaServed. Address, phone and hours are the real ones.
+ */
+export function localBusinessForArea(locale: Locale, area: { name: string; country: string }, pageUrl: string) {
+  return {
+    "@context": "https://schema.org",
+    "@type": ["LocalBusiness", "Store"],
+    "@id": BUSINESS_ID,
+    name: company.brand,
+    url: pageUrl,
+    image: `${SITE_URL}${OG_IMAGE}`,
+    telephone: company.phoneE164,
+    email: company.email,
+    address: postalAddress(locale),
+    geo: { "@type": "GeoCoordinates", latitude: company.geo.lat, longitude: company.geo.lng },
+    openingHours: company.hours,
+    priceRange: "$$",
+    parentOrganization: { "@id": ORG_ID },
+    areaServed: { "@type": "City", name: area.name, containedInPlace: { "@type": "Country", name: area.country } },
+  };
+}
+
+export function organizationSchema(locale: Locale) {
+  const sameAs = [...Object.values(social).filter((u) => u && !u.includes("wa.me")), ...listings];
+  const address = postalAddress(locale);
   return {
     "@context": "https://schema.org",
     "@graph": [

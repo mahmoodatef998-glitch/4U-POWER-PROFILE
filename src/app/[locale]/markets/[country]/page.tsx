@@ -7,7 +7,9 @@ import { FaqBlock } from "@/components/faq-block";
 import { PageHero } from "@/components/page-hero";
 import { ProductCard } from "@/components/product-card";
 import { SectionHeading } from "@/components/section-heading";
+import { cities } from "@/content/locations";
 import { getMarketPage, marketPages } from "@/content/markets";
+import { Link } from "@/i18n/navigation";
 import { marketNames } from "@/content/taxonomy";
 import { routing } from "@/i18n/routing";
 import { getProducts } from "@/lib/data";
@@ -108,6 +110,25 @@ export default async function MarketPage({ params }: Props) {
                   <ProductCard product={p} />
                 </li>
               ))}
+            </ul>
+          </div>
+        </section>
+      )}
+
+      {cities.some((c) => c.market === m.code) && (
+        <section className="section" aria-labelledby="cities-title">
+          <div className="container-x">
+            <SectionHeading id="cities-title" title={ar ? `مورد مولدات في مدن ${name}` : `Generator suppliers by city in ${name}`} />
+            <ul className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              {cities
+                .filter((c) => c.market === m.code)
+                .map((c) => (
+                  <li key={c.slug}>
+                    <Link href={`/locations/${c.slug}`} className="flex h-full rounded-2xl border border-line px-5 py-4 font-semibold text-ink transition hover:border-brand-500/50 hover:bg-white/5">
+                      {ar ? `مورد مولدات في ${pick(c.name, locale)}` : `Generator supplier in ${c.name.en}`}
+                    </Link>
+                  </li>
+                ))}
             </ul>
           </div>
         </section>

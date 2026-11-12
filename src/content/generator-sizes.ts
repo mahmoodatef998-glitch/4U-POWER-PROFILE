@@ -38,6 +38,17 @@ export function sizeData(kva: number) {
   return { kva, kw, amps, ats, fuel50, fuel75, fuel100, tank8h, tank24h, primeKva, acUnits, enclosure, engines };
 }
 
+/** Short "typical use" label for the size chart (same bands as the size pages' longer copy). */
+export function typicalUse(kva: number): L10n {
+  if (kva <= 20) return { en: "Villa, shop, small office", ar: "فيلا، محل، مكتب صغير" };
+  if (kva <= 60) return { en: "Clinic, restaurant, workshop", ar: "عيادة، مطعم، ورشة" };
+  if (kva <= 150) return { en: "School, supermarket, small building", ar: "مدرسة، سوبرماركت، مبنى صغير" };
+  if (kva <= 300) return { en: "Building, cold store, construction site", ar: "مبنى، مخزن تبريد، موقع بناء" };
+  if (kva <= 750) return { en: "Hotel, mall, factory, hospital", ar: "فندق، مول، مصنع، مستشفى" };
+  if (kva <= 1500) return { en: "Hospital, factory, tower, data centre", ar: "مستشفى، مصنع، برج، مركز بيانات" };
+  return { en: "Data centre, industrial plant, utility", ar: "مركز بيانات، مصنع كبير، محطة كهرباء" };
+}
+
 type Band = { uses: L10n; note: L10n };
 function band(kva: number): Band {
   if (kva <= 20)
@@ -78,11 +89,11 @@ export function sizeCopy(kva: number, locale: "en" | "ar") {
     container: { en: "20/40 ft container", ar: "حاوية 20 / 40 قدم" },
   };
 
-  const title = ar ? `سعر مولد ${kva} كيلو فولت أمبير في الإمارات | المواصفات` : `${kva} kVA Diesel Generator Price & Specs in UAE`;
-  const seoTitle = ar ? `مولد ${kva} ك.ف.أ ديزل: السعر والمواصفات | فور يو باور` : `${kva} kVA Generator Price & Specs UAE | 4U Power`;
+  const title = ar ? `مولد ديزل ${kva} ك.ف.أ في الإمارات: السعر والمواصفات` : `${kva} kVA Diesel Generator in UAE: Price & Specifications`;
+  const seoTitle = ar ? `سعر مولد ${kva} كيلو فولت أمبير في الإمارات والمواصفات` : `${kva} kVA Generator Price in UAE & Specs | Quote in 24h`;
   const seoDesc = ar
-    ? `مولد ديزل ${kva} ك.ف.أ (${n(d.kw)} كيلوواط): التيار ${n(Math.round(d.amps))} أمبير، لوحة ATS ${d.ats} أمبير، استهلاك ${n(Math.round(d.fuel75))} لتر/ساعة. سعر في نفس اليوم وتوصيل من الشارقة.`
-    : `${kva} kVA (${n(d.kw)} kW) diesel generator: ${n(Math.round(d.amps))} A full load, ${d.ats} A ATS, ~${n(Math.round(d.fuel75))} L/h at 75% load. Same-day price, delivery from Sharjah.`;
+    ? `مولد ديزل ${kva} ك.ف.أ (${n(d.kw)} كيلوواط): المواصفات، تيار ${n(Math.round(d.amps))} أمبير، لوحة ATS ${d.ats} أمبير، نحو ${n(Math.round(d.fuel75))} لتر/ساعة. عرض سعر خلال 24 ساعة.`
+    : `${kva} kVA (${n(d.kw)} kW) diesel generator in UAE: specification, ${n(Math.round(d.amps))} A full load, ${d.ats} A ATS, ~${n(Math.round(d.fuel75))} L/h at 75%. Quote in 24 hours.`;
   const intro = ar
     ? `مولد ${kva} كيلو فولت أمبير يعطي نحو ${n(d.kw)} كيلوواط عند معامل قدرة 0.8، وهو حجم مناسب لـ${b.uses.ar}. نورّده بمحركات ${d.engines.map((e) => engineBrandLabels[e]?.ar ?? e).join(" أو ")} من مستودعنا في الشارقة، مع لوحة ATS المناسبة وضمان سنة.`
     : `A ${kva} kVA generator delivers about ${n(d.kw)} kW at 0.8 power factor — the right size for ${b.uses.en}. We supply it with ${d.engines.join(", ").replace(/, ([^,]*)$/, " or $1")} engines from our Sharjah warehouse, with a matched ATS panel and a 1-year warranty.`;
@@ -125,8 +136,8 @@ export function sizeCopy(kva: number, locale: "en" | "ar") {
     {
       q: { en: `What is the price of a ${kva} kVA generator in the UAE?`, ar: `كم سعر مولد ${kva} ك.ف.أ في الإمارات؟` },
       a: {
-        en: `It depends on the engine brand, enclosure, controller and whether you need an ATS and fuel tank. Send us the site and delivery city on WhatsApp and we reply the same working day with 2–3 engine options side by side.`,
-        ar: `يعتمد السعر على ماركة المحرك ونوع الهيكل ووحدة التحكم وهل تحتاج لوحة ATS وخزان وقود. أرسل لنا الموقع ومدينة التسليم على الواتساب ونرد في نفس يوم العمل بخيارين أو ثلاثة من المحركات جنباً إلى جنب.`,
+        en: `It depends on the engine brand, enclosure, controller and whether you need an ATS and fuel tank. Send us the site and delivery city on WhatsApp and we reply with a written quotation within 24 hours, with 2–3 engine options side by side.`,
+        ar: `يعتمد السعر على ماركة المحرك ونوع الهيكل ووحدة التحكم وهل تحتاج لوحة ATS وخزان وقود. أرسل لنا الموقع ومدينة التسليم على الواتساب ونرد بعرض سعر مكتوب خلال 24 ساعة بخيارين أو ثلاثة من المحركات جنباً إلى جنب.`,
       },
     },
     {

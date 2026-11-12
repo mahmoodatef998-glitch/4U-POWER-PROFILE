@@ -9,10 +9,10 @@ import { LeadForm } from "@/components/lead-form";
 import { ModelTable } from "@/components/model-table";
 import { PageHero } from "@/components/page-hero";
 import { buttonVariants } from "@/components/ui/button";
-import { products as seedProducts } from "@/content/products";
+import { getProducts } from "@/lib/data";
 import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
-import { brandModels, brandName, gensetModels, getModel, modelImage, modelName, modelPath, modelSpecSections, productForModel, ratingNotes } from "@/lib/genset-models";
+import { brandModels, brandName, gensetModels, getModel, modelImage, modelName, modelPath, modelSpecSections, productForModel, ratingNotes, brandHubPath } from "@/lib/genset-models";
 import { buildMetadata, localeUrl } from "@/lib/seo";
 import { SITE_URL } from "@/lib/site";
 import type { Locale } from "@/lib/utils";
@@ -51,7 +51,8 @@ export default async function ModelPage({ params }: Props) {
   const ar = locale === "ar";
   const name = modelName(m, locale);
   const sections = modelSpecSections(m, locale);
-  const parent = seedProducts.find((p) => p.slug === productForModel(m));
+  // the live catalog, not the bundled seed: a product removed from the database must not be linked (it redirects)
+  const parent = (await getProducts()).find((p) => p.slug === productForModel(m));
   const brand = brandName(m.brand, locale);
   const range = brandModels(m.brand);
   const idx = range.indexOf(m);
@@ -85,7 +86,7 @@ export default async function ModelPage({ params }: Props) {
         crumbs={[
           { name: t("common.breadcrumbHome"), path: "/" },
           { name: t("nav.products"), path: "/products" },
-          ...(parent ? [{ name: ar ? parent.name_ar : parent.name_en, path: `/products/${parent.slug}` }] : []),
+          parent ? { name: ar ? parent.name_ar : parent.name_en, path: `/products/${parent.slug}` } : { name: ar ? `مولدات ${brand}` : `${m.brand} generators`, path: brandHubPath(m.brand) },
           { name: m.code, path: modelPath(m) },
         ]}
         eyebrow={ar ? `مولدات ${brand} · ${m.ratedHz ?? 50} هرتز` : `${brand} generating set · ${m.ratedHz ?? 50} Hz`}

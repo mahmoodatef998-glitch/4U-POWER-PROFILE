@@ -15,8 +15,10 @@ import { FUEL_ICONS, kvaLabel } from "@/lib/product-meta";
 import { SectionHeading } from "@/components/section-heading";
 import { categoryHref, categoryLabels, engineBrandLabels, fuelLabels } from "@/content/taxonomy";
 import { products as seedProducts } from "@/content/products";
+import { GENERATOR_SIZES, sizeSlug } from "@/content/generator-sizes";
 import { getProduct, getProducts } from "@/lib/data";
 import { brandHubPath, modelsForProduct } from "@/lib/genset-models";
+import { productSeo } from "@/content/seo";
 import { buildMetadata, localeUrl } from "@/lib/seo";
 import { SITE_URL } from "@/lib/site";
 import { Link } from "@/i18n/navigation";
@@ -38,7 +40,8 @@ function metaFor(p: NonNullable<Awaited<ReturnType<typeof getProduct>>>, locale:
   const title = (name + suffix).length <= 62 ? name + suffix : name;
   const raw = locale === "ar" ? p.description_ar : p.description_en;
   const description = raw.length > 155 ? `${raw.slice(0, 152).replace(/\s+\S*$/, "")}…` : raw;
-  return { name, title, description };
+  const o = productSeo[p.slug];
+  return { name, title: o ? o.title[locale] : title, description: o ? o.description[locale] : description };
 }
 
 export async function generateMetadata({ params }: Props) {
@@ -67,6 +70,7 @@ export default async function ProductPage({ params }: Props) {
   const kva = kvaLabel(p, locale, t("common.kva"));
   const FuelIcon = p.fuel_type ? FUEL_ICONS[p.fuel_type] : null;
   const related = all.filter((o) => o.slug !== p.slug && o.category === p.category).slice(0, 3);
+  const sizesInRange = GENERATOR_SIZES.filter((k) => p.kva_min != null && p.kva_max != null && k >= p.kva_min && k <= p.kva_max);
   const fill = related.length < 3 ? all.filter((o) => o.slug !== p.slug && o.category !== p.category).slice(0, 3 - related.length) : [];
   const waMessage = t("cta.whatsappProduct", { product: name });
   const catPath = categoryHref[p.category].split("#")[0] as string;
@@ -204,6 +208,28 @@ export default async function ProductPage({ params }: Props) {
                 {ar ? `كل موديلات وأحجام ${engineBrandLabels[models[0]!.brand]?.ar ?? models[0]!.brand}` : `Every ${models[0]!.brand} model and size`}
               </Link>
             </p>
+          </div>
+        </section>
+      )}
+
+      {p.category === "generator" && sizesInRange.length > 0 && (
+        <section className="section pt-0" aria-labelledby="sizes-title">
+          <div className="container-x">
+            <h2 id="sizes-title" className="text-2xl text-ink">{ar ? "صفحات الأحجام لهذا المنتج" : "Generator sizes in this range"}</h2>
+            <ul className="mt-5 flex flex-wrap gap-2">
+              {sizesInRange.map((k) => (
+                <li key={k}>
+                  <Link href={`/generators/${sizeSlug(k)}`} className="inline-flex rounded-full border border-line px-4 py-2 text-sm font-semibold text-ink hover:border-brand-500/60 hover:bg-white/5">
+                    {ar ? `مولد ${k} ك.ف.أ` : `${k} kVA generator`}
+                  </Link>
+                </li>
+              ))}
+              <li>
+                <Link href="/generators/sizes" className="inline-flex rounded-full px-4 py-2 text-sm font-semibold text-brand-400 hover:underline">
+                  {ar ? "جدول أحجام المولدات ←" : "Generator size chart →"}
+                </Link>
+              </li>
+            </ul>
           </div>
         </section>
       )}

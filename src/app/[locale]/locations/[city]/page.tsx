@@ -11,7 +11,7 @@ import { sizeSlug } from "@/content/generator-sizes";
 import { cities, cityFaq, getCity } from "@/content/locations";
 import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
-import { buildMetadata, localeUrl, ORG_ID } from "@/lib/seo";
+import { buildMetadata, localBusinessForArea, localeUrl, ORG_ID } from "@/lib/seo";
 import { pick, type Locale } from "@/lib/utils";
 
 export const revalidate = 86400;
@@ -28,12 +28,12 @@ export async function generateMetadata({ params }: Props) {
   const c = getCity(city);
   if (!c) return {};
   const n = pick(c.name, locale);
-  const full = `مولدات كهربائية للبيع في ${n} | أسعار وتوريد | فور يو باور`;
-  const title = locale === "ar" ? (full.length > 65 ? `مولدات كهربائية للبيع في ${n} | فور يو باور` : full) : `Diesel Generators for Sale in ${n} | 4U Power`;
+  const title =
+    locale === "ar" ? `مولدات كهربائية للبيع في ${n} | مورد مولدات ولوحات ATS | فور يو باور` : `Generator Supplier in ${n} | Diesel Generators & ATS | 4U Power`;
   const description =
     locale === "ar"
-      ? `مولدات ديزل كمنز وبيركنز ولوحات ATS في ${n} من 10 إلى 2500 ك.ف.أ، توصيل من الشارقة وضمان سنة. اطلب السعر عبر واتساب.`
-      : `Cummins & Perkins generators, ATS panels and switchgear in ${n}, 10–2500 kVA. Delivered from Sharjah, 12-month warranty. Price on WhatsApp.`;
+      ? `مورد مولدات كهربائية في ${n}: مولدات ديزل كمنز وبيركنز من 10 إلى 2500 ك.ف.أ ولوحات ATS، توصيل من الشارقة وضمان 12 شهراً. عرض سعر خلال 24 ساعة.`
+      : `Generator supplier in ${n}: Cummins & Perkins diesel generators 10–2500 kVA, ATS panels and switchgear from Sharjah. 12-month warranty, quote in 24h.`;
   return buildMetadata({ locale, path: `/locations/${c.slug}`, title, description });
 }
 
@@ -70,6 +70,7 @@ export default async function CityPage({ params }: Props) {
   return (
     <>
       <JsonLd data={schema} />
+      <JsonLd data={localBusinessForArea(locale, { name: c.name.en, country: c.region.en.split(", ").pop() ?? "" }, localeUrl(locale, `/locations/${c.slug}`))} />
       <PageHero
         locale={locale}
         crumbs={[
@@ -78,7 +79,7 @@ export default async function CityPage({ params }: Props) {
           { name: n, path: `/locations/${c.slug}` },
         ]}
         eyebrow={L(c.region)}
-        title={ar ? `مولدات كهربائية للبيع في ${n}` : `Diesel generators for sale in ${n}`}
+        title={ar ? `مورد مولدات كهربائية في ${n}` : `Generator Supplier in ${n}`}
         intro={L(c.angle)}
         aside={
           <ul className="spotlight grid gap-4 rounded-[1.75rem] border border-white/10 bg-white/[0.04] p-6 backdrop-blur">
@@ -120,6 +121,27 @@ export default async function CityPage({ params }: Props) {
             {ar
               ? `نورّد في ${n} لقطاعات: ${c.sectors.ar}. نقدم مولدات ديزل بمحركات كمنز وبيركنز من 10 إلى 2500 ك.ف.أ، ولوحات تحويل أوتوماتيكي ATS، ولوحات توزيع ومفاتيح كهربائية، وأنظمة طاقة شمسية وخزانات وقود وأبراج إنارة.`
               : `In ${n} we supply ${c.sectors.en}. Our range covers Cummins and Perkins diesel generators from 10 to 2500 kVA, automatic transfer switch (ATS) panels, LV and MV switchgear, solar-hybrid systems, fuel tanks and light towers.`}
+          </p>
+        </div>
+      </section>
+
+      <section className="section pt-0" aria-labelledby="area-title">
+        <div className="container-x max-w-4xl">
+          <h2 id="area-title" className="text-2xl text-ink sm:text-3xl">{ar ? `التوصيل ومنطقة الخدمة في ${n}` : `Delivery and service area in ${n}`}</h2>
+          <p className="mt-4 leading-8 text-muted">
+            {ar
+              ? `${L(c.delivery)}. نخدم ${n} والمناطق المحيطة بها من مستودعنا في المنطقة الحرة لمطار الشارقة: التوريد والتنزيل في الموقع، والتركيب والتشغيل والتسليم، ثم عقود الصيانة وقطع الغيار بعد التسليم. كل منتج نورّده مشمول بضمان 12 شهراً.`
+              : `${L(c.delivery)}. We cover ${n} and the surrounding areas from our warehouse in SAIF Zone, Sharjah: supply and offloading on site, installation, commissioning and handover, then maintenance contracts and spare parts after handover. Every product we supply carries a 12-month warranty.`}
+          </p>
+          <p className="mt-4 leading-8 text-muted">
+            {ar ? "أكثر ما يطلبه عملاؤنا: " : "What customers ask us for most: "}
+            <Link href="/generators/sizes" className="font-semibold text-brand-400 hover:underline">{ar ? "جدول أحجام المولدات" : "the generator size chart"}</Link>
+            {ar ? "، و" : ", "}
+            <Link href="/ats-panels" className="font-semibold text-brand-400 hover:underline">{ar ? `لوحات ATS في ${n}` : `ATS panels for ${n} projects`}</Link>
+            {ar ? "، و" : ", "}
+            <Link href="/spare-parts" className="font-semibold text-brand-400 hover:underline">{ar ? "قطع غيار المولدات" : "generator spare parts"}</Link>
+            {ar ? "، و" : " and "}
+            <Link href="/services" className="font-semibold text-brand-400 hover:underline">{ar ? "الصيانة والتشغيل" : "service and commissioning"}</Link>.
           </p>
         </div>
       </section>

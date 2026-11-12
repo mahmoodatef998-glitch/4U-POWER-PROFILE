@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: Props) {
   return buildMetadata({
     locale,
     path: "/spare-parts",
-    title: locale === "ar" ? "قطع غيار المولدات في الإمارات | فلاتر وAVR ووحدات تحكم" : "Generator Spare Parts in UAE | Filters, AVR & Controllers",
+    title: locale === "ar" ? "قطع غيار مولدات في الإمارات | فلاتر وAVR ووحدات تحكم" : "Generator Spare Parts in UAE | Filters, AVR & Controllers",
     description:
       locale === "ar"
         ? "قطع غيار مولدات بيركنز وكمنز وبودوان وكوبوتا وغيرها: فلاتر وسيور وAVR ووحدات تحكم ومارشات. أرسل رقم القطعة أو صورتها واحصل على السعر في نفس اليوم."
