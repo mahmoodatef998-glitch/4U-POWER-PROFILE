@@ -93,8 +93,8 @@ export const marketPages: MarketPage[] = [
         ar: "مولدات ديزل ولوحات ATS في السعودية | فور يو باور",
       },
       description: {
-        en: "Diesel generators 10–2500 kVA, ATS panels and switchgear exported from Sharjah to Riyadh, Jeddah and Dammam. Perkins, Cummins & Baudouin sets for KSA projects.",
-        ar: "مولدات ديزل من 10 إلى 2500 ك.ف.أ ولوحات ATS ولوحات كهرباء تُصدّر من الشارقة إلى الرياض وجدة والدمام. مولدات بيركنز وكمنز وبودوان لمشاريع المملكة.",
+        en: "Diesel generator supplier in Saudi Arabia: 10–2500 kVA Perkins, Cummins & Baudouin sets at 50 or 60 Hz, ATS and sync panels from Sharjah. Quote in 24h.",
+        ar: "مورد مولدات ديزل في السعودية: مولدات بيركنز وكمنز وبودوان من 10 إلى 2500 ك.ف.أ بتردد 50 أو 60 هرتز ولوحات ATS وتزامن من الشارقة. عرض سعر خلال 24 ساعة.",
       },
     },
     h1: {
@@ -149,6 +149,20 @@ export const marketPages: MarketPage[] = [
         a: {
           en: "Road freight from Sharjah to Riyadh usually takes 3–6 days including border clearance, depending on documentation readiness.",
           ar: "الشحن البري من الشارقة إلى الرياض يستغرق عادةً من 3 إلى 6 أيام بما فيها التخليص الحدودي، حسب جاهزية المستندات.",
+        },
+      },
+      {
+        q: { en: "Is the 60 Hz rating the same as the 50 Hz rating?", ar: "هل قدرة المولد على 60 هرتز هي نفسها على 50 هرتز؟" },
+        a: {
+          en: "Not always. At 1800 rpm many engines give more output than at 1500 rpm, some stay the same, and a few are built for 50 Hz only. The table on this page lists published 60 Hz ratings for common sizes; we confirm the rating at your voltage in the quotation.",
+          ar: "ليس دائماً. على 1800 لفة تعطي محركات كثيرة قدرة أعلى من 1500 لفة، وبعضها يبقى كما هو، وقليل منها مصنوع لتردد 50 هرتز فقط. الجدول في هذه الصفحة يعرض قدرات 60 هرتز المنشورة للأحجام الشائعة، ونؤكد القدرة على الجهد المطلوب في عرض السعر.",
+        },
+      },
+      {
+        q: { en: "Which generator sizes are most used on Saudi projects?", ar: "ما أحجام المولدات الأكثر استخداماً في مشاريع السعودية؟" },
+        a: {
+          en: "For construction and industrial sites, 200–1250 kVA Cummins and Perkins sets, often two or more on a synchronising panel, with high-current ATS panels for buildings. Smaller 20–150 kVA sets cover site offices, villas and telecom.",
+          ar: "لمواقع الإنشاءات والصناعة، مولدات كمنز وبيركنز من 200 إلى 1250 ك.ف.أ، وغالباً مولدان أو أكثر على لوحة تزامن، مع لوحات ATS للتيارات العالية للمباني. أما المولدات الأصغر من 20 إلى 150 ك.ف.أ فتغطي مكاتب المواقع والفلل والاتصالات.",
         },
       },
     ],
@@ -315,15 +329,15 @@ export const marketPages: MarketPage[] = [
     tier: "secondary",
     seo: {
       title: {
-        en: "Diesel Generator Supplier South Africa | Load-Shedding Power",
-        ar: "مولدات ديزل لجنوب أفريقيا | حلول تخفيف الأحمال",
+        en: "Generator Suppliers in South Africa | Diesel Generators",
+        ar: "مورد مولدات ديزل لجنوب أفريقيا | مولدات ولوحات ATS",
       },
       description: {
-        en: "Diesel generators, ATS panels and hybrid systems exported from the UAE to Johannesburg, Durban and mining sites — built for load-shedding and prime power.",
-        ar: "مولدات ديزل ولوحات ATS وأنظمة هجينة تُصدّر من الإمارات إلى جوهانسبرغ وديربان ومواقع التعدين، مصممة لفترات تخفيف الأحمال والتشغيل الأساسي.",
+        en: "Diesel generator supplier for South Africa: 10–2500 kVA Perkins, Cummins and Baudouin sets and ATS panels, shipped from the UAE to Durban. Quote in 24h.",
+        ar: "مورد مولدات ديزل لجنوب أفريقيا: مولدات بيركنز وكمنز وبودوان من 10 إلى 2500 ك.ف.أ ولوحات ATS، تُشحن من الإمارات إلى ديربان. عرض سعر خلال 24 ساعة.",
       },
     },
-    h1: { en: "Generator Supplier for South Africa", ar: "مورد مولدات كهرباء في جنوب أفريقيا" },
+    h1: { en: "Diesel Generator Supplier for South Africa", ar: "مورد مولدات ديزل لجنوب أفريقيا" },
     intro: {
       en: "Load-shedding turned standby generators into daily-use equipment for South African businesses. We supply prime-capable sets, ATS panels and hybrid battery systems sized for frequent starts and long runs.",
       ar: "حوّل تخفيف الأحمال المولدات الاحتياطية إلى معدات للاستخدام اليومي لدى الشركات في جنوب أفريقيا. نورد مولدات قادرة على التشغيل الأساسي ولوحات ATS وأنظمة بطاريات هجينة مصممة للتشغيل المتكرر والطويل.",
@@ -343,6 +357,13 @@ export const marketPages: MarketPage[] = [
           ar: "مولدات عالية القدرة داخل حاويات مع خزانات وقود كبيرة ومراقبة عن بُعد.",
         },
       },
+      {
+        title: { en: "Same 50 Hz standard", ar: "نفس معيار 50 هرتز" },
+        body: {
+          en: "South Africa runs on 400/230 V at 50 Hz like the UAE, so our standard 1500 rpm sets connect without conversion.",
+          ar: "تعمل جنوب أفريقيا على 400/230 فولت و50 هرتز مثل الإمارات، فتتصل مولداتنا القياسية بسرعة 1500 لفة دون أي تحويل.",
+        },
+      },
     ],
     logistics: {
       en: "Sea freight from Jebel Ali to Durban, with onward delivery to Gauteng and mining regions.",
@@ -352,7 +373,43 @@ export const marketPages: MarketPage[] = [
       en: "Typical South Africa requests: 60–500 kVA sets with ATS, and 1000+ kVA containerised units for mines.",
       ar: "طلبات جنوب أفريقيا المعتادة: مولدات من 60 إلى 500 ك.ف.أ مع ATS، ووحدات داخل حاويات بقدرة تفوق 1000 ك.ف.أ للمناجم.",
     },
-    faq: [],
+    faq: [
+      {
+        q: { en: "Do you supply diesel generators to South Africa?", ar: "هل توردون مولدات ديزل إلى جنوب أفريقيا؟" },
+        a: {
+          en: "Yes. We are a UAE generator supplier and export complete sets from 10 to 2500 kVA with Perkins, Cummins, Baudouin, Kubota and Lister Petter engines, plus ATS panels, synchronising panels and fuel tanks, to customers across South Africa, including Johannesburg, Durban and mining regions.",
+          ar: "نعم. نحن مورد مولدات في الإمارات ونصدّر مولدات كاملة من 10 إلى 2500 ك.ف.أ بمحركات بيركنز وكمنز وبودوان وكوبوتا وليستر بيتر، مع لوحات ATS ولوحات تزامن وخزانات وقود، لعملاء في أنحاء جنوب أفريقيا، منها جوهانسبرغ وديربان ومناطق التعدين.",
+        },
+      },
+      {
+        q: { en: "Will a UAE generator work on South Africa's power supply?", ar: "هل يعمل مولد من الإمارات على كهرباء جنوب أفريقيا؟" },
+        a: {
+          en: "Yes. Both countries use 400 V three-phase / 230 V single-phase at 50 Hz, so our standard sets (400/230 V, 50 Hz, 1500 rpm) connect directly to South African distribution boards.",
+          ar: "نعم. البلدان يستخدمان 400 فولت ثلاثي الأطوار و230 فولت أحادي الطور عند 50 هرتز، فتتصل مولداتنا القياسية (400/230 فولت، 50 هرتز، 1500 لفة) مباشرة بلوحات التوزيع في جنوب أفريقيا.",
+        },
+      },
+      {
+        q: { en: "What size generator do I need for load-shedding?", ar: "ما حجم المولد المناسب لفترات تخفيف الأحمال؟" },
+        a: {
+          en: "Size on the prime rating, not standby, because the set runs for hours every day. Add up the loads that must run during an outage, divide the kW by 0.8 for kVA and add about 20 % for motor starts. Our kVA calculator does the sum, and an ATS panel switches the load over automatically at each outage.",
+          ar: "اختر الحجم على أساس القدرة الأساسية لا الاحتياطية، لأن المولد يعمل ساعات كل يوم. اجمع الأحمال التي يجب أن تعمل أثناء الانقطاع، واقسم الكيلوواط على 0.8 للحصول على ك.ف.أ، وأضف نحو 20% لبدء المحركات. حاسبة القدرة لدينا تقوم بالحساب، ولوحة ATS تحوّل الحمل تلقائياً عند كل انقطاع.",
+        },
+      },
+      {
+        q: { en: "How are generators shipped to South Africa?", ar: "كيف تُشحن المولدات إلى جنوب أفريقيا؟" },
+        a: {
+          en: "By sea from Jebel Ali to Durban, as open sets, canopies or containerised units, with onward road delivery to your site on request. We provide the datasheets, commercial invoice, packing list and certificate of origin your clearing agent needs.",
+          ar: "بحراً من جبل علي إلى ديربان، كمولدات مفتوحة أو بكابينة أو داخل حاويات، مع التوصيل البري إلى موقعك عند الطلب. ونوفر النشرات الفنية والفاتورة التجارية وقائمة التعبئة وشهادة المنشأ التي يحتاجها مخلّصك الجمركي.",
+        },
+      },
+      {
+        q: { en: "Do you manufacture the generators?", ar: "هل تصنّعون المولدات؟" },
+        a: {
+          en: "Our group holds an industrial licence in SAIF Zone, Sharjah, for manufacturing generators and electric motors, alongside 4U's trading licence. Every set ships with a 12-month / 1,000-hour warranty.",
+          ar: "تملك مجموعتنا رخصة صناعية في المنطقة الحرة لمطار الشارقة لتصنيع المولدات والمحركات الكهربائية، إلى جانب الرخصة التجارية لفور يو باور. وكل مولد يُشحن بضمان 12 شهراً أو 1,000 ساعة.",
+        },
+      },
+    ],
   },
 ];
 

@@ -7,7 +7,9 @@ import { FaqBlock } from "@/components/faq-block";
 import { PageHero } from "@/components/page-hero";
 import { ProductCard } from "@/components/product-card";
 import { SectionHeading } from "@/components/section-heading";
+import { RATINGS_60HZ } from "@/content/genset-60hz";
 import { cities } from "@/content/locations";
+import { fiftyHzModels, modelPath } from "@/lib/genset-models";
 import { getMarketPage, marketPages } from "@/content/markets";
 import { Link } from "@/i18n/navigation";
 import { marketNames } from "@/content/taxonomy";
@@ -40,6 +42,13 @@ const FEATURED: Record<string, string[]> = {
   kenya: ["solar-hybrid-power-system-10-100kva", "chinese-engine-generator-series-20-1000kva", "perkins-diesel-generator-10-200kva"],
   "south-africa": ["cummins-diesel-generator-20-500kva", "ats-panel-63a-400a", "cummins-diesel-generator-550-2500kva"],
 };
+
+/** Common sizes for the Saudi 60 Hz table: the first model at each prime rating that has published 1800 rpm figures. */
+const KSA_60HZ_SIZES = [20, 30, 50, 100, 150, 200, 250, 300, 400, 500, 650, 800, 1000, 1250, 1500, 2000];
+function ksa60Rows() {
+  const all = fiftyHzModels();
+  return KSA_60HZ_SIZES.map((k) => all.find((m) => m.primeKva === k && RATINGS_60HZ[m.engine])).filter((m) => m !== undefined);
+}
 
 export default async function MarketPage({ params }: Props) {
   const { locale, country } = await params;
@@ -111,6 +120,50 @@ export default async function MarketPage({ params }: Props) {
                 </li>
               ))}
             </ul>
+          </div>
+        </section>
+      )}
+
+      {m.code === "saudi-arabia" && (
+        <section className="section" aria-labelledby="hz60-title">
+          <div className="container-x">
+            <SectionHeading id="hz60-title" title={ar ? "مولدات 60 هرتز للسعودية: القدرة على 50 و60 هرتز" : "60 Hz generators for Saudi Arabia: 50 Hz vs 60 Hz ratings"} />
+            <p className="mt-4 max-w-3xl leading-7 text-muted">
+              {ar
+                ? "شبكة السعودية تعمل على 60 هرتز، والمحرك على 1800 لفة لا يعطي دائماً نفس قدرة 1500 لفة. هذه قدرات 60 هرتز المنشورة من المصنّعين لأحجام شائعة، ونؤكد القدرة على الجهد المطلوب لمشروعك في عرض السعر."
+                : "Saudi Arabia's grid runs at 60 Hz, and an engine at 1800 rpm does not always give the same output as at 1500 rpm. These are the makers' published 60 Hz ratings for common sizes; we confirm the rating at your project voltage in the quotation."}
+            </p>
+            <div className="mt-6 overflow-x-auto rounded-2xl border border-line">
+              <table className="w-full min-w-[40rem] text-start text-sm">
+                <caption className="sr-only">{ar ? "قدرات المولدات على 50 و60 هرتز" : "Generator ratings at 50 Hz and 60 Hz"}</caption>
+                <thead className="bg-surface text-muted">
+                  <tr>
+                    {(ar
+                      ? ["الموديل", "المحرك", "50 هرتز أساسي / احتياطي", "60 هرتز أساسي / احتياطي"]
+                      : ["Model", "Engine", "50 Hz prime / standby", "60 Hz prime / standby"]
+                    ).map((h) => (
+                      <th key={h} scope="col" className="px-4 py-3 text-start font-semibold">{h}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-line">
+                  {ksa60Rows().map((x) => {
+                    const r = RATINGS_60HZ[x.engine]!;
+                    const unit = ar ? "ك.ف.أ" : "kVA";
+                    return (
+                      <tr key={x.slug}>
+                        <th scope="row" className="px-4 py-3 text-start">
+                          <Link href={modelPath(x)} className="font-bold text-brand-700 hover:underline">{x.code}</Link>
+                        </th>
+                        <td className="px-4 py-3 text-ink" dir="ltr">{x.brand} {r.engine ?? x.engine}</td>
+                        <td className="px-4 py-3 text-ink whitespace-nowrap">{x.primeKva} / {x.standbyKva} {unit}</td>
+                        <td className="px-4 py-3 font-semibold text-ink whitespace-nowrap">{r.prime} / {r.standby} {unit}</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
           </div>
         </section>
       )}
