@@ -34,8 +34,9 @@ const EMIRATES: Opt[] = [
 ];
 const CALL_TIMES: Opt[] = [
   { v: "as soon as possible", en: "As soon as possible", ar: "في أقرب وقت" },
-  { v: "morning (08:00–12:00)", en: "Morning (08:00–12:00)", ar: "صباحاً (8–12)" },
-  { v: "afternoon (12:00–18:00)", en: "Afternoon (12:00–18:00)", ar: "بعد الظهر (12–6)" },
+  { v: "morning (09:00–13:00)", en: "Morning (09:00–13:00)", ar: "صباحاً (9–1)" },
+  { v: "afternoon (13:00–17:00)", en: "Afternoon (13:00–17:00)", ar: "بعد الظهر (1–5)" },
+  { v: "evening (17:00–20:00)", en: "Evening (17:00–20:00)", ar: "مساءً (5–8)" },
 ];
 
 const initial: LeadState = { status: "idle" };

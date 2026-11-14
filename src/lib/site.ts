@@ -34,7 +34,8 @@ export const company = {
   phoneE164: "+971502296962",
   whatsapp: "971502296962",
   email: "info@4upowers.com",
-  hours: "Mo-Sa 08:00-18:00",
+  // owner, 14 Nov 2026: open every day 09:00–20:00 except Sunday (matches the Google Business Profile)
+  hours: "Mo-Sa 09:00-20:00",
   mapQuery: "4U POWER GENERATION ( FZC ), Saif Zone, Sharjah",
 } as const;
 
