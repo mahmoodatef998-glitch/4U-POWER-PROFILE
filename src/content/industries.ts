@@ -20,16 +20,16 @@ export const industries: Industry[] = [
     slug: "hospitals-healthcare",
     icon: "hospital",
     name: { en: "Hospitals & healthcare", ar: "المستشفيات والرعاية الصحية" },
-    h1: { en: "Standby generators & ATS for hospitals and clinics in the UAE", ar: "مولدات احتياطية ولوحات ATS للمستشفيات والعيادات في الإمارات" },
+    h1: { en: "Generators for hospitals and clinics in the UAE: standby sets & ATS", ar: "مولدات كهرباء للمستشفيات والعيادات في الإمارات: مولدات احتياطية ولوحات ATS" },
     intro: {
       en: "Operating theatres, ICUs, medical gas and cold storage cannot wait for the grid. We supply generator sets, automatic transfer panels and distribution boards sized for critical healthcare loads, with the documentation consultants and authorities ask for.",
       ar: "غرف العمليات والعناية المركزة والغازات الطبية وثلاجات الأدوية لا تحتمل انتظار عودة الكهرباء. نورّد مولدات ولوحات تحويل أوتوماتيكي ولوحات توزيع بأحجام مناسبة للأحمال الحرجة في المنشآت الصحية، مع المستندات التي يطلبها الاستشاريون والهيئات.",
     },
     seo: {
-      title: { en: "Hospital Generators & ATS Panels UAE | 4U Power", ar: "مولدات ولوحات ATS للمستشفيات في الإمارات | فور يو باور" },
+      title: { en: "Generator for Hospitals & Clinics UAE | Standby Sets & ATS", ar: "مولدات كهرباء للمستشفيات والعيادات في الإمارات | ATS" },
       description: {
-        en: "Standby diesel generators, fast-transfer ATS panels and MDBs for hospitals, clinics and labs in the UAE, KSA and Iraq. Sized for critical loads, quoted same day.",
-        ar: "مولدات ديزل احتياطية ولوحات ATS سريعة التحويل ولوحات توزيع للمستشفيات والعيادات والمختبرات في الإمارات والسعودية والعراق، بأحجام مناسبة للأحمال الحرجة وعرض سعر في نفس اليوم.",
+        en: "Generators for hospitals and clinics in the UAE: standby diesel sets, fast-transfer ATS and sync panels sized for critical loads. Quote in 24 hours.",
+        ar: "مولدات للمستشفيات والعيادات في الإمارات: مولدات ديزل احتياطية ولوحات ATS سريعة التحويل ولوحات تزامن بأحجام مناسبة للأحمال الحرجة. عرض سعر خلال 24 ساعة.",
       },
     },
     range: { en: "Typical: 60–2500 kVA, often 2+ sets in parallel", ar: "النطاق المعتاد: 60–2500 ك.ف.أ، وغالباً مولدان أو أكثر على التوازي" },
@@ -76,6 +76,34 @@ export const industries: Industry[] = [
         a: {
           en: "For critical sites we usually recommend two or more synchronised sets: if one is in service, the other carries the essential load.",
           ar: "للمواقع الحرجة نوصي عادةً بمولدين أو أكثر على التزامن؛ فإذا كان أحدهما في الصيانة يحمل الآخر الأحمال الأساسية.",
+        },
+      },
+      {
+        q: { en: "What size generator does a hospital need?", ar: "ما حجم المولد الذي يحتاجه المستشفى؟" },
+        a: {
+          en: "List the essential loads — life-safety lighting, operating theatres and ICU, medical gas, imaging, essential cooling, lifts and fire pumps — add up the running kW, apply a diversity factor, divide by 0.8 for kVA and add a 20 % margin for motor starts and Gulf heat. The worked example on this page shows the steps; a clinic often lands at 100–250 kVA, a hospital at 500 kVA and above, usually split over two or more sets.",
+          ar: "اكتب الأحمال الأساسية: إنارة سلامة الأرواح وغرف العمليات والعناية المركزة والغازات الطبية والأشعة والتبريد الأساسي والمصاعد ومضخات الحريق، واجمع الكيلوواط التشغيلي، وطبّق معامل التزامن، واقسم على 0.8 للحصول على ك.ف.أ، وأضف 20% لبدء المحركات وحرارة الخليج. المثال المحسوب في هذه الصفحة يوضح الخطوات؛ العيادة غالباً بين 100 و250 ك.ف.أ، والمستشفى من 500 ك.ف.أ فما فوق، وعادةً على مولدين أو أكثر.",
+        },
+      },
+      {
+        q: { en: "How much fuel should a hospital generator hold?", ar: "كم يجب أن يخزّن مولد المستشفى من الوقود؟" },
+        a: {
+          en: "Size the tank for the running time your consultant or authority specifies. As a guide, a 500 kVA set uses about 78 litres an hour at 75 % load, so 24 hours needs roughly 1,900 litres; larger plants use a bulk tank with a day tank and transfer pump.",
+          ar: "حدد سعة الخزان حسب مدة التشغيل التي يحددها الاستشاري أو الجهة المختصة. كمثال، مولد 500 ك.ف.أ يستهلك نحو 78 لتراً في الساعة عند حمل 75%، أي أن 24 ساعة تحتاج قرابة 1,900 لتر، والمحطات الأكبر تستخدم خزاناً رئيسياً مع خزان يومي ومضخة نقل.",
+        },
+      },
+      {
+        q: { en: "How should a hospital generator be tested?", ar: "كيف يتم اختبار مولد المستشفى؟" },
+        a: {
+          en: "Follow the schedule your authority and consultant set. A common routine is a weekly start, a regular on-load test through the ATS, and a load-bank test at commissioning and periodically after, because the building rarely loads the set to its full rating.",
+          ar: "اتبع الجدول الذي تحدده الجهة المختصة والاستشاري. والروتين الشائع تشغيل أسبوعي، واختبار دوري على الحمل عبر لوحة ATS، واختبار بجهاز لود بنك عند التشغيل الأولي وبشكل دوري بعده، لأن المبنى نادراً ما يحمّل المولد بقدرته الكاملة.",
+        },
+      },
+      {
+        q: { en: "Do you supply the ATS, synchronising panels and MDB as well?", ar: "هل توردون لوحات ATS والتزامن والتوزيع أيضاً؟" },
+        a: {
+          en: "Yes. We supply the generator sets with 4-pole ATS panels, synchronising panels for two or more sets and MDBs with separate essential and non-essential sections, all with a 12-month / 1,000-hour warranty.",
+          ar: "نعم. نورّد المولدات مع لوحات ATS رباعية الأقطاب ولوحات تزامن لمولدين أو أكثر ولوحات توزيع رئيسية بأقسام منفصلة للأحمال الأساسية وغير الأساسية، وكلها بضمان 12 شهراً أو 1,000 ساعة.",
         },
       },
     ],

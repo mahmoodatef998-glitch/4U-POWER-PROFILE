@@ -10,19 +10,33 @@ import { ProductCard } from "@/components/product-card";
 import { generatorImageForKva, withSizeImage } from "@/lib/generator-image";
 import { BuySteps } from "@/components/buy-steps";
 import { ModelTable } from "@/components/model-table";
-import { fiftyHzModels, nearestModels } from "@/lib/genset-models";
+import { brandName, dimText, fiftyHzModels, nearestModels } from "@/lib/genset-models";
+import type { Faq } from "@/content/faq";
 import { SectionHeading } from "@/components/section-heading";
 import { GENERATOR_SIZES, sizeCopy, sizeFromSlug, sizeSlug } from "@/content/generator-sizes";
 import { engineBrandLabels } from "@/content/taxonomy";
 import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 import { matchAts, matchProducts } from "@/lib/calculator";
-import { getProducts } from "@/lib/data";
+import { getNews, getProducts } from "@/lib/data";
 import { buildMetadata, localeUrl, ORG_ID } from "@/lib/seo";
 import { SITE_URL } from "@/lib/site";
 import { cn, type Locale } from "@/lib/utils";
 
 export const revalidate = 86400;
+
+/** In-depth article per size; shown only once it is published. */
+const SIZE_GUIDES: Record<number, string> = {
+  30: "30-kva-generator-guide",
+  80: "80-kva-generator-guide",
+  100: "100-kva-generator-load-capacity",
+  250: "250-kva-generator-guide",
+  300: "300-kva-generator-guide",
+  1000: "1000-kva-generator-specifications",
+  1250: "1250-kva-generator-guide",
+};
+
+const n0 = (v: number, ar: boolean) => new Intl.NumberFormat(ar ? "ar-AE-u-nu-latn" : "en-AE").format(v);
 export const dynamicParams = false;
 
 export function generateStaticParams() {
@@ -58,6 +72,28 @@ export default async function GeneratorSizePage({ params }: Props) {
     (x, y) => Number(y.primeKva === kva) - Number(x.primeKva === kva) || x.primeKva - y.primeKva || x.standbyKva - y.standbyKva,
   );
   const wa = ar ? `مرحباً، أرغب في عرض سعر لمولد ${kva} ك.ف.أ — مدينة التسليم: ` : `Hi, I need a price for a ${kva} kVA generator — delivery city: `;
+  const guide = SIZE_GUIDES[kva] ? (await getNews()).find((p) => p.slug === SIZE_GUIDES[kva]) : undefined;
+  // size-specific answers from the datasheets of the sets coded at this rating
+  const extraFaq: Faq[] = [];
+  if (coded.length) {
+    extraFaq.push({
+      q: { en: `Which engines are used in a ${kva} kVA generator?`, ar: `ما المحركات المستخدمة في مولد ${kva} ك.ف.أ؟` },
+      a: {
+        en: `Our ${kva} kVA (prime) sets: ${coded.map((m) => `${m.code} with a ${m.brand} ${m.engine}`).join("; ")}. All run at 1500 rpm with a 4U · Leroy-Somer | Stamford alternator and a Deep Sea controller.`,
+        ar: `مولدات ${kva} ك.ف.أ (أساسي) لدينا: ${coded.map((m) => `${m.code} بمحرك ${brandName(m.brand, "ar")} ${m.engine}`).join("؛ ")}. كلها تعمل على 1500 لفة/دقيقة مع مولد تيار 4U · Leroy-Somer | Stamford ووحدة تحكم Deep Sea.`,
+      },
+    });
+    const sized = coded.filter((m) => m.enclosed && dimText(m.enclosed, "en"));
+    if (sized.length) {
+      extraFaq.push({
+        q: { en: `What are the dimensions and weight of a ${kva} kVA generator?`, ar: `ما أبعاد ووزن مولد ${kva} ك.ف.أ؟` },
+        a: {
+          en: `From the datasheets: ${sized.map((m) => `${m.code} ${m.enclosed!.container ? "in a" : "in a silent canopy,"} ${dimText(m.enclosed, "en")}${m.enclosed!.kg ? `, ${n0(m.enclosed!.kg, false)} kg` : ""}`).join("; ")}. Allow space around the set for airflow and service, and crane access for its weight.`,
+          ar: `من الداتا شيت: ${sized.map((m) => `${m.code} ${m.enclosed!.container ? "داخل" : "بكابينة صامتة"} ${dimText(m.enclosed, "ar")}${m.enclosed!.kg ? `، ${n0(m.enclosed!.kg, true)} كجم` : ""}`).join("؛ ")}. اترك مساحة حول المولد للتهوية والصيانة، ومدخلاً لرافعة تناسب وزنه.`,
+        },
+      });
+    }
+  }
   const idx = (GENERATOR_SIZES as readonly number[]).indexOf(kva);
   const near = GENERATOR_SIZES.filter((_, i) => Math.abs(i - idx) <= 3 && i !== idx);
 
@@ -238,7 +274,17 @@ export default async function GeneratorSizePage({ params }: Props) {
       </section>
 
       <BuySteps locale={locale} what={{ en: `a ${kva} kVA generator`, ar: `مولد ${kva} ك.ف.أ` }} />
-      <FaqBlock locale={locale} items={c.faq} eyebrow={ar ? `مولد ${kva} ك.ف.أ` : `${kva} kVA generator`} title={ar ? "أسئلة شائعة" : "Frequently asked questions"} dark />
+      {guide && (
+        <section className="section pt-0" aria-labelledby="guide-title">
+          <div className="container-x">
+            <Link href={`/news/${guide.slug}`} className="group flex flex-col gap-1 rounded-2xl border border-line p-6 hover:border-brand-500/60">
+              <span id="guide-title" className="text-xs font-semibold tracking-wide text-brand-400 uppercase rtl:tracking-normal">{ar ? "الدليل الكامل" : "Full guide"}</span>
+              <span className="text-lg font-bold text-ink group-hover:underline">{ar ? guide.title_ar : guide.title_en}</span>
+            </Link>
+          </div>
+        </section>
+      )}
+      <FaqBlock locale={locale} items={[...c.faq, ...extraFaq]} eyebrow={ar ? `مولد ${kva} ك.ف.أ` : `${kva} kVA generator`} title={ar ? "أسئلة شائعة" : "Frequently asked questions"} dark />
       <CtaBanner
         title={ar ? `سعر مولد ${kva} ك.ف.أ اليوم` : `Get a ${kva} kVA generator price today`}
         body={ar ? "أرسل مدينة التسليم ونوع التشغيل (احتياطي أو أساسي) ونرد بخيارات المحركات والسعر ومدة التسليم." : "Send the delivery city and duty (standby or prime) — we reply with engine options, price and lead time."}

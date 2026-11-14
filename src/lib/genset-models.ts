@@ -157,7 +157,7 @@ export function modelName(m: GensetModel, locale: Locale) {
   );
 }
 
-const dimText = (d: GensetDim | null, locale: Locale) =>
+export const dimText = (d: GensetDim | null, locale: Locale) =>
   !d ? null
   : d.container
     ? locale === "ar"

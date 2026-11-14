@@ -13,7 +13,7 @@ import type { Faq } from "@/content/faq";
 import { GENERATOR_SIZES } from "@/content/generator-sizes";
 import { home } from "@/content/pages";
 import { Link } from "@/i18n/navigation";
-import { getProducts } from "@/lib/data";
+import { getNews, getProducts } from "@/lib/data";
 import { BRANDS, brandHubPath, brandModels, brandName, modelName, modelPath, type GensetBrand, type GensetModel } from "@/lib/genset-models";
 import { buildMetadata, localeUrl } from "@/lib/seo";
 import { pick, type Locale } from "@/lib/utils";
@@ -46,13 +46,42 @@ export function brandHubMetadata(brand: GensetBrand, locale: Locale) {
   return buildMetadata({
     locale,
     path: brandHubPath(brand),
-    title: locale === "ar" ? `مولدات ${brandName(brand, "ar")} ديزل في الإمارات | ${range} ك.ف.أ | فور يو` : `${brand} Diesel Generators UAE | ${range} kVA | 4U`,
+    title: locale === "ar" ? `مولدات ${brandName(brand, "ar")} ديزل في الإمارات | ${range} ك.ف.أ | فور يو` : `${brand} Generators UAE | Diesel Gensets ${range} kVA | 4U`,
     description:
       locale === "ar"
         ? `${list.length} موديل مولد ديزل ${brandName(brand, "ar")} من ${fmt(min, "ar")} إلى ${fmt(max, "ar")} ك.ف.أ: القدرة الاحتياطية والأساسية واستهلاك الوقود وداتا شيت لكل موديل. مفتوح أو كاتم للصوت، مع عرض سعر في الإمارات.`
         : `${list.length} ${brand} diesel generator models from ${fmt(min, "en")} to ${fmt(max, "en")} kVA: standby and prime ratings, fuel use and a datasheet for each. Open or silent, with a UAE quote.`,
   });
 }
+
+/**
+ * Perkins engine families in the range, grouped by model number (403/404, 1103–1106, 1206, 1506, 1706, 2206,
+ * 2506, 2806, 4006–4016), each with the prime kVA it covers — straight from the datasheets.
+ */
+function perkinsFamilies(list: GensetModel[]) {
+  const groups = new Map<string, { codes: Set<string>; kva: number[]; cyl: Set<number> }>();
+  for (const m of list) {
+    const code = m.engine.split("-")[0]!.replace(/\(.*\)$/, "");
+    const digits = /^\d+/.exec(code)?.[0] ?? code;
+    const key = digits.length === 3 ? digits[0]! : digits.slice(0, 2);
+    const g = groups.get(key) ?? { codes: new Set(), kva: [], cyl: new Set() };
+    g.codes.add(code);
+    g.kva.push(m.primeKva);
+    if (m.cylinders != null) g.cyl.add(m.cylinders);
+    groups.set(key, g);
+  }
+  return [...groups.values()]
+    .map((g) => ({ codes: [...g.codes].join(" · "), min: Math.min(...g.kva), max: Math.max(...g.kva), cyl: [...g.cyl].sort((a, b) => a - b).join(" / "), n: g.kva.length }))
+    .sort((a, b) => a.min - b.min);
+}
+
+/** In-depth articles per brand (only ones already published are shown). */
+const BRAND_GUIDES: Partial<Record<GensetBrand, { slug: string; label: { en: string; ar: string } }[]>> = {
+  Perkins: [
+    { slug: "perkins-generator-uae-guide", label: { en: "Perkins generators in the UAE: buyer's guide", ar: "دليل شراء مولدات بيركنز في الإمارات" } },
+    { slug: "perkins-vs-cummins-vs-kubota-engine-brand-uae", label: { en: "Perkins vs Cummins vs Kubota: which engine brand?", ar: "بيركنز أم كمنز أم كوبوتا: أي ماركة محرك؟" } },
+  ],
+};
 
 /** Smallest, mid-size (nearest 500 kVA) and largest model that have fuel figures. */
 function fuelExamples(list: GensetModel[]) {
@@ -129,6 +158,9 @@ export async function BrandHub({ brand, locale }: { brand: GensetBrand; locale: 
   // one link per standard size this brand is built in, e.g. "Perkins 500 kVA"
   const sizes = f.list.filter((m, i, all) => (GENERATOR_SIZES as readonly number[]).includes(m.standbyKva) && all.findIndex((x) => x.standbyKva === m.standbyKva) === i);
   const faq = hubFaq(brand, f);
+  const families = brand === "Perkins" ? perkinsFamilies(f.list) : [];
+  const published = new Set((await getNews()).map((n) => n.slug));
+  const guides = (BRAND_GUIDES[brand] ?? []).filter((g) => published.has(g.slug));
   const title = ar ? `مولدات ${name} ديزل في الإمارات، ${range} ك.ف.أ` : `${brand} diesel generators in the UAE, ${range} kVA`;
   const list = {
     "@context": "https://schema.org",
@@ -242,6 +274,52 @@ export async function BrandHub({ brand, locale }: { brand: GensetBrand; locale: 
           </dl>
         </div>
       </section>
+
+      {families.length > 0 && (
+        <section className="section" aria-labelledby="hub-families">
+          <div className="container-x grid gap-10 lg:grid-cols-12">
+            <div className="lg:col-span-5">
+              <h2 id="hub-families" className="text-2xl sm:text-3xl">{ar ? "محركات بيركنز حسب القدرة" : "Perkins engines by rating"}</h2>
+              <p className="mt-3 leading-7 text-muted">
+                {ar
+                  ? "بيركنز شركة بريطانية لمحركات الديزل، ومحركاتها من أكثر المحركات انتشاراً في مولدات الخليج، فقطع غيارها وفنيوها متوفرون في كل مكان. كل عائلة محركات تغطي نطاقاً من القدرات، فيبقى نفس المحرك وقطع غياره في أكثر من مقاس."
+                  : "Perkins is a British diesel engine maker and one of the most common engines in Gulf generator sets, so parts and technicians are easy to find. Each engine family covers a band of ratings, so the same engine and its spare parts serve several sizes."}
+              </p>
+              {guides.length > 0 && (
+                <ul className="mt-5 space-y-2 text-sm font-semibold">
+                  {guides.map((g) => (
+                    <li key={g.slug}>
+                      <Link href={`/news/${g.slug}`} className="text-brand-700 underline">{L(g.label)}</Link>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+            <div className="overflow-x-auto rounded-2xl border border-line lg:col-span-7">
+              <table className="w-full min-w-[30rem] text-start text-sm">
+                <caption className="sr-only">{ar ? "محركات بيركنز حسب القدرة" : "Perkins engines by rating"}</caption>
+                <thead className="bg-surface text-muted">
+                  <tr>
+                    {(ar ? ["عائلة المحرك", "القدرة الأساسية", "الأسطوانات", "الموديلات"] : ["Engine family", "Prime rating", "Cylinders", "Models"]).map((h) => (
+                      <th key={h} scope="col" className="px-4 py-3 text-start font-semibold">{h}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-line">
+                  {families.map((r) => (
+                    <tr key={r.codes}>
+                      <th scope="row" className="px-4 py-3 text-start font-bold text-ink" dir="ltr">{r.codes}</th>
+                      <td className="px-4 py-3 text-ink whitespace-nowrap">{r.min === r.max ? fmt(r.min, locale) : `${fmt(r.min, locale)}–${fmt(r.max, locale)}`} {ar ? "ك.ف.أ" : "kVA"}</td>
+                      <td className="px-4 py-3 text-ink">{r.cyl}</td>
+                      <td className="px-4 py-3 text-ink">{r.n}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+      )}
 
       {products.length > 0 && (
         <section className="section" aria-labelledby="hub-ranges">
