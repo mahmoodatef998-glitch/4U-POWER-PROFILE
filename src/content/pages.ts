@@ -195,6 +195,15 @@ export const about = {
       address: { en: "Registered address", ar: "العنوان المسجل" },
     },
   },
+  // owner, 14 Nov 2026: the group also holds a SAIF Zone industrial licence for generator & electric-motor
+  // manufacturing; wording kept generic on purpose (no company name or number on the 4U site)
+  manufacturing: {
+    title: { en: "Trading and manufacturing", ar: "تجارة وتصنيع" },
+    body: {
+      en: "Alongside 4U's trading licence, our group holds an industrial licence in SAIF Zone, Sharjah, for manufacturing generators and electric motors — so we build and assemble as well as supply.",
+      ar: "إلى جانب الرخصة التجارية لفور يو باور، تملك مجموعتنا رخصة صناعية في المنطقة الحرة لمطار الشارقة لتصنيع المولدات والمحركات الكهربائية، فنحن نصنّع ونجمّع إلى جانب التوريد.",
+    },
+  },
   leadership: {
     title: { en: "Leadership", ar: "الإدارة" },
     intro: { en: "4U is owner-managed — you deal directly with the people accountable for your order.", ar: "يدير ملّاك فور يو باور الشركة بأنفسهم، فتتعامل مباشرة مع أصحاب القرار في طلبك." },

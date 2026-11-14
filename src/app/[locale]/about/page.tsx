@@ -77,6 +77,10 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
               </dl>
               <p className="mt-4 text-xs leading-5 text-muted">{L(about.licence.note)}</p>
             </section>
+            <section aria-labelledby="mfg-title" className="mt-6 rounded-3xl border border-line bg-surface p-6 sm:p-8">
+              <h2 id="mfg-title" className="text-xl">{L(about.manufacturing.title)}</h2>
+              <p className="mt-3 text-sm leading-7 text-ink">{L(about.manufacturing.body)}</p>
+            </section>
           </Reveal>
         </div>
       </section>
