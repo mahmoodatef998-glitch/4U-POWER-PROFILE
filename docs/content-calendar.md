@@ -12,8 +12,8 @@ displaced moves to the backlog below.
 | 2 (19–22 Oct) | ✅ Fuel consumption chart | ✅ Rent or buy | ✅ ATS panel types |
 | 3 (26–29 Oct) | ✅ 🔎 Perkins generators UAE ("perkins generator uae") | ✅ 🔎 1000 kVA generator specification ("1000 kva generator specification") | ✅ 🔎 Construction-site generators ("generator for construction site") |
 | 4 (2–5 Nov) | ✅ 🔎 100 kVA generator load capacity ("100 kva generator load capacity") | ✅ 🔎 250 kVA generator ("250 kva generator") | ✅ 🔎 Generator full load current, kVA ↔ amps ("400 kva dg full load current", "750kva generator full load current") |
-| 5 (9–12 Nov) | 🔎 Diesel generator size chart ("standard generator sizes kva", "diesel generator size chart", "generator sizes") | 🔎 300 kVA generator ("300 kva generator") | 🔎 80 kVA generators ("80 kva generators") |
-| 6 (16–19 Nov) | ⚠️ Importing a generator to Saudi Arabia (SASO, 60 Hz) | Data centres: generator + UPS | Load-bank testing |
+| 5 (9–12 Nov) | ✅ 🔎 Diesel generator size chart ("standard generator sizes kva", "diesel generator size chart", "generator sizes") | ✅ 🔎 300 kVA generator ("300 kva generator") | ✅ 🔎 80 kVA generators ("80 kva generators") |
+| 6 (16–19 Nov) | 🔎 30 kVA generator ("30kva generator", "30 kva generator", "30 kva generator dimensions") | 🔎 Load-bank testing ("generator load bank", "generator load banks", "load bank for generator") | 🔎 1250 kVA generator ("1250 kva generator") |
 | 7 (23–26 Nov) | Neighbourhood (ambeer) generators in Iraq | Hotels & commercial buildings | How to read a generator datasheet |
 | 8 (30 Nov–3 Dec) | Used vs new generator | MDB & generator integration | Light towers: diesel or solar |
 | 9 (7–10 Dec) | BESS + generator fuel savings | Schools & mosques | The alternator explained |
@@ -21,6 +21,6 @@ displaced moves to the backlog below.
 | 11 (21–24 Dec) | Chinese engine generators: worth it? | Power factor correction (PFC) | AMF controllers: Deep Sea vs ComAp |
 | 12 (28–31 Dec) | Choosing a generator supplier in the UAE | Generator buying guide 2027 | 30 generator FAQs |
 
-Backlog (displaced by search-driven articles, use in a later free slot): Why a generator won't start: 10 causes · Telecom & remote sites · ⚠️ Fuel tanks: capacity & requirements · Baudouin vs Perkins · Silent generators & residential noise · Synchronising: 1 × 1000 vs 2 × 500 kVA · Generators for factories (motor starting) · Solar + generator for farms.
+Backlog (displaced by search-driven articles, use in a later free slot): ⚠️ Importing a generator to Saudi Arabia (SASO, 60 Hz) · Data centres: generator + UPS · Why a generator won't start: 10 causes · Telecom & remote sites · ⚠️ Fuel tanks: capacity & requirements · Baudouin vs Perkins · Silent generators & residential noise · Synchronising: 1 × 1000 vs 2 × 500 kVA · Generators for factories (motor starting) · Solar + generator for farms.
 
 Case studies (Socotra island, Etisalat/e& sites, …) are added as they arrive — need client permission to name them, plus real site photos.

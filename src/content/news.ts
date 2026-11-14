@@ -5,5 +5,6 @@ import { newsPart4 } from "./news-4";
 import { newsPart5 } from "./news-5";
 import { newsPart6 } from "./news-6";
 import { newsPart7 } from "./news-7";
+import { newsPart8 } from "./news-8";
 
-export const newsPosts = [...newsPart1, ...newsPart2, ...newsPart3, ...newsPart4, ...newsPart5, ...newsPart6, ...newsPart7];
+export const newsPosts = [...newsPart1, ...newsPart2, ...newsPart3, ...newsPart4, ...newsPart5, ...newsPart6, ...newsPart7, ...newsPart8];
