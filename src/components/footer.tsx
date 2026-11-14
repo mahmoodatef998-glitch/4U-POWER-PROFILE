@@ -3,7 +3,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { sizeSlug } from "@/content/generator-sizes";
 import { cities } from "@/content/locations";
 import { Link } from "@/i18n/navigation";
-import { company, telUrl } from "@/lib/site";
+import { company, googleBusiness, telUrl } from "@/lib/site";
 import { pick, type Locale } from "@/lib/utils";
 import { Brand } from "./header";
 import { SocialLinks } from "./social-links";
@@ -84,6 +84,9 @@ export async function Footer() {
               <span>
                 {ar ? company.address.streetAr : company.address.street}, {company.address.poBox},{" "}
                 {ar ? company.address.cityAr : company.address.city}, {ar ? company.address.countryAr : company.address.country}
+                <a href={googleBusiness.mapsUrl} target="_blank" rel="noopener" className="mt-1 block font-semibold text-brand-400 hover:underline">
+                  {ar ? "موقعنا وتقييماتنا على خرائط جوجل" : "Find us & our reviews on Google Maps"}
+                </a>
               </span>
             </p>
             <p className="flex gap-3">

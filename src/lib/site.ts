@@ -28,18 +28,23 @@ export const company = {
     countryAr: "الإمارات العربية المتحدة",
     countryCode: "AE",
   },
-  // CONTENT_TODO: confirm exact pin of Warehouse A2-020 in Google Maps and update.
-  geo: { lat: 25.3263, lng: 55.5186 },
+  // the Google Business Profile pin (plus code 7HQQ8FGX+MG2, Saif Zone), read 14 Nov 2026
+  geo: { lat: 25.32664, lng: 55.49877 },
   phone: "+971 50 229 6962",
   phoneE164: "+971502296962",
   whatsapp: "971502296962",
   email: "info@4upowers.com",
   hours: "Mo-Sa 08:00-18:00",
-  mapQuery: "SAIF Zone Warehouse A2-020, Sharjah, United Arab Emirates",
+  mapQuery: "4U POWER GENERATION ( FZC ), Saif Zone, Sharjah",
+} as const;
+
+/** Google Business Profile "4U POWER GENERATION ( FZC )" (Maps CID from the owner's profile link, 14 Nov 2026). */
+export const googleBusiness = {
+  mapsUrl: "https://maps.google.com/?cid=16621724285106736810",
 } as const;
 
 /** Business directory listings (same NAP as above) — emitted as schema.org `sameAs` so Google ties them to this site. */
-export const listings = ["https://www.yellowpages-uae.com/4u-power-generation-fzc-188988"] as const;
+export const listings = [googleBusiness.mapsUrl, "https://www.yellowpages-uae.com/4u-power-generation-fzc-188988"] as const;
 
 /** Leave a URL empty to hide that network everywhere. */
 export const social = {

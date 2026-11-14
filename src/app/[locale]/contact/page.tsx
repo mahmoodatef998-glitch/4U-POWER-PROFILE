@@ -7,7 +7,7 @@ import { PageHero } from "@/components/page-hero";
 import { pageSeo } from "@/content/seo";
 import { getProducts } from "@/lib/data";
 import { buildMetadata } from "@/lib/seo";
-import { company, telUrl } from "@/lib/site";
+import { company, googleBusiness, telUrl } from "@/lib/site";
 import type { Locale } from "@/lib/utils";
 
 export const revalidate = 86400;
@@ -109,6 +109,14 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
               />
+              <div className="flex flex-wrap gap-x-6 gap-y-2 border-t border-white/10 px-5 py-4 text-sm font-semibold">
+                <a href={googleBusiness.mapsUrl} target="_blank" rel="noopener" className="text-brand-400 hover:underline">
+                  {ar ? "افتح موقعنا على خرائط جوجل" : "Open in Google Maps"}
+                </a>
+                <a href={googleBusiness.mapsUrl} target="_blank" rel="noopener" className="text-brand-400 hover:underline">
+                  {ar ? "اكتب تقييمك على جوجل" : "Review us on Google"}
+                </a>
+              </div>
             </div>
           </div>
         </div>
