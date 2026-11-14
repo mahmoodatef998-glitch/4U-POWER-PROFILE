@@ -89,12 +89,12 @@ export const marketPages: MarketPage[] = [
     tier: "primary",
     seo: {
       title: {
-        en: "Diesel Generator Supplier in Saudi Arabia | 4U Power",
-        ar: "مولدات ديزل ولوحات ATS في السعودية | فور يو باور",
+        en: "Diesel Generator Supplier in Saudi Arabia | 60 Hz Sets",
+        ar: "مولدات ديزل 60 هرتز ولوحات ATS في السعودية | فور يو باور",
       },
       description: {
-        en: "Diesel generator supplier in Saudi Arabia: 10–2500 kVA Perkins, Cummins & Baudouin sets at 50 or 60 Hz, ATS and sync panels from Sharjah. Quote in 24h.",
-        ar: "مورد مولدات ديزل في السعودية: مولدات بيركنز وكمنز وبودوان من 10 إلى 2500 ك.ف.أ بتردد 50 أو 60 هرتز ولوحات ATS وتزامن من الشارقة. عرض سعر خلال 24 ساعة.",
+        en: "Diesel generator supplier in Saudi Arabia: 60 Hz Perkins, Cummins & Baudouin sets built for 1800 rpm, ATS and sync panels from Sharjah. Quote in 24h.",
+        ar: "مورد مولدات ديزل في السعودية: مولدات 60 هرتز بيركنز وكمنز وبودوان مصممة لسرعة 1800 لفة، ولوحات ATS وتزامن من الشارقة. عرض سعر خلال 24 ساعة.",
       },
     },
     h1: {
@@ -102,8 +102,8 @@ export const marketPages: MarketPage[] = [
       ar: "مورد مولدات ديزل في المملكة العربية السعودية – الرياض وجدة والدمام",
     },
     intro: {
-      en: "Saudi Arabia's construction and industrial pipeline needs reliable standby and prime power, fast. We ship generator sets, ATS panels and synchronising panels by road from Sharjah to every major Saudi city, with the export documentation your clearing agent needs.",
-      ar: "تحتاج مشاريع الإنشاءات والصناعة في المملكة إلى طاقة احتياطية وأساسية موثوقة وبسرعة. نشحن المولدات ولوحات ATS ولوحات التزامن برّاً من الشارقة إلى جميع المدن السعودية الكبرى، مع مستندات التصدير التي يحتاجها مخلّصك الجمركي.",
+      en: "Saudi Arabia runs on 60 Hz, and its construction and industrial pipeline needs reliable standby and prime power, fast. We supply 60 Hz generator sets, ATS panels and synchronising panels by road from Sharjah to every major Saudi city, with the export documentation your clearing agent needs.",
+      ar: "تعمل الشبكة السعودية بتردد 60 هرتز، وتحتاج مشاريع الإنشاءات والصناعة في المملكة إلى طاقة احتياطية وأساسية موثوقة وبسرعة. نورّد مولدات 60 هرتز ولوحات ATS ولوحات تزامن برّاً من الشارقة إلى جميع المدن السعودية الكبرى، مع مستندات التصدير التي يحتاجها مخلّصك الجمركي.",
     },
     points: [
       {
@@ -114,10 +114,10 @@ export const marketPages: MarketPage[] = [
         },
       },
       {
-        title: { en: "60 Hz ready", ar: "جاهزة لتردد 60 هرتز" },
+        title: { en: "Built for 60 Hz", ar: "مصممة لتردد 60 هرتز" },
         body: {
-          en: "Sets configured for 60 Hz and Saudi voltages (380/220 V or 400/230 V) where required by the project.",
-          ar: "مولدات مهيأة لتردد 60 هرتز والجهد السعودي (380/220 أو 400/230 فولت) حسب متطلبات المشروع.",
+          en: "60 Hz sets with the engine, alternator and controller rated for 1800 rpm — not a 50 Hz set re-adjusted — at the Saudi voltage your project needs (380/220 V or 400/230 V).",
+          ar: "مولدات 60 هرتز بمحرك ومولد تيار ووحدة تحكم مصنّفة لسرعة 1800 لفة، وليست مولد 50 هرتز معاد ضبطه، وبالجهد السعودي الذي يحتاجه مشروعك (380/220 أو 400/230 فولت).",
         },
       },
       {
@@ -140,8 +140,8 @@ export const marketPages: MarketPage[] = [
       {
         q: { en: "Can you supply 60 Hz generators for Saudi Arabia?", ar: "هل توفرون مولدات 60 هرتز للسعودية؟" },
         a: {
-          en: "Yes. Most engines we supply can be configured for 60 Hz at 1800 rpm; we confirm the rated output at 60 Hz in the quotation.",
-          ar: "نعم. معظم المحركات التي نوردها يمكن ضبطها على 60 هرتز بسرعة 1800 دورة، ونؤكد القدرة المقننة عند 60 هرتز في عرض السعر.",
+          en: "Yes, 60 Hz sets are available. A 60 Hz generator is not the same as a 50 Hz one: the engine runs at 1800 rpm with its own rating and fuel figures, and the alternator and controller are rated for 60 Hz. Tell us 60 Hz and your voltage, and the quotation states the 60 Hz rating of the set we supply.",
+          ar: "نعم، مولدات 60 هرتز متوفرة. ومولد 60 هرتز ليس مثل مولد 50 هرتز: المحرك يعمل على 1800 لفة بقدرة واستهلاك وقود خاصين به، ومولد التيار ووحدة التحكم مصنّفان لتردد 60 هرتز. أخبرنا أنك تحتاج 60 هرتز والجهد المطلوب، ويذكر عرض السعر قدرة المولد على 60 هرتز.",
         },
       },
       {
